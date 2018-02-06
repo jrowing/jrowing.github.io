@@ -1,65 +1,37 @@
-<!DOCTYPE html>
-<html lang="english">
-<head>
-        <meta charset="utf-8" />
-        <title>eruditely.co.uk</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
+---
+layout: default
+---
 
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
-</head>
+This blog is powered by the <a href="http://sagecell.sagemath.org/">Sage Cell Server</a>. You can type <a href="http://www.sagemath.org/">Sage</a>/Python code into the cell below, and press `Shift+Enter` to evaluate it (or click "Evaluate").
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="/">eruditely.co.uk </a></h1>
-                <nav><ul>
-                    <li><a href="/category/hello-world.html">Hello World</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
+<div class="all">
+  <script type="text/x-sage">
+d,c,p,k = [0.05, 0.05, -0.15, 0.05]
+u = [random() for i in range(3)]
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="/hello-world.html">Hello World</a></h1>
-<footer class="post-info">
-        <abbr class="published" title="2010-12-03T10:20:00+00:00">
-                Published: Fri 03 December 2010
-        </abbr>
+x(t) = (sin(t*2*pi) + sin((1-c + u[2]*c*2)*t*2*pi) + p*pi)*exp(-d*t)
+y(t) = (sin((1-c+ u[0]*c*2)*t*2*pi + k*u[1]*pi) + cos((1-c + u[2]*c*2)*t*2*pi) + p*pi)*exp(-d*t)
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jrowing.html">JRowing</a>
-        </address>
-<p>In <a href="/category/hello-world.html">Hello World</a>.</p>
+parametric_plot((x(t),y(t)),(t,0,100),color = u, axes= False, plot_points = 3000).show()    
+  </script>
+</div>
 
-</footer><!-- /.post-info --><p>Hello World</p>                </article>
-            </aside><!-- /#featured -->
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="http://getpelican.com/">Pelican</a></li>
-                            <li><a href="http://python.org/">Python.org</a></li>
-                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
-                            <li><a href="#">You can modify those links in your config file</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
+<div class="posts">
+  {% for post in site.posts limit:5 %}
+    {% if post.draft_tag == null %}
+      <article class="post">    
+        
+        <h1><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h1>
+  
+        <div class="entry">
+          {{ post.excerpt }}
+        </div>
+        
+        <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
+      </article>
+    {% endif %}
+  {% endfor %}
+  
+  <a href="http://sheaves.github.io/archive" class="read-more">ALL POSTS</a>
+</div>
 
-                            <li><a href="#">You can add links in your config file</a></li>
-                            <li><a href="#">Another social link</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
-
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
-
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
-
-</body>
-</html>
