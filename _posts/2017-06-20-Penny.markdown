@@ -12,6 +12,9 @@ share: true
 <div dir="ltr" style="text-align: left;" trbidi="on">
 <div class="" style="clear: both; text-align: left;">
 <span style="text-align: left;">Whilst looking for videos to use in class I stumbled across this section of the Big Bang Theory that analogues historical physics teaching so perfectly that I had to share it. Sheldon, despite all his passion for the subject and knowledge of it's history cannot engage Penny, because she has a different set of interests and targets in mind...</span></div>
+
+<!--more-->
+
 <div class="separator" style="clear: both; text-align: center;">
 <object class="BLOGGER-youtube-video" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" data-thumbnail-src="http://3.gvt0.com/vi/n38eAO3ne8M/0.jpg" height="266" width="320"><param name="movie" value="http://www.youtube.com/v/n38eAO3ne8M&fs=1&source=uds" />
 
