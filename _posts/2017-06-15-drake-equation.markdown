@@ -15,7 +15,7 @@ The simplest form of the Drake Equation to understand is as follows:
 The number of communicating civilisations in our galaxy, N, is:
 <div>`$$ N = S \times f_{p} \times n_{e} \times f_{l} \times f_{i} \times f_{c} \times f_{L} $$`</div>
 
-
+<!--break-->
 In this equation:
 
 1.	$$S$$ represents the number of stars in the Milky Way Galaxy (approx 100 billion, or 109).  The fact that the Drake Equation and the Search for Extra Terrestrial Intelligence (SETI) is restricted to the Milky Way galaxy gives an opportunity to teach the scale of space and the speed of light, and thus the reason that no-one is looking outside of our galaxy for intelligent alien life.
