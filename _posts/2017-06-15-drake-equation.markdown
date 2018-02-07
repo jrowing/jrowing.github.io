@@ -5,7 +5,7 @@ subtitle: "Working out the probabilities..."
 date: 2017-03-21
 author: Joe
 category: teaching
-tag: teaching, maths
+tag: maths
 
 ---
 
