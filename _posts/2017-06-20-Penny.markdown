@@ -19,7 +19,7 @@ share: true
 <param name="bgcolor" value="#FFFFFF" />
 
 
-<embed width="320" height="266"  src="http://www.youtube.com/v/n38eAO3ne8M&fs=1&source=uds" type="application/x-shockwave-flash"></embed></object></div>
+<embed width="320" height="266"  src="http://www.youtube.com/v/n38eAO3ne8M&fs=1&source=uds" type="application/x-shockwave-flash"></object></div>
 <div class="separator" style="clear: both; text-align: center;">
 <br /></div>
 <div class="" style="clear: both; text-align: left;">
