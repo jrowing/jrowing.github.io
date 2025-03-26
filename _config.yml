@@ -40,7 +40,7 @@ geogebra: joerowing
 width: normal
 
 # do you want to display an about section? true or false
-about: true
+about: false
 
 # do you want to display a skills section? true or false
 skills: false
@@ -101,11 +101,11 @@ project-list:
         url: https://github.com/jrowing/EMS-Physics-Notes
     IoP:
         name: Institute of Physics Coach
-        description: Provided expert guidance and support to teachers, helping to improve the quality of physics education and student outcomes locally and Nationally. Drawing on extensive subject knowledge and teaching experience to developed and delivered professional development sessions, share best practices, and offered tailored mentoring to colleagues. Areas of particular focus included fostering confidence and excellence in physics teaching, improving the gender balance and enabling teachers to inspire and engage students while promoting a deeper understanding of the subject and its real-world applications.
+        description: Provided expert guidance and support to teachers, helping to improve the quality of physics education and student outcomes locally and Nationally. 
         url: https://www.iop.org/education
     EMS:
         name: Exeter Maths School
-        description: Instrumental in the establishment of Exeter Maths School, a specialist sixth form college for talented mathematicians aged 16-19. As part of the founding team, Joe played a key role in designing and implementing the curriculum, the safeguarding, pastoral and behaviour policies, careers and university progression. Also Establishing the boarding provision, establishing the physics lab, building strong partnerships with local universities and industries, and fostering a culture of academic excellence and innovation. Leadership contributed to the school’s success in providing an outstanding education, nurturing students’ passion for STEM, and achieving national recognition as a centre of excellence for mathematics and physics.
+        description: Founding member of Exeter Maths School, a specialist sixth form college for talented mathematicians aged 16-19. As part of the founding team, Joe played a key role in designing and implementing the curriculum, the safeguarding, pastoral and behaviour policies, careers and university progression. Also Establishing the boarding provision, establishing the physics lab, building strong partnerships with local universities and industries, and fostering a culture of academic excellence and innovation. Leadership contributed to the school’s success in providing an outstanding education, nurturing students’ passion for STEM, and achieving national recognition as a centre of excellence for mathematics and physics.
         url: https://exetermathematicsschool.ac.uk/
     Neemo16:
         name: NEEMO 16
