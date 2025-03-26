@@ -86,10 +86,9 @@ projects: true
 
 # add your projects here
 project-list:
-
     Blog:
-        name: Blog 
-	description: A repository of random thoughts.
+	    name: Blog
+	    description: A repository of random thoughts.
         url: https://jrowing.com/blog
     Jupyterlabbooks:
         name: Jupyter Physics Lab books
