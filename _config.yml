@@ -87,9 +87,9 @@ projects: true
 # add your projects here
 project-list:
 	Blog:
-	    name: Blog
+ 		name: Blog
 		description: A repository of random thoughts.
-        url: https://jrowing.com/blog
+  		url: https://jrowing.com/blog
     Jupyterlabbooks:
         name: Jupyter Physics Lab books
         description: Lab report templates and experiments in jupyter notebook form (work in progress)
@@ -110,16 +110,7 @@ project-list:
         name: NEEMO 16
         description: The NEEMO 16 Education Project is an educational initiative designed to engage students with science, technology, engineering, and mathematics (STEM) through the lens of space exploration and underwater research. Developed as part of NASA’s Extreme Environment Mission Operations (NEEMO), this project leverages the unique environment of underwater habitats to simulate the challenges of space missions.
         url: https://www.youtube.com/watch?v=tmdgJ7FUvuc&list=PL50D3F281AF1788F3&ab_channel=NASAanalogTV
-    PhysNotes:
-        name: Physics Notes
-        description: Complete textbook/notes for the A-level Physics course.
-        url: https://github.com/jrowing/EMS-Physics-Notes
-    Hodder:
-        name: Edexcel A Level Physics Teaching and Learning Resources
-        description: Textbook authoring and production of Teaching and Learning Resources for the Edexcel A Level Physics course. Published by Hachette Learning (Hodder)
-        url: https://openlibrary.org/books/OL37962284M/Edexcel_a_Level_Physics_2_Teaching_and_Learning_Resources
     
-
 # do you want to display the theme attribution? true or false
 footer: false
 
