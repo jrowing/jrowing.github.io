@@ -86,14 +86,14 @@ projects: true
 
 # add your projects here
 project-list:
-    Blog:
+	Blog:
 	    name: Blog
-	    description: A repository of random thoughts.
+		description: A repository of random thoughts.
         url: https://jrowing.com/blog
     Jupyterlabbooks:
         name: Jupyter Physics Lab books
         description: Lab report templates and experiments in jupyter notebook form (work in progress)
-        url: https://mybinder.org/v2/gh/jrowing/Jupyter_lab_book/HEAD
+		url: https://mybinder.org/v2/gh/jrowing/Jupyter_lab_book/HEAD
     PhysNotes:
         name: Physics Notes
         description: Complete textbook/notes for the A-level Physics course.
