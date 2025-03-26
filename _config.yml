@@ -28,10 +28,10 @@ email: joe@jrowing.com
 # stackoverflow: 7044681/mystackoverflow
 # quora: userquora
 # reddit: username
-medium: JRowing
+# medium: JRowing
 # vimeo: myvimeo
 # lanyrd: mylanyrd
-# bandcamp: taleriverrowing
+ bandcamp: taleriverrowing
 geogebra: joerowing
 
 # do you want a larger site? change the option below
@@ -43,7 +43,7 @@ width: normal
 about: true
 
 # do you want to display a skills section? true or false
-skills: true
+skills: false
 
 # add your skills here
 skills-list:
