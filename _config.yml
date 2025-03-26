@@ -93,7 +93,7 @@ project-list:
     Jupyterlabbooks:
         name: Jupyter Physics Lab books
         description: Lab report templates and experiments in jupyter notebook form (work in progress)
-		url: https://mybinder.org/v2/gh/jrowing/Jupyter_lab_book/HEAD
+        url: https://mybinder.org/v2/gh/jrowing/Jupyter_lab_book/HEAD
     PhysNotes:
         name: Physics Notes
         description: Complete textbook/notes for the A-level Physics course.
