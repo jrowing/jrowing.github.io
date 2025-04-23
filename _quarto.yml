@@ -1,6 +1,6 @@
 project:
   type: website
-
+  output-dir: docs
 website:
   title: "JRowing.com"
   navbar:
@@ -16,6 +16,6 @@ format:
       - litera
       - brand
     css: styles.css
-
+  
 editor: visual
 
