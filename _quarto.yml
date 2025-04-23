@@ -1,7 +1,7 @@
 project:
   type: website
   output-dir: docs
-  resources:
+resources:
   - CNAME
 website:
   title: "JRowing.com"
@@ -12,7 +12,9 @@ website:
         href: https://github.com/jrowing
       - icon: twitter
         href: https://twitter.com/jrowing
-  
+include-in-header:
+  - text: |
+     <link rel = "shortcut icon" href = "favicon.ico" />  
 format:
   html:
     theme:
