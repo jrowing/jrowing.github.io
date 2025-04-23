@@ -4,9 +4,8 @@ author: "JRowing"
 date: "2025-04-19"
 categories: [Projectiles, R Models, A-Level]
 ---
+
 ## Freefall from space
-
-
 
 In 2012, Felix Baumgartner jumped from the edge of space, plummeting from an altitude of nearly 39,000 meters. During his descent, he accelerated rapidly, eventually breaking the sound barrier before safely deploying his parachute.
 
@@ -37,7 +36,7 @@ $$
 \mathbf{F_d} = -C \rho(h) A |\mathbf{v}|^2 \hat{v}
 $$
 
-Where the drag coefficient $$C \rho(h) A$$ is composed of a constant $$ C $$ depending on the shape of the object, the air density $$ \rho(h) $$ which depends on the height with respect to sea level, and the surface area perpendicular to the direction of motion$ A $.
+Where the drag coefficient $$C \rho(h) A$$ is composed of a constant $$ C $$ depending on the shape of the object, the air density $$ \rho(h) $$ which depends on the height with respect to sea level, and the surface area perpendicular to the direction of motion\$ A \$.
 
 Assume that Baumgartner + equipment have a mass of 120kg, and that we are on Earth (so $|\mathbf{g}| = 9.81 \text{ m/s}^2$).
 
