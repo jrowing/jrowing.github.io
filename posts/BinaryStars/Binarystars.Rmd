@@ -2,6 +2,16 @@
 title: "Binary Star Model"
 date: "2025-04-20"
 categories: [Projectiles, R Models, A-Level] 
+
+execute: 
+  warning: false
+  message: false
+ # echo: false
+ 
+format:
+  html:
+    code-fold: true
+    code-summary: "Show the code"
 ---
 
 This model visualizes the observed Doppler shift in frequency for two stars in a binary star system over time. The Doppler effect, caused by the relative motion of the stars, shifts the frequency of their emitted radiation as observed from Earth. This plot demonstrates how the frequencies of the two stars (Star 1 and Star 2) vary over time, reflecting the periodic nature of their orbits.
