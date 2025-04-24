@@ -8,7 +8,7 @@
 
 <meta name="dcterms.date" content="2025-04-24">
 
-<title>Confidence in the Garden: Understanding BirdNET-Pi Confidence Scores and Why They Matter – JRowing.com</title>
+<title>Sherlock Holmes - Can you graph literature? – JRowing.com</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -67,6 +67,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 <link rel="shortcut icon" href="favicon.ico">  
 
 
@@ -117,7 +120,7 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7">Confidence in the Garden: Understanding BirdNET-Pi Confidence Scores and Why They Matter</h1></header>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7">Sherlock Holmes - Can you graph literature?</h1></header>
 
 <header id="title-block-header">
 
@@ -126,93 +129,153 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>One of the joys of setting up a BirdNET-Pi in the garden is that it turns your everyday green space into a hub of real-time bioacoustic science. Every chirp, tweet, and call becomes a data point. But when we look at the results—particularly those elusive confidence scores many of us wonder: <em>What exactly do these numbers mean?</em> And how much can we trust them?</p>
-<p>Let’s unpack what confidence scores are, how they’re used in BirdNET-Pi, and what insights we can pull from visualizing them, like in the box plot I generated from my garden’s data:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Detection confidence.png" class="img-fluid figure-img"></p>
-<figcaption>Confidence plot for detected species in the garden.</figcaption>
-</figure>
+<p>This evening I’m watching a Sherlock Holmes adaptation and my mind turns to the interconnectedness of all of the tales. I wonder if it’s possible to apply a graphical rendering to the collected works…</p>
+<p>… It turns out that the Sherlock Holmes story network is a fascinating way to visualize the relationships between characters, stories, settings, and themes in Sir Arthur Conan Doyle’s detective canon. By imagining the stories as nodes in a graph and connecting them by shared elements, we can explore how the world of Holmes is intricately interwoven.</p>
+<p>Here’s a breakdown of the main elements in such a network:</p>
+<section id="key-nodes-in-the-network" class="level2">
+<h2 class="anchored" data-anchor-id="key-nodes-in-the-network">Key Nodes in the Network</h2>
+<section id="central-character-node" class="level3">
+<h3 class="anchored" data-anchor-id="central-character-node">1. Central Character Node</h3>
+<p>Sherlock Holmes is the hub. He appears in nearly every story. Connected to: Every case, Dr.&nbsp;Watson, clients, villains, Scotland Yard, and locations.</p>
+</section>
+<section id="dr.-john-watson" class="level3">
+<h3 class="anchored" data-anchor-id="dr.-john-watson">2. Dr.&nbsp;John Watson</h3>
+<p>Holmes’ companion and chronicler. Present in most stories, especially earlier ones. His medical background and moral compass balance Holmes’ deductive detachment.</p>
+</section>
+<section id="recurring-supporting-characters" class="level3">
+<h3 class="anchored" data-anchor-id="recurring-supporting-characters">3. Recurring Supporting Characters</h3>
+<p>Mycroft Holmes – Sherlock’s brilliant but lazy brother. Inspector Lestrade, Gregson, Hopkins – Scotland Yard detectives. Mrs.&nbsp;Hudson – Holmes’ landlady. Professor Moriarty – Criminal mastermind, Holmes’ arch-nemesis. Irene Adler – “The Woman,” only appears once but has lasting impact.</p>
+</section>
+<section id="stories-as-nodes" class="level3">
+<h3 class="anchored" data-anchor-id="stories-as-nodes">4. Stories as Nodes</h3>
+<p>There are 60 stories (56 short stories, 4 novels): Novels: A Study in Scarlet, The Sign of the Four, The Hound of the Baskervilles, The Valley of Fear Collections include: The Adventures of Sherlock Holmes, The Memoirs, The Return, His Last Bow, The Case-Book, etc.</p>
+</section>
+<section id="villains" class="level3">
+<h3 class="anchored" data-anchor-id="villains">5. Villains</h3>
+<p>Some are connected to multiple stories (e.g., Moriarty is mentioned across a few). Others are one-offs but memorable (Dr.&nbsp;Roylott in Speckled Band, Jonathan Small in Sign of the Four).</p>
+</section>
+<section id="settings" class="level3">
+<h3 class="anchored" data-anchor-id="settings">6. Settings</h3>
+<ul>
+<li>221B Baker Street – Always home base.</li>
+<li>London – Primary playground for urban mysteries.</li>
+<li>English countryside – Many rural cases, e.g., The Copper Beeches, Hound of the Baskervilles.</li>
+<li>International elements – Some stories link to India, the US, Andaman Islands, etc.</li>
+</ul>
+</section>
+</section>
+<section id="connections-in-the-network" class="level2">
+<h2 class="anchored" data-anchor-id="connections-in-the-network">Connections in the Network</h2>
+<p>Story to character (e.g., The Speckled Band → Dr.&nbsp;Roylott) Story to location (e.g., The Hound of the Baskervilles → Baskerville Hall) Character to character (e.g., Holmes ↔︎ Moriarty) Theme links (e.g., inheritance disputes, revenge, justice, deception)</p>
+</section>
+<section id="why-map-this-network" class="level2">
+<h2 class="anchored" data-anchor-id="why-map-this-network">Why Map This Network?</h2>
+<p>Educational: Great for literature analysis or classroom discussion. Fun for fans: Spot patterns and hidden relationships. Computational analysis: You can apply network science to study centrality (Holmes wins!), clustering, or the evolution of story arcs.</p>
+<p>Here’s the plot:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">graph TD
+    A[Sherlock Holmes] --&gt; B[The Hound of the Baskervilles]
+    A[Sherlock Holmes] --&gt; C[The Adventure of the Speckled Band]
+    A[Sherlock Holmes] --&gt; D[The Sign of the Four]
+    A[Sherlock Holmes] --&gt; E[The Adventure of the Blue Carbuncle]
+    A[Sherlock Holmes] --&gt; F[The Final Problem]
+    A[Sherlock Holmes] --&gt; G[The Adventure of the Musgrave Ritual]
+    A[Sherlock Holmes] --&gt; H[The Adventure of the Engineer's Thumb]
+    A[Sherlock Holmes] --&gt; I[The Adventure of the Priory School]
+    A[Sherlock Holmes] --&gt; J[The Adventure of the Beryl Coronet]
+
+    B --&gt; K[Dr. Watson]
+    C --&gt; K
+    D --&gt; K
+    E --&gt; K
+    F --&gt; K
+    G --&gt; K
+    H --&gt; K
+    I --&gt; K
+    J --&gt; K
+
+    K --&gt; L[Villain: Dr. Grimesby Roylott]
+    K --&gt; M[Villain: Jonathan Small]
+    K --&gt; N[Villain: Charles Augustus Milverton]
+    K --&gt; O[Villain: Professor Moriarty]
+    K --&gt; P[Villain: John Hector McFarlane]
+    K --&gt; Q[Villain: Hugo Baskerville]
+    K --&gt; R[Villain: Charles Baskerville]
+
+    B --&gt; S[Setting: Baskerville Hall]
+    C --&gt; T[Setting: Stoke Moran]
+    D --&gt; U[Setting: The Andaman Islands]
+    E --&gt; V[Setting: London]
+    F --&gt; W[Setting: Reichenbach Falls]
+    G --&gt; X[Setting: Musgrave Manor]
+    H --&gt; Y[Setting: The Engineer’s Workshop]
+    I --&gt; Z[Setting: The Priory School]
+    J --&gt; AA[Setting: The Jewelers' Shop]
+
+    L --&gt; AB[Death of Helen Stoner]
+    M --&gt; AC[The Hunt for the Treasure]
+    N --&gt; AD[Blackmail Plot]
+    O --&gt; AE[Reichenbach Falls Death]
+    P --&gt; AF[Inheritance Conspiracy]
+    Q --&gt; AG[Hound Mystery]
+    R --&gt; AH[Baskerville Family Curse]
+
+    S --&gt; AI[The Hound of the Baskervilles]
+    T --&gt; AJ[The Poisonous Snake]
+    U --&gt; AK[Treasure Hunt]
+    V --&gt; AL[The Blue Carbuncle]
+    W --&gt; AM[Holmes and Moriarty's Final Confrontation]
+    X --&gt; AN[Musgrave's Ritual]
+    Y --&gt; AO[The Engineer's Dilemma]
+    Z --&gt; AP[The Missing Schoolboy]
+    AA --&gt; AQ[The Robbery of the Beryl Coronet]
+</pre>
 </div>
-<section id="what-is-a-confidence-score" class="level2">
-<h2 class="anchored" data-anchor-id="what-is-a-confidence-score">What is a Confidence Score?</h2>
-<p>In the world of machine learning and AI, a <strong>confidence score</strong> is a number (usually between 0 and 1) that tells us how certain the model is that it has made the right prediction. In the case of BirdNET-Pi, this means: How sure is the system that the bird call it detected belongs to a particular species?</p>
-<p>If the system hears a song and assigns a confidence score of <strong>0.94</strong> to a <strong>Great Tit</strong>, it’s very confident. If it gives only <strong>0.72</strong> for a <strong>Goldfinch</strong>, it’s not so sure.</p>
-<p>These scores are not random—they’re derived from deep learning models trained on thousands of real bird vocalizations. But even the best models have limits, especially in real-world environments full of overlapping calls, wind, rain, or traffic noise.</p>
-<p>Before we dig into the BirdNET data specifically, let’s briefly detour into statistics. A <strong>confidence interval</strong> is a range of values, derived from sample data, that likely contains the true value we care about.</p>
-<p>Say you’re measuring the average height of sparrows in your garden. You might find a mean of 16 cm, with a <strong>95% confidence interval</strong> of [15.7 cm, 16.3 cm]. That means you can be 95% sure the true average falls in that range. It’s a way of expressing <strong>uncertainty</strong>—and it’s a concept that’s related (though not identical) to BirdNET’s confidence scores.</p>
-<p>While BirdNET doesn’t give us formal “confidence intervals,” the distribution of scores across many detections acts like one. That’s where graphs like the one I generated become useful.</p>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 </section>
-<section id="interpreting-the-graph-confidence-scores-across-25-bird-species" class="level2">
-<h2 class="anchored" data-anchor-id="interpreting-the-graph-confidence-scores-across-25-bird-species">Interpreting the Graph: Confidence Scores Across 25 Bird Species</h2>
-<p>Recently, I collected data from my BirdNET-Pi setup in the garden and created a box plot showing detection confidence scores for the 25 bird species it picked up most commonly. Here’s what it revealed:</p>
-<ul>
-<li>Species like the Eurasian Jackdaw and White Wagtail consistently scored high, often above 0.9. The AI model is highly confident when it hears them.</li>
-<li>Others, like the Ring-necked Pheasant or Great Spotted Woodpecker, had wider spreads and lower medians—suggesting the model struggled more with these. There is some evidence that birds have local accents and I wonder if these are coming into play.</li>
-<li>Some species had lots of <strong>outliers</strong>, hinting at inconsistent recordings or background noise.</li>
-</ul>
-<p>This plot is powerful because it helps me do three things:</p>
-<ol type="1">
-<li><p>Evaluate model reliability: If a species constantly has low confidence scores, maybe I shouldn’t treat its detection as trustworthy without more evidence.</p></li>
-<li><p>Spot detection bias: Some birds might be misidentified due to overlapping frequencies with other species. A wide range of scores might indicate this.</p></li>
-<li><p>Tailor my alerts and filtering: I might only log or act on detections with a confidence &gt; 0.85 for certain species. Others, I might review manually.</p></li>
-</ol>
-</section>
-<section id="why-this-matters-for-garden-birding" class="level2">
-<h2 class="anchored" data-anchor-id="why-this-matters-for-garden-birding">Why This Matters for Garden Birding</h2>
-<p>In short - it doesn’t - if all you want to do is have an idea of what’s around. If, on the other hand, you’re using BirdNET-Pi as part of your bird monitoring, conservation efforts, or just for fun, understanding confidence scores helps you interpret your data responsibly. You don’t want to celebrate the return of a rare warbler only to realize it was just a noisy House Sparrow with a weird echo!</p>
-<p>By looking at trends over time and visualizing confidence distributions, we start to go beyond passive detection and become more active, informed interpreters of the data. And the more we learn, the more meaningful our garden’s bird chorus becomes.</p>
-</section>
-<section id="practical-tips-for-using-confidence-scores" class="level2">
-<h2 class="anchored" data-anchor-id="practical-tips-for-using-confidence-scores">Practical Tips for Using Confidence Scores</h2>
-<p>Here are a few ways to make the most of your confidence data:</p>
-<ul>
-<li><p>Set a filtering threshold: In BirdNET-Pi’s web interface or your CSV logs, you can filter to only include results with confidence above eg. 0.80 or 0.90.</p></li>
-<li><p>Visualize trends: Use tools like Excel, Python, or R to graph detection confidence over time or by species.</p></li>
-<li><p>Investigate edge cases: Low scores might point to interesting events—background noise, mimicry, or even unusual bird behavior.</p></li>
-<li><p>Compare seasons: Are confidence scores better in spring when birds sing more clearly? Or do leaves and wind affect fall detection?</p></li>
-</ul>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Threshold</th>
-<th>Interpretation</th>
-<th>Use Case</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>&gt; 0.90</td>
-<td>Very high confidence</td>
-<td>Pretty safe to assume correct ID — good for data logging, biodiversity reports.</td>
-</tr>
-<tr class="even">
-<td>0.80 – 0.90</td>
-<td>High confidence</td>
-<td>Likely correct, but worth a second look if species are similar-sounding.</td>
-</tr>
-<tr class="odd">
-<td>0.70 – 0.80</td>
-<td>Medium confidence</td>
-<td>Can include false positives — OK for casual monitoring but be cautious with rare species.</td>
-</tr>
-<tr class="even">
-<td>&lt; 0.70</td>
-<td>Low confidence</td>
-<td>Often unreliable — treat with skepticism unless you can verify it manually.</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="final-thoughts" class="level2">
-<h2 class="anchored" data-anchor-id="final-thoughts">Final Thoughts</h2>
-<p>BirdNET-Pi brings a beautiful blend of AI and ecology right into our backyards. And while the tech behind it is complex, tools like confidence scores help demystify the magic. With a bit of data-savvy, we can turn raw detection logs into meaningful insights—and maybe even uncover some surprises along the way.</p>
-<p>Whether you’re a seasoned birder, a teacher running a school science project (ahem!), or just someone who loves the dawn chorus, take a closer look at your confidence data. You might find there’s more certainty (and more mystery) in the garden than you realized.</p>
+<section id="breaking-down-an-individual-story" class="level2">
+<h2 class="anchored" data-anchor-id="breaking-down-an-individual-story">Breaking down an individual story:</h2>
+<p>Having plotted the cannon I wonder if there are equivalent ways to lay out the stories. It seems a shame to reduce the twists and turns of the plot to a clear graphic, however; 1 - It’s an intellectual idea for fun 2 - I’m experimenting with what’s possible 3 - It might give a new, different, glimpse at a favourite old story.</p>
+<p>Here’s how one can represent a Sherlock Holmes sequence diagram using Mermaid in an R Markdown document. This example shows a simplified sequence of investigation in one of the classic stories, The Adventure of the Speckled Band…</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">sequenceDiagram
+    participant Helen as Helen Stoner
+    participant Holmes as Sherlock Holmes
+    participant Watson as Dr. Watson
+    participant Roylott as Dr. Roylott
+    participant Inspector as Inspector
+
+    Helen-&gt;&gt;Holmes: Requests help for her sister's mysterious death
+    Holmes-&gt;&gt;Watson: Summarizes the case
+    Holmes-&gt;&gt;Helen: Asks detailed questions
+    Helen-&gt;&gt;Holmes: Mentions whistle and metallic sound
+    Holmes-&gt;&gt;Roylott: Receives visit and threat
+    Holmes-&gt;&gt;Watson: Decides to investigate Stoke Moran
+    Holmes-&gt;&gt;Helen: Plans to stay hidden in her room
+    Roylott-&gt;&gt;Helen: Sends her to sleep in her old room
+    Holmes-&gt;&gt;Roylott: Waits with Watson overnight
+    Roylott-&gt;&gt;Holmes: Releases snake through ventilator
+    Holmes-&gt;&gt;Snake: Strikes it with a cane
+    Snake-&gt;&gt;Roylott: Returns and bites Roylott
+    Roylott--&gt;&gt;X: Dies from snake bite
+    Holmes-&gt;&gt;Inspector: Explains the events
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 
 
 </section>

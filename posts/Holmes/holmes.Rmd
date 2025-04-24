@@ -1,0 +1,168 @@
+---
+title: "Sherlock Holmes - Can you graph literature?"
+# author: "JRowing"
+date: "2025-04-24"
+categories: [Books, Statistics, Sherlock, RStudio]
+title-block-banner: false
+title-block-style: none
+execute: 
+  warning: false
+  message: false
+ # echo: false
+ 
+format:
+  html:
+    code-fold: true
+    code-summary: "Show the code"
+---
+
+This evening I'm watching a Sherlock Holmes adaptation and my mind turns to the interconnectedness of all of the tales. I wonder if it's possible to apply a graphical rendering to the collected works...
+
+... It turns out that the Sherlock Holmes story network is a fascinating way to visualize the relationships between characters, stories, settings, and themes in Sir Arthur Conan Doyle's detective canon. By imagining the stories as nodes in a graph and connecting them by shared elements, we can explore how the world of Holmes is intricately interwoven.
+
+Here’s a breakdown of the main elements in such a network:
+
+## Key Nodes in the Network
+
+### 1. Central Character Node
+
+Sherlock Holmes is the hub. He appears in nearly every story.
+Connected to: Every case, Dr. Watson, clients, villains, Scotland Yard, and locations.
+
+### 2. Dr. John Watson
+
+Holmes’ companion and chronicler.
+Present in most stories, especially earlier ones.
+His medical background and moral compass balance Holmes’ deductive detachment.
+
+### 3. Recurring Supporting Characters
+
+Mycroft Holmes – Sherlock’s brilliant but lazy brother.
+Inspector Lestrade, Gregson, Hopkins – Scotland Yard detectives.
+Mrs. Hudson – Holmes’ landlady.
+Professor Moriarty – Criminal mastermind, Holmes’ arch-nemesis.
+Irene Adler – “The Woman,” only appears once but has lasting impact.
+
+### 4. Stories as Nodes
+
+There are 60 stories (56 short stories, 4 novels):
+Novels: A Study in Scarlet, The Sign of the Four, The Hound of the Baskervilles, The Valley of Fear
+Collections include: The Adventures of Sherlock Holmes, The Memoirs, The Return, His Last Bow, The Case-Book, etc.
+
+### 5. Villains
+
+Some are connected to multiple stories (e.g., Moriarty is mentioned across a few).
+Others are one-offs but memorable (Dr. Roylott in Speckled Band, Jonathan Small in Sign of the Four).
+
+### 6. Settings
+
+* 221B Baker Street – Always home base.
+* London – Primary playground for urban mysteries.
+* English countryside – Many rural cases, e.g., The Copper Beeches, Hound of the Baskervilles.
+* International elements – Some stories link to India, the US, Andaman Islands, etc.
+
+## Connections in the Network
+Story to character (e.g., The Speckled Band → Dr. Roylott)
+Story to location (e.g., The Hound of the Baskervilles → Baskerville Hall)
+Character to character (e.g., Holmes ↔ Moriarty)
+Theme links (e.g., inheritance disputes, revenge, justice, deception)
+
+## Why Map This Network?
+Educational: Great for literature analysis or classroom discussion.
+Fun for fans: Spot patterns and hidden relationships.
+Computational analysis: You can apply network science to study centrality (Holmes wins!), clustering, or the evolution of story arcs.
+
+Here's the plot:
+
+```{mermaid}
+graph TD
+    A[Sherlock Holmes] --> B[The Hound of the Baskervilles]
+    A[Sherlock Holmes] --> C[The Adventure of the Speckled Band]
+    A[Sherlock Holmes] --> D[The Sign of the Four]
+    A[Sherlock Holmes] --> E[The Adventure of the Blue Carbuncle]
+    A[Sherlock Holmes] --> F[The Final Problem]
+    A[Sherlock Holmes] --> G[The Adventure of the Musgrave Ritual]
+    A[Sherlock Holmes] --> H[The Adventure of the Engineer's Thumb]
+    A[Sherlock Holmes] --> I[The Adventure of the Priory School]
+    A[Sherlock Holmes] --> J[The Adventure of the Beryl Coronet]
+
+    B --> K[Dr. Watson]
+    C --> K
+    D --> K
+    E --> K
+    F --> K
+    G --> K
+    H --> K
+    I --> K
+    J --> K
+
+    K --> L[Villain: Dr. Grimesby Roylott]
+    K --> M[Villain: Jonathan Small]
+    K --> N[Villain: Charles Augustus Milverton]
+    K --> O[Villain: Professor Moriarty]
+    K --> P[Villain: John Hector McFarlane]
+    K --> Q[Villain: Hugo Baskerville]
+    K --> R[Villain: Charles Baskerville]
+
+    B --> S[Setting: Baskerville Hall]
+    C --> T[Setting: Stoke Moran]
+    D --> U[Setting: The Andaman Islands]
+    E --> V[Setting: London]
+    F --> W[Setting: Reichenbach Falls]
+    G --> X[Setting: Musgrave Manor]
+    H --> Y[Setting: The Engineer’s Workshop]
+    I --> Z[Setting: The Priory School]
+    J --> AA[Setting: The Jewelers' Shop]
+
+    L --> AB[Death of Helen Stoner]
+    M --> AC[The Hunt for the Treasure]
+    N --> AD[Blackmail Plot]
+    O --> AE[Reichenbach Falls Death]
+    P --> AF[Inheritance Conspiracy]
+    Q --> AG[Hound Mystery]
+    R --> AH[Baskerville Family Curse]
+
+    S --> AI[The Hound of the Baskervilles]
+    T --> AJ[The Poisonous Snake]
+    U --> AK[Treasure Hunt]
+    V --> AL[The Blue Carbuncle]
+    W --> AM[Holmes and Moriarty's Final Confrontation]
+    X --> AN[Musgrave's Ritual]
+    Y --> AO[The Engineer's Dilemma]
+    Z --> AP[The Missing Schoolboy]
+    AA --> AQ[The Robbery of the Beryl Coronet]
+```
+
+
+## Breaking down an individual story:
+
+Having plotted the cannon I wonder if there are equivalent ways to lay out the stories. It seems a shame to reduce the twists and turns of the plot to a clear graphic, however;
+1 - It's an intellectual idea for fun
+2 - I'm experimenting with what's possible
+3 - It might give a new, different, glimpse at a favourite old story.
+
+Here's how one can represent a Sherlock Holmes sequence diagram using Mermaid in an R Markdown document. This example shows a simplified sequence of investigation in one of the classic stories, The Adventure of the Speckled Band...
+
+```{mermaid}
+sequenceDiagram
+    participant Helen as Helen Stoner
+    participant Holmes as Sherlock Holmes
+    participant Watson as Dr. Watson
+    participant Roylott as Dr. Roylott
+    participant Inspector as Inspector
+
+    Helen->>Holmes: Requests help for her sister's mysterious death
+    Holmes->>Watson: Summarizes the case
+    Holmes->>Helen: Asks detailed questions
+    Helen->>Holmes: Mentions whistle and metallic sound
+    Holmes->>Roylott: Receives visit and threat
+    Holmes->>Watson: Decides to investigate Stoke Moran
+    Holmes->>Helen: Plans to stay hidden in her room
+    Roylott->>Helen: Sends her to sleep in her old room
+    Holmes->>Roylott: Waits with Watson overnight
+    Roylott->>Holmes: Releases snake through ventilator
+    Holmes->>Snake: Strikes it with a cane
+    Snake->>Roylott: Returns and bites Roylott
+    Roylott-->>X: Dies from snake bite
+    Holmes->>Inspector: Explains the events
+```

@@ -1,9 +1,10 @@
 ---
 title: "Confidence in the Garden: Understanding BirdNET-Pi Confidence Scores and Why They Matter"
-author: "JRowing"
+# author: "JRowing"
 date: "2025-04-24"
 categories: [Wildlife, Statistics, Birdnet, RStudio]
 title-block-banner: false
+title-block-style: none
 execute: 
   warning: false
   message: false

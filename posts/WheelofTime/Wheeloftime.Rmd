@@ -1,9 +1,10 @@
 ---
 title: "The Wheel of Time and the Science of Everchanging Seasons"
-author: "JRowing"
+#author: "JRowing"
 date: "2025-04-23"
 categories: [Cosmology, R Models, A-Level, Fantasy]
 title-block-banner: false
+title-block-style: none
 execute: 
   warning: false
   message: false
