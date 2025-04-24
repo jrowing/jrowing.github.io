@@ -7,8 +7,7 @@ categories: [Interesting problems, R Models]
 
 Creating a 90-ball bingo card can be challenging because of several key rules and requirements that must be followed, including the distribution of numbers, the uniqueness of each row, and ensuring a balanced and fair game. Here's why it's particularly tricky:
 
-1. Fixed Number Range per Column
-In 90-ball bingo, there are 90 possible numbers, ranging from 1 to 90. The card consists of 3 rows and 9 columns, with each column corresponding to a specific range of numbers:
+1.  Fixed Number Range per Column In 90-ball bingo, there are 90 possible numbers, ranging from 1 to 90. The card consists of 3 rows and 9 columns, with each column corresponding to a specific range of numbers:
 
 Column 1: Numbers 1–9
 
@@ -26,24 +25,19 @@ Each column contains a random selection of numbers from the correct range.
 
 The total number of numbers in the card is limited (i.e., each row contains only 5 numbers and each column contains exactly 3 numbers).
 
-2. Ensuring No Duplicates
-Each bingo card must be unique — no two cards can have the same number in the same place. This means that not only do we need to distribute the numbers according to the column ranges, but we also have to ensure that across multiple cards, the number placement is randomized without repeating the exact same pattern.
+2.  Ensuring No Duplicates Each bingo card must be unique — no two cards can have the same number in the same place. This means that not only do we need to distribute the numbers according to the column ranges, but we also have to ensure that across multiple cards, the number placement is randomized without repeating the exact same pattern.
 
-3. Each Row Must Contain 5 Numbers
-A 90-ball bingo card has 3 rows and 9 columns, but only 5 numbers per row. This means that in each row, there will be some empty cells (spots with no numbers). The challenge is to:
+3.  Each Row Must Contain 5 Numbers A 90-ball bingo card has 3 rows and 9 columns, but only 5 numbers per row. This means that in each row, there will be some empty cells (spots with no numbers). The challenge is to:
 
 Ensure that the numbers are spread out across the entire row while keeping the 5-number constraint.
 
 Maintain a consistent structure across multiple cards.
 
-4. Ensuring Fair Distribution
-For the game to be fair, numbers should be distributed as evenly as possible across the 9 columns. This means ensuring that there are no biases, such as certain columns being overly dense with numbers or others being too sparse. The balancing between columns is vital to prevent players from having an unfair advantage.
+4.  Ensuring Fair Distribution For the game to be fair, numbers should be distributed as evenly as possible across the 9 columns. This means ensuring that there are no biases, such as certain columns being overly dense with numbers or others being too sparse. The balancing between columns is vital to prevent players from having an unfair advantage.
 
-5. Randomization
-While bingo cards are created with specific rules for how numbers are placed, there is still a randomness aspect involved. Ensuring that every generated card adheres to the required constraints (e.g., 3 numbers per column, 5 numbers per row) while still being unique and random adds an additional layer of complexity.
+5.  Randomization While bingo cards are created with specific rules for how numbers are placed, there is still a randomness aspect involved. Ensuring that every generated card adheres to the required constraints (e.g., 3 numbers per column, 5 numbers per row) while still being unique and random adds an additional layer of complexity.
 
-6. Maintaining Consistency with Game Rules
-90-ball bingo has 3 types of wins: line, two lines, and full house. Ensuring that the card layout doesn’t favor one type of win over another or create any unintentional patterns adds to the challenge of card creation.
+6.  Maintaining Consistency with Game Rules 90-ball bingo has 3 types of wins: line, two lines, and full house. Ensuring that the card layout doesn’t favor one type of win over another or create any unintentional patterns adds to the challenge of card creation.
 
 This is my effort:
 
@@ -106,28 +100,12 @@ set.seed(42)
 generate_and_save_bingo_cards(n_cards = 5)
 ```
 
-Card 1:
- 1 17 25  .  . 51 61  .  .
- .  .  . 33 45 54 63 71  .
- . 19 27 39  .  .  . 77 82
+Card 1: 1 17 25 . . 51 61 . . . . . 33 45 54 63 71 . . 19 27 39 . . . 77 82
 
-Card 2:
- 8 10  .  . 48  . 62 74  .
- . 14  . 33  . 53  . 75 84
- . 18 26  . 49 58  . 77  .
+Card 2: 8 10 . . 48 . 62 74 . . 14 . 33 . 53 . 75 84 . 18 26 . 49 58 . 77 .
 
-Card 3:
- .  . 29 37 40 52  . 75  .
- 1  .  . 39 44  . 60  . 84
- 5 16  .  . 48 58  .  . 87
+Card 3: . . 29 37 40 52 . 75 . 1 . . 39 44 . 60 . 84 5 16 . . 48 58 . . 87
 
-Card 4:
- 1 10  .  .  .  . 63 79 80
- . 12 29 30  .  . 69  . 83
- . 14  . 34 42 55  .  . 89
+Card 4: 1 10 . . . . 63 79 80 . 12 29 30 . . 69 . 83 . 14 . 34 42 55 . . 89
 
-Card 5:
- 1  . 20 38 45 53  .  .  .
- 4 15  .  .  . 55 66 75  .
- 9 17 25  . 49  .  .  . 89
-
+Card 5: 1 . 20 38 45 53 . . . 4 15 . . . 55 66 75 . 9 17 25 . 49 . . . 89
