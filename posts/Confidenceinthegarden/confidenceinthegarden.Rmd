@@ -71,7 +71,7 @@ Here are a few ways to make the most of your confidence data:
 -   Compare seasons: Are confidence scores better in spring when birds sing more clearly? Or do leaves and wind affect fall detection?
 
 | Threshold | Interpretation | Use Case |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | \> 0.90 | Very high confidence | Pretty safe to assume correct ID — good for data logging, biodiversity reports. |
 | 0.80 – 0.90 | High confidence | Likely correct, but worth a second look if species are similar-sounding. |
 | 0.70 – 0.80 | Medium confidence | Can include false positives — OK for casual monitoring but be cautious with rare species. |
@@ -85,6 +85,6 @@ Whether you're a seasoned birder, a teacher running a school science project (ah
 
 ------------------------------------------------------------------------
 
-## Comments {.unlisted}
+## Comments
 
 {{< bluesky-comments https://bsky.app/profile/jrowing.com/post/3lnuiejxa2c2c >}}
