@@ -1,0 +1,162 @@
+---
+title: "Joy-Bird or Bird-Division?"
+author: "JRowing"
+date: "2025-04-28"
+categories: [Wildlife, Statistics, Birdnet, Pop Culture]
+title-block-banner: false
+execute: 
+  warning: false
+  message: false
+ # echo: false
+ 
+format:
+  html:
+    code-fold: true
+    code-summary: "Show the code"
+---
+So, if yo're at all sensible you'll be fed-up already with statistics from my Birdnet-Pi, but roll with me - this one is more like artwork. 
+
+Inspired by listening to Joy Division earlier I thought a ridgeline plot might be the best way to show some of the time of day stuff. Here's a comparison of when in the day all the different birds have been detected, coloured by the average confidence of the identification of the bird. (not so useful that one but it makes it pretty)...
+```{r}
+# Load packages
+library(DBI)
+library(RSQLite)
+library(dplyr)
+library(ggplot2)
+library(ggridges)
+library(forcats)
+library(lubridate)
+
+# Connect to the database
+con <- dbConnect(RSQLite::SQLite(), "birds.db")
+
+# Read detections
+detections <- dbGetQuery(con, "SELECT * FROM detections")
+
+# Prepare data
+detections <- detections %>%
+  mutate(
+    DateTime = as.POSIXct(paste(Date, Time), format = "%Y-%m-%d %H:%M:%S"),
+    Hour = hour(DateTime) + minute(DateTime) / 60
+  )
+
+# (Optional) Top 20 species
+top_species <- detections %>%
+  count(Com_Name, sort = TRUE) %>%
+  slice_head(n = 100) %>%
+  pull(Com_Name)
+
+detections_filtered <- detections %>%
+  filter(Com_Name %in% top_species)
+
+# 🛠️ Calculate overall average confidence per species
+species_confidence <- detections_filtered %>%
+  group_by(Com_Name) %>%
+  summarise(AvgConfidence = mean(Confidence, na.rm = TRUE), .groups = "drop")
+
+# Join back into main data
+detections_final <- detections_filtered %>%
+  left_join(species_confidence, by = "Com_Name")
+
+# --- RIDGELINE PLOT with Species-based Fill ---
+ggplot(detections_final, aes(x = Hour, y = fct_rev(factor(Com_Name)), fill = AvgConfidence)) +
+  geom_density_ridges(scale = 3, rel_min_height = 0.12, color = "white") +
+  scale_fill_viridis_c(name = "Avg % Confidence", option = "plasma") +
+  theme_minimal() +
+  labs(
+    title = "Bird Detection Patterns by Time of Day",
+    subtitle = "Ridge Fill = Overall Average Detection Confidence",
+    x = "Hour of Day",
+    y = "Species"
+  ) +
+  theme(
+    axis.text.y = element_text(size = 4),
+    plot.title = element_text(size = 16, face = "bold")
+  )
+
+```
+To those of us of a certain age or musical persuassion there's more than gentle echos of the cover of Joy Division’s Unknown Pleasures (1979). That image, one of the most iconic album artworks ever, is much more minimalist, stark and mysterious.
+
+Interestingly the cover is a plot of successive radio pulses from the first pulsar discovered, CP 1919, superimposed vertically from Radio Observations of the Pulse Profiles and Dispersion Measures of Twelve Pulsars (Craft, 1970).
+
+I'm not going to go into much more here as [Scientific American has already done such a good job.](https://www.scientificamerican.com/blog/sa-visual/pop-culture-pulsar-origin-story-of-joy-division-s-unknown-pleasures-album-cover-video/)
+
+Thanks to Scientific American, there is a complete explanation of the dataset and its origin and we can plot it here to recreate the album:
+
+``` {r}
+# Load necessary libraries
+library(ggplot2)
+library(ggridges)
+library(dplyr)
+
+# Read the uploaded CSV
+pulsar <- read.csv("joydivision.csv")
+
+library(ggplot2)
+library(ggridges)
+
+col1 <- "black"
+col2 <- "white"
+
+ggplot(pulsar, aes(x = x, y = y, height = z, group = y)) +
+  geom_ridgeline(
+    min_height = min(pulsar$z),
+    scale = 0.2,
+    linewidth = 0.5,
+    fill = col1,
+    colour = col2
+  ) +
+  scale_y_reverse() +
+  theme_void() +
+  theme(
+    panel.background = element_rect(fill = col1),
+    plot.background = element_rect(fill = col1, color = col1),
+  )
+```
+
+
+So having recreated that one - lets see what we can do with my birdnet data...
+
+
+```{r}
+# --- (Optional) Top 20 species ---
+top_species <- detections %>%
+  count(Com_Name, sort = TRUE) %>%
+  slice_head(n = 70) %>%    # now only 20 species
+  pull(Com_Name)
+
+detections_filtered <- detections %>%
+  filter(Com_Name %in% top_species)
+
+# 🛠️ Calculate overall average confidence per species
+species_confidence <- detections_filtered %>%
+  group_by(Com_Name) %>%
+  summarise(AvgConfidence = mean(Confidence, na.rm = TRUE), .groups = "drop")
+
+# Join back into main data
+detections_final <- detections_filtered %>%
+  left_join(species_confidence, by = "Com_Name")
+
+# --- JOY DIVISION STYLE RIDGELINE PLOT ---
+ggplot(detections_final, aes(x = Hour, y = fct_rev(factor(Com_Name)), group = Com_Name)) +
+  geom_density_ridges(
+    fill = "black",
+    color = "white",
+    scale = 5,
+    size = 0.1,
+    rel_min_height = 0
+  ) +
+  theme_void() +
+  theme(
+    plot.background = element_rect(fill = "black", color = NA),
+    panel.background = element_rect(fill = "black", color = NA),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    plot.margin = margin(20, 20, 20, 20)
+  )
+
+
+```
+Not far off! 
+
+
