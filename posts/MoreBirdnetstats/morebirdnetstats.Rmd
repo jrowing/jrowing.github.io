@@ -14,9 +14,11 @@ format:
     code-fold: true
     code-summary: "Show the code"
 ---
-So, if yo're at all sensible you'll be fed-up already with statistics from my Birdnet-Pi, but roll with me - this one is more like artwork. 
+
+So, if yo're at all sensible you'll be fed-up already with statistics from my Birdnet-Pi, but roll with me - this one is more like artwork.
 
 Inspired by listening to Joy Division earlier I thought a ridgeline plot might be the best way to show some of the time of day stuff. Here's a comparison of when in the day all the different birds have been detected, coloured by the average confidence of the identification of the bird. (not so useful that one but it makes it pretty)...
+
 ```{r}
 # Load packages
 library(DBI)
@@ -40,7 +42,7 @@ detections <- detections %>%
     Hour = hour(DateTime) + minute(DateTime) / 60
   )
 
-# (Optional) Top 20 species
+# (Optional) Top 100 species
 top_species <- detections %>%
   count(Com_Name, sort = TRUE) %>%
   slice_head(n = 100) %>%
@@ -54,27 +56,58 @@ species_confidence <- detections_filtered %>%
   group_by(Com_Name) %>%
   summarise(AvgConfidence = mean(Confidence, na.rm = TRUE), .groups = "drop")
 
-# Join back into main data
-detections_final <- detections_filtered %>%
-  left_join(species_confidence, by = "Com_Name")
+# 🛠️ Calculate peak hour for each species (only where n >= 2)
+species_peak <- detections_filtered %>%
+  group_by(Com_Name) %>%
+  filter(n() >= 2) %>%
+  summarise(
+    PeakHour = {
+      dens <- density(Hour, from = 0, to = 24)
+      dens$x[which.max(dens$y)]
+    },
+    .groups = "drop"
+  )
 
-# --- RIDGELINE PLOT with Species-based Fill ---
-ggplot(detections_final, aes(x = Hour, y = fct_rev(factor(Com_Name)), fill = AvgConfidence)) +
-  geom_density_ridges(scale = 3, rel_min_height = 0.12, color = "white") +
+# Join confidence and peak time into main data
+detections_final <- detections_filtered %>%
+  left_join(species_confidence, by = "Com_Name") %>%
+  left_join(species_peak, by = "Com_Name") %>%
+  filter(!is.na(PeakHour)) %>%
+  mutate(Com_Name = fct_reorder(Com_Name, PeakHour, .fun = min))
+
+# --- RIDGELINE PLOT with Fill and Labels ---
+ggplot(detections_final, aes(x = Hour, y = fct_rev(Com_Name), fill = AvgConfidence)) +
+  geom_density_ridges(
+    scale = 3,
+    rel_min_height = 0.1,
+    color = "white",
+    size = 0.3,
+    alpha = 1
+  ) +
   scale_fill_viridis_c(name = "Avg % Confidence", option = "plasma") +
-  theme_minimal() +
+  theme_minimal(base_family = "sans") +
   labs(
     title = "Bird Detection Patterns by Time of Day",
-    subtitle = "Ridge Fill = Overall Average Detection Confidence",
+    subtitle = "Ridges sorted by earliest peak; Fill = Avg Confidence",
     x = "Hour of Day",
     y = "Species"
   ) +
   theme(
-    axis.text.y = element_text(size = 4),
-    plot.title = element_text(size = 16, face = "bold")
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.background = element_rect(fill = "white", color = NA),
+    axis.text.y = element_text(size = 3, color = "black"),
+    axis.text.x = element_text(color = "black"),
+    axis.title = element_text(color = "black"),
+    plot.title = element_text(size = 12, face = "bold", color = "black"),
+    plot.subtitle = element_text(size = 8, color = "black"),
+    legend.title = element_text(color = "black"),
+    legend.text = element_text(color = "black")
   )
 
+
+
 ```
+
 To those of us of a certain age or musical persuassion there's more than gentle echos of the cover of Joy Division’s Unknown Pleasures (1979). That image, one of the most iconic album artworks ever, is much more minimalist, stark and mysterious.
 
 Interestingly the cover is a plot of successive radio pulses from the first pulsar discovered, CP 1919, superimposed vertically from Radio Observations of the Pulse Profiles and Dispersion Measures of Twelve Pulsars (Craft, 1970).
@@ -83,7 +116,7 @@ I'm not going to go into much more here as [Scientific American has already done
 
 Thanks to Scientific American, there is a complete explanation of the dataset and its origin and we can plot it here to recreate the album:
 
-``` {r}
+```{r}
 # Load necessary libraries
 library(ggplot2)
 library(ggridges)
@@ -114,9 +147,7 @@ ggplot(pulsar, aes(x = x, y = y, height = z, group = y)) +
   )
 ```
 
-
 So having recreated that one - lets see what we can do with my birdnet data...
-
 
 ```{r}
 # --- (Optional) Top 20 species ---
@@ -157,6 +188,5 @@ ggplot(detections_final, aes(x = Hour, y = fct_rev(factor(Com_Name)), group = Co
 
 
 ```
-Not far off! 
 
-
+Not far off!
