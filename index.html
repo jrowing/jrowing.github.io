@@ -3,72 +3,6 @@ layout: default
 title: Home
 ---
 
-<style>
-  /* HERO */
-  .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding-top: 4rem; }
-  .hero-text { padding: 5rem 3rem 5rem 5rem; }
-  .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--reef); margin-bottom: 1.5rem; }
-  .hero-name { font-family: 'Playfair Display', serif; font-size: clamp(3rem,5vw,4.5rem); line-height: 1.05; color: var(--ocean); margin-bottom: 0.5rem; }
-  .hero-name em { font-style: italic; color: var(--coral); }
-  .hero-subtitle { font-family: 'DM Mono', monospace; font-size: 0.9rem; color: var(--muted); margin-bottom: 2rem; letter-spacing: 0.04em; }
-  .hero-bio { font-size: 1.05rem; line-height: 1.75; color: #374151; max-width: 500px; margin-bottom: 2.5rem; }
-  .hero-links { display: flex; gap: 1rem; flex-wrap: wrap; }
-  .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.7rem 1.4rem; border-radius: 6px; font-size: 0.85rem; font-weight: 500; text-decoration: none; letter-spacing: 0.03em; transition: all 0.2s; }
-  .btn-primary { background: var(--ocean); color: var(--white); }
-  .btn-primary:hover { background: var(--reef); }
-  .btn-outline { border: 1.5px solid var(--ocean); color: var(--ocean); background: transparent; }
-  .btn-outline:hover { background: var(--ocean); color: var(--white); }
-
-  /* Hero visual */
-  .hero-visual { position: relative; height: 100vh; background: var(--ocean); overflow: hidden; display: flex; align-items: center; justify-content: center; }
-  .ocean-anim { position: absolute; inset: 0; opacity: 0.18; }
-  .hero-card { position: relative; z-index: 2; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 2.5rem; max-width: 320px; backdrop-filter: blur(8px); }
-  .hero-card-label { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--coral); margin-bottom: 1.2rem; }
-  .hero-card-tag { display: inline-block; background: rgba(232,115,74,0.18); color: var(--coral); border-radius: 100px; padding: 0.3rem 0.85rem; font-size: 0.78rem; margin: 0.2rem; border: 1px solid rgba(232,115,74,0.3); }
-  .hero-card-loc { margin-top: 1.5rem; font-family: 'DM Mono', monospace; font-size: 0.75rem; color: rgba(255,255,255,0.5); letter-spacing: 0.05em; }
-  .hero-card-loc strong { color: rgba(255,255,255,0.85); display: block; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; margin-bottom: 0.2rem; }
-
-  /* Sections */
-  section { padding: 6rem 5rem; }
-  section:nth-of-type(even) { background: var(--foam); }
-  .section-label { font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--reef); margin-bottom: 0.8rem; }
-  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem,3vw,2.6rem); color: var(--ocean); margin-bottom: 2.5rem; line-height: 1.2; }
-
-  /* Projects */
-  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-  .project-card { background: var(--white); border-radius: 12px; padding: 1.8rem; border: 1px solid rgba(0,0,0,0.06); text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 0.6rem; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden; }
-  .project-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--reef), var(--coral)); opacity: 0; transition: opacity 0.2s; }
-  .project-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
-  .project-card:hover::before { opacity: 1; }
-  .project-card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--ocean); }
-  .project-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
-  .project-tag { margin-top: auto; align-self: flex-start; font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--reef); background: var(--foam); padding: 0.25rem 0.6rem; border-radius: 4px; }
-
-  /* Resources section */
-  #resources-section { background: var(--ocean) !important; color: var(--white); }
-  #resources-section .section-label { color: var(--coral); }
-  #resources-section .section-title { color: var(--white); }
-  .resources-intro { font-size: 1rem; color: rgba(255,255,255,0.65); max-width: 600px; line-height: 1.7; margin-bottom: 2.5rem; }
-  .resources-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
-  .resource-item { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 1.4rem 1.6rem; text-decoration: none; color: var(--white); display: flex; align-items: center; gap: 1rem; transition: background 0.2s; }
-  .resource-item:hover { background: rgba(255,255,255,0.12); }
-  .resource-icon { font-size: 1.4rem; flex-shrink: 0; }
-  .resource-name { font-size: 0.95rem; font-weight: 500; }
-  .resource-empty { color: rgba(255,255,255,0.4); font-size: 0.9rem; font-style: italic; }
-
-  /* Wave animation */
-  @keyframes wave { 0%,100% { transform: translateX(0); } 50% { transform: translateX(-40px); } }
-  .wave1 { animation: wave 7s ease-in-out infinite; }
-  .wave2 { animation: wave 11s ease-in-out infinite reverse; }
-
-  @media (max-width: 860px) {
-    .hero { grid-template-columns: 1fr; }
-    .hero-visual { display: none; }
-    .hero-text { padding: 7rem 1.5rem 4rem; }
-    section { padding: 4rem 1.5rem; }
-  }
-</style>
-
 <!-- HERO -->
 <section class="hero" id="about">
   <div class="hero-text">
@@ -91,12 +25,15 @@ title: Home
 
   <div class="hero-visual">
     <svg class="ocean-anim" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-      <rect width="1000" height="600" fill="#1a6b72" opacity="0.3"/>
+      <rect width="1000" height="600" fill="#1a6b72" opacity="0.25"/>
       <g class="wave1">
-        <path d="M-100,80 C100,120 300,40 500,80 C700,120 900,40 1100,80 L1100,300 L-100,300 Z" fill="#1a6b72" opacity="0.5"/>
+        <path d="M-100,100 C100,140 300,60 500,100 C700,140 900,60 1100,100 L1100,350 L-100,350 Z" fill="#1a6b72" opacity="0.5"/>
       </g>
       <g class="wave2">
-        <path d="M-100,160 C150,200 350,120 550,160 C750,200 950,120 1150,160 L1150,400 L-100,400 Z" fill="#0a5060" opacity="0.4"/>
+        <path d="M-100,180 C150,220 350,140 550,180 C750,220 950,140 1150,180 L1150,450 L-100,450 Z" fill="#0d4f57" opacity="0.45"/>
+      </g>
+      <g class="wave1" style="animation-duration:15s">
+        <path d="M-100,260 C200,290 400,230 600,260 C800,290 1000,230 1200,260 L1200,600 L-100,600 Z" fill="#0a2540" opacity="0.6"/>
       </g>
     </svg>
     <div class="hero-card">
@@ -116,7 +53,7 @@ title: Home
 </section>
 
 <!-- PROJECTS -->
-<section id="projects">
+<section class="site-section" id="projects">
   <p class="section-label">Work &amp; Projects</p>
   <h2 class="section-title">Current Projects &amp; Interests</h2>
   <div class="projects-grid">
@@ -149,12 +86,12 @@ title: Home
 </section>
 
 <!-- RESOURCES -->
-<section id="resources-section">
+<section class="site-section site-section--dark" id="resources-section">
   <p class="section-label">Free Resources</p>
   <h2 class="section-title">Teaching &amp; Learning Resources</h2>
   <p class="resources-intro">
-    Drop any HTML file into the <code style="background:rgba(255,255,255,0.1);padding:0.1em 0.4em;border-radius:4px;">resources/</code> folder
-    with the two-line front matter shown in the example — push to GitHub and it appears here automatically.
+    Drop any HTML file into the <code>resources/</code> folder with two lines of front matter at the top —
+    push to GitHub and it appears here and in the nav automatically.
   </p>
   <div class="resources-grid">
     {% assign resource_pages = site.pages | where: "is_resource", true | sort: "title" %}
