@@ -1,0 +1,21 @@
+title: Joe Rowing
+description: Educator, Physicist, Explorer
+baseurl: ""
+url: "https://jrowing.com"
+
+# Tell Jekyll to process HTML files in /resources as pages
+include:
+  - resources
+
+# Collections aren't needed — Jekyll will discover pages automatically.
+# But we label resources so layouts can filter them.
+defaults:
+  - scope:
+      path: "resources"
+      type: "pages"
+    values:
+      layout: resource
+      is_resource: true
+
+plugins:
+  - jekyll-seo-tag
