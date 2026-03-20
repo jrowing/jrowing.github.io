@@ -35,6 +35,21 @@
 
 {{ content }}
 
+<script>
+  // Dropdown toggle — works on both hover (desktop) and click (touch/keyboard)
+  document.querySelectorAll('.nav-dropdown').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.stopPropagation();
+      el.classList.toggle('open');
+    });
+  });
+  document.addEventListener('click', function() {
+    document.querySelectorAll('.nav-dropdown.open').forEach(function(el) {
+      el.classList.remove('open');
+    });
+  });
+</script>
+
 <footer>
   <p>© {{ 'now' | date: "%Y" }} Joe Rowing &nbsp;·&nbsp;
     <a href="https://www.linkedin.com/in/jrowing/">LinkedIn</a> &nbsp;·&nbsp;

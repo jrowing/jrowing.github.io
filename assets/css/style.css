@@ -52,7 +52,8 @@ nav {
   box-shadow: 0 16px 40px rgba(0,0,0,0.4);
 }
 .nav-dropdown:hover .dropdown-menu,
-.nav-dropdown:focus-within .dropdown-menu { display: block; }
+.nav-dropdown:focus-within .dropdown-menu,
+.nav-dropdown.open .dropdown-menu { display: block; }
 .dropdown-menu a {
   display: block; padding: 0.65rem 1.2rem;
   color: rgba(255,255,255,0.8) !important;
