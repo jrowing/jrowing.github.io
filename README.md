@@ -1,75 +1,32 @@
-# jrowing.com — Jekyll / GitHub Pages Site
+# jrowing.com
 
-A Jekyll site for Joe Rowing. GitHub Pages builds it natively — no Actions workflow, no build scripts.
-
----
-
-## Setup (5 minutes)
-
-### 1. Push to GitHub
-```bash
-git init && git add . && git commit -m "initial commit"
-# Create a new repo on GitHub, then:
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
-git push -u origin main
-```
-
-### 2. Enable GitHub Pages
-- **Settings → Pages**
-- Source: **Deploy from a branch**
-- Branch: `main`, folder: `/ (root)`
-- GitHub detects Jekyll automatically — no extra configuration needed.
-
-### 3. Custom domain (optional)
-Add a file called `CNAME` at the repo root containing just:
-```
-jrowing.com
-```
-Then update your DNS to point to GitHub Pages (see GitHub's docs for current IP addresses).
-
----
+Personal site for Joe Rowing, built with Jekyll and hosted on GitHub Pages.
 
 ## Adding a resource page
 
-Create a file in `resources/` — either `.html` or `.md` — starting with this front matter:
+1. Create an HTML file anywhere in the `resources/` folder
+2. Add these **two lines** at the very top:
 
 ```
 ---
 layout: resource
-title: "Your Page Title"
+title: "Your Page Title Here"
 is_resource: true
 ---
 ```
 
-Push it. GitHub Pages rebuilds the site and the page appears in the homepage Resources
-section and the nav dropdown automatically. No other files to edit.
+3. Write your content below the `---`
+4. Push to GitHub — it appears in the nav and homepage automatically
 
-### Markdown example
-```markdown
----
-layout: resource
-title: "Newton's Laws — Summary Sheet"
-is_resource: true
----
-
-## Newton's Laws
-
-Content here in normal Markdown...
-```
-
-### HTML example
-```html
----
-layout: resource
-title: "Interactive Wave Demo"
-is_resource: true
----
-
-<h2>Wave Demo</h2>
-<p>Full HTML content here...</p>
-```
+That's it. No config files to edit, no JSON to update.
 
 ---
+
+## Setup (first time)
+
+1. Push this repo to GitHub
+2. Go to **Settings → Pages → Deploy from branch `main` / root**
+3. Point your domain DNS at GitHub Pages (or use the default `username.github.io` URL)
 
 ## File structure
 
@@ -77,25 +34,9 @@ is_resource: true
 .
 ├── _config.yml           ← Site settings
 ├── _layouts/
-│   ├── default.html      ← Base layout (nav + footer)
-│   └── resource.html     ← Layout for resource pages
-├── _includes/
-│   ├── nav.html          ← Shared nav (auto-lists resources via Liquid)
-│   └── styles.html       ← Shared CSS variables & nav styles
+│   ├── default.html      ← Nav + footer shell used by all pages
+│   └── resource.html     ← Wrapper for resource pages (adds back link)
 ├── index.html            ← Homepage
-├── Gemfile               ← github-pages gem (for local preview)
 └── resources/
-    ├── waves-optics.html ← Example HTML resource
-    └── dataloggers.md    ← Example Markdown resource
-```
-
----
-
-## Local preview (optional)
-
-```bash
-gem install bundler
-bundle install
-bundle exec jekyll serve
-# Open http://localhost:4000
+    └── waves-optics.html ← Example resource (copy to add more)
 ```
