@@ -1,0 +1,87 @@
+---
+layout: resource
+title: "Diving"
+is_resource: true
+---
+
+<p>After moving to the Seychelles I've rekindled my love of diving. The Indian Ocean around the islands is extraordinary — coral gardens, reef sharks, turtles, and visibility that makes you feel like you're flying.</p>
+
+<h2>My Latest Dive</h2>
+
+<p>Live data from my dive log:</p>
+
+<style>
+  .dive-widget-wrap {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+  }
+  .dive-card {
+    background: var(--ocean);
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    color: white;
+    min-width: 200px;
+  }
+  .dive-card-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--coral);
+    margin-bottom: 1rem;
+  }
+  /* Override divelogs widget styles to blend in */
+  .divelogs_ldframe {
+    width: 100% !important;
+    font-size: 13px !important;
+    border: none !important;
+    font-family: 'DM Sans', sans-serif !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+  }
+  .divelogs_ldheadfoot {
+    background: transparent !important;
+    font-weight: 600;
+    color: var(--coral) !important;
+    padding: 0.3rem 0 !important;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .divelogs_ldheadfoot a {
+    color: rgba(255,255,255,0.5) !important;
+    font-size: 0.7rem;
+    text-decoration: none !important;
+    letter-spacing: 0.05em;
+  }
+  .divelogs_ldcontent {
+    background: transparent !important;
+    color: rgba(255,255,255,0.85) !important;
+    padding: 0.5rem 0 !important;
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+</style>
+
+<div class="dive-widget-wrap">
+  <div class="dive-card">
+    <p class="dive-card-label">Latest from divelogs.de</p>
+    <div class='divelogs_ldframe'>
+      <div class='divelogs_ldheadfoot'>My latest dive</div>
+      <div class='divelogs_ldcontent'>
+        <script language='Javascript' src='http://en.divelogs.de/mylatestdive.php?u=jrowing' type='text/javascript'></script>
+      </div>
+      <div class='divelogs_ldheadfoot'>
+        <a href='http://en.divelogs.de' target='_blank'>divelogs.de</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2>Diving in the Seychelles</h2>
+
+<p>The Seychelles sit at the confluence of several major ocean currents, making the marine life exceptionally diverse. Favourite sites include the coral gardens around Sainte Anne Marine National Park and the granite boulders of Beau Vallon.</p>
