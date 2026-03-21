@@ -1,0 +1,563 @@
+---
+layout: resource
+is_resource: true
+title: "9702 Revision spinner"
+date: 2026-03-21
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAIE 9702 AS Physics — Revision Spinner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #0a0c12;
+    --surface: #12151e;
+    --surf2:   #1a1e2a;
+    --border:  rgba(255,255,255,0.08);
+    --text:    #f0ede4;
+    --muted:   #6a6a7c;
+    --row-h:   72px;
+    --visible: 5;       /* odd number — centre row is the winner */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 24px 40px;
+    gap: 28px;
+  }
+
+  /* ── Header ── */
+  header {
+    width: 100%;
+    max-width: 1100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  header h1 {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+  }
+
+  header p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  .badge {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 7px 18px;
+    border-radius: 100px;
+    background: var(--surf2);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  /* ── Machine body ── */
+  .machine {
+    width: 100%;
+    max-width: 1100px;
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  /* ── Each reel column ── */
+  .reel-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .reel-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* The visible window */
+  .reel-window {
+    width: 100%;
+    height: calc(var(--row-h) * var(--visible));
+    border-radius: 16px;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    background: var(--surface);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Fade top & bottom, highlight centre */
+  .reel-window::before,
+  .reel-window::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .reel-window::before {
+    top: 0;
+    height: calc(var(--row-h) * 2);
+    background: linear-gradient(to bottom, var(--surface) 0%, transparent 100%);
+  }
+
+  .reel-window::after {
+    bottom: 0;
+    height: calc(var(--row-h) * 2);
+    background: linear-gradient(to top, var(--surface) 0%, transparent 100%);
+  }
+
+  /* Centre highlight bar */
+  .reel-highlight {
+    position: absolute;
+    top: calc(var(--row-h) * 2);
+    left: 0; right: 0;
+    height: var(--row-h);
+    border-top: 1.5px solid rgba(255,255,255,0.15);
+    border-bottom: 1.5px solid rgba(255,255,255,0.15);
+    z-index: 9;
+    pointer-events: none;
+  }
+
+  /* The scrolling strip */
+  .reel-strip {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    will-change: transform;
+  }
+
+  /* Each item row */
+  .reel-item {
+    height: var(--row-h);
+    display: flex;
+    align-items: center;
+    padding: 0 22px;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.2;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: none;
+  }
+
+  .reel-item.even { background: #12151e; color: #6faaff; }
+  .reel-item.odd  { background: #0e1a16; color: #3ecfa6; }
+
+  /* ── Spin button under each reel ── */
+  .spin-btn {
+    padding: 12px 28px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1.5px solid rgba(255,255,255,0.18);
+    border-radius: 100px;
+    cursor: pointer;
+    background: var(--surf2);
+    color: var(--text);
+    transition: all 0.18s ease;
+  }
+
+  .spin-btn:hover  { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); }
+  .spin-btn:active { transform: scale(0.96); }
+  .spin-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* ── Centre column: spin-both + result ── */
+  .centre-col {
+    width: 260px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    justify-content: center;
+    padding-top: 33px; /* align with reel window top (label + gap) */
+  }
+
+  .spin-both-btn {
+    width: 100%;
+    padding: 16px 0;
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #3b7de8 0%, #1ec99a 100%);
+    color: #fff;
+    transition: opacity 0.18s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .spin-both-btn:hover   { opacity: 0.88; }
+  .spin-both-btn:active  { transform: scale(0.97); }
+  .spin-both-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 18px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+    min-height: 200px;
+  }
+
+  .result-placeholder {
+    font-size: 14px;
+    color: var(--muted);
+    text-align: center;
+    font-weight: 500;
+    line-height: 1.7;
+  }
+
+  .result-content {
+    display: none;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .result-block { padding: 12px 0; }
+  .result-block + .result-block { border-top: 1px solid var(--border); }
+
+  .result-lbl {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+
+  .result-val {
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  .result-val.topic-col    { color: #6ab0ff; }
+  .result-val.activity-col { color: #2fd4a6; }
+
+  .result-spec {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+    margin-top: 4px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .anim-in { animation: fadeUp 0.3s ease forwards; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>AS Physics Revision Spinner</h1>
+    <p>CAIE 9702 · 2025–2027 Specification</p>
+  </div>
+  <div class="badge">Topics 1–11</div>
+</header>
+
+<div class="machine">
+
+  <!-- Topic reel -->
+  <div class="reel-col">
+    <div class="reel-label">Topic</div>
+    <div class="reel-window" id="topicWindow">
+      <div class="reel-highlight"></div>
+      <div class="reel-strip" id="topicStrip"></div>
+    </div>
+    <button class="spin-btn" id="topicBtn" onclick="spinTopic()">Spin Topic</button>
+  </div>
+
+  <!-- Centre: spin-both + result -->
+  <div class="centre-col">
+    <button class="spin-both-btn" id="bothBtn" onclick="spinBoth()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 4 23 10 17 10"/>
+        <polyline points="1 20 1 14 7 14"/>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+      </svg>
+      Spin Both
+    </button>
+
+    <div class="result-card">
+      <p class="result-placeholder" id="resultPlaceholder">Spin to get<br>your task</p>
+      <div class="result-content" id="resultContent">
+        <div class="result-block">
+          <div class="result-lbl">Topic</div>
+          <div class="result-val topic-col" id="resTopic"></div>
+        </div>
+        <div class="result-block">
+          <div class="result-lbl">Activity</div>
+          <div class="result-val activity-col" id="resActivity"></div>
+        </div>
+        <div class="result-block">
+          <div class="result-spec" id="resSpec"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity reel -->
+  <div class="reel-col">
+    <div class="reel-label">Activity</div>
+    <div class="reel-window" id="activityWindow">
+      <div class="reel-highlight"></div>
+      <div class="reel-strip" id="activityStrip"></div>
+    </div>
+    <button class="spin-btn" id="activityBtn" onclick="spinActivity()">Spin Activity</button>
+  </div>
+
+</div>
+
+<script>
+const ROW_H   = 72;
+const VISIBLE = 5;
+const PADDING = 20; // extra rows above & below for smooth overflow
+
+const topicData = [
+  ["SI units & prefixes",        "1.2 SI units"],
+  ["Errors & uncertainties",     "1.3 Errors & uncertainties"],
+  ["Scalars & vectors",          "1.4 Scalars & vectors"],
+  ["Equations of motion",        "2.1 Kinematics"],
+  ["s–t and v–t graphs",         "2.1 Kinematics"],
+  ["Projectile motion",          "2.1 Kinematics"],
+  ["Newton's laws",              "3.1 Dynamics"],
+  ["Terminal velocity",          "3.2 Non-uniform motion"],
+  ["Conservation of momentum",   "3.3 Linear momentum"],
+  ["Moments & torques",          "4.1 Turning effects"],
+  ["Equilibrium of forces",      "4.2 Equilibrium"],
+  ["Density & pressure",         "4.3 Density & pressure"],
+  ["Work & energy",              "5.1 Energy conservation"],
+  ["KE & GPE",                   "5.2 Kinetic & potential E"],
+  ["Power & efficiency",         "5.3 Power"],
+  ["Hooke's law",                "6.1 Deformation"],
+  ["Stress, strain & Young E",   "6.2 Elastic & plastic"],
+  ["Wave properties",            "7.1 Waves"],
+  ["Transverse & longitudinal",  "7.1 Waves"],
+  ["EM spectrum",                "7.2 EM spectrum"],
+  ["Superposition",              "8.1 Superposition"],
+  ["Diffraction & interference", "8.2 Diffraction"],
+  ["Charge, current & p.d.",     "9.1 Electricity"],
+  ["Resistance & Ohm's law",     "9.2 Resistance"],
+  ["I–V characteristics",        "9.3 I–V chars"],
+  ["Kirchhoff's laws",           "10.1 D.C. circuits"],
+  ["Potential divider",          "10.2 Potential divider"],
+  ["EMF & internal resistance",  "10.3 EMF & r"],
+  ["Atomic structure",           "11.1 Atomic model"],
+  ["Nucleons & quarks",          "11.2 Particle physics"],
+  ["Photoelectric effect",       "11.3 Photoelectric"],
+];
+
+const activities = [
+  "Past paper Q",
+  "Write definitions",
+  "Derivation",
+  "Flashcards",
+  "Worked example",
+  "Teach it back",
+  "Draw a diagram",
+  "Formula sheet",
+  "Blurting",
+  "Mark scheme check",
+  "Concept summary",
+  "Practicals recap",
+  "Mind map",
+  "60-sec explain",
+  "Flow chart",
+];
+
+const topics = topicData.map(d => d[0]);
+
+// ── Build strip: many copies so we never run out regardless of spin count ──
+const COPIES = 40; // 40 copies = plenty for any number of spins
+
+function buildStrip(stripEl, items) {
+  for (let rep = 0; rep < COPIES; rep++) {
+    items.forEach((label, i) => {
+      const div = document.createElement('div');
+      div.className = 'reel-item ' + ((i % 2 === 0) ? 'even' : 'odd');
+      div.textContent = label;
+      stripEl.appendChild(div);
+    });
+  }
+}
+
+buildStrip(document.getElementById('topicStrip'),    topics);
+buildStrip(document.getElementById('activityStrip'), activities);
+
+// ── Position: translateY moves the strip so row `pos` is centred in the window ──
+// Window centre pixel = (VISIBLE-1)/2 * ROW_H = 2 * 72 = 144px from top of window
+// Strip translateY = windowCentre - (pos + 0.5) * ROW_H
+const CENTRE_PX = ((VISIBLE - 1) / 2) * ROW_H; // 144
+
+function posToY(pos) {
+  return CENTRE_PX - (pos + 0.5) * ROW_H;
+}
+
+function setStripPos(stripEl, pos) {
+  stripEl.style.transform = `translateY(${posToY(pos)}px)`;
+}
+
+// Start in the middle of the strip so there's plenty of runway both ways
+// We use copy index 20 (middle of 40 copies) as the baseline
+function startPos(n) {
+  return Math.floor(COPIES / 2) * n + Math.floor(n / 2);
+}
+
+let topicPos    = startPos(topics.length);
+let activityPos = startPos(activities.length);
+
+setStripPos(document.getElementById('topicStrip'),    topicPos);
+setStripPos(document.getElementById('activityStrip'), activityPos);
+
+// ── Easing ──
+function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
+
+// ── Spin a reel ──
+function spinReel(stripEl, items, getPos, setPos, onDone) {
+  const n          = items.length;
+  const extraRows  = n * (6 + Math.floor(Math.random() * 4)); // 6–9 full loops
+  const targetItem = Math.floor(Math.random() * n);
+
+  // From current fractional pos, work out integer rows to advance so that
+  // an exact integer row lands in centre, and that row shows targetItem.
+  const curFloor   = Math.floor(getPos());
+  const currentItem = ((curFloor % n) + n) % n;
+  let nudge = targetItem - currentItem;
+  if (nudge <= 0) nudge += n; // always go forward at least one full item
+  const totalRows = extraRows + nudge;
+
+  const startP = Math.ceil(getPos()); // snap to clean integer to avoid drift
+  const endP   = startP + totalRows;
+
+  const dur = 2800 + Math.random() * 800;
+  let t0 = null;
+
+  setButtons(true);
+
+  function frame(ts) {
+    if (!t0) t0 = ts;
+    const p   = Math.min((ts - t0) / dur, 1);
+    const pos = startP + easeOut(p) * (endP - startP);
+    setPos(pos);
+    setStripPos(stripEl, pos);
+
+    if (p < 1) {
+      requestAnimationFrame(frame);
+    } else {
+      // Snap to exact integer so centre row is pixel-perfect
+      setPos(endP);
+      setStripPos(stripEl, endP);
+      setButtons(false);
+      onDone(targetItem);
+    }
+  }
+  requestAnimationFrame(frame);
+}
+
+// ── State ──
+let curTopic = null, curAct = null;
+let topicSpinning = false, actSpinning = false;
+
+function setButtons(disabled) {
+  // Only disable if BOTH are spinning
+  const busy = topicSpinning || actSpinning;
+  document.getElementById('topicBtn').disabled    = busy;
+  document.getElementById('activityBtn').disabled = busy;
+  document.getElementById('bothBtn').disabled     = busy;
+}
+
+function showResult() {
+  if (curTopic === null || curAct === null) return;
+  if (topicSpinning || actSpinning) return;
+
+  document.getElementById('resultPlaceholder').style.display = 'none';
+  const rc = document.getElementById('resultContent');
+  rc.style.display = 'flex';
+  rc.classList.remove('anim-in');
+  void rc.offsetWidth;
+  rc.classList.add('anim-in');
+
+  document.getElementById('resTopic').textContent    = topics[curTopic];
+  document.getElementById('resActivity').textContent = activities[curAct];
+  document.getElementById('resSpec').textContent     = 'Spec ref: ' + topicData[curTopic][1];
+}
+
+function hideResult() {
+  document.getElementById('resultPlaceholder').style.display = 'block';
+  document.getElementById('resultContent').style.display = 'none';
+}
+
+function spinTopic() {
+  if (topicSpinning) return;
+  topicSpinning = true;
+  curTopic = null;
+  hideResult();
+  spinReel(
+    document.getElementById('topicStrip'),
+    topics,
+    () => topicPos,
+    v  => topicPos = v,
+    idx => { curTopic = idx; topicSpinning = false; setButtons(false); showResult(); }
+  );
+}
+
+function spinActivity() {
+  if (actSpinning) return;
+  actSpinning = true;
+  curAct = null;
+  hideResult();
+  spinReel(
+    document.getElementById('activityStrip'),
+    activities,
+    () => activityPos,
+    v  => activityPos = v,
+    idx => { curAct = idx; actSpinning = false; setButtons(false); showResult(); }
+  );
+}
+
+function spinBoth() {
+  spinTopic();
+  spinActivity();
+}
+</script>
+</body>
+</html>
