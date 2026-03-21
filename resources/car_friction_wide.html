@@ -1,0 +1,276 @@
+---
+layout: post
+title: "Car friction simulation"
+date: 2026-03-21
+categories: [physics, simulations]
+tags: [friction, forces, interactive]
+description: "An interactive simulation showing a car rolling down a ramp and across a surface, with adjustable ramp angle, floor friction, and a microscope view of the surface texture."
+---
+
+<style>
+  canvas { width: 100%; display: block; border-radius: 8px; border: 1px solid #ddd; }
+  .row { display: flex; align-items: center; gap: 12px; margin-top: .75rem; font-size: 13px; }
+  .row span.lbl { color: #666; white-space: nowrap; }
+  .row input[type=range] { flex: 1; }
+  .row span.val { min-width: 34px; font-weight: 600; }
+  .btns { display: flex; gap: 8px; margin-top: .75rem; }
+  button { flex: 1; padding: .45rem; border-radius: 8px; font-size: 13px; cursor: pointer; border: 1px solid #ccc; background: #fff; }
+  button.go { background: #e8f4fd; border-color: #90c8f0; color: #1a6fa8; }
+</style>
+
+<canvas id="c"></canvas>
+
+<div class="row">
+  <span class="lbl">Ramp angle</span>
+  <input type="range" id="ang" min="10" max="50" value="30" step="1">
+  <span class="val" id="ang-lbl">30°</span>
+</div>
+<div class="row">
+  <span class="lbl">Floor friction (μ)</span>
+  <input type="range" id="mu" min="0.01" max="0.8" value="0.2" step="0.01">
+  <span class="val" id="mu-lbl">0.20</span>
+</div>
+<div class="btns">
+  <button class="go" id="btn">Release car</button>
+  <button id="rst">Reset</button>
+</div>
+
+<script>
+(function(){
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+function sizeCanvas() {
+  const W = canvas.offsetWidth || 700;
+  canvas.width  = W;
+  canvas.height = Math.round(W * 0.42);
+}
+sizeCanvas();
+
+const WHEEL_R = 12;
+const G = 9.8;
+const RAMP_MU = 0.2;
+
+function geom() {
+  const W = canvas.width, H = canvas.height;
+  const rampEndX   = Math.round(W * 0.28);
+  const floorY     = Math.round(H * 0.80);
+  const rampStartX = 0;
+  const angRad     = +document.getElementById('ang').value * Math.PI / 180;
+  const rampStartY = floorY - rampEndX * Math.tan(angRad);
+  const rampLen    = Math.hypot(rampEndX - rampStartX, floorY - rampStartY);
+  const PX         = W * 0.085;
+  return { W, H, rampStartX, rampStartY, rampEndX, floorY, rampLen, angRad, PX };
+}
+
+function makeRNG(seed) {
+  let s = seed;
+  return function(){ s=(s*1664525+1013904223)&0xffffffff; return (s>>>0)/0xffffffff; };
+}
+const RNG = makeRNG(42);
+const GRAINS=[], BOULDERS=[];
+for(let i=0;i<180;i++) GRAINS.push({x:RNG(),y:RNG(),r:0.012+RNG()*0.038,h:0.3+RNG()*0.7,shade:RNG(),shape:Math.floor(RNG()*3)});
+for(let i=0;i<22;i++)  BOULDERS.push({x:RNG(),y:RNG(),rx:0.06+RNG()*0.08,ry:0.03+RNG()*0.05,rot:RNG()*Math.PI,shade:RNG()});
+
+function drawMicroscope(mu, g) {
+  const t  = (mu-0.01)/0.79;
+  const mw = Math.round(g.W * 0.16);
+  const mh = Math.round(mw * 0.74);
+  const mx = 8, my = g.H - mh - 8;
+
+  ctx.save();
+  ctx.beginPath(); ctx.roundRect(mx,my,mw,mh,5); ctx.clip();
+
+  const bL = Math.round(210-t*90);
+  ctx.fillStyle=`rgb(${bL-10},${bL-5},${bL})`; ctx.fillRect(mx,my,mw,mh);
+
+  const grd=ctx.createRadialGradient(mx+mw*0.3,my+mh*0.25,2,mx+mw*0.5,my+mh*0.5,mw*0.8);
+  grd.addColorStop(0,`rgba(255,255,255,${0.18-t*0.12})`);
+  grd.addColorStop(1,`rgba(0,0,0,${0.12+t*0.18})`);
+  ctx.fillStyle=grd; ctx.fillRect(mx,my,mw,mh);
+
+  const scrOpacity=Math.max(0,0.35-t*0.4);
+  if(scrOpacity>0.02){
+    const rng2=makeRNG(99);
+    ctx.strokeStyle=`rgba(180,190,200,${scrOpacity})`; ctx.lineWidth=0.4;
+    for(let i=0;i<18;i++){
+      const sy=my+(i/18)*mh+rng2()*4-2, sk=(rng2()-0.5)*8;
+      ctx.beginPath(); ctx.moveTo(mx,sy);
+      ctx.bezierCurveTo(mx+mw*0.3,sy+sk,mx+mw*0.7,sy-sk*0.5,mx+mw,sy+sk*0.3); ctx.stroke();
+    }
+  }
+
+  const grainCount=Math.round(20+t*160);
+  for(let i=0;i<Math.min(grainCount,GRAINS.length);i++){
+    const g2=GRAINS[i];
+    const gx=mx+g2.x*mw, gy=my+g2.y*mh;
+    const gr=g2.r*Math.min(mw,mh)*(0.5+t*0.8);
+    if(g2.h*t<0.05) continue;
+    const so=gr*0.4*(1+t), sL=Math.round(bL-55-t*30);
+    ctx.fillStyle=`rgba(${sL-20},${sL-20},${sL-15},${0.3+t*0.35})`;
+    ctx.beginPath(); ctx.ellipse(gx+so*0.6,gy+so*0.5,gr*1.1,gr*0.65,0.4,0,Math.PI*2); ctx.fill();
+    const fL=Math.round(bL+20+g2.shade*40-t*10);
+    ctx.fillStyle=`rgb(${fL-8+Math.round(g2.shade*12)},${fL-5+Math.round(g2.shade*8)},${fL+5})`;
+    if(g2.shape===0){
+      ctx.beginPath(); ctx.ellipse(gx,gy,gr,gr*0.75,g2.shade*Math.PI,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle=`rgba(255,255,255,${0.25-t*0.1})`;
+      ctx.beginPath(); ctx.ellipse(gx-gr*0.25,gy-gr*0.2,gr*0.35,gr*0.25,-0.5,0,Math.PI*2); ctx.fill();
+    } else if(g2.shape===1){
+      ctx.beginPath(); ctx.moveTo(gx,gy-gr); ctx.lineTo(gx+gr,gy+gr*0.3); ctx.lineTo(gx-gr*0.6,gy+gr*0.6); ctx.closePath(); ctx.fill();
+    } else {
+      ctx.beginPath(); ctx.ellipse(gx,gy,gr*1.8,gr*0.45,g2.shade*Math.PI,0,Math.PI*2); ctx.fill();
+    }
+  }
+
+  const boulderOpacity=Math.max(0,t-0.3)/0.7;
+  if(boulderOpacity>0.01){
+    for(let i=0;i<BOULDERS.length;i++){
+      const b=BOULDERS[i];
+      if(b.shade>boulderOpacity) continue;
+      const bx=mx+b.x*mw, by=my+b.y*mh;
+      const brx=b.rx*Math.min(mw,mh)*(0.6+t*0.5), bry=b.ry*Math.min(mw,mh)*(0.6+t*0.5);
+      ctx.fillStyle=`rgba(30,28,25,${0.35*boulderOpacity})`;
+      ctx.beginPath(); ctx.ellipse(bx+brx*0.5,by+bry*0.4,brx*1.1,bry*0.8,b.rot,0,Math.PI*2); ctx.fill();
+      const bLL=Math.round(130+b.shade*60-t*20);
+      ctx.fillStyle=`rgb(${bLL-5},${bLL-8},${bLL-3})`;
+      ctx.beginPath(); ctx.ellipse(bx,by,brx,bry,b.rot,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle=`rgba(255,255,255,${0.18*boulderOpacity})`;
+      ctx.beginPath(); ctx.ellipse(bx-brx*0.2,by-bry*0.25,brx*0.45,bry*0.35,b.rot,0,Math.PI*2); ctx.fill();
+    }
+  }
+
+  const vig=ctx.createRadialGradient(mx+mw/2,my+mh/2,mw*0.2,mx+mw/2,my+mh/2,mw*0.75);
+  vig.addColorStop(0,'rgba(0,0,0,0)'); vig.addColorStop(1,`rgba(0,0,0,${0.25+t*0.2})`);
+  ctx.fillStyle=vig; ctx.fillRect(mx,my,mw,mh);
+  ctx.restore();
+
+  ctx.strokeStyle='rgba(120,120,120,0.6)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.roundRect(mx,my,mw,mh,5); ctx.stroke();
+  ctx.fillStyle='rgba(100,100,100,0.85)'; ctx.font=`${Math.max(8,Math.round(mw*0.09))}px monospace`;
+  ctx.fillText('SEM ×200',mx+4,my+mh-4);
+  ctx.strokeStyle='rgba(120,120,120,0.8)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(mx+mw-28,my+mh-8); ctx.lineTo(mx+mw-6,my+mh-8); ctx.stroke();
+  ctx.fillStyle='rgba(100,100,100,0.8)'; ctx.font=`${Math.max(7,Math.round(mw*0.08))}px monospace`;
+  ctx.fillText('10μm',mx+mw-28,my+mh-11);
+}
+
+let x, y, speed, dist, onRamp, running, rafId, last, wheelAngle;
+
+function init() {
+  const g=geom();
+  x=g.rampStartX+15; y=g.rampStartY+15;
+  speed=0; dist=0; onRamp=true; running=false; last=null; wheelAngle=0;
+  if(rafId){ cancelAnimationFrame(rafId); rafId=null; }
+}
+
+function draw() {
+  sizeCanvas();
+  const g=geom(), mu=+document.getElementById('mu').value;
+  const W=g.W, H=g.H;
+  ctx.clearRect(0,0,W,H);
+
+  ctx.fillStyle='#ccc9bf';
+  ctx.beginPath();
+  ctx.moveTo(g.rampStartX,g.rampStartY); ctx.lineTo(g.rampEndX,g.floorY);
+  ctx.lineTo(g.rampEndX,H); ctx.lineTo(0,H); ctx.lineTo(0,g.rampStartY);
+  ctx.closePath(); ctx.fill();
+
+  ctx.fillStyle='#ccc9bf';
+  ctx.fillRect(g.rampEndX,g.floorY,W-g.rampEndX,H-g.floorY);
+  const t=(mu-0.01)/0.79, hue=Math.round(120-t*120);
+  ctx.fillStyle=`hsla(${hue},55%,55%,0.22)`;
+  ctx.fillRect(g.rampEndX,g.floorY,W-g.rampEndX,H-g.floorY);
+
+  ctx.strokeStyle='#555'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(g.rampStartX,g.rampStartY); ctx.lineTo(g.rampEndX,g.floorY); ctx.lineTo(W,g.floorY); ctx.stroke();
+
+  const bumpCount=Math.round(6+mu*30), bumpH=1.5+mu*5;
+  ctx.fillStyle='rgba(80,60,40,0.35)';
+  for(let i=0;i<bumpCount;i++){
+    const bx=g.rampEndX+(W-g.rampEndX)*(i+0.5)/bumpCount;
+    ctx.beginPath(); ctx.moveTo(bx-4,g.floorY); ctx.lineTo(bx,g.floorY-bumpH); ctx.lineTo(bx+4,g.floorY); ctx.closePath(); ctx.fill();
+  }
+
+  ctx.fillStyle='rgba(60,60,60,0.55)'; ctx.font='12px sans-serif';
+  ctx.fillText('μ = '+mu.toFixed(2),g.rampEndX+14,g.floorY-10);
+
+  const arcR=36;
+  ctx.strokeStyle='#888'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.arc(g.rampEndX,g.floorY,arcR,Math.PI,Math.PI+g.angRad); ctx.stroke();
+  const mid=Math.PI+g.angRad*0.5;
+  ctx.fillStyle='#666'; ctx.font='11px sans-serif';
+  ctx.fillText(document.getElementById('ang').value+'°',
+    g.rampEndX+Math.cos(mid)*(arcR+8)-8, g.floorY+Math.sin(mid)*(arcR+8)+4);
+
+  const rdx=g.rampEndX-g.rampStartX, rdy=g.floorY-g.rampStartY;
+  drawCar(x,y,onRamp?Math.atan2(rdy,rdx):0);
+  drawMicroscope(mu,g);
+}
+
+function drawCar(cx,cy,rot){
+  ctx.save(); ctx.translate(cx,cy); ctx.rotate(rot);
+  const W2=50,bodyH=18,cabH=14,wr=WHEEL_R;
+  ctx.fillStyle='#2a7fc4'; ctx.strokeStyle='#1a5a90'; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.roundRect(-W2/2,-(wr*2+bodyH-wr),W2,bodyH,3); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.roundRect(-W2*0.35,-(wr*2+bodyH+cabH-wr),W2*0.7,cabH,3); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='rgba(180,220,255,0.6)'; ctx.strokeStyle='#1a5a90'; ctx.lineWidth=0.6;
+  ctx.beginPath(); ctx.roundRect(-W2*0.33,-(wr*2+bodyH+cabH-wr)+2,W2*0.3,cabH-4,2); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.roundRect(W2*0.04,-(wr*2+bodyH+cabH-wr)+2,W2*0.3,cabH-4,2); ctx.fill(); ctx.stroke();
+  [-W2/2+10,W2/2-10].forEach(wx=>{
+    ctx.fillStyle='#333'; ctx.strokeStyle='#222'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.arc(wx,-wr,wr,0,Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#aaa'; ctx.beginPath(); ctx.arc(wx,-wr,wr*0.3,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle='#888'; ctx.lineWidth=1;
+    for(let s=0;s<4;s++){
+      const a=wheelAngle+s*Math.PI/2;
+      ctx.beginPath();
+      ctx.moveTo(wx+Math.cos(a)*wr*0.3,-wr+Math.sin(a)*wr*0.3);
+      ctx.lineTo(wx+Math.cos(a)*wr*0.85,-wr+Math.sin(a)*wr*0.85);
+      ctx.stroke();
+    }
+  });
+  ctx.restore();
+}
+
+function tick(ts){
+  if(!running) return;
+  if(last===null) last=ts;
+  const dt=Math.min((ts-last)/1000,0.04); last=ts;
+  const g=geom(), mu=+document.getElementById('mu').value;
+  const rdx=g.rampEndX-g.rampStartX, rdy=g.floorY-g.rampStartY;
+  if(onRamp){
+    const accel=Math.max(0,(G*Math.sin(g.angRad)-RAMP_MU*G*Math.cos(g.angRad))*g.PX);
+    speed+=accel*dt; dist+=speed*dt;
+    if(dist>=g.rampLen){ onRamp=false; x=g.rampEndX; y=g.floorY; }
+    else { const f=dist/g.rampLen; x=g.rampStartX+rdx*f; y=g.rampStartY+rdy*f; }
+  } else {
+    speed=Math.max(0,speed-mu*G*g.PX*dt);
+    x+=speed*dt; y=g.floorY;
+  }
+  wheelAngle+=speed*dt/WHEEL_R;
+  draw();
+  if((speed===0&&!onRamp)||x>g.W+20){ running=false; return; }
+  rafId=requestAnimationFrame(tick);
+}
+
+document.getElementById('ang').addEventListener('input',function(){
+  document.getElementById('ang-lbl').textContent=this.value+'°';
+  if(!running){init();draw();}
+});
+document.getElementById('mu').addEventListener('input',function(){
+  document.getElementById('mu-lbl').textContent=(+this.value).toFixed(2);
+  if(!running){init();draw();}
+});
+document.getElementById('btn').addEventListener('click',function(){
+  init(); draw(); running=true; rafId=requestAnimationFrame(tick);
+});
+document.getElementById('rst').addEventListener('click',function(){
+  init(); draw();
+});
+window.addEventListener('resize',function(){ if(!running){init();draw();} });
+
+init(); draw();
+})();
+</script>
+
