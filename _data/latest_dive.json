@@ -9,5 +9,7 @@
   "location": "Praslin",
   "divesite": "Cayman Rock&nbsp;",
   "max_depth": "19 m",
-  "duration": "58:59"
+  "duration": "58:59",
+  "profile_h": 50,
+  "profile_w": 90
 }
