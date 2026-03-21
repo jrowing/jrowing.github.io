@@ -41,7 +41,6 @@ jobs:
           if m:
               total = int(m.group(1))
 
-          # First row = latest dive
           row = re.search(r"<tr class='td'>(.*?)</tr>", html, re.S)
           dive = {
               "profile_url": "https://en.divelogs.de/jrowing",
@@ -57,9 +56,7 @@ jobs:
 
               if len(cells) >= 5:
                   dive["number"] = strip(cells[0])
-
                   when = strip(cells[1])
-                  dive["date_raw"] = when
                   dm = re.search(r'(\d{2})\.(\d{2})\.(\d{4})', when)
                   if dm:
                       dive["date"] = f"{dm.group(3)}-{dm.group(2)}-{dm.group(1)}"
@@ -67,26 +64,31 @@ jobs:
 
                   loc_parts = [p.strip() for p in re.split(r'<br\s*/?>', cells[2], flags=re.I)]
                   loc_parts = [re.sub(r'<[^>]+>', '', p).replace('\xa0','').strip() for p in loc_parts if p.strip()]
-                  if loc_parts:
-                      dive["location"] = loc_parts[0]
-                  if len(loc_parts) > 1:
-                      dive["divesite"] = loc_parts[1]
+                  if loc_parts: dive["location"] = loc_parts[0]
+                  if len(loc_parts) > 1: dive["divesite"] = loc_parts[1]
 
                   dive["max_depth"] = strip(cells[3])
                   dive["duration"]  = strip(cells[4])
 
-              # Extract profile polyline points from col6 SVG
+              # Debug: print full cell 6 so we can see the SVG structure
               if len(cells) >= 6:
-                  poly = re.search(r'<polyline[^>]*points=["\']([^"\']+)["\']', cells[5], re.I)
-                  if poly:
-                      dive["profile_points"] = poly.group(1).strip()
-                  # Also grab original SVG viewbox dimensions
-                  svg_dim = re.search(r'<svg[^>]*height=["\'](\d+)["\'][^>]*width=["\'](\d+)["\']', cells[5], re.I)
-                  if not svg_dim:
-                      svg_dim = re.search(r'<svg[^>]*width=["\'](\d+)["\'][^>]*height=["\'](\d+)["\']', cells[5], re.I)
-                  if svg_dim:
-                      dive["profile_h"] = int(svg_dim.group(1))
-                      dive["profile_w"] = int(svg_dim.group(2))
+                  print("=== CELL 6 FULL CONTENT ===")
+                  print(cells[5])
+                  print("=== END CELL 6 ===")
+
+                  # Try every likely pattern
+                  cell6 = cells[5]
+                  for pat in [
+                      r'points=["\']([^"\']+)["\']',
+                      r'points=([^"\'\s>]+)',
+                      r'<path[^>]+d=["\']([^"\']+)["\']',
+                  ]:
+                      m2 = re.search(pat, cell6, re.I | re.S)
+                      if m2:
+                          dive["profile_points"] = m2.group(1).strip()
+                          print(f"Matched pattern: {pat}")
+                          print(f"Points: {dive['profile_points'][:100]}")
+                          break
 
           with open("_data/latest_dive.json", "w") as f:
               json.dump(dive, f, indent=2)
