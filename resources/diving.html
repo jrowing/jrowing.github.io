@@ -10,7 +10,6 @@ is_resource: true
     border-radius: 20px;
     padding: 2.5rem;
     margin: 2rem 0;
-    color: white;
     position: relative;
     overflow: hidden;
   }
@@ -21,32 +20,38 @@ is_resource: true
     background: radial-gradient(ellipse at 80% 0%, rgba(26,107,114,0.5) 0%, transparent 60%);
     pointer-events: none;
   }
+  /* All text inside the card needs !important to beat .page-wrap p/h2 */
+  .dive-hero p,
+  .dive-hero div,
+  .dive-hero h2,
+  .dive-hero span { color: #ffffff !important; }
+
   .dive-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.7rem !important;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #ff8c5a;
-    margin-bottom: 0.6rem;
+    color: #ff8c5a !important;
+    margin-bottom: 0.6rem !important;
     position: relative;
     font-weight: 700;
   }
   .dive-site-name {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
-    color: #ffffff;
+    font-family: 'Playfair Display', serif !important;
+    font-size: clamp(1.8rem, 4vw, 2.8rem) !important;
+    color: #ffffff !important;
     line-height: 1.1;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.3rem !important;
+    margin-top: 0 !important;
     position: relative;
-    text-shadow: 0 0 30px rgba(232,115,74,0.5), 0 2px 12px rgba(0,0,0,0.9);
-    letter-spacing: 0.01em;
+    text-shadow: 0 0 30px rgba(232,115,74,0.4), 0 2px 12px rgba(0,0,0,0.8);
     font-weight: 700;
   }
   .dive-location-line {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.75);
-    margin-bottom: 2rem;
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.8rem !important;
+    color: rgba(255,255,255,0.7) !important;
+    margin-bottom: 2rem !important;
     letter-spacing: 0.05em;
     position: relative;
   }
@@ -62,24 +67,21 @@ is_resource: true
     font-size: 0.62rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--coral);
+    color: #ff8c5a !important;
     margin-bottom: 0.3rem;
   }
   .dive-stat-value {
     font-family: 'Playfair Display', serif;
     font-size: 2rem;
-    color: #ffffff;
+    color: #ffffff !important;
     line-height: 1;
-    text-shadow: 0 1px 8px rgba(0,0,0,0.4);
   }
   .dive-stat-unit {
     font-family: 'DM Sans', sans-serif;
     font-size: 0.85rem;
-    color: rgba(255,255,255,0.75);
+    color: rgba(255,255,255,0.6) !important;
     margin-left: 0.2rem;
   }
-
-  /* Profile graph */
   .dive-profile {
     background: rgba(0,0,0,0.3);
     border-radius: 12px;
@@ -88,59 +90,29 @@ is_resource: true
     position: relative;
   }
   .dive-profile-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.62rem;
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.62rem !important;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.3);
-    margin-bottom: 0.6rem;
+    color: rgba(255,255,255,0.5) !important;
+    margin-bottom: 0.6rem !important;
   }
-  .dive-profile svg {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
+  .dive-profile svg { width: 100%; height: auto; display: block; }
   .depth-label {
     font-family: 'DM Mono', monospace;
     font-size: 5px;
-    fill: rgba(255,255,255,0.35);
+    fill: rgba(255,255,255,0.5);
   }
-  .time-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 5px;
-    fill: rgba(255,255,255,0.25);
-    text-anchor: middle;
-  }
-
   .dive-footer {
     padding-top: 1.2rem;
     border-top: 1px solid rgba(255,255,255,0.08);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
     position: relative;
   }
   .dive-fetched {
     font-family: 'DM Mono', monospace;
     font-size: 0.65rem;
-    color: rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.3) !important;
   }
-  .dive-logbook-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    background: var(--reef);
-    color: white !important;
-    text-decoration: none;
-    padding: 0.55rem 1.1rem;
-    border-radius: 6px;
-    font-size: 0.82rem;
-    font-weight: 500;
-    transition: background 0.2s;
-  }
-  .dive-logbook-link:hover { background: var(--coral); }
 </style>
 
 {% assign dive = site.data.latest_dive %}
@@ -170,28 +142,29 @@ is_resource: true
   {% if dive.profile_points %}
   <div class="dive-profile">
     <p class="dive-profile-label">Depth profile · {{ dive.duration }} · {{ dive.max_depth }} max</p>
-    <!-- viewBox matches original 90×50 coordinate space exactly, just scaled up via CSS width:100% -->
-    <svg viewBox="-2 -3 96 62" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <!--
+      Data coordinate space: x=0..90, y=1 (surface) to y=46 (max depth=19m)
+      Grid lines at y=12.8 (5m), y=24.6 (10m), y=36.4 (15m), y=46 (19m)
+      Formula: y = (depth/19) * 46
+    -->
+    <svg viewBox="-2 -3 96 58" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
       <defs>
         <linearGradient id="divegrad" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%"   style="stop-color:#1a6b72;stop-opacity:0.9"/>
-          <stop offset="100%" style="stop-color:#0a2540;stop-opacity:0.6"/>
+          <stop offset="100%" style="stop-color:#0a2540;stop-opacity:0.5"/>
         </linearGradient>
       </defs>
-
-      <!-- Horizontal grid lines aligned to depth labels -->
-      <line x1="0" y1="12"  x2="90" y2="12"  stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
-      <line x1="0" y1="24"  x2="90" y2="24"  stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
-      <line x1="0" y1="36"  x2="90" y2="36"  stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
-      <line x1="0" y1="46"  x2="90" y2="46"  stroke="rgba(255,255,255,0.07)" stroke-width="0.4"/>
-
-      <!-- Depth axis labels (right side) — y=1 surface, y=46 = max depth -->
-      <text class="depth-label" x="88" y="13"  text-anchor="end">5m</text>
-      <text class="depth-label" x="88" y="25"  text-anchor="end">10m</text>
-      <text class="depth-label" x="88" y="37"  text-anchor="end">15m</text>
-      <text class="depth-label" x="88" y="48"  text-anchor="end" style="fill:rgba(255,255,255,0.6);font-size:6px;">{{ dive.max_depth }}</text>
-
-      <!-- The actual profile polygon from divelogs data -->
+      <!-- Grid lines at correct depths: y = (depth/19)*46 -->
+      <line x1="0" y1="12.1" x2="90" y2="12.1" stroke="rgba(255,255,255,0.12)" stroke-width="0.4"/>
+      <line x1="0" y1="24.2" x2="90" y2="24.2" stroke="rgba(255,255,255,0.12)" stroke-width="0.4"/>
+      <line x1="0" y1="36.3" x2="90" y2="36.3" stroke="rgba(255,255,255,0.12)" stroke-width="0.4"/>
+      <line x1="0" y1="46"   x2="90" y2="46"   stroke="rgba(255,255,255,0.07)" stroke-width="0.4"/>
+      <!-- Labels -->
+      <text class="depth-label" x="89" y="11.5" text-anchor="end">5m</text>
+      <text class="depth-label" x="89" y="23.5" text-anchor="end">10m</text>
+      <text class="depth-label" x="89" y="35.5" text-anchor="end">15m</text>
+      <text class="depth-label" x="89" y="45.5" text-anchor="end" style="fill:rgba(255,255,255,0.7);font-size:6px">{{ dive.max_depth }}</text>
+      <!-- Profile -->
       <polygon
         points="{{ dive.profile_points }}"
         style="fill:url(#divegrad);stroke:#e8734a;stroke-width:0.8;stroke-linejoin:round"/>
@@ -201,12 +174,8 @@ is_resource: true
 
   <div class="dive-footer">
     <span class="dive-fetched">Updated {{ dive.fetched }}</span>
-    <a class="dive-logbook-link" href="{{ dive.profile_url }}" target="_blank" rel="noopener">
-      Full logbook ↗
-    </a>
   </div>
 </div>
 
 <h2>Diving in the Seychelles</h2>
-
 <p>The Seychelles sit at the confluence of several major ocean currents, making the marine life exceptionally diverse. Favourite sites include the coral gardens around Sainte Anne Marine National Park, the granite boulders of Beau Vallon, and the remote seamounts of the outer islands.</p>
