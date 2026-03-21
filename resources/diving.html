@@ -1,7 +1,7 @@
 ---
-layout: resource
+layout: bare
 title: "Diving"
-is_resource: false
+is_resource: true
 ---
 
 <style>
@@ -27,32 +27,32 @@ is_resource: false
   .dive-hero h2,
   .dive-hero p,
   .dive-hero div,
-  .dive-hero span { color: #ffffff !important; margin: 0 !important; }
+  .dive-hero span { color: #ffffff; margin: 0; }
 
   /* Orange elements — must come AFTER the blanket rule */
-  .dive-eyebrow        { color: #e8734a !important; font-family: 'DM Mono', monospace !important; font-size: 0.68rem !important; letter-spacing: 0.18em !important; text-transform: uppercase; margin-bottom: 0.7rem !important; font-weight: 600; position: relative; }
-  .dive-stat-label     { color: #e8734a !important; font-family: 'DM Mono', monospace !important; font-size: 0.6rem !important; letter-spacing: 0.15em !important; text-transform: uppercase; margin-bottom: 0.35rem !important; display: block; }
-  .dive-profile-label  { color: #e8734a !important; font-family: 'DM Mono', monospace !important; font-size: 0.6rem !important; letter-spacing: 0.15em !important; text-transform: uppercase; margin-bottom: 0.7rem !important; }
+  .dive-eyebrow        { color: #e8734a; font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 0.7rem; font-weight: 600; position: relative; }
+  .dive-stat-label     { color: #e8734a; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.35rem; display: block; }
+  .dive-profile-label  { color: #e8734a; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.7rem; }
 
   /* White elements */
   .dive-site-name {
-    font-family: 'Playfair Display', serif !important;
-    font-size: clamp(2rem, 5vw, 3rem) !important;
-    font-weight: 700 !important;
-    color: #ffffff !important;
-    line-height: 1.05 !important;
-    margin-bottom: 0.35rem !important;
-    margin-top: 0 !important;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.05;
+    margin-bottom: 0.35rem;
+    margin-top: 0;
     position: relative;
     text-shadow: 0 2px 20px rgba(0,0,0,0.6);
     letter-spacing: -0.01em;
   }
   .dive-location-line {
-    font-family: 'DM Mono', monospace !important;
-    font-size: 0.78rem !important;
-    color: rgba(255,255,255,0.5) !important;
-    margin-bottom: 0 !important;
-    letter-spacing: 0.04em !important;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 0;
+    letter-spacing: 0.04em;
     position: relative;
   }
 
@@ -69,16 +69,16 @@ is_resource: false
   .dive-stat { flex: 1; padding-right: 1.5rem; }
   .dive-stat + .dive-stat { padding-left: 1.5rem; border-left: 1px solid rgba(255,255,255,0.07); }
   .dive-stat-value {
-    font-family: 'Playfair Display', serif !important;
-    font-size: 1.9rem !important;
-    color: #ffffff !important;
-    line-height: 1 !important;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    color: #ffffff;
+    line-height: 1;
   }
   .dive-stat-unit {
-    font-family: 'DM Sans', sans-serif !important;
-    font-size: 0.8rem !important;
-    color: rgba(255,255,255,0.45) !important;
-    margin-left: 0.15rem !important;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.45);
+    margin-left: 0.15rem;
   }
 
   /* Profile */
@@ -99,11 +99,15 @@ is_resource: false
     position: relative;
   }
   .dive-fetched {
-    font-family: 'DM Mono', monospace !important;
-    font-size: 0.62rem !important;
-    color: rgba(255,255,255,0.25) !important;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: rgba(255,255,255,0.25);
   }
 </style>
+
+<div style="max-width:860px;margin:0 auto;padding:2rem 2rem 5rem;">
+<a href="{{ '/' | relative_url }}" style="display:inline-flex;align-items:center;gap:0.4rem;margin-bottom:2rem;color:var(--reef);text-decoration:none;font-size:0.9rem;">← Back to jrowing.com</a>
+<h1 style="font-family:'Playfair Display',serif;font-size:2.4rem;color:var(--ocean);margin-bottom:2rem;">Diving</h1>
 
 {% assign dive = site.data.latest_dive %}
 
@@ -207,4 +211,5 @@ is_resource: false
     <p class="dive-op-desc">Run by Jean-Paul, who has over 4,000 logged dives and 20 years' experience on Praslin's reefs. Small groups, meticulous briefings, and a passion for conservation. Reviewers rave about the lemongrass tea between dives. Whale sharks, white-tip reef sharks, turtles and rays are regulars.</p>
     <span class="dive-op-link">praslinprodivers.com ↗</span>
   </a>
+</div>
 </div>
