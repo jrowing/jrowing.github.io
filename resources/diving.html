@@ -156,5 +156,55 @@ is_resource: false
   </div>
 </div>
 
-<h2>Diving in the Seychelles</h2>
-<p>The Seychelles sit at the confluence of several major ocean currents, making the marine life exceptionally diverse. Favourite sites include the coral gardens around Sainte Anne Marine National Park, the granite boulders of Beau Vallon, and the remote seamounts of the outer islands.</p>
+<style>
+  .dive-operators { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem; margin-top: 1.5rem; }
+  .dive-op-card {
+    background: var(--foam);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid rgba(10,37,64,0.08);
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .dive-op-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--reef), var(--coral));
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .dive-op-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
+  .dive-op-card:hover::before { opacity: 1; }
+  .dive-op-star { color: var(--coral); font-size: 0.75rem; letter-spacing: 0.05em; }
+  .dive-op-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--ocean); font-weight: 700; }
+  .dive-op-location { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.06em; }
+  .dive-op-desc { font-size: 0.88rem; color: #374151; line-height: 1.6; }
+  .dive-op-link { margin-top: auto; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--reef); letter-spacing: 0.06em; }
+</style>
+
+<h2>Where to dive on Praslin</h2>
+<p>Praslin's waters are exceptional — around 17 sites, rarely deeper than 20m, teeming with reef sharks, turtles, rays and clouds of colourful fish among granite boulders. Both operators below are based on Anse Volbert on the Côte d'Or.</p>
+
+<div class="dive-operators">
+  <a class="dive-op-card" href="https://www.whitetipdivers.com" target="_blank" rel="noopener">
+    <span class="dive-op-star">⭐ Recommended</span>
+    <span class="dive-op-name">Whitetip Divers</span>
+    <span class="dive-op-location">Anse Volbert, Côte d'Or · Paradise Sun Hotel</span>
+    <p class="dive-op-desc">Run by Arnaud and Simona, Whitetip has been diving Praslin's waters for over 15 years. Brilliant for all levels — relaxed, well organised, fair pricing and complimentary hotel transfers. A gem of an operation.</p>
+    <span class="dive-op-link">whitetipdivers.com ↗</span>
+  </a>
+
+  <a class="dive-op-card" href="https://www.octopusdiver.com" target="_blank" rel="noopener">
+    <span class="dive-op-star">Voted top 100 dive centres worldwide</span>
+    <span class="dive-op-name">Octopus Diver</span>
+    <span class="dive-op-location">Anse Volbert, Côte d'Or</span>
+    <p class="dive-op-desc">More of a diving club than a dive centre — a gathering point for scuba divers from around the world. Full PADI courses, night diving, snorkelling trips to Curieuse and St Pierre. Warm, expert team.</p>
+    <span class="dive-op-link">octopusdiver.com ↗</span>
+  </a>
+</div>
