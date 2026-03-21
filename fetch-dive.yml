@@ -1,0 +1,73 @@
+name: Fetch Latest Dive
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-dive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch from divelogs.de feed
+        run: |
+          python3 - << 'EOF'
+          import urllib.request, json, re, datetime, sys
+          from html.parser import HTMLParser
+
+          url = "http://en.divelogs.de/ifr_tglist.php?u=jrowing"
+          req = urllib.request.Request(url, headers={
+              "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"
+          })
+
+          try:
+              with urllib.request.urlopen(req, timeout=15) as r:
+                  html = r.read().decode("utf-8", errors="ignore")
+          except Exception as e:
+              print(f"Fetch failed: {e}", file=sys.stderr)
+              sys.exit(0)
+
+          print("--- RAW RESPONSE (first 3000 chars) ---")
+          print(html[:3000])
+          print("--- END ---")
+
+          # Parse out whatever fields are available
+          dive = {
+              "profile_url": "https://en.divelogs.de/jrowing",
+              "fetched": datetime.datetime.utcnow().strftime("%Y-%m-%d"),
+              "raw_preview": html[:500]
+          }
+
+          # Try common patterns
+          patterns = {
+              "date":      r'(\d{4}-\d{2}-\d{2}|\d{2}[./]\d{2}[./]\d{4})',
+              "max_depth": r'(\d+\.?\d*)\s*m(?:\b|ax)',
+              "duration":  r'(\d+)\s*min',
+              "location":  r'(?:site|location|place|spot)[^>]*>([^<]{3,50})',
+          }
+
+          for key, pat in patterns.items():
+              m = re.search(pat, html, re.I)
+              if m:
+                  dive[key] = m.group(1).strip()
+
+          with open("_data/latest_dive.json", "w") as f:
+              json.dump(dive, f, indent=2)
+
+          print("Saved:", json.dumps(dive, indent=2))
+          EOF
+
+      - name: Commit updated dive data
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add _data/latest_dive.json
+          git diff --staged --quiet && echo "No changes" || \
+            git commit -m "chore: update latest dive data [skip ci]"
+          git push
