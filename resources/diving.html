@@ -6,82 +6,122 @@ is_resource: true
 
 <p>After moving to the Seychelles I've rekindled my love of diving. The Indian Ocean around the islands is extraordinary — coral gardens, reef sharks, turtles, and visibility that makes you feel like you're flying.</p>
 
-<h2>My Latest Dive</h2>
-
-<p>Live data from my dive log:</p>
-
 <style>
-  .dive-widget-wrap {
-    display: flex;
-    align-items: flex-start;
-    gap: 2rem;
-    margin: 2rem 0;
-    flex-wrap: wrap;
-  }
-  .dive-card {
+  .dive-hero {
     background: var(--ocean);
     border-radius: 16px;
-    padding: 1.5rem 2rem;
+    padding: 2rem 2.5rem;
+    margin: 2rem 0;
     color: white;
-    min-width: 200px;
   }
-  .dive-card-label {
+  .dive-hero-label {
     font-family: 'DM Mono', monospace;
     font-size: 0.7rem;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--coral);
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
   }
-  /* Override divelogs widget styles to blend in */
-  .divelogs_ldframe {
-    width: 100% !important;
-    font-size: 13px !important;
-    border: none !important;
-    font-family: 'DM Sans', sans-serif !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    background: transparent !important;
+  .dive-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: white;
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
   }
-  .divelogs_ldheadfoot {
-    background: transparent !important;
-    font-weight: 600;
-    color: var(--coral) !important;
-    padding: 0.3rem 0 !important;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
+  .dive-subtitle {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 1.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+  }
+  .dive-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 1.2rem;
+  }
+  .dive-stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
+    color: var(--coral);
+    margin-bottom: 0.3rem;
   }
-  .divelogs_ldheadfoot a {
-    color: rgba(255,255,255,0.5) !important;
-    font-size: 0.7rem;
-    text-decoration: none !important;
-    letter-spacing: 0.05em;
+  .dive-stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: white;
+    line-height: 1;
   }
-  .divelogs_ldcontent {
-    background: transparent !important;
-    color: rgba(255,255,255,0.85) !important;
-    padding: 0.5rem 0 !important;
-    font-size: 0.9rem;
-    line-height: 1.7;
+  .dive-stat-value.small {
+    font-size: 1rem;
+    font-family: 'DM Sans', sans-serif;
   }
+  .dive-footer {
+    margin-top: 1.5rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .dive-fetched {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.3);
+  }
+  .dive-logbook-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--reef);
+    color: white !important;
+    text-decoration: none;
+    padding: 0.55rem 1.1rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    transition: background 0.2s;
+  }
+  .dive-logbook-link:hover { background: var(--coral); }
 </style>
 
-<div class="dive-widget-wrap">
-  <div class="dive-card">
-    <p class="dive-card-label">Latest from divelogs.de</p>
-    <div class='divelogs_ldframe'>
-      <div class='divelogs_ldheadfoot'>My latest dive</div>
-      <div class='divelogs_ldcontent'>
-        <script language='Javascript' src='http://en.divelogs.de/mylatestdive.php?u=jrowing' type='text/javascript'></script>
-      </div>
-      <div class='divelogs_ldheadfoot'>
-        <a href='http://en.divelogs.de' target='_blank'>divelogs.de</a>
-      </div>
+{% assign dive = site.data.latest_dive %}
+
+<div class="dive-hero">
+  <p class="dive-hero-label">🤿 Latest dive — #{{ dive.number }} of {{ dive.total_dives }}</p>
+  <h2 class="dive-title">{{ dive.divesite }}</h2>
+  <p class="dive-subtitle">{{ dive.location }} &nbsp;·&nbsp; {{ dive.date }}{% if dive.time %} at {{ dive.time }}{% endif %}</p>
+
+  <div class="dive-stats">
+    <div>
+      <div class="dive-stat-label">Max Depth</div>
+      <div class="dive-stat-value">{{ dive.max_depth }}</div>
     </div>
+    <div>
+      <div class="dive-stat-label">Duration</div>
+      <div class="dive-stat-value small">{{ dive.duration }}</div>
+    </div>
+    <div>
+      <div class="dive-stat-label">Total Dives</div>
+      <div class="dive-stat-value">{{ dive.total_dives }}</div>
+    </div>
+  </div>
+
+  <div class="dive-footer">
+    <span class="dive-fetched">Updated: {{ dive.fetched }}</span>
+    <a class="dive-logbook-link" href="{{ dive.profile_url }}" target="_blank" rel="noopener">
+      Full logbook ↗
+    </a>
   </div>
 </div>
 
 <h2>Diving in the Seychelles</h2>
 
-<p>The Seychelles sit at the confluence of several major ocean currents, making the marine life exceptionally diverse. Favourite sites include the coral gardens around Sainte Anne Marine National Park and the granite boulders of Beau Vallon.</p>
+<p>The Seychelles sit at the confluence of several major ocean currents, making the marine life exceptionally diverse. Favourite sites include the coral gardens around Sainte Anne Marine National Park, the granite boulders of Beau Vallon, and the remote seamounts of the outer islands.</p>

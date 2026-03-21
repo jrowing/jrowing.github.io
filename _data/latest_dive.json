@@ -1,8 +1,12 @@
 {
-  "date": null,
-  "max_depth": null,
-  "duration": null,
-  "location": null,
-  "profile_url": "https://divelogs.org/log/jrowing",
-  "fetched": null
+  "number": "51",
+  "date": "2026-03-08",
+  "time": "12:04",
+  "location": "Praslin",
+  "divesite": "Cayman Rock",
+  "max_depth": "19 m",
+  "duration": "58:59",
+  "total_dives": 51,
+  "profile_url": "https://en.divelogs.de/jrowing",
+  "fetched": "2026-03-21"
 }

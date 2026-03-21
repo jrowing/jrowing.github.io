@@ -15,11 +15,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Fetch from divelogs.de feed
+      - name: Fetch from divelogs.de
         run: |
           python3 - << 'EOF'
           import urllib.request, json, re, datetime, sys
-          from html.parser import HTMLParser
 
           url = "http://en.divelogs.de/ifr_tglist.php?u=jrowing"
           req = urllib.request.Request(url, headers={
@@ -33,29 +32,52 @@ jobs:
               print(f"Fetch failed: {e}", file=sys.stderr)
               sys.exit(0)
 
-          print("--- RAW RESPONSE (first 3000 chars) ---")
-          print(html[:3000])
-          print("--- END ---")
+          # Total dives e.g. "51 Dives by jrowing"
+          total = None
+          m = re.search(r'(\d+)\s+Dives?\s+by', html, re.I)
+          if m:
+              total = int(m.group(1))
 
-          # Parse out whatever fields are available
+          # First <tr class='td'> row = latest dive
+          # Columns: Nr | When | Location / Divesite | Depth | Duration
+          row = re.search(r"<tr class='td'>(.*?)</tr>", html, re.S)
           dive = {
               "profile_url": "https://en.divelogs.de/jrowing",
               "fetched": datetime.datetime.utcnow().strftime("%Y-%m-%d"),
-              "raw_preview": html[:500]
+              "total_dives": total
           }
 
-          # Try common patterns
-          patterns = {
-              "date":      r'(\d{4}-\d{2}-\d{2}|\d{2}[./]\d{2}[./]\d{4})',
-              "max_depth": r'(\d+\.?\d*)\s*m(?:\b|ax)',
-              "duration":  r'(\d+)\s*min',
-              "location":  r'(?:site|location|place|spot)[^>]*>([^<]{3,50})',
-          }
+          if row:
+              cells = re.findall(r"<td[^>]*>(.*?)</td>", row.group(1), re.S)
+              def strip(s):
+                  return re.sub(r'<[^>]+>', ' ', s).strip().replace('&nbsp;', ' ')
 
-          for key, pat in patterns.items():
-              m = re.search(pat, html, re.I)
-              if m:
-                  dive[key] = m.group(1).strip()
+              if len(cells) >= 5:
+                  # Col 1: dive number (strip tags to get just the number)
+                  dive["number"] = strip(cells[0])
+
+                  # Col 2: date/time e.g. "08.03.2026, 12:04"
+                  when = strip(cells[1])
+                  dive["date_raw"] = when
+                  # Reformat DD.MM.YYYY to YYYY-MM-DD
+                  dm = re.search(r'(\d{2})\.(\d{2})\.(\d{4})', when)
+                  if dm:
+                      dive["date"] = f"{dm.group(3)}-{dm.group(2)}-{dm.group(1)}"
+                      dive["time"] = when.split(',')[1].strip() if ',' in when else None
+
+                  # Col 3: location / divesite (two lines separated by <br>)
+                  loc_parts = [p.strip() for p in re.split(r'<br\s*/?>', cells[2], flags=re.I)]
+                  loc_parts = [re.sub(r'<[^>]+>', '', p).strip() for p in loc_parts if p.strip()]
+                  if loc_parts:
+                      dive["location"] = loc_parts[0]
+                  if len(loc_parts) > 1:
+                      dive["divesite"] = loc_parts[1].replace('\xa0','').strip()
+
+                  # Col 4: depth e.g. "19 m"
+                  dive["max_depth"] = strip(cells[3])
+
+                  # Col 5: duration e.g. "58:59"
+                  dive["duration"] = strip(cells[4])
 
           with open("_data/latest_dive.json", "w") as f:
               json.dump(dive, f, indent=2)
