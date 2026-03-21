@@ -35,14 +35,13 @@ jobs:
               print(f"Fetch failed: {e}", file=sys.stderr)
               sys.exit(0)
 
-          # Total dives e.g. "51 Dives by jrowing"
+          # Total dives
           total = None
           m = re.search(r'(\d+)\s+Dives?\s+by', html, re.I)
           if m:
               total = int(m.group(1))
 
-          # First <tr class='td'> row = latest dive
-          # Columns: Nr | When | Location / Divesite | Depth | Duration
+          # First row = latest dive
           row = re.search(r"<tr class='td'>(.*?)</tr>", html, re.S)
           dive = {
               "profile_url": "https://en.divelogs.de/jrowing",
@@ -52,35 +51,42 @@ jobs:
 
           if row:
               cells = re.findall(r"<td[^>]*>(.*?)</td>", row.group(1), re.S)
+
               def strip(s):
-                  return re.sub(r'<[^>]+>', ' ', s).strip().replace('&nbsp;', ' ')
+                  return re.sub(r'<[^>]+>', ' ', s).strip().replace('&nbsp;', '').strip()
 
               if len(cells) >= 5:
-                  # Col 1: dive number (strip tags to get just the number)
                   dive["number"] = strip(cells[0])
 
-                  # Col 2: date/time e.g. "08.03.2026, 12:04"
                   when = strip(cells[1])
                   dive["date_raw"] = when
-                  # Reformat DD.MM.YYYY to YYYY-MM-DD
                   dm = re.search(r'(\d{2})\.(\d{2})\.(\d{4})', when)
                   if dm:
                       dive["date"] = f"{dm.group(3)}-{dm.group(2)}-{dm.group(1)}"
                       dive["time"] = when.split(',')[1].strip() if ',' in when else None
 
-                  # Col 3: location / divesite (two lines separated by <br>)
                   loc_parts = [p.strip() for p in re.split(r'<br\s*/?>', cells[2], flags=re.I)]
-                  loc_parts = [re.sub(r'<[^>]+>', '', p).strip() for p in loc_parts if p.strip()]
+                  loc_parts = [re.sub(r'<[^>]+>', '', p).replace('\xa0','').strip() for p in loc_parts if p.strip()]
                   if loc_parts:
                       dive["location"] = loc_parts[0]
                   if len(loc_parts) > 1:
-                      dive["divesite"] = loc_parts[1].replace('\xa0','').strip()
+                      dive["divesite"] = loc_parts[1]
 
-                  # Col 4: depth e.g. "19 m"
                   dive["max_depth"] = strip(cells[3])
+                  dive["duration"]  = strip(cells[4])
 
-                  # Col 5: duration e.g. "58:59"
-                  dive["duration"] = strip(cells[4])
+              # Extract profile polyline points from col6 SVG
+              if len(cells) >= 6:
+                  poly = re.search(r'<polyline[^>]*points=["\']([^"\']+)["\']', cells[5], re.I)
+                  if poly:
+                      dive["profile_points"] = poly.group(1).strip()
+                  # Also grab original SVG viewbox dimensions
+                  svg_dim = re.search(r'<svg[^>]*height=["\'](\d+)["\'][^>]*width=["\'](\d+)["\']', cells[5], re.I)
+                  if not svg_dim:
+                      svg_dim = re.search(r'<svg[^>]*width=["\'](\d+)["\'][^>]*height=["\'](\d+)["\']', cells[5], re.I)
+                  if svg_dim:
+                      dive["profile_h"] = int(svg_dim.group(1))
+                      dive["profile_w"] = int(svg_dim.group(2))
 
           with open("_data/latest_dive.json", "w") as f:
               json.dump(dive, f, indent=2)
