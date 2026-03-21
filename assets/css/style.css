@@ -235,12 +235,19 @@ nav {
   font-family: 'Playfair Display', serif; font-size: 1.2rem;
   color: var(--ocean); margin: 1.5rem 0 0.5rem;
 }
-/* Override for headings inside dark hero cards on resource pages */
+/* Overrides for dark dive hero card inside .page-wrap */
 .page-wrap .dive-site-name {
   color: #ffffff !important;
   text-shadow: 0 0 30px rgba(232,115,74,0.5), 0 2px 12px rgba(0,0,0,0.9);
   font-weight: 700;
 }
+.page-wrap .dive-eyebrow      { color: #ff8c5a !important; }
+.page-wrap .dive-location-line { color: rgba(255,255,255,0.75) !important; }
+.page-wrap .dive-stat-label   { color: #ff8c5a !important; }
+.page-wrap .dive-stat-value   { color: #ffffff !important; }
+.page-wrap .dive-stat-unit    { color: rgba(255,255,255,0.75) !important; }
+.page-wrap .dive-profile-label { color: rgba(255,255,255,0.5) !important; }
+.page-wrap .dive-fetched       { color: rgba(255,255,255,0.35) !important; }
 .page-wrap p { line-height: 1.75; color: #374151; margin-bottom: 1rem; }
 .page-wrap a { color: var(--reef); }
 .page-wrap code {
