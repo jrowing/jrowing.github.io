@@ -38,8 +38,9 @@ is_resource: true
     line-height: 1.1;
     margin-bottom: 0.3rem;
     position: relative;
-    text-shadow: 0 2px 16px rgba(0,0,0,0.5);
+    text-shadow: 0 0 30px rgba(232,115,74,0.5), 0 2px 12px rgba(0,0,0,0.9);
     letter-spacing: 0.01em;
+    font-weight: 700;
   }
   .dive-location-line {
     font-family: 'DM Mono', monospace;
@@ -178,16 +179,17 @@ is_resource: true
         </linearGradient>
       </defs>
 
-      <!-- Horizontal grid lines at ¼ ½ ¾ depth -->
-      <line x1="0" y1="12.5" x2="90" y2="12.5" stroke="rgba(255,255,255,0.08)" stroke-width="0.4"/>
-      <line x1="0" y1="25"   x2="90" y2="25"   stroke="rgba(255,255,255,0.08)" stroke-width="0.4"/>
-      <line x1="0" y1="37.5" x2="90" y2="37.5" stroke="rgba(255,255,255,0.08)" stroke-width="0.4"/>
+      <!-- Horizontal grid lines aligned to depth labels -->
+      <line x1="0" y1="12"  x2="90" y2="12"  stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
+      <line x1="0" y1="24"  x2="90" y2="24"  stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
+      <line x1="0" y1="36"  x2="90" y2="36"  stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
+      <line x1="0" y1="46"  x2="90" y2="46"  stroke="rgba(255,255,255,0.07)" stroke-width="0.4"/>
 
-      <!-- Depth axis labels (right side) -->
-      <text class="depth-label" x="86" y="13.5" text-anchor="end">5m</text>
-      <text class="depth-label" x="86" y="26"   text-anchor="end">10m</text>
-      <text class="depth-label" x="86" y="38.5" text-anchor="end">15m</text>
-      <text class="depth-label" x="86" y="50"   text-anchor="end">{{ dive.max_depth }}</text>
+      <!-- Depth axis labels (right side) — y=1 surface, y=46 = max depth -->
+      <text class="depth-label" x="88" y="13"  text-anchor="end">5m</text>
+      <text class="depth-label" x="88" y="25"  text-anchor="end">10m</text>
+      <text class="depth-label" x="88" y="37"  text-anchor="end">15m</text>
+      <text class="depth-label" x="88" y="48"  text-anchor="end" style="fill:rgba(255,255,255,0.6);font-size:6px;">{{ dive.max_depth }}</text>
 
       <!-- The actual profile polygon from divelogs data -->
       <polygon
