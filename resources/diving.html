@@ -1,117 +1,107 @@
 ---
 layout: resource
 title: "Diving"
-is_resource: true
+is_resource: false
 ---
 
 <style>
   .dive-hero {
-    background: #061828;
+    background: linear-gradient(160deg, #061828 0%, #0a3040 100%);
     border-radius: 20px;
     padding: 2.5rem;
     margin: 2rem 0;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.45);
   }
   .dive-hero::before {
     content: '';
     position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 80% 0%, rgba(26,107,114,0.5) 0%, transparent 60%);
+    top: -80px; right: -80px;
+    width: 360px; height: 360px;
+    background: radial-gradient(circle, rgba(26,107,114,0.35) 0%, transparent 70%);
     pointer-events: none;
   }
-  /* All text inside the card needs !important to beat .page-wrap p/h2 */
+
+  /* Blanket white for everything, then selectively override to orange */
+  .dive-hero h2,
   .dive-hero p,
   .dive-hero div,
-  .dive-hero h2,
-  .dive-hero span { color: #ffffff !important; }
+  .dive-hero span { color: #ffffff !important; margin: 0 !important; }
 
-  .dive-eyebrow {
-    font-family: 'DM Mono', monospace !important;
-    font-size: 0.7rem !important;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: #ff8c5a !important;
-    margin-bottom: 0.6rem !important;
-    position: relative;
-    font-weight: 700;
-  }
+  /* Orange elements — must come AFTER the blanket rule */
+  .dive-eyebrow        { color: #e8734a !important; font-family: 'DM Mono', monospace !important; font-size: 0.68rem !important; letter-spacing: 0.18em !important; text-transform: uppercase; margin-bottom: 0.7rem !important; font-weight: 600; position: relative; }
+  .dive-stat-label     { color: #e8734a !important; font-family: 'DM Mono', monospace !important; font-size: 0.6rem !important; letter-spacing: 0.15em !important; text-transform: uppercase; margin-bottom: 0.35rem !important; display: block; }
+  .dive-profile-label  { color: #e8734a !important; font-family: 'DM Mono', monospace !important; font-size: 0.6rem !important; letter-spacing: 0.15em !important; text-transform: uppercase; margin-bottom: 0.7rem !important; }
+
+  /* White elements */
   .dive-site-name {
     font-family: 'Playfair Display', serif !important;
-    font-size: clamp(1.8rem, 4vw, 2.8rem) !important;
+    font-size: clamp(2rem, 5vw, 3rem) !important;
+    font-weight: 700 !important;
     color: #ffffff !important;
-    line-height: 1.1;
-    margin-bottom: 0.3rem !important;
+    line-height: 1.05 !important;
+    margin-bottom: 0.35rem !important;
     margin-top: 0 !important;
     position: relative;
-    text-shadow: 0 0 30px rgba(232,115,74,0.4), 0 2px 12px rgba(0,0,0,0.8);
-    font-weight: 700;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.6);
+    letter-spacing: -0.01em;
   }
   .dive-location-line {
     font-family: 'DM Mono', monospace !important;
-    font-size: 0.8rem !important;
-    color: rgba(255,255,255,0.7) !important;
-    margin-bottom: 2rem !important;
-    letter-spacing: 0.05em;
+    font-size: 0.78rem !important;
+    color: rgba(255,255,255,0.5) !important;
+    margin-bottom: 0 !important;
+    letter-spacing: 0.04em !important;
     position: relative;
   }
+
+  /* Stats row */
   .dive-stats {
     display: flex;
-    gap: 2.5rem;
-    flex-wrap: wrap;
-    margin-bottom: 2rem;
+    gap: 0;
+    margin: 1.8rem 0;
     position: relative;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    padding: 1.2rem 0;
   }
-  .dive-stat-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.62rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: #ff8c5a !important;
-    margin-bottom: 0.3rem;
-  }
+  .dive-stat { flex: 1; padding-right: 1.5rem; }
+  .dive-stat + .dive-stat { padding-left: 1.5rem; border-left: 1px solid rgba(255,255,255,0.07); }
   .dive-stat-value {
-    font-family: 'Playfair Display', serif;
-    font-size: 2rem;
+    font-family: 'Playfair Display', serif !important;
+    font-size: 1.9rem !important;
     color: #ffffff !important;
-    line-height: 1;
+    line-height: 1 !important;
   }
   .dive-stat-unit {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.6) !important;
-    margin-left: 0.2rem;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 0.8rem !important;
+    color: rgba(255,255,255,0.45) !important;
+    margin-left: 0.15rem !important;
   }
+
+  /* Profile */
   .dive-profile {
-    background: rgba(0,0,0,0.3);
-    border-radius: 12px;
+    background: rgba(0,0,0,0.25);
+    border-radius: 10px;
     padding: 1rem 1rem 0.6rem;
     margin-bottom: 1.5rem;
     position: relative;
   }
-  .dive-profile-label {
-    font-family: 'DM Mono', monospace !important;
-    font-size: 0.62rem !important;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.5) !important;
-    margin-bottom: 0.6rem !important;
-  }
   .dive-profile svg { width: 100%; height: auto; display: block; }
-  .depth-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 5px;
-    fill: rgba(255,255,255,0.5);
-  }
+  .depth-label { font-family: 'DM Mono', monospace; font-size: 3px; fill: rgba(255,255,255,0.4); }
+
+  /* Footer */
   .dive-footer {
-    padding-top: 1.2rem;
-    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.07);
     position: relative;
   }
   .dive-fetched {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    color: rgba(255,255,255,0.3) !important;
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.62rem !important;
+    color: rgba(255,255,255,0.25) !important;
   }
 </style>
 
@@ -125,16 +115,16 @@ is_resource: true
   <p class="dive-location-line">{{ dive.location }} &nbsp;·&nbsp; {{ dive.date }}{% if dive.time %} at {{ dive.time }}{% endif %}</p>
 
   <div class="dive-stats">
-    <div>
-      <div class="dive-stat-label">Max Depth</div>
+    <div class="dive-stat">
+      <span class="dive-stat-label">Max Depth</span>
       <div class="dive-stat-value">{{ dive.max_depth | split: ' ' | first }}<span class="dive-stat-unit">m</span></div>
     </div>
-    <div>
-      <div class="dive-stat-label">Duration</div>
-      <div class="dive-stat-value" style="font-size:1.6rem;font-family:'DM Sans',sans-serif">{{ dive.duration }}</div>
+    <div class="dive-stat">
+      <span class="dive-stat-label">Duration</span>
+      <div class="dive-stat-value" style="font-family:'DM Sans',sans-serif!important;font-size:1.6rem!important">{{ dive.duration }}</div>
     </div>
-    <div>
-      <div class="dive-stat-label">Total Logged</div>
+    <div class="dive-stat">
+      <span class="dive-stat-label">Total Logged</span>
       <div class="dive-stat-value">{{ dive.total_dives }}</div>
     </div>
   </div>
@@ -142,11 +132,6 @@ is_resource: true
   {% if dive.profile_points %}
   <div class="dive-profile">
     <p class="dive-profile-label">Depth profile · {{ dive.duration }} · {{ dive.max_depth }} max</p>
-    <!--
-      Data coordinate space: x=0..90, y=1 (surface) to y=46 (max depth=19m)
-      Grid lines at y=12.8 (5m), y=24.6 (10m), y=36.4 (15m), y=46 (19m)
-      Formula: y = (depth/19) * 46
-    -->
     <svg viewBox="-2 -3 96 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
       <defs>
         <linearGradient id="divegrad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -154,19 +139,14 @@ is_resource: true
           <stop offset="100%" style="stop-color:#0a2540;stop-opacity:0.5"/>
         </linearGradient>
       </defs>
-      <!-- Grid lines: full 50px = 19m, so y = (depth/19)*50 -->
-      <line x1="0" y1="13.2" x2="90" y2="13.2" stroke="rgba(255,255,255,0.12)" stroke-width="0.4"/>
-      <line x1="0" y1="26.3" x2="90" y2="26.3" stroke="rgba(255,255,255,0.12)" stroke-width="0.4"/>
-      <line x1="0" y1="39.5" x2="90" y2="39.5" stroke="rgba(255,255,255,0.12)" stroke-width="0.4"/>
-      <!-- Labels -->
+      <line x1="0" y1="13.2" x2="90" y2="13.2" stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
+      <line x1="0" y1="26.3" x2="90" y2="26.3" stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
+      <line x1="0" y1="39.5" x2="90" y2="39.5" stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
       <text class="depth-label" x="89" y="12.5" text-anchor="end">5m</text>
       <text class="depth-label" x="89" y="25.5" text-anchor="end">10m</text>
       <text class="depth-label" x="89" y="38.5" text-anchor="end">15m</text>
-      <text class="depth-label" x="89" y="50" text-anchor="end" style="fill:rgba(255,255,255,0.7);font-size:6px">{{ dive.max_depth }}</text>
-      <!-- Profile -->
-      <polygon
-        points="{{ dive.profile_points }}"
-        style="fill:url(#divegrad);stroke:#e8734a;stroke-width:0.8;stroke-linejoin:round"/>
+      <text class="depth-label" x="89" y="50"   text-anchor="end" style="font-size:3.5px;fill:rgba(255,255,255,0.6)">{{ dive.max_depth }}</text>
+      <polygon points="{{ dive.profile_points }}" style="fill:url(#divegrad);stroke:#e8734a;stroke-width:0.4;stroke-linejoin:round"/>
     </svg>
   </div>
   {% endif %}
