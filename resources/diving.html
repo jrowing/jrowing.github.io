@@ -4,67 +4,128 @@ title: "Diving"
 is_resource: true
 ---
 
-<p>After moving to the Seychelles I've rekindled my love of diving. The Indian Ocean around the islands is extraordinary — coral gardens, reef sharks, turtles, and visibility that makes you feel like you're flying.</p>
-
 <style>
+  /* ── DIVE HERO ── */
   .dive-hero {
     background: var(--ocean);
-    border-radius: 16px;
-    padding: 2rem 2.5rem;
+    border-radius: 20px;
+    padding: 2.5rem;
     margin: 2rem 0;
     color: white;
+    position: relative;
+    overflow: hidden;
   }
-  .dive-hero-label {
+  .dive-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 0%, rgba(26,107,114,0.5) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .dive-eyebrow {
     font-family: 'DM Mono', monospace;
     font-size: 0.7rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--coral);
-    margin-bottom: 1.2rem;
+    margin-bottom: 0.6rem;
   }
-  .dive-title {
+  .dive-site-name {
     font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
     color: white;
-    margin-bottom: 0.25rem;
-    line-height: 1.2;
+    line-height: 1.1;
+    margin-bottom: 0.3rem;
   }
-  .dive-subtitle {
-    font-size: 0.95rem;
-    color: rgba(255,255,255,0.55);
-    margin-bottom: 1.5rem;
+  .dive-location-line {
     font-family: 'DM Mono', monospace;
     font-size: 0.8rem;
-    letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 2rem;
+    letter-spacing: 0.05em;
   }
+
+  /* ── STATS ROW ── */
   .dive-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 1rem;
-    margin-top: 1.2rem;
+    display: flex;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
   }
   .dive-stat-label {
     font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.12em;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--coral);
     margin-bottom: 0.3rem;
   }
   .dive-stat-value {
     font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
+    font-size: 2rem;
     color: white;
     line-height: 1;
   }
-  .dive-stat-value.small {
-    font-size: 1rem;
+  .dive-stat-unit {
     font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.5);
+    margin-left: 0.2rem;
   }
+
+  /* ── PROFILE GRAPH ── */
+  .dive-profile {
+    background: rgba(0,0,0,0.25);
+    border-radius: 12px;
+    padding: 1.2rem 1.2rem 0.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .dive-profile-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 0.8rem;
+  }
+  .dive-profile svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+  }
+  .profile-axis {
+    stroke: rgba(255,255,255,0.1);
+    stroke-width: 0.5;
+  }
+  .profile-fill {
+    fill: rgba(26,107,114,0.35);
+  }
+  .profile-line {
+    fill: none;
+    stroke: var(--coral);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .profile-depth-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 7px;
+    fill: rgba(255,255,255,0.3);
+  }
+  .axis-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 6px;
+    fill: rgba(255,255,255,0.25);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── FOOTER ROW ── */
   .dive-footer {
-    margin-top: 1.5rem;
     padding-top: 1.2rem;
-    border-top: 1px solid rgba(255,255,255,0.1);
+    border-top: 1px solid rgba(255,255,255,0.08);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -73,8 +134,8 @@ is_resource: true
   }
   .dive-fetched {
     font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    color: rgba(255,255,255,0.3);
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.25);
   }
   .dive-logbook-link {
     display: inline-flex;
@@ -94,28 +155,86 @@ is_resource: true
 
 {% assign dive = site.data.latest_dive %}
 
+<p>After moving to the Seychelles I've rekindled my love of diving. The Indian Ocean around the islands is extraordinary — coral gardens, reef sharks, turtles, and visibility that makes you feel like you're flying.</p>
+
 <div class="dive-hero">
-  <p class="dive-hero-label">🤿 Latest dive — #{{ dive.number }} of {{ dive.total_dives }}</p>
-  <h2 class="dive-title">{{ dive.divesite }}</h2>
-  <p class="dive-subtitle">{{ dive.location }} &nbsp;·&nbsp; {{ dive.date }}{% if dive.time %} at {{ dive.time }}{% endif %}</p>
+  <p class="dive-eyebrow">🤿 Dive #{{ dive.number }} of {{ dive.total_dives }}</p>
+  <h2 class="dive-site-name">{{ dive.divesite }}</h2>
+  <p class="dive-location-line">{{ dive.location }} &nbsp;·&nbsp; {{ dive.date }}{% if dive.time %} at {{ dive.time }}{% endif %}</p>
 
   <div class="dive-stats">
     <div>
       <div class="dive-stat-label">Max Depth</div>
-      <div class="dive-stat-value">{{ dive.max_depth }}</div>
+      <div class="dive-stat-value">{{ dive.max_depth | split: ' ' | first }}<span class="dive-stat-unit">m</span></div>
     </div>
     <div>
       <div class="dive-stat-label">Duration</div>
-      <div class="dive-stat-value small">{{ dive.duration }}</div>
+      <div class="dive-stat-value" style="font-size:1.6rem;font-family:'DM Sans',sans-serif;">{{ dive.duration }}</div>
     </div>
     <div>
-      <div class="dive-stat-label">Total Dives</div>
+      <div class="dive-stat-label">Total Logged</div>
       <div class="dive-stat-value">{{ dive.total_dives }}</div>
     </div>
   </div>
 
+  {% if dive.profile_points %}
+  <div class="dive-profile">
+    <p class="dive-profile-label">Depth profile</p>
+    <svg id="dive-svg" viewBox="0 0 500 120" preserveAspectRatio="none">
+      <!-- Grid lines -->
+      <line class="profile-axis" x1="0" y1="30"  x2="500" y2="30"/>
+      <line class="profile-axis" x1="0" y1="60"  x2="500" y2="60"/>
+      <line class="profile-axis" x1="0" y1="90"  x2="500" y2="90"/>
+      <!-- Depth labels -->
+      <text class="profile-depth-label" x="4" y="29">surface</text>
+      <text class="profile-depth-label" x="4" y="59">⅓</text>
+      <text class="profile-depth-label" x="4" y="89">⅔</text>
+      <text class="profile-depth-label" x="4" y="108">{{ dive.max_depth }}</text>
+      <!-- Profile fill and line drawn by JS -->
+      <polygon id="profile-fill" class="profile-fill"/>
+      <polyline id="profile-line" class="profile-line"/>
+    </svg>
+  </div>
+
+  <script>
+  (function() {
+    // Raw points from divelogs (small coordinate space, y=0 is surface, y increases with depth)
+    var raw = "{{ dive.profile_points }}".trim().split(/\s+/);
+    var pts = raw.map(function(p) {
+      var xy = p.split(',');
+      return { x: parseFloat(xy[0]), y: parseFloat(xy[1]) };
+    }).filter(function(p) { return !isNaN(p.x) && !isNaN(p.y); });
+
+    if (!pts.length) return;
+
+    var minX = Math.min.apply(null, pts.map(function(p){return p.x;}));
+    var maxX = Math.max.apply(null, pts.map(function(p){return p.x;}));
+    var minY = Math.min.apply(null, pts.map(function(p){return p.y;}));
+    var maxY = Math.max.apply(null, pts.map(function(p){return p.y;}));
+
+    // Map to SVG space: x → 0..500, y → 0..110 (depth goes DOWN so invert if needed)
+    var W = 500, H = 110, pad = 5;
+    function mapX(x) { return pad + (x - minX) / (maxX - minX || 1) * (W - pad*2); }
+    function mapY(y) { return pad + (y - minY) / (maxY - minY || 1) * (H - pad*2); }
+
+    var mapped = pts.map(function(p) { return { x: mapX(p.x), y: mapY(p.y) }; });
+    var pointStr = mapped.map(function(p) { return p.x.toFixed(1)+','+p.y.toFixed(1); }).join(' ');
+
+    // Polygon closes back to surface on both ends
+    var fillStr = '0,' + pad + ' ' + pointStr + ' ' + (W-pad) + ',' + pad;
+
+    document.getElementById('profile-line').setAttribute('points', pointStr);
+    document.getElementById('profile-fill').setAttribute('points', fillStr);
+  })();
+  </script>
+  {% else %}
+  <p style="font-family:'DM Mono',monospace;font-size:0.75rem;color:rgba(255,255,255,0.3);margin-bottom:1.5rem;">
+    Profile graph will appear after the next data refresh.
+  </p>
+  {% endif %}
+
   <div class="dive-footer">
-    <span class="dive-fetched">Updated: {{ dive.fetched }}</span>
+    <span class="dive-fetched">Updated {{ dive.fetched }}</span>
     <a class="dive-logbook-link" href="{{ dive.profile_url }}" target="_blank" rel="noopener">
       Full logbook ↗
     </a>
