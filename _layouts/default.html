@@ -15,19 +15,6 @@
   <ul class="nav-links">
     <li><a href="{{ '/' | relative_url }}#about">About</a></li>
     <li><a href="{{ '/' | relative_url }}#projects">Projects</a></li>
-    <li class="nav-dropdown" id="resources-dropdown">
-      <a href="{{ '/' | relative_url }}#resources-section">Resources ▾</a>
-      <div class="dropdown-menu">
-        {% assign resource_pages = site.pages | where: "is_resource", true | sort: "title" %}
-        {% if resource_pages.size > 0 %}
-          {% for r in resource_pages %}
-            <a href="{{ r.url | relative_url }}">{{ r.title }}</a>
-          {% endfor %}
-        {% else %}
-          <span class="dropdown-empty">No resources yet</span>
-        {% endif %}
-      </div>
-    </li>
     <li><a href="{{ '/resources/' | relative_url }}">Resources</a></li>
     <li><a href="{{ '/book/' | relative_url }}">Book</a></li>
     <li><a href="https://jrowing.substack.com" target="_blank" rel="noopener">Substack ↗</a></li>
