@@ -85,26 +85,3 @@ title: Home
   </div>
 </section>
 
-<!-- RESOURCES -->
-<section class="site-section site-section--dark" id="resources-section">
-  <p class="section-label">Free Resources</p>
-  <h2 class="section-title">Teaching &amp; Learning Resources</h2>
-  <p class="resources-intro">
-    A growing collection of free teaching and learning materials covering physics, science, and beyond.
-    Everything here is free to use — whether you're a student looking for clear notes,
-    or a teacher after something ready to use in the classroom.
-  </p>
-  <div class="resources-grid">
-    {% assign resource_pages = site.pages | where: "is_resource", true | sort: "title" %}
-    {% if resource_pages.size > 0 %}
-      {% for r in resource_pages %}
-        <a class="resource-item" href="{{ r.url | relative_url }}">
-          <span class="resource-icon">📄</span>
-          <span class="resource-name">{{ r.title }}</span>
-        </a>
-      {% endfor %}
-    {% else %}
-      <span class="resource-empty">No resources yet — add HTML files to the resources/ folder.</span>
-    {% endif %}
-  </div>
-</section>
