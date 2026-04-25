@@ -1,0 +1,242 @@
+---
+layout: bare
+title: "Cambridge International Physics Notes"
+is_resource: true
+description: "A complete set of A-level physics notes covering all 12 topics, written in the Tufte style. Free to use under CC BY-NC-SA."
+icon: "📐"
+subject: "Physics"
+---
+
+<style>
+  .notes-wrap { max-width: 900px; margin: 0 auto; padding: 4rem 2rem 6rem; }
+  .back-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--reef); text-decoration: none; font-size: 0.9rem; margin-bottom: 3rem; transition: color 0.2s; }
+  .back-link:hover { color: var(--coral); }
+
+  .notes-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 4rem;
+    align-items: start;
+    margin-bottom: 4rem;
+  }
+  @media (max-width: 680px) { .notes-layout { grid-template-columns: 1fr; gap: 2rem; } }
+
+  /* Cover */
+  .notes-cover {
+    position: sticky;
+    top: 7rem;
+  }
+  .notes-cover-img {
+    width: 100%;
+    aspect-ratio: 210/297;
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 4px;
+    box-shadow: -5px 5px 0 rgba(0,0,0,0.08), 0 16px 48px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.5rem 1.2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .notes-cover-spine {
+    position: absolute;
+    left: 0; top: 0; bottom: 0; width: 8px;
+    background: var(--ocean);
+  }
+  .notes-cover-author {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-left: 0.5rem;
+  }
+  .notes-cover-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--ocean);
+    line-height: 1.3;
+    padding-left: 0.5rem;
+    font-weight: 700;
+  }
+  .notes-cover-title em {
+    font-style: italic;
+    color: var(--coral);
+    font-size: 1.2em;
+  }
+  .notes-cover-dedication {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-left: 0.5rem;
+  }
+  .notes-cover-badge {
+    position: absolute;
+    top: 1rem; right: 0.8rem;
+    background: var(--foam);
+    color: var(--reef);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    border: 1px solid rgba(26,107,114,0.2);
+  }
+
+  /* Content */
+  .notes-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--reef);
+    margin-bottom: 0.7rem;
+  }
+  .notes-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    color: var(--ocean);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 0.3rem;
+  }
+  .notes-subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+  }
+  .notes-desc { font-size: 0.97rem; line-height: 1.8; color: #374151; margin-bottom: 1rem; }
+
+  .notes-meta {
+    display: flex; gap: 2rem; flex-wrap: wrap;
+    margin: 1.8rem 0;
+    padding: 1.2rem 0;
+    border-top: 1px solid rgba(0,0,0,0.07);
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+  }
+  .notes-meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--reef); margin-bottom: 0.25rem;
+  }
+  .notes-meta-value { font-size: 0.9rem; color: var(--ocean); font-weight: 500; }
+
+  .notes-download {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--ocean); color: white; text-decoration: none;
+    padding: 0.85rem 1.8rem; border-radius: 8px;
+    font-size: 0.9rem; font-weight: 500;
+    transition: background 0.2s; margin-right: 0.8rem;
+  }
+  .notes-download:hover { background: var(--reef); color: white; }
+  .notes-licence {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    border: 1.5px solid rgba(0,0,0,0.12); color: var(--muted);
+    text-decoration: none; padding: 0.85rem 1.4rem; border-radius: 8px;
+    font-size: 0.85rem; transition: all 0.2s;
+  }
+  .notes-licence:hover { border-color: var(--reef); color: var(--reef); }
+
+  /* Chapter list */
+  .chapters-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--reef); margin: 3rem 0 1.2rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .chapters-label::after { content: ''; flex: 1; height: 1px; background: rgba(10,37,64,0.1); }
+  .chapters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.7rem;
+  }
+  .chapter-item {
+    display: flex; align-items: center; gap: 0.8rem;
+    background: var(--foam); border-radius: 8px;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+  .chapter-num {
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    color: var(--coral); min-width: 1.4rem; font-weight: 600;
+  }
+  .chapter-name { font-size: 0.85rem; color: var(--ocean); line-height: 1.3; }
+</style>
+
+<div class="notes-wrap">
+  <a href="{{ '/resources/' | relative_url }}" class="back-link">← Resources</a>
+
+  <div class="notes-layout">
+    <div class="notes-cover">
+      <div class="notes-cover-img">
+        <div class="notes-cover-spine"></div>
+        <div class="notes-cover-badge">β Release</div>
+        <div class="notes-cover-author">Joe Rowing</div>
+        <div class="notes-cover-title">Cambridge<br>International<br>Physics Notes<br><em>β</em></div>
+        <div class="notes-cover-dedication">For my students</div>
+      </div>
+    </div>
+
+    <div>
+      <p class="notes-eyebrow">A-Level Physics · Cambridge International</p>
+      <h1 class="notes-title">Cambridge International<br>Physics Notes</h1>
+      <p class="notes-subtitle">β Release · April 2026</p>
+
+      <p class="notes-desc">A complete set of A-level physics notes covering the full Cambridge International syllabus, typeset in the Tufte style for clarity and elegance. Written for my students — now free for everyone.</p>
+      <p class="notes-desc">These notes are a living document, currently in beta. Feedback welcome — find me on <a href="https://www.linkedin.com/in/jrowing/" style="color:var(--reef)">LinkedIn</a> or <a href="https://jrowing.substack.com" style="color:var(--reef)">Substack</a>.</p>
+
+      <div class="notes-meta">
+        <div>
+          <div class="notes-meta-label">Pages</div>
+          <div class="notes-meta-value">179</div>
+        </div>
+        <div>
+          <div class="notes-meta-label">Chapters</div>
+          <div class="notes-meta-value">12</div>
+        </div>
+        <div>
+          <div class="notes-meta-label">Format</div>
+          <div class="notes-meta-value">PDF</div>
+        </div>
+        <div>
+          <div class="notes-meta-label">Licence</div>
+          <div class="notes-meta-value">CC BY-NC-SA 4.0</div>
+        </div>
+        <div>
+          <div class="notes-meta-label">Typeset with</div>
+          <div class="notes-meta-value">LaTeX / Tufte</div>
+        </div>
+      </div>
+
+      <a class="notes-download" href="{{ '/assets/cambridge-physics-notes.pdf' | relative_url }}" download>
+        ↓ Download PDF
+      </a>
+      <a class="notes-licence" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">
+        CC BY-NC-SA 4.0
+      </a>
+
+      <p class="chapters-label">Contents</p>
+      <div class="chapters-grid">
+        <div class="chapter-item"><span class="chapter-num">01</span><span class="chapter-name">Physical Quantities</span></div>
+        <div class="chapter-item"><span class="chapter-num">02</span><span class="chapter-name">Kinematics</span></div>
+        <div class="chapter-item"><span class="chapter-num">03</span><span class="chapter-name">Force &amp; Motion</span></div>
+        <div class="chapter-item"><span class="chapter-num">04</span><span class="chapter-name">Mechanical Equilibrium</span></div>
+        <div class="chapter-item"><span class="chapter-num">05</span><span class="chapter-name">Momentum</span></div>
+        <div class="chapter-item"><span class="chapter-num">06</span><span class="chapter-name">Work &amp; Energy</span></div>
+        <div class="chapter-item"><span class="chapter-num">07</span><span class="chapter-name">Materials</span></div>
+        <div class="chapter-item"><span class="chapter-num">08</span><span class="chapter-name">Fluids</span></div>
+        <div class="chapter-item"><span class="chapter-num">09</span><span class="chapter-name">Waves</span></div>
+        <div class="chapter-item"><span class="chapter-num">10</span><span class="chapter-name">Cosmology</span></div>
+        <div class="chapter-item"><span class="chapter-num">11</span><span class="chapter-name">Electrical Quantities &amp; Components</span></div>
+        <div class="chapter-item"><span class="chapter-num">12</span><span class="chapter-name">Sub-atomic Particles</span></div>
+      </div>
+    </div>
+  </div>
+</div>
