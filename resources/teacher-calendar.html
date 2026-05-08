@@ -1,0 +1,3785 @@
+---
+layout: bare
+title: "Teacher Calendar"
+is_resource: true
+icon: "📅"
+description: "A markdown-based teacher planning calendar with dark mode support."
+subject: "Tools"
+---
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markdown Calendar</title>
+<style>
+  :root {
+    --bg: #fafaf7;
+    --surface: #ffffff;
+    --surface-2: #f4f3ee;
+    --border: #e5e3dc;
+    --border-strong: #d3d1c7;
+    --text: #2c2c2a;
+    --text-muted: #6a6a66;
+    --text-faint: #9a9a95;
+    --accent: #534ab7;
+    --accent-soft: #eeedfe;
+    --accent-strong: #3c3489;
+    --today: #d85a30;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18;
+      --surface: #25241f;
+      --surface-2: #2c2c28;
+      --border: #38372f;
+      --border-strong: #4a4940;
+      --text: #f1efe8;
+      --text-muted: #b4b2a9;
+      --text-faint: #888780;
+      --accent: #afa9ec;
+      --accent-soft: #2a2546;
+      --accent-strong: #cecbf6;
+      --today: #f0997b;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+    height: calc(100vh - 4.5rem);
+  }
+  .app { height: calc(100vh - 4.5rem) !important; display: flex; flex-direction: column; height: 100vh; }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  .toolbar h1 {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0;
+  }
+  .toolbar .spacer { flex: 1; }
+  .folder-info {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 320px;
+  }
+  .folder-info .path {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    background: var(--surface-2);
+    padding: 3px 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .live-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #1d9e75;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  button {
+    font: inherit;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  button:hover { background: var(--surface-2); }
+  button:active { transform: scale(0.98); }
+  button:disabled { opacity: 0.5; cursor: default; }
+  button.primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  button.primary:hover { background: var(--accent-strong); }
+  button.icon {
+    padding: 6px 10px;
+  }
+  button.danger {
+    color: #c14040;
+    border-color: #d8a0a0;
+  }
+  button.danger:hover {
+    background: #fbeaea;
+  }
+  @media (prefers-color-scheme: dark) {
+    button.danger {
+      color: #f08585;
+      border-color: #6a3a3a;
+    }
+    button.danger:hover {
+      background: #3a2424;
+    }
+  }
+
+  .main { display: flex; flex: 1; min-height: 0; }
+  .calendar-pane {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+  }
+  .detail-pane {
+    width: 380px;
+    flex-shrink: 0;
+    border-left: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .month-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .month-header h2 {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+    flex: 1;
+  }
+
+  .weekday-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    padding: 10px 16px 4px;
+    gap: 4px;
+  }
+  .weekday-row > div {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-align: center;
+    padding: 4px 0;
+  }
+
+  .month-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: 1fr;
+    gap: 4px;
+    padding: 0 16px 16px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* ---------- Week view ---------- */
+  .week-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .week-allday-row {
+    display: grid;
+    grid-template-columns: 56px repeat(5, 1fr);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+    max-height: 80px;
+    overflow-y: auto;
+  }
+  .week-allday-row .gutter-cell {
+    padding: 4px 6px;
+    font-size: 10px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-right: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+  }
+  .week-allday-row .allday-cell {
+    padding: 4px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-height: 24px;
+  }
+  .week-allday-row .allday-cell:last-child { border-right: none; }
+  .week-day-headers {
+    display: grid;
+    grid-template-columns: 56px repeat(5, 1fr);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+  }
+  .week-day-headers > div {
+    padding: 8px 6px;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+  .week-day-headers > div:last-child { border-right: none; }
+  .week-day-headers .gutter-cell { background: var(--surface-2); }
+  .week-day-headers .day-name {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+  }
+  .week-day-headers .day-num {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .week-day-headers .day-col.today .day-num {
+    color: white;
+    background: var(--today);
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .week-day-headers .day-col {
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .week-day-headers .day-col:hover {
+    background: var(--surface-2);
+  }
+
+  .week-time-grid {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+  }
+  .week-time-grid-inner {
+    display: grid;
+    grid-template-columns: 56px repeat(5, 1fr);
+    position: relative;
+  }
+  .week-time-grid .hour-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    padding: 2px 6px 0 0;
+    text-align: right;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-2);
+  }
+  .week-time-grid .day-column {
+    position: relative;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .week-time-grid .day-column:last-child { border-right: none; }
+  .week-time-grid .day-column.weekend {
+    background: rgba(0,0,0,0.015);
+  }
+  @media (prefers-color-scheme: dark) {
+    .week-time-grid .day-column.weekend {
+      background: rgba(255,255,255,0.02);
+    }
+  }
+  .week-event {
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 3px 5px;
+    font-size: 11px;
+    line-height: 1.3;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    transition: filter 0.1s;
+  }
+  .week-event:hover {
+    filter: brightness(0.96);
+  }
+  @media (prefers-color-scheme: dark) {
+    .week-event:hover {
+      filter: brightness(1.15);
+    }
+  }
+  .week-event .event-time {
+    font-size: 10px;
+    opacity: 0.8;
+    white-space: nowrap;
+  }
+  .week-event .event-title {
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .week-event.tiny {
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    padding: 1px 5px;
+  }
+  .week-event.tiny .event-time {
+    font-size: 9px;
+  }
+  .week-event.tiny .event-title {
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .week-allday-event {
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-size: 10px;
+    line-height: 1.3;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .week-now-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 0;
+    border-top: 2px solid var(--today);
+    z-index: 5;
+    pointer-events: none;
+  }
+  .week-now-line::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: -5px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--today);
+  }
+
+  .day {
+    background: var(--surface-2);
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 0.1s, background 0.1s;
+    min-height: 0;
+  }
+  .day:hover { border-color: var(--border-strong); }
+  .day.other-month { opacity: 0.4; }
+  .day.selected {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+  }
+  .day-number {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    align-self: flex-start;
+    padding: 2px 7px;
+    border-radius: 999px;
+    line-height: 1.4;
+    min-width: 22px;
+    text-align: center;
+  }
+  .day.today .day-number {
+    background: var(--today);
+    color: white;
+  }
+  .entry-pill {
+    font-size: 10px;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    padding: 2px 6px;
+    border-radius: 4px;
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    overflow: hidden;
+  }
+  .entry-pill .pill-tag {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0 4px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.12);
+    flex-shrink: 0;
+    max-width: 60px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  @media (prefers-color-scheme: dark) {
+    .entry-pill .pill-tag {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  }
+  .entry-pill .pill-title {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .more-indicator {
+    font-size: 10px;
+    color: var(--text-muted);
+    padding: 0 4px;
+  }
+
+  .view-toggle {
+    display: inline-flex;
+    background: var(--surface-2);
+    border-radius: var(--radius);
+    padding: 2px;
+    border: 1px solid var(--border);
+  }
+  .view-toggle button {
+    background: transparent;
+    border: none;
+    padding: 4px 12px;
+    font-size: 12px;
+    border-radius: 6px;
+    color: var(--text-muted);
+  }
+  .view-toggle button.active {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+  .view-toggle button:hover:not(.active) {
+    color: var(--text);
+  }
+
+  .timeline {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 24px 32px;
+  }
+  .timeline-empty {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 60px 20px;
+  }
+  .timeline-month-header {
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    padding: 8px 0;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    z-index: 1;
+  }
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 80px 12px 1fr;
+    gap: 12px;
+    padding: 10px 0;
+    align-items: flex-start;
+    cursor: pointer;
+    border-radius: var(--radius);
+    transition: background 0.1s;
+  }
+  .timeline-item:hover {
+    background: var(--surface-2);
+    margin: 0 -8px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .timeline-item:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+  .timeline-date {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: right;
+    line-height: 1.4;
+    padding-top: 1px;
+  }
+  .timeline-date strong {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .timeline-rail {
+    position: relative;
+    width: 12px;
+    height: 100%;
+    align-self: stretch;
+  }
+  .timeline-rail::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+  .timeline-rail::after {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--surface);
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+  .timeline-content h4 {
+    margin: 0 0 2px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .timeline-content .meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .timeline-content .body-preview {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-top: 4px;
+  }
+  .timeline-tags {
+    display: inline-flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    vertical-align: middle;
+  }
+
+  .tag.clickable {
+    cursor: pointer;
+    transition: filter 0.1s;
+  }
+
+  .detail-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .detail-header h3 {
+    margin: 0 0 2px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .detail-header .count {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .detail-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+  }
+  .empty {
+    text-align: center;
+    color: var(--text-faint);
+    padding: 40px 20px;
+    font-size: 13px;
+  }
+
+  .entry-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.1s, background 0.1s;
+  }
+  .entry-card:hover {
+    border-color: var(--border-strong);
+    background: var(--surface-2);
+  }
+  .entry-card:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+  .entry-card h4 {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .entry-card .relpath {
+    font-size: 10px;
+    color: var(--text-faint);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    margin-bottom: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .entry-time {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .entry-tags {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .tag {
+    font-size: 10px;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    line-height: 1.5;
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .tag.clickable:hover {
+    filter: brightness(0.95);
+  }
+  @media (prefers-color-scheme: dark) {
+    .tag.clickable:hover {
+      filter: brightness(1.15);
+    }
+  }
+  .entry-body {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    max-height: 9em;
+    overflow: hidden;
+    margin-bottom: 8px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .entry-body.md, .body-preview.md {
+    white-space: normal;
+  }
+  .entry-body.md > *:first-child, .body-preview.md > *:first-child { margin-top: 0; }
+  .entry-body.md > *:last-child, .body-preview.md > *:last-child { margin-bottom: 0; }
+  .entry-body.md p, .body-preview.md p {
+    margin: 0 0 6px;
+  }
+  .entry-body.md h3, .entry-body.md h4, .entry-body.md h5, .entry-body.md h6,
+  .body-preview.md h3, .body-preview.md h4, .body-preview.md h5, .body-preview.md h6 {
+    margin: 8px 0 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .entry-body.md ul, .entry-body.md ol,
+  .body-preview.md ul, .body-preview.md ol {
+    margin: 4px 0;
+    padding-left: 18px;
+  }
+  .entry-body.md li, .body-preview.md li { margin: 1px 0; }
+  .entry-body.md strong, .body-preview.md strong { color: var(--text); font-weight: 600; }
+  .entry-body.md em, .body-preview.md em { font-style: italic; }
+  .entry-body.md code, .body-preview.md code {
+    background: var(--surface-2);
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    color: var(--text);
+  }
+  .entry-body.md pre, .body-preview.md pre {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    padding: 6px 8px;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 6px 0;
+    font-size: 11px;
+  }
+  .entry-body.md pre code, .body-preview.md pre code {
+    background: transparent;
+    padding: 0;
+    font-size: 11px;
+  }
+  .entry-body.md blockquote, .body-preview.md blockquote {
+    border-left: 3px solid var(--border-strong);
+    padding-left: 8px;
+    margin: 4px 0;
+    color: var(--text-faint);
+  }
+  .entry-body.md a, .body-preview.md a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+  .entry-body.md a:hover, .body-preview.md a:hover { text-decoration-thickness: 2px; }
+  .entry-body.md hr, .body-preview.md hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 8px 0;
+  }
+  .entry-body.md del, .body-preview.md del { color: var(--text-faint); }
+  .entry-meta {
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+    margin-top: 8px;
+    font-size: 11px;
+  }
+  .entry-meta dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 8px;
+  }
+  .entry-meta dt {
+    color: var(--text-muted);
+    text-align: right;
+  }
+  .entry-meta dd {
+    margin: 0;
+    color: var(--text);
+    word-break: break-word;
+  }
+
+  .welcome {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    padding: 40px;
+    text-align: center;
+  }
+  .welcome-icon {
+    width: 64px;
+    height: 64px;
+    border: 2px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .welcome h2 { margin: 0; font-size: 22px; font-weight: 500; }
+  .welcome p { margin: 0 0 8px; color: var(--text-muted); max-width: 420px; }
+  .welcome .actions { display: flex; gap: 8px; margin-top: 8px; }
+  .welcome .formats {
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--text-muted);
+    max-width: 460px;
+    text-align: left;
+    background: var(--surface-2);
+    padding: 14px 18px;
+    border-radius: var(--radius);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    white-space: pre-wrap;
+    line-height: 1.7;
+  }
+  .browser-warning {
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--text-muted);
+    max-width: 420px;
+    padding: 10px 14px;
+    background: var(--surface-2);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text);
+    color: var(--bg);
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    z-index: 1000;
+  }
+  .toast.show { opacity: 0.95; }
+
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    padding: 20px;
+  }
+  .modal {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    width: 100%;
+    max-width: 520px;
+    max-height: calc(100vh - 40px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .modal-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+  }
+  .modal-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    flex: 1;
+  }
+  .modal-body {
+    padding: 16px 18px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .modal-footer {
+    padding: 12px 18px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .field input, .field textarea, .field select {
+    font: inherit;
+    font-size: 13px;
+    padding: 8px 10px;
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    outline: none;
+    transition: border-color 0.1s, box-shadow 0.1s;
+    width: 100%;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .field textarea {
+    min-height: 100px;
+    resize: vertical;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .field-row { display: flex; gap: 10px; }
+  .field-row > .field { flex: 1; }
+  .field-hint {
+    font-size: 11px;
+    color: var(--text-faint);
+  }
+  .modal-error {
+    color: #d24747;
+    font-size: 12px;
+    margin: 0;
+  }
+
+  .summary-panel {
+    width: 340px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .summary-header {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .summary-header h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    flex: 1;
+  }
+  .summary-week-nav {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface-2);
+  }
+  .summary-week-nav .week-label {
+    flex: 1;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .summary-week-nav .week-label small {
+    color: var(--text-muted);
+    font-size: 11px;
+    display: block;
+  }
+  .summary-mode-toggle {
+    display: flex;
+    background: var(--surface-2);
+    border-radius: var(--radius);
+    padding: 2px;
+    border: 1px solid var(--border);
+    margin: 12px 16px 0;
+  }
+  .summary-mode-toggle button {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 6px;
+    color: var(--text-muted);
+  }
+  .summary-mode-toggle button.active {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+  .summary-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 16px 24px;
+  }
+  .summary-empty {
+    text-align: center;
+    color: var(--text-faint);
+    padding: 40px 20px;
+    font-size: 13px;
+  }
+  .req-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .req-item:last-child { border-bottom: none; }
+  .req-item .req-text {
+    flex: 1;
+    line-height: 1.4;
+  }
+  .req-item .req-count {
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--surface-2);
+    padding: 1px 7px;
+    border-radius: 999px;
+    flex-shrink: 0;
+  }
+  .req-session-block {
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .req-session-block:last-child { border-bottom: none; }
+  .req-session-block .session-head {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  .req-session-block h4 {
+    font-size: 13px;
+    margin: 0 0 6px;
+    font-weight: 500;
+  }
+  .req-session-block ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .req-session-block .no-reqs {
+    font-size: 12px;
+    color: var(--text-faint);
+    font-style: italic;
+  }
+  .summary-totals {
+    font-size: 11px;
+    color: var(--text-muted);
+    padding: 8px 16px;
+    border-top: 1px solid var(--border);
+    background: var(--surface-2);
+  }
+</style>
+
+<div class="app" id="app"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------- IndexedDB for persisting directory handle ----------
+const DB_NAME = 'markdown-calendar';
+const STORE = 'handles';
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = () => req.result.createObjectStore(STORE);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function saveHandle(handle) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, 'readwrite');
+    tx.objectStore(STORE).put(handle, 'root');
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+async function loadHandle() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, 'readonly');
+    const req = tx.objectStore(STORE).get('root');
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function clearHandle() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, 'readwrite');
+    tx.objectStore(STORE).delete('root');
+    tx.oncomplete = () => resolve();
+  });
+}
+
+// ---------- Front matter parser ----------
+function parseFrontMatter(text) {
+  const lines = text.split(/\r?\n/);
+  if (lines[0]?.trim() !== '---') return { fm: {}, body: text };
+
+  const fm = {};
+  let bodyStart = lines.length;
+  let currentKey = null;
+  let currentList = [];
+
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+
+    if (trimmed === '---') {
+      if (currentKey && currentList.length) fm[currentKey] = currentList;
+      bodyStart = i + 1;
+      break;
+    }
+
+    // List item under previous key
+    if (/^\s*-\s+/.test(line) && currentKey) {
+      const v = trimmed.replace(/^-\s+/, '').replace(/^["']|["']$/g, '');
+      currentList.push(v);
+      continue;
+    }
+
+    const colonIdx = line.indexOf(':');
+    if (colonIdx > -1) {
+      // commit previous list-key if any
+      if (currentKey && currentList.length) {
+        fm[currentKey] = currentList;
+        currentList = [];
+      }
+      const key = line.slice(0, colonIdx).trim();
+      let val = line.slice(colonIdx + 1).trim();
+
+      if (val === '') {
+        currentKey = key;
+      } else {
+        // inline array: [a, b, c]
+        if (val.startsWith('[') && val.endsWith(']')) {
+          fm[key] = val.slice(1, -1)
+            .split(',')
+            .map(s => s.trim().replace(/^["']|["']$/g, ''))
+            .filter(Boolean);
+        } else {
+          fm[key] = val.replace(/^["']|["']$/g, '');
+        }
+        currentKey = null;
+      }
+    }
+  }
+  const body = lines.slice(bodyStart).join('\n').trim();
+  return { fm, body };
+}
+
+function parseDate(value) {
+  if (value == null) return null;
+  if (value instanceof Date) return isNaN(value) ? null : value;
+  const s = String(value).trim();
+  if (!s) return null;
+
+  // Try ISO and common variants
+  const candidates = [
+    s,
+    s.replace(' ', 'T'),
+  ];
+  for (const c of candidates) {
+    const d = new Date(c);
+    if (!isNaN(d)) return d;
+  }
+  // dd/mm/yyyy or mm/dd/yyyy fallback (try mm/dd/yyyy first)
+  const m = s.match(/^(\d{1,2})[/](\d{1,2})[/](\d{4})$/);
+  if (m) {
+    const [, a, b, y] = m;
+    const d = new Date(`${y}-${a.padStart(2,'0')}-${b.padStart(2,'0')}`);
+    if (!isNaN(d)) return d;
+  }
+  return null;
+}
+
+// ---------- Folder scanning ----------
+async function scanDirectory(dirHandle, pathPrefix = '', results = []) {
+  for await (const [name, handle] of dirHandle.entries()) {
+    if (name.startsWith('.')) continue; // skip hidden
+    const subpath = pathPrefix ? `${pathPrefix}/${name}` : name;
+
+    if (handle.kind === 'directory') {
+      await scanDirectory(handle, subpath, results);
+    } else if (handle.kind === 'file') {
+      const lower = name.toLowerCase();
+      if (!lower.endsWith('.md') && !lower.endsWith('.markdown') && !lower.endsWith('.mdown')) continue;
+      const file = await handle.getFile();
+      results.push({
+        relpath: subpath,
+        name,
+        size: file.size,
+        lastModified: file.lastModified,
+        file,
+      });
+    }
+  }
+  return results;
+}
+
+function parseRequirementsList(text) {
+  // Parse a textarea where each non-empty line is one requirement.
+  // Strip leading bullets/numbers/checkboxes if present.
+  return text
+    .split(/\r?\n/)
+    .map(l => l.replace(/^\s*(?:[-*+]|\d+\.)\s+/, '').replace(/^\[\s*[ xX]?\s*\]\s*/, '').trim())
+    .filter(Boolean);
+}
+
+function composeBodyWithRequirements(bodyWithoutSection, requirements) {
+  const trimmed = (bodyWithoutSection || '').trim();
+  if (!requirements || requirements.length === 0) return trimmed;
+  const reqBlock = ['## Requirements', '', ...requirements.map(r => `- ${r}`)].join('\n');
+  if (!trimmed) return reqBlock;
+  return `${trimmed}\n\n${reqBlock}`;
+}
+
+
+// an object: { items: string[], bodyWithoutSection: string }.
+// Recognizes either `## Requirements` or `### Requirements` followed by a markdown list.
+// The list ends at the next heading of equal-or-higher level, or at end of document.
+function parseRequirements(body) {
+  const lines = body.split(/\r?\n/);
+  const headingRe = /^(#{1,6})\s+(.+?)\s*$/;
+
+  let sectionStart = -1;
+  let sectionLevel = 0;
+  for (let i = 0; i < lines.length; i++) {
+    const m = lines[i].match(headingRe);
+    if (!m) continue;
+    const level = m[1].length;
+    const title = m[2].trim().toLowerCase();
+    if (/^(requirements|requires|needs|materials|equipment)$/.test(title)) {
+      sectionStart = i;
+      sectionLevel = level;
+      break;
+    }
+  }
+  if (sectionStart === -1) return { items: [], bodyWithoutSection: body };
+
+  // Find the section end
+  let sectionEnd = lines.length;
+  for (let i = sectionStart + 1; i < lines.length; i++) {
+    const m = lines[i].match(headingRe);
+    if (m && m[1].length <= sectionLevel) {
+      sectionEnd = i;
+      break;
+    }
+  }
+
+  const items = [];
+  for (let i = sectionStart + 1; i < sectionEnd; i++) {
+    const line = lines[i];
+    // Bullet, dash, asterisk, or numbered list
+    const bullet = line.match(/^\s*(?:[-*+]|\d+\.)\s+(.+?)\s*$/);
+    if (bullet) {
+      // Strip a trailing checkbox marker like "[ ]" or "[x]" if the user uses task-list syntax
+      const text = bullet[1].replace(/^\[\s*[ xX]?\s*\]\s*/, '').trim();
+      if (text) items.push(text);
+    }
+  }
+
+  // Remove the section from the body for clean preview rendering
+  const before = lines.slice(0, sectionStart).join('\n').replace(/\s+$/, '');
+  const after = lines.slice(sectionEnd).join('\n').replace(/^\s+/, '');
+  const bodyWithoutSection = [before, after].filter(Boolean).join('\n\n');
+
+  return { items, bodyWithoutSection };
+}
+
+async function buildEntries(fileRecords) {
+  const entries = [];
+  for (const rec of fileRecords) {
+    let text;
+    try {
+      text = await rec.file.text();
+    } catch (e) {
+      continue;
+    }
+    const { fm, body } = parseFrontMatter(text);
+    const dateStr = fm.date || fm.created || fm.published;
+    const date = parseDate(dateStr);
+    if (!date) continue;
+
+    let tags = [];
+    if (Array.isArray(fm.tags)) tags = fm.tags;
+    else if (typeof fm.tags === 'string') {
+      tags = fm.tags.replace(/^\[|\]$/g, '').split(',').map(s => s.trim()).filter(Boolean);
+    }
+
+    const title = fm.title || rec.name.replace(/\.(md|markdown|mdown)$/i, '');
+
+    // Parse optional end time. Sources, in priority order:
+    //   1) "end" or "end_date" or "endDate" — explicit datetime, parsed like "date"
+    //   2) "duration" — minutes (number), or "Nm", "Nh", "Hh Mm" patterns
+    let endDate = null;
+    const endStr = fm.end || fm.end_date || fm.endDate;
+    if (endStr) {
+      endDate = parseDate(endStr);
+    }
+    if (!endDate && fm.duration) {
+      const minutes = parseDurationMinutes(String(fm.duration));
+      if (minutes != null) {
+        endDate = new Date(date.getTime() + minutes * 60000);
+      }
+    }
+    // Sanity: endDate must be after date
+    if (endDate && endDate <= date) endDate = null;
+
+    // Extract requirements section from body
+    const { items: requirements, bodyWithoutSection } = parseRequirements(body);
+
+    entries.push({
+      id: rec.relpath,
+      relpath: rec.relpath,
+      title,
+      date,
+      endDate,
+      tags,
+      body,
+      bodyWithoutRequirements: bodyWithoutSection,
+      requirements,
+      frontMatter: fm,
+      lastModified: rec.lastModified,
+    });
+  }
+  entries.sort((a, b) => a.date - b.date);
+  return entries;
+}
+
+function parseDurationMinutes(s) {
+  const trimmed = String(s).trim();
+  if (!trimmed) return null;
+  // Pure number = minutes
+  if (/^\d+(\.\d+)?$/.test(trimmed)) return parseFloat(trimmed);
+  // Patterns: "30m", "1h", "1h30m", "1.5h", "90 min", "1 hour 30 min"
+  let total = 0;
+  let matched = false;
+  const re = /(\d+(?:\.\d+)?)\s*(h(?:ours?|rs?)?|m(?:in(?:ute)?s?)?)/gi;
+  let m;
+  while ((m = re.exec(trimmed)) != null) {
+    matched = true;
+    const num = parseFloat(m[1]);
+    const unit = m[2].toLowerCase();
+    if (unit.startsWith('h')) total += num * 60;
+    else total += num;
+  }
+  return matched ? total : null;
+}
+
+// ---------- File creation ----------
+function slugify(s) {
+  return String(s)
+    .toLowerCase()
+    .trim()
+    .replace(/['"]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 60) || 'entry';
+}
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function formatDurationLabel(startTimeStr, endTimeStr) {
+  if (!startTimeStr || !endTimeStr) return '';
+  const [sh, sm] = startTimeStr.split(':').map(Number);
+  const [eh, em] = endTimeStr.split(':').map(Number);
+  let mins = (eh * 60 + em) - (sh * 60 + sm);
+  let crossesMidnight = false;
+  if (mins <= 0) {
+    mins += 24 * 60;
+    crossesMidnight = true;
+  }
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  const parts = [];
+  if (h) parts.push(`${h}h`);
+  if (m) parts.push(`${m}m`);
+  const dur = parts.join(' ') || '0m';
+  return crossesMidnight
+    ? `Duration: ${dur} (ends next day)`
+    : `Duration: ${dur}`;
+}
+
+// ---------- Extras (custom front-matter fields) ----------
+function renderExtraRow(key = '', value = '') {
+  return `
+    <div class="extra-row" style="display: flex; gap: 6px; align-items: center;">
+      <input type="text" class="extra-key" value="${escapeAttr(key)}" placeholder="key" style="flex: 0 0 35%;">
+      <input type="text" class="extra-value" value="${escapeAttr(value)}" placeholder="value" style="flex: 1;">
+      <button type="button" class="extra-remove icon" aria-label="Remove field" tabindex="-1" style="color: var(--text-faint); padding: 4px 8px;">×</button>
+    </div>
+  `;
+}
+
+function renderExtrasSection(id, prefilled = []) {
+  // prefilled: array of [key, value]
+  return `
+    <div class="field">
+      <label>Other front-matter fields</label>
+      <div id="${id}" style="display: flex; flex-direction: column; gap: 6px;">
+        ${prefilled.map(([k, v]) => renderExtraRow(k, Array.isArray(v) ? v.join(', ') : String(v))).join('')}
+      </div>
+      <button type="button" class="extras-add" data-extras-target="${id}" style="margin-top: 6px; font-size: 12px;">+ Add field</button>
+      <div class="field-hint">Custom YAML keys saved verbatim into the front matter. Use commas in values for inline lists.</div>
+    </div>
+  `;
+}
+
+function wireExtrasSection(rootEl) {
+  // Add-field button
+  rootEl.querySelectorAll('.extras-add').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.getAttribute('data-extras-target');
+      const container = rootEl.querySelector('#' + targetId);
+      container.insertAdjacentHTML('beforeend', renderExtraRow());
+      const newRow = container.lastElementChild;
+      wireExtraRow(newRow);
+      newRow.querySelector('.extra-key').focus();
+    });
+  });
+  // Existing rows
+  rootEl.querySelectorAll('.extra-row').forEach(wireExtraRow);
+}
+
+function wireExtraRow(row) {
+  row.querySelector('.extra-remove')?.addEventListener('click', () => {
+    row.remove();
+  });
+}
+
+function collectExtrasFromContainer(container) {
+  if (!container) return {};
+  const result = {};
+  for (const row of container.querySelectorAll('.extra-row')) {
+    const k = row.querySelector('.extra-key').value.trim();
+    const v = row.querySelector('.extra-value').value.trim();
+    if (k && v) result[k] = v;
+  }
+  return result;
+}
+
+function formatDateForFrontMatter(date, includeTime) {
+  const y = date.getFullYear();
+  const m = pad(date.getMonth() + 1);
+  const d = pad(date.getDate());
+  if (!includeTime) return `${y}-${m}-${d}`;
+  const hh = pad(date.getHours());
+  const mm = pad(date.getMinutes());
+  return `${y}-${m}-${d} ${hh}:${mm}`;
+}
+
+function escapeYamlString(s) {
+  // Quote if contains special chars or starts with one
+  if (/^[\s'"#&*!|>%@`]/.test(s) || /[:#]/.test(s) || s !== s.trim()) {
+    return `"${s.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
+  }
+  return s;
+}
+
+function buildMarkdown({ title, date, includeTime, endDate, tags, body, extraFields }) {
+  const lines = ['---'];
+  lines.push(`title: ${escapeYamlString(title)}`);
+  lines.push(`date: ${formatDateForFrontMatter(date, includeTime)}`);
+  if (endDate && includeTime) {
+    lines.push(`end: ${formatDateForFrontMatter(endDate, true)}`);
+  }
+  if (tags && tags.length) {
+    lines.push(`tags: [${tags.map(escapeYamlString).join(', ')}]`);
+  }
+  for (const [k, v] of Object.entries(extraFields || {})) {
+    if (v) lines.push(`${k}: ${escapeYamlString(v)}`);
+  }
+  lines.push('---');
+  lines.push('');
+  if (body) lines.push(body);
+  return lines.join('\n');
+}
+
+async function getOrCreateSubdirHandle(rootHandle, subpath) {
+  if (!subpath) return rootHandle;
+  const parts = subpath.split('/').filter(Boolean);
+  let current = rootHandle;
+  for (const part of parts) {
+    current = await current.getDirectoryHandle(part, { create: true });
+  }
+  return current;
+}
+
+async function pickAvailableFilename(dirHandle, baseName) {
+  // baseName already has .md extension
+  let candidate = baseName;
+  let n = 2;
+  while (true) {
+    try {
+      await dirHandle.getFileHandle(candidate);
+      // exists — increment
+      const stem = baseName.replace(/\.md$/, '');
+      candidate = `${stem}-${n}.md`;
+      n++;
+    } catch (e) {
+      if (e.name === 'NotFoundError') return candidate;
+      throw e;
+    }
+  }
+}
+
+async function writeMarkdownToHandle(rootHandle, subfolder, stem, markdown) {
+  const dir = await getOrCreateSubdirHandle(rootHandle, subfolder);
+  const finalName = await pickAvailableFilename(dir, `${stem}.md`);
+  const fileHandle = await dir.getFileHandle(finalName, { create: true });
+  const writable = await fileHandle.createWritable();
+  await writable.write(markdown);
+  await writable.close();
+  return { finalName, relpath: subfolder ? `${subfolder}/${finalName}` : finalName };
+}
+
+function buildOccurrences(startDate, recurrence) {
+  if (!recurrence || recurrence.kind !== 'weekly' || !recurrence.until) {
+    return [startDate];
+  }
+  const until = new Date(recurrence.until);
+  until.setHours(23, 59, 59, 999);
+  const occurrences = [];
+  let cursor = new Date(startDate);
+  // Hard cap to avoid runaway loops
+  while (cursor <= until && occurrences.length < 520) {
+    occurrences.push(new Date(cursor));
+    cursor.setDate(cursor.getDate() + 7);
+  }
+  return occurrences;
+}
+
+async function createEntry({ title, dateString, timeString, endTimeString, tags, body, requirements, subfolder, recurrence, extraFields }) {
+  // Build a Date from the form inputs (local time)
+  const includeTime = !!timeString;
+  const datePart = dateString;
+  const timePart = timeString || '00:00';
+  const composed = new Date(`${datePart}T${timePart}`);
+  if (isNaN(composed)) throw new Error('Invalid date');
+
+  // Optional end time on the same day. Crosses midnight by rolling to next day.
+  let endComposed = null;
+  if (includeTime && endTimeString) {
+    endComposed = new Date(`${datePart}T${endTimeString}`);
+    if (isNaN(endComposed)) {
+      endComposed = null;
+    } else if (endComposed <= composed) {
+      // End time before/equal start — treat as next-day end
+      endComposed.setDate(endComposed.getDate() + 1);
+    }
+  }
+
+  // Strip any reserved keys the user may have entered as custom fields
+  const cleanedExtras = { ...(extraFields || {}) };
+  for (const k of ['title', 'date', 'tags', 'end', 'end_date', 'enddate', 'duration', 'created', 'published']) {
+    delete cleanedExtras[k];
+  }
+
+  // Merge requirements into the body as a ## Requirements section (if any)
+  const finalBody = composeBodyWithRequirements(body, requirements || []);
+
+  const occurrences = buildOccurrences(composed, recurrence);
+  if (occurrences.length === 0) throw new Error('Recurrence produced zero occurrences');
+
+  const slug = slugify(title);
+  const isUploadMode = !state.rootHandle && !!state.uploadedFiles;
+  const written = [];
+
+  for (const occDate of occurrences) {
+    const datePrefix = formatDateForFrontMatter(occDate, false);
+    const stem = `${datePrefix}-${slug}`;
+
+    // Compute per-occurrence endDate by preserving the duration from the first occurrence
+    let occEnd = null;
+    if (endComposed) {
+      const durationMs = endComposed.getTime() - composed.getTime();
+      occEnd = new Date(occDate.getTime() + durationMs);
+    }
+
+    const markdown = buildMarkdown({
+      title,
+      date: occDate,
+      includeTime,
+      endDate: occEnd,
+      tags,
+      body: finalBody,
+      extraFields: cleanedExtras,
+    });
+
+    if (state.rootHandle) {
+      const { relpath } = await writeMarkdownToHandle(state.rootHandle, subfolder, stem, markdown);
+      written.push({ relpath, occDate });
+    } else if (state.uploadedFiles) {
+      // Safari fallback: download each file
+      const finalName = `${stem}.md`;
+      const blob = new Blob([markdown], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = finalName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+      // Also add to in-memory entries so calendar updates immediately
+      const fakeFile = new File([markdown], finalName, { type: 'text/markdown' });
+      const relpath = subfolder ? `${subfolder}/${finalName}` : finalName;
+      state.uploadedFiles.push({
+        relpath,
+        name: finalName,
+        size: fakeFile.size,
+        lastModified: fakeFile.lastModified,
+        file: fakeFile,
+      });
+      written.push({ relpath, occDate });
+
+      // Throttle a tiny bit so Safari doesn't merge or block download bursts
+      if (occurrences.length > 1) await new Promise(r => setTimeout(r, 150));
+    } else {
+      throw new Error('No folder open');
+    }
+  }
+
+  // Refresh state & selection
+  if (state.rootHandle) {
+    await loadFromHandle(state.rootHandle, { firstLoad: true });
+  } else if (state.uploadedFiles) {
+    state.entries = await buildEntries(state.uploadedFiles);
+  }
+  state.selectedDate = startOfDay(composed);
+  if (!isSameMonth(composed, state.displayedMonth)) {
+    state.displayedMonth = new Date(composed.getFullYear(), composed.getMonth(), 1);
+  }
+
+  return {
+    mode: isUploadMode ? 'downloaded' : 'written',
+    count: written.length,
+    relpath: written[0]?.relpath,
+  };
+}
+
+async function listSubfolders(rootHandle, prefix = '', results = ['']) {
+  for await (const [name, handle] of rootHandle.entries()) {
+    if (name.startsWith('.')) continue;
+    if (handle.kind === 'directory') {
+      const subpath = prefix ? `${prefix}/${name}` : name;
+      results.push(subpath);
+      await listSubfolders(handle, subpath, results);
+    }
+  }
+  return results;
+}
+
+async function getFileHandleByRelpath(rootHandle, relpath) {
+  const parts = relpath.split('/').filter(Boolean);
+  if (parts.length === 0) throw new Error('Invalid relpath');
+  let dir = rootHandle;
+  for (let i = 0; i < parts.length - 1; i++) {
+    dir = await dir.getDirectoryHandle(parts[i]);
+  }
+  return { dir, fileHandle: await dir.getFileHandle(parts[parts.length - 1]), filename: parts[parts.length - 1] };
+}
+
+async function updateEntry(originalEntry, { title, dateString, timeString, endTimeString, tags, body, requirements, extraFields }) {
+  const includeTime = !!timeString;
+  const datePart = dateString;
+  const timePart = timeString || '00:00';
+  const composed = new Date(`${datePart}T${timePart}`);
+  if (isNaN(composed)) throw new Error('Invalid date');
+
+  let endComposed = null;
+  if (includeTime && endTimeString) {
+    endComposed = new Date(`${datePart}T${endTimeString}`);
+    if (isNaN(endComposed)) {
+      endComposed = null;
+    } else if (endComposed <= composed) {
+      endComposed.setDate(endComposed.getDate() + 1);
+    }
+  }
+
+  // Strip auto-managed fields from extraFields if user accidentally has them as extras
+  const cleanedExtras = { ...(extraFields || {}) };
+  delete cleanedExtras.end;
+  delete cleanedExtras.end_date;
+  delete cleanedExtras.endDate;
+  delete cleanedExtras.duration;
+
+  // Merge requirements section into body
+  const finalBody = composeBodyWithRequirements(body, requirements || []);
+
+  const markdown = buildMarkdown({
+    title,
+    date: composed,
+    includeTime,
+    endDate: endComposed,
+    tags,
+    body: finalBody,
+    extraFields: cleanedExtras,
+  });
+
+  if (state.rootHandle) {
+    // Write back to the same file (preserves the original filename, even if title changed)
+    const { fileHandle } = await getFileHandleByRelpath(state.rootHandle, originalEntry.relpath);
+    const writable = await fileHandle.createWritable();
+    await writable.write(markdown);
+    await writable.close();
+
+    await loadFromHandle(state.rootHandle, { firstLoad: true });
+  } else if (state.uploadedFiles) {
+    // Safari: download replacement file under original filename
+    const filename = originalEntry.relpath.split('/').pop();
+    const blob = new Blob([markdown], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+    // Replace in-memory record
+    const fakeFile = new File([markdown], filename, { type: 'text/markdown' });
+    const idx = state.uploadedFiles.findIndex(r => r.relpath === originalEntry.relpath);
+    if (idx >= 0) {
+      state.uploadedFiles[idx] = {
+        relpath: originalEntry.relpath,
+        name: filename,
+        size: fakeFile.size,
+        lastModified: fakeFile.lastModified,
+        file: fakeFile,
+      };
+    }
+    state.entries = await buildEntries(state.uploadedFiles);
+  } else {
+    throw new Error('No folder open');
+  }
+
+  // Move the calendar to the new date
+  state.selectedDate = startOfDay(composed);
+  if (!isSameMonth(composed, state.displayedMonth)) {
+    state.displayedMonth = new Date(composed.getFullYear(), composed.getMonth(), 1);
+  }
+
+  return {
+    mode: state.rootHandle ? 'written' : 'downloaded',
+    relpath: originalEntry.relpath,
+  };
+}
+
+async function deleteEntry(entry) {
+  if (state.rootHandle) {
+    const { dir, filename } = await getFileHandleByRelpath(state.rootHandle, entry.relpath);
+    await dir.removeEntry(filename);
+    await loadFromHandle(state.rootHandle, { firstLoad: true });
+  } else if (state.uploadedFiles) {
+    state.uploadedFiles = state.uploadedFiles.filter(r => r.relpath !== entry.relpath);
+    state.entries = await buildEntries(state.uploadedFiles);
+  } else {
+    throw new Error('No folder open');
+  }
+}
+
+// ---------- App state ----------
+const state = {
+  rootHandle: null,
+  rootName: null,
+  entries: [],
+  fileSignature: '',
+  selectedDate: startOfDay(new Date()),
+  displayedMonth: new Date(),
+  pollInterval: null,
+  liveMode: false,
+  uploadedFiles: null,
+  view: 'calendar', // 'calendar' | 'timeline'
+  filterTag: null,
+  showSummary: false,
+  summaryMode: 'aggregated', // 'aggregated' | 'breakdown'
+  summaryWeekStart: null, // null = use selectedDate's week
+};
+
+function startOfDay(d) {
+  const x = new Date(d);
+  x.setHours(0, 0, 0, 0);
+  return x;
+}
+function isSameDay(a, b) {
+  return a.getFullYear() === b.getFullYear() &&
+         a.getMonth() === b.getMonth() &&
+         a.getDate() === b.getDate();
+}
+function isSameMonth(a, b) {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
+}
+
+function startOfWeek(date, weekStartsOn = 0) {
+  // weekStartsOn: 0 = Sunday, 1 = Monday
+  const d = startOfDay(date);
+  const day = d.getDay();
+  const diff = (day - weekStartsOn + 7) % 7;
+  d.setDate(d.getDate() - diff);
+  return d;
+}
+
+function endOfWeek(date, weekStartsOn = 0) {
+  const start = startOfWeek(date, weekStartsOn);
+  const end = new Date(start);
+  end.setDate(end.getDate() + 7);
+  return end; // exclusive
+}
+
+function entryHasTime(e) {
+  const raw = e.frontMatter?.date || e.frontMatter?.created || e.frontMatter?.published || '';
+  return /\d{1,2}:\d{2}/.test(String(raw));
+}
+
+// Sort: all-day entries first (alphabetical by title), then timed entries chronologically.
+// Tiebreak by title so the order is stable across renders.
+function compareEntriesForDay(a, b) {
+  const aTimed = entryHasTime(a);
+  const bTimed = entryHasTime(b);
+  if (aTimed !== bTimed) return aTimed ? 1 : -1;
+  if (aTimed) {
+    const dt = a.date - b.date;
+    if (dt !== 0) return dt;
+  }
+  return a.title.localeCompare(b.title);
+}
+
+function allTagsWithCounts(entries) {
+  const counts = new Map();
+  for (const e of entries) {
+    for (const t of e.tags) {
+      counts.set(t, (counts.get(t) || 0) + 1);
+    }
+  }
+  return Array.from(counts.entries()).sort((a, b) => {
+    if (b[1] !== a[1]) return b[1] - a[1];
+    return a[0].localeCompare(b[0]);
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ---------- Folder load + polling ----------
+async function verifyPermission(handle, mode = 'read') {
+  const opts = { mode };
+  if ((await handle.queryPermission(opts)) === 'granted') return true;
+  if ((await handle.requestPermission(opts)) === 'granted') return true;
+  return false;
+}
+
+async function loadFromHandle(handle, { firstLoad = true } = {}) {
+  state.rootHandle = handle;
+  state.rootName = handle.name;
+
+  const records = await scanDirectory(handle);
+  // signature = sorted "path|size|mtime" string for change detection
+  const sig = records
+    .map(r => `${r.relpath}|${r.size}|${r.lastModified}`)
+    .sort()
+    .join('\n');
+
+  if (!firstLoad && sig === state.fileSignature) return false; // no changes
+
+  state.fileSignature = sig;
+  state.entries = await buildEntries(records);
+  return true;
+}
+
+function startPolling() {
+  stopPolling();
+  state.liveMode = true;
+  state.pollInterval = setInterval(async () => {
+    if (!state.rootHandle) return;
+    try {
+      const changed = await loadFromHandle(state.rootHandle, { firstLoad: false });
+      if (changed) {
+        render();
+        showToast('Folder updated');
+      }
+    } catch (e) {
+      console.warn('Poll failed', e);
+    }
+  }, 3000);
+}
+function stopPolling() {
+  if (state.pollInterval) clearInterval(state.pollInterval);
+  state.pollInterval = null;
+}
+
+async function pickFolder() {
+  if (!('showDirectoryPicker' in window)) {
+    // Safari/Firefox: trigger the hidden file input
+    triggerFolderUpload();
+    return;
+  }
+  try {
+    const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
+    if (!(await verifyPermission(handle, 'readwrite'))) {
+      showToast('Permission denied');
+      return;
+    }
+    await saveHandle(handle);
+    await loadFromHandle(handle, { firstLoad: true });
+    startPolling();
+    render();
+  } catch (e) {
+    if (e.name !== 'AbortError') {
+      console.error(e);
+      showToast('Could not open folder: ' + e.message);
+    }
+  }
+}
+
+function triggerFolderUpload() {
+  // Create a temp file input and click it (works in Safari)
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.setAttribute('webkitdirectory', '');
+  input.setAttribute('directory', '');
+  input.multiple = true;
+  input.style.display = 'none';
+  input.addEventListener('change', e => {
+    handleFileInput(e.target.files);
+    input.remove();
+  });
+  document.body.appendChild(input);
+  input.click();
+}
+
+async function disconnectFolder() {
+  stopPolling();
+  await clearHandle();
+  state.rootHandle = null;
+  state.rootName = null;
+  state.entries = [];
+  state.fileSignature = '';
+  state.uploadedFiles = null;
+  state.liveMode = false;
+  render();
+}
+
+async function refreshNow() {
+  if (!state.rootHandle) return;
+  try {
+    await loadFromHandle(state.rootHandle, { firstLoad: true });
+    render();
+    showToast('Refreshed');
+  } catch (e) {
+    showToast('Refresh failed');
+  }
+}
+
+// ---------- Fallback: file input (no live updates) ----------
+async function handleFileInput(fileList) {
+  const records = [];
+  for (const f of fileList) {
+    const lower = f.name.toLowerCase();
+    if (!lower.endsWith('.md') && !lower.endsWith('.markdown') && !lower.endsWith('.mdown')) continue;
+    records.push({
+      relpath: f.webkitRelativePath || f.name,
+      name: f.name,
+      size: f.size,
+      lastModified: f.lastModified,
+      file: f,
+    });
+  }
+  if (records.length === 0) {
+    showToast('No markdown files found');
+    return;
+  }
+  state.uploadedFiles = records;
+  state.rootName = records[0].relpath.split('/')[0] || 'Files';
+  state.entries = await buildEntries(records);
+  state.liveMode = false;
+  render();
+}
+
+// ---------- Rendering ----------
+const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const WEEKDAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function render() {
+  const app = document.getElementById('app');
+  if (state.entries.length === 0 && !state.rootHandle && !state.uploadedFiles) {
+    app.innerHTML = renderWelcome();
+    wireWelcome();
+  } else {
+    app.innerHTML = renderMain();
+    wireMain();
+  }
+}
+
+function renderWelcome() {
+  const supportsFSA = 'showDirectoryPicker' in window;
+  const example = `---
+title: Project kickoff
+date: 2026-05-12 14:30
+tags: [work, meeting]
+project: Atlas
+---
+
+Notes from today's kickoff...`;
+
+  return `
+    <div class="welcome">
+      <div class="welcome-icon">▦</div>
+      <h2>Markdown calendar</h2>
+      <p>Pick a folder of markdown files. Each file's <code>date</code> front-matter field decides where it lands on the calendar. Subfolders are scanned too.</p>
+      <div class="actions">
+        ${supportsFSA
+          ? `<button class="primary" id="pick-folder">Choose folder…</button>`
+          : `<label class="primary" style="cursor: pointer; padding: 7px 12px; border-radius: 8px;">
+               Choose folder…
+               <input type="file" id="file-input" webkitdirectory directory multiple style="display:none">
+             </label>`}
+      </div>
+      ${!supportsFSA ? `<div class="browser-warning">Live folder watching needs the File System Access API (Chrome, Edge, Arc, Brave). In Safari/Firefox you can still browse and create entries — new entries download as <code>.md</code> files for you to drop into your folder.</div>` : ''}
+      <div class="formats">${escapeHtml(example)}</div>
+    </div>
+  `;
+}
+
+function wireWelcome() {
+  document.getElementById('pick-folder')?.addEventListener('click', pickFolder);
+  document.getElementById('file-input')?.addEventListener('change', e => handleFileInput(e.target.files));
+}
+
+function renderMain() {
+  let mainPane;
+  if (state.view === 'timeline') {
+    mainPane = `<div class="calendar-pane">${renderTimelineHeader()}${renderTimeline()}</div>`;
+  } else if (state.view === 'week') {
+    mainPane = `<div class="calendar-pane">${renderWeekHeader()}${renderWeekGrid()}</div>`;
+  } else {
+    mainPane = `<div class="calendar-pane">
+         ${renderMonthHeader()}
+         ${renderWeekdayRow()}
+         ${renderMonthGrid()}
+       </div>`;
+  }
+  return `
+    ${renderToolbar()}
+    <div class="main">
+      ${state.showSummary ? renderSummaryPanel() : ''}
+      ${mainPane}
+      <div class="detail-pane">
+        ${renderDetail()}
+      </div>
+    </div>
+  `;
+}
+
+function renderSummaryPanel() {
+  // Determine the week to summarize. Fall back to selected date's week.
+  const anchor = state.summaryWeekStart || state.selectedDate;
+  const weekStartsOn = 1; // Monday — common for "weekly" summaries
+  const weekStart = startOfWeek(anchor, weekStartsOn);
+  const weekEnd = endOfWeek(anchor, weekStartsOn); // exclusive
+
+  // Filter entries to this week, applying current tag filter for consistency
+  let weekEntries = state.entries.filter(e => e.date >= weekStart && e.date < weekEnd);
+  if (state.filterTag) {
+    weekEntries = weekEntries.filter(e => e.tags.includes(state.filterTag));
+  }
+  weekEntries.sort(compareEntriesForDay);
+  // After day-level ordering, also sort across days
+  weekEntries.sort((a, b) => {
+    const dayA = startOfDay(a.date).getTime();
+    const dayB = startOfDay(b.date).getTime();
+    if (dayA !== dayB) return dayA - dayB;
+    return compareEntriesForDay(a, b);
+  });
+
+  const fmtRange = () => {
+    const lastDay = new Date(weekEnd);
+    lastDay.setDate(lastDay.getDate() - 1);
+    const sameMonth = weekStart.getMonth() === lastDay.getMonth();
+    const opts = { month: 'short', day: 'numeric' };
+    const startStr = weekStart.toLocaleDateString(undefined, opts);
+    const endStr = sameMonth
+      ? lastDay.getDate()
+      : lastDay.toLocaleDateString(undefined, opts);
+    return `${startStr} – ${endStr}, ${lastDay.getFullYear()}`;
+  };
+
+  const sessionsWithReqs = weekEntries.filter(e => e.requirements.length > 0);
+  const totalReqs = sessionsWithReqs.reduce((acc, e) => acc + e.requirements.length, 0);
+
+  let body;
+  if (weekEntries.length === 0) {
+    body = `<div class="summary-empty">No sessions this week.</div>`;
+  } else if (state.summaryMode === 'aggregated') {
+    body = renderAggregatedSummary(weekEntries);
+  } else {
+    body = renderBreakdownSummary(weekEntries);
+  }
+
+  return `
+    <div class="summary-panel">
+      <div class="summary-header">
+        <h3>Weekly requirements</h3>
+        <button class="icon" id="close-summary" title="Close" aria-label="Close">×</button>
+      </div>
+      <div class="summary-week-nav">
+        <button class="icon" id="prev-week" title="Previous week" aria-label="Previous week">‹</button>
+        <div class="week-label">
+          ${fmtRange()}
+          <small>${weekEntries.length} ${weekEntries.length === 1 ? 'session' : 'sessions'}${state.filterTag ? ` · tagged ${escapeHtml(state.filterTag)}` : ''}</small>
+        </div>
+        <button id="this-week" style="font-size: 11px; padding: 4px 10px;">This week</button>
+        <button class="icon" id="next-week" title="Next week" aria-label="Next week">›</button>
+      </div>
+      <div class="summary-mode-toggle">
+        <button id="summary-aggregated" class="${state.summaryMode === 'aggregated' ? 'active' : ''}">Aggregated</button>
+        <button id="summary-breakdown" class="${state.summaryMode === 'breakdown' ? 'active' : ''}">Per-session</button>
+      </div>
+      <div class="summary-body">${body}</div>
+      ${weekEntries.length > 0 ? `
+        <div class="summary-totals">
+          ${sessionsWithReqs.length} of ${weekEntries.length} ${weekEntries.length === 1 ? 'session has' : 'sessions have'} requirements ·
+          ${totalReqs} item${totalReqs === 1 ? '' : 's'} total
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function renderAggregatedSummary(entries) {
+  // Normalize each requirement to a comparable key (lowercased, whitespace-collapsed)
+  // but display the first form encountered.
+  const buckets = new Map(); // key → { display, count, sessions: Set }
+  for (const e of entries) {
+    for (const req of e.requirements) {
+      const key = req.toLowerCase().replace(/\s+/g, ' ').trim();
+      if (!buckets.has(key)) {
+        buckets.set(key, { display: req, count: 0, sessions: new Set() });
+      }
+      const b = buckets.get(key);
+      b.count++;
+      b.sessions.add(e.id);
+    }
+  }
+  if (buckets.size === 0) {
+    return `<div class="summary-empty">No <code>## Requirements</code> sections found in this week's sessions.</div>`;
+  }
+  // Sort: most-needed first, then alphabetical
+  const sorted = Array.from(buckets.values()).sort((a, b) => {
+    if (b.sessions.size !== a.sessions.size) return b.sessions.size - a.sessions.size;
+    return a.display.localeCompare(b.display);
+  });
+  return sorted.map(b => `
+    <div class="req-item">
+      <input type="checkbox" style="margin-top: 3px; flex-shrink: 0;" aria-label="Mark ${escapeAttr(b.display)} as ready">
+      <div class="req-text">${escapeHtml(b.display)}</div>
+      <div class="req-count" title="${b.sessions.size} session${b.sessions.size === 1 ? '' : 's'}">${b.sessions.size}×</div>
+    </div>
+  `).join('');
+}
+
+function renderBreakdownSummary(entries) {
+  const fmtTime = (d) => d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+  const fmtDay = (d) => d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+
+  const withReqs = entries.filter(e => e.requirements.length > 0);
+  if (withReqs.length === 0) {
+    return `<div class="summary-empty">No sessions this week have requirements listed.</div>`;
+  }
+
+  return withReqs.map(e => {
+    const hasTime = entryHasTime(e);
+    const time = hasTime ? fmtTime(e.date) : 'all day';
+    return `
+      <div class="req-session-block">
+        <div class="session-head">${escapeHtml(fmtDay(e.date))} · ${time}</div>
+        <h4>${escapeHtml(e.title)}</h4>
+        <ul>${e.requirements.map(r => `<li>${escapeHtml(r)}</li>`).join('')}</ul>
+      </div>
+    `;
+  }).join('');
+}
+
+// ---------- Week view (Mon–Fri, 7am–5pm) ----------
+const WEEK_VIEW_START_HOUR = 7;
+const WEEK_VIEW_END_HOUR = 17; // 5pm
+const WEEK_VIEW_HOUR_HEIGHT = 56; // px
+
+function renderWeekHeader() {
+  const weekStart = startOfWeek(state.summaryWeekStart || state.selectedDate, 1); // Monday
+  const fmtRange = () => {
+    const fri = new Date(weekStart);
+    fri.setDate(fri.getDate() + 4);
+    const sameMonth = weekStart.getMonth() === fri.getMonth();
+    const startStr = weekStart.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    const endStr = sameMonth
+      ? fri.getDate()
+      : fri.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    return `${startStr} – ${endStr}, ${fri.getFullYear()}`;
+  };
+  return `
+    <div class="month-header">
+      <h2>${fmtRange()}</h2>
+      <button class="icon" id="week-prev" title="Previous week" aria-label="Previous week">‹</button>
+      <button id="week-this">This week</button>
+      <button class="icon" id="week-next" title="Next week" aria-label="Next week">›</button>
+    </div>
+  `;
+}
+
+function renderWeekGrid() {
+  // Anchor on Monday of the week containing summaryWeekStart || selectedDate
+  const weekStart = startOfWeek(state.summaryWeekStart || state.selectedDate, 1);
+  const days = [];
+  for (let i = 0; i < 5; i++) {
+    const d = new Date(weekStart);
+    d.setDate(d.getDate() + i);
+    days.push(d);
+  }
+  const today = startOfDay(new Date());
+
+  // Filter entries into this Mon-Fri window, applying tag filter
+  let weekEntries = state.entries.filter(e => {
+    const day = startOfDay(e.date);
+    return day >= weekStart && day < new Date(days[4].getTime() + 86400000);
+  });
+  if (state.filterTag) {
+    weekEntries = weekEntries.filter(e => e.tags.includes(state.filterTag));
+  }
+
+  // Bucket into all-day vs timed, by day index 0-4
+  const allDayByDay = [[], [], [], [], []];
+  const timedByDay = [[], [], [], [], []];
+  for (const e of weekEntries) {
+    const dayIndex = Math.floor((startOfDay(e.date) - weekStart) / 86400000);
+    if (dayIndex < 0 || dayIndex > 4) continue;
+    if (entryHasTime(e)) {
+      timedByDay[dayIndex].push(e);
+    } else {
+      allDayByDay[dayIndex].push(e);
+    }
+  }
+
+  // Render day-of-week + date headers
+  const headerCells = days.map((d, i) => {
+    const isToday = isSameDay(d, today);
+    return `
+      <div class="day-col${isToday ? ' today' : ''}" data-week-day-index="${i}">
+        <div class="day-name">${d.toLocaleDateString(undefined, { weekday: 'short' })}</div>
+        <div class="day-num">${d.getDate()}</div>
+      </div>
+    `;
+  }).join('');
+
+  // All-day strip — only show if any day has all-day entries
+  const hasAnyAllDay = allDayByDay.some(arr => arr.length > 0);
+  const allDayRow = hasAnyAllDay ? `
+    <div class="week-allday-row">
+      <div class="gutter-cell">All-day</div>
+      ${allDayByDay.map(entries => `
+        <div class="allday-cell">
+          ${entries.map(e => {
+            const firstTag = e.tags[0];
+            const style = firstTag ? `style="${tagStyleAttr(firstTag)}"` : '';
+            return `<div class="week-allday-event" data-entry-id="${escapeAttr(e.id)}" title="${escapeAttr(e.title)}" ${style}>${escapeHtml(e.title)}</div>`;
+          }).join('')}
+        </div>
+      `).join('')}
+    </div>
+  ` : '';
+
+  // Hour rows for the time grid
+  const totalHours = WEEK_VIEW_END_HOUR - WEEK_VIEW_START_HOUR;
+  const gridHeight = totalHours * WEEK_VIEW_HOUR_HEIGHT;
+
+  // For each hour row, we need the gutter label cell and 5 day-column cells.
+  // We use a single CSS grid with 6 columns and `totalHours` rows of fixed height.
+  let hourRows = '';
+  for (let h = 0; h < totalHours; h++) {
+    const hour = WEEK_VIEW_START_HOUR + h;
+    const label = formatHourLabel(hour);
+    hourRows += `<div class="hour-label" style="height: ${WEEK_VIEW_HOUR_HEIGHT}px;">${label}</div>`;
+    for (let d = 0; d < 5; d++) {
+      hourRows += `<div class="day-column-cell" style="height: ${WEEK_VIEW_HOUR_HEIGHT}px;"></div>`;
+    }
+  }
+
+  // We also need positioned event blocks per day. Render them as absolutely-positioned
+  // children of the day-column overlay.
+  const dayOverlays = days.map((d, i) => {
+    const events = computeWeekDayEventLayout(timedByDay[i]);
+    const eventHtml = events.map(ev => {
+      const firstTag = ev.entry.tags[0];
+      const style = `${firstTag ? tagStyleAttr(firstTag) : ''} top: ${ev.top}px; height: ${ev.height}px; left: calc(${ev.left}% + 2px); width: calc(${ev.width}% - 4px);`;
+      const tinyClass = ev.height < 28 ? ' tiny' : '';
+      const fmtTime = (dt) => dt.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+      const timeStr = ev.entry.endDate
+        ? `${fmtTime(ev.entry.date)} – ${fmtTime(ev.entry.endDate)}`
+        : fmtTime(ev.entry.date);
+      return `
+        <div class="week-event${tinyClass}" data-entry-id="${escapeAttr(ev.entry.id)}"
+             style="${style}" title="${escapeAttr(timeStr + ' · ' + ev.entry.title)}">
+          <div class="event-time">${escapeHtml(timeStr)}</div>
+          <div class="event-title">${escapeHtml(ev.entry.title)}</div>
+        </div>
+      `;
+    }).join('');
+
+    // "Now" line if today is in view and current time is within range
+    let nowLine = '';
+    const now = new Date();
+    if (isSameDay(d, now)) {
+      const minutesFromStart = (now.getHours() - WEEK_VIEW_START_HOUR) * 60 + now.getMinutes();
+      if (minutesFromStart >= 0 && minutesFromStart <= totalHours * 60) {
+        const top = (minutesFromStart / 60) * WEEK_VIEW_HOUR_HEIGHT;
+        nowLine = `<div class="week-now-line" style="top: ${top}px;"></div>`;
+      }
+    }
+
+    return `
+      <div class="day-column${[5,6].includes(d.getDay()) ? ' weekend' : ''}"
+           data-week-day-index="${i}"
+           data-date="${d.toISOString()}"
+           style="position: absolute; top: 0; bottom: 0; left: calc(56px + ${i} * (100% - 56px) / 5); width: calc((100% - 56px) / 5);">
+        ${eventHtml}
+        ${nowLine}
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="week-container">
+      <div class="week-day-headers">
+        <div class="gutter-cell"></div>
+        ${headerCells}
+      </div>
+      ${allDayRow}
+      <div class="week-time-grid">
+        <div class="week-time-grid-inner" style="height: ${gridHeight}px; grid-template-rows: repeat(${totalHours}, ${WEEK_VIEW_HOUR_HEIGHT}px); position: relative;">
+          ${hourRows}
+          ${dayOverlays}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function formatHourLabel(hour) {
+  if (hour === 0) return '12am';
+  if (hour === 12) return '12pm';
+  return hour < 12 ? `${hour}am` : `${hour - 12}pm`;
+}
+
+// Lay out a day's timed events with horizontal stacking when they overlap.
+// Uses a sweep over events sorted by start time, grouping overlapping events
+// into "columns" that get equal width inside the day cell.
+function computeWeekDayEventLayout(entries) {
+  // Clip to view bounds
+  const startMin = WEEK_VIEW_START_HOUR * 60;
+  const endMin = WEEK_VIEW_END_HOUR * 60;
+  const items = entries.map(e => {
+    const sMin = e.date.getHours() * 60 + e.date.getMinutes();
+    let eMin;
+    if (e.endDate) {
+      // If endDate is on a later day, clamp to end of view today
+      const sameDay = isSameDay(e.date, e.endDate);
+      eMin = sameDay
+        ? e.endDate.getHours() * 60 + e.endDate.getMinutes()
+        : 24 * 60;
+    } else {
+      eMin = sMin + 30; // Default 30-min slot for events without explicit duration
+    }
+    const clippedStart = Math.max(sMin, startMin);
+    const clippedEnd = Math.min(eMin, endMin);
+    if (clippedEnd <= clippedStart) return null;
+    return { entry: e, startMin: clippedStart, endMin: clippedEnd };
+  }).filter(Boolean);
+
+  items.sort((a, b) => a.startMin - b.startMin || b.endMin - a.endMin);
+
+  // Sweep to assign columns. Group overlapping events; within a group, distribute columns.
+  const placed = []; // { item, col, groupId }
+  const groups = []; // { ids: Set, cols: count, items: [...] }
+  let currentGroup = null;
+  let currentEnd = -Infinity;
+
+  for (const item of items) {
+    if (item.startMin >= currentEnd) {
+      // Start new group
+      currentGroup = { items: [], cols: 0 };
+      groups.push(currentGroup);
+    }
+    // Find lowest column not in use within this group
+    const usedCols = new Set(
+      currentGroup.items
+        .filter(p => p.endMin > item.startMin)
+        .map(p => p.col)
+    );
+    let col = 0;
+    while (usedCols.has(col)) col++;
+    currentGroup.items.push({ ...item, col });
+    currentGroup.cols = Math.max(currentGroup.cols, col + 1);
+    currentEnd = Math.max(currentEnd, item.endMin);
+  }
+
+  // Convert to layout
+  const out = [];
+  for (const g of groups) {
+    for (const p of g.items) {
+      const top = ((p.startMin - WEEK_VIEW_START_HOUR * 60) / 60) * WEEK_VIEW_HOUR_HEIGHT;
+      const height = Math.max(18, ((p.endMin - p.startMin) / 60) * WEEK_VIEW_HOUR_HEIGHT - 2);
+      const colWidth = 100 / g.cols;
+      out.push({
+        entry: p.entry,
+        top,
+        height,
+        left: p.col * colWidth,
+        width: colWidth,
+      });
+    }
+  }
+  return out;
+}
+
+function renderTimelineHeader() {
+  const tagLabel = state.filterTag
+    ? `Tagged <span class="tag" style="${tagStyleAttr(state.filterTag)} display:inline-block; vertical-align: middle;">${escapeHtml(state.filterTag)}</span>`
+    : 'All entries';
+  return `
+    <div class="month-header">
+      <h2 style="display: flex; align-items: center; gap: 8px;">${tagLabel}</h2>
+      ${state.filterTag ? `<button id="clear-tag" class="icon">Clear filter</button>` : ''}
+    </div>
+  `;
+}
+
+function renderTimeline() {
+  const filtered = state.filterTag
+    ? state.entries.filter(e => e.tags.includes(state.filterTag))
+    : state.entries.slice();
+  filtered.sort((a, b) => {
+    const dayA = startOfDay(a.date).getTime();
+    const dayB = startOfDay(b.date).getTime();
+    if (dayA !== dayB) return dayA - dayB;
+    return compareEntriesForDay(a, b);
+  });
+
+  if (filtered.length === 0) {
+    return `<div class="timeline"><div class="timeline-empty">
+      ${state.filterTag
+        ? `No entries tagged <strong>${escapeHtml(state.filterTag)}</strong>.`
+        : `No entries yet.`}
+    </div></div>`;
+  }
+
+  // Group by year-month
+  const groups = new Map();
+  for (const e of filtered) {
+    const key = `${e.date.getFullYear()}-${pad(e.date.getMonth() + 1)}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(e);
+  }
+
+  const fmtTime = (d) => d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+
+  let html = '<div class="timeline">';
+  for (const [key, items] of groups) {
+    const [year, month] = key.split('-').map(Number);
+    const heading = `${MONTH_NAMES[month - 1]} ${year}`;
+    html += `<div class="timeline-month-header">${heading}</div>`;
+
+    for (const e of items) {
+      const dayName = e.date.toLocaleDateString(undefined, { weekday: 'short' });
+      const rawDate = e.frontMatter.date || e.frontMatter.created || e.frontMatter.published || '';
+      const hadTime = /\d{1,2}:\d{2}/.test(String(rawDate));
+
+      let timeStr = '';
+      if (hadTime) {
+        timeStr = fmtTime(e.date);
+        if (e.endDate) timeStr += ` – ${fmtTime(e.endDate)}`;
+      }
+
+      const tagsHtml = e.tags.length
+        ? `<span class="timeline-tags">${e.tags.map(t =>
+            `<span class="tag clickable" data-tag="${escapeAttr(t)}" style="${tagStyleAttr(t, { active: t === state.filterTag })}">${escapeHtml(t)}</span>`
+          ).join('')}</span>`
+        : '';
+
+      const previewSrc = e.bodyWithoutRequirements ?? e.body;
+      const bodyPreview = previewSrc
+        ? `<div class="body-preview md">${renderMarkdown(previewSrc)}</div>`
+        : '';
+
+      html += `
+        <div class="timeline-item" data-entry-id="${escapeAttr(e.id)}" tabindex="0" role="button" aria-label="Edit ${escapeAttr(e.title)}">
+          <div class="timeline-date">
+            <strong>${e.date.getDate()}</strong>
+            ${dayName}${timeStr ? `<br><span style="font-size: 10px;">${timeStr}</span>` : ''}
+          </div>
+          <div class="timeline-rail"></div>
+          <div class="timeline-content">
+            <h4>${escapeHtml(e.title)}</h4>
+            ${tagsHtml ? `<div class="meta">${tagsHtml}</div>` : ''}
+            ${bodyPreview}
+          </div>
+        </div>
+      `;
+    }
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderToolbar() {
+  const hasFolder = !!state.rootHandle;
+  const hasUpload = !!state.uploadedFiles;
+  const canCreate = hasFolder || hasUpload;
+  const tagsList = allTagsWithCounts(state.entries);
+
+  const tagSelect = tagsList.length
+    ? `<select id="tag-filter" title="Filter by tag" style="padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text); font-size: 12px; max-width: 180px;">
+        <option value="">All entries</option>
+        ${tagsList.map(([t, n]) => {
+          const c = tagColors(t);
+          return `<option value="${escapeAttr(t)}" ${state.filterTag === t ? 'selected' : ''} style="background: ${c.bg}; color: ${c.fg};">${escapeHtml(t)} (${n})</option>`;
+        }).join('')}
+      </select>`
+    : '';
+
+  return `
+    <div class="toolbar">
+      <h1>Markdown calendar</h1>
+      <div class="view-toggle">
+        <button id="view-calendar" class="${state.view === 'calendar' ? 'active' : ''}">Calendar</button>
+        <button id="view-week" class="${state.view === 'week' ? 'active' : ''}">Week</button>
+        <button id="view-timeline" class="${state.view === 'timeline' ? 'active' : ''}">Timeline</button>
+      </div>
+      ${tagSelect}
+      <button id="toggle-summary" class="${state.showSummary ? 'primary' : ''}" title="Weekly requirements summary">Requirements</button>
+      <div class="spacer"></div>
+      <div class="folder-info">
+        <span class="path" title="${escapeAttr(state.rootName || '')}">${escapeHtml(state.rootName || '')}</span>
+        ${state.liveMode
+          ? `<span class="live-indicator"><span class="live-dot"></span>Live</span>`
+          : (hasUpload ? `<span class="live-indicator" style="color: var(--text-faint);">Read-only</span>` : '')}
+      </div>
+      <button class="primary" id="new-entry" ${canCreate ? '' : 'disabled title="Pick a folder first"'}>+ New entry</button>
+      ${hasUpload
+        ? `<label class="icon" style="cursor: pointer;" title="Reload files">
+             ↻
+             <input type="file" id="reload-input" webkitdirectory directory multiple style="display:none">
+           </label>`
+        : `<button class="icon" id="refresh" title="Refresh">↻</button>`}
+      <button class="icon" id="change-folder" title="Change folder">Folder</button>
+      <button class="icon" id="disconnect" title="Disconnect">×</button>
+    </div>
+  `;
+}
+
+function renderMonthHeader() {
+  const m = state.displayedMonth;
+  const title = `${MONTH_NAMES[m.getMonth()]} ${m.getFullYear()}`;
+  return `
+    <div class="month-header">
+      <h2>${title}</h2>
+      <button class="icon" id="prev-month">‹</button>
+      <button id="today">Today</button>
+      <button class="icon" id="next-month">›</button>
+    </div>
+  `;
+}
+
+function renderWeekdayRow() {
+  return `<div class="weekday-row">${WEEKDAY_NAMES.map(d => `<div>${d}</div>`).join('')}</div>`;
+}
+
+function renderMonthGrid() {
+  const m = state.displayedMonth;
+  const year = m.getFullYear();
+  const month = m.getMonth();
+  const firstOfMonth = new Date(year, month, 1);
+  const startOffset = firstOfMonth.getDay(); // Sunday = 0
+  const gridStart = new Date(year, month, 1 - startOffset);
+
+  // Group entries by start-of-day timestamp
+  const sourceEntries = state.filterTag
+    ? state.entries.filter(e => e.tags.includes(state.filterTag))
+    : state.entries;
+  const buckets = new Map();
+  for (const e of sourceEntries) {
+    const key = startOfDay(e.date).getTime();
+    if (!buckets.has(key)) buckets.set(key, []);
+    buckets.get(key).push(e);
+  }
+
+  const cells = [];
+  const today = startOfDay(new Date());
+  for (let i = 0; i < 42; i++) {
+    const day = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + i);
+    const key = day.getTime();
+    const dayEntries = (buckets.get(key) || []).sort(compareEntriesForDay);
+
+    const classes = ['day'];
+    if (!isSameMonth(day, m)) classes.push('other-month');
+    if (isSameDay(day, today)) classes.push('today');
+    if (isSameDay(day, state.selectedDate)) classes.push('selected');
+
+    const pills = dayEntries.slice(0, 3).map(e => {
+      const firstTag = e.tags[0];
+      const pillStyle = firstTag ? `style="${tagStyleAttr(firstTag)}"` : '';
+      const tagLabel = firstTag
+        ? `<span class="pill-tag">${escapeHtml(firstTag)}</span>`
+        : '';
+      const titleAttr = firstTag ? `${firstTag} · ${e.title}` : e.title;
+      return `<div class="entry-pill" title="${escapeAttr(titleAttr)}" ${pillStyle}>${tagLabel}<span class="pill-title">${escapeHtml(e.title)}</span></div>`;
+    }).join('');
+    const more = dayEntries.length > 3
+      ? `<div class="more-indicator">+${dayEntries.length - 3} more</div>`
+      : '';
+
+    cells.push(`
+      <div class="${classes.join(' ')}" data-date="${day.toISOString()}">
+        <div class="day-number">${day.getDate()}</div>
+        ${pills}
+        ${more}
+      </div>
+    `);
+  }
+  return `<div class="month-grid">${cells.join('')}</div>`;
+}
+
+function renderDetail() {
+  const dayEntries = state.entries
+    .filter(e => isSameDay(e.date, state.selectedDate))
+    .filter(e => !state.filterTag || e.tags.includes(state.filterTag))
+    .sort(compareEntriesForDay);
+
+  const dateStr = state.selectedDate.toLocaleDateString(undefined, {
+    weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+  });
+
+  let body;
+  if (dayEntries.length === 0) {
+    body = `<div class="empty">No entries</div>`;
+  } else {
+    body = dayEntries.map(renderEntryCard).join('');
+  }
+
+  return `
+    <div class="detail-header">
+      <div style="display: flex; align-items: flex-start; gap: 8px;">
+        <div style="flex: 1;">
+          <h3>${escapeHtml(dateStr)}</h3>
+          <div class="count">${dayEntries.length} ${dayEntries.length === 1 ? 'entry' : 'entries'}</div>
+        </div>
+        ${(state.rootHandle || state.uploadedFiles) ? `<button class="icon" id="new-entry-here" title="New entry on this day">+</button>` : ''}
+      </div>
+    </div>
+    <div class="detail-body">${body}</div>
+  `;
+}
+
+function renderEntryCard(e) {
+  const fmtTime = (d) => d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+  let timeDisplay = fmtTime(e.date);
+  if (e.endDate) {
+    const sameDay = isSameDay(e.date, e.endDate);
+    const durMs = e.endDate - e.date;
+    const totalMin = Math.round(durMs / 60000);
+    const h = Math.floor(totalMin / 60);
+    const m = totalMin % 60;
+    const durParts = [];
+    if (h) durParts.push(`${h}h`);
+    if (m) durParts.push(`${m}m`);
+    const durStr = durParts.join(' ') || '0m';
+    timeDisplay = sameDay
+      ? `${fmtTime(e.date)} – ${fmtTime(e.endDate)} <span style="color: var(--text-faint);">· ${durStr}</span>`
+      : `${fmtTime(e.date)} – ${fmtTime(e.endDate)} (next day) <span style="color: var(--text-faint);">· ${durStr}</span>`;
+  }
+  const tags = e.tags.length
+    ? `<div class="entry-tags">${e.tags.map(t => `<span class="tag clickable" data-tag="${escapeAttr(t)}" style="${tagStyleAttr(t, { active: t === state.filterTag })}">${escapeHtml(t)}</span>`).join('')}</div>`
+    : '';
+  const previewBody = e.bodyWithoutRequirements ?? e.body;
+  const truncated = previewBody && previewBody.length > 800
+    ? previewBody.slice(0, 800) + '…'
+    : previewBody;
+  const body = previewBody
+    ? `<div class="entry-body md">${renderMarkdown(truncated)}</div>`
+    : '';
+  const reqs = e.requirements.length
+    ? `<div style="margin-top: 6px; font-size: 11px;">
+         <div style="color: var(--text-muted); margin-bottom: 2px; font-weight: 500;">Requirements</div>
+         <ul style="margin: 0; padding-left: 16px; color: var(--text); line-height: 1.5;">
+           ${e.requirements.map(r => `<li>${escapeHtml(r)}</li>`).join('')}
+         </ul>
+       </div>`
+    : '';
+
+  const excluded = new Set(['title','date','tags','created','published','end','end_date','enddate','duration']);
+  const extras = Object.entries(e.frontMatter).filter(([k]) => !excluded.has(k.toLowerCase()));
+  const meta = extras.length
+    ? `<div class="entry-meta"><dl>${extras.map(([k, v]) =>
+        `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(Array.isArray(v) ? v.join(', ') : String(v))}</dd>`
+       ).join('')}</dl></div>`
+    : '';
+
+  return `
+    <div class="entry-card" data-entry-id="${escapeAttr(e.id)}" tabindex="0" role="button" aria-label="Edit ${escapeAttr(e.title)}">
+      <h4>${escapeHtml(e.title)}</h4>
+      <div class="relpath" title="${escapeAttr(e.relpath)}">${escapeHtml(e.relpath)}</div>
+      <div class="entry-time">${timeDisplay}</div>
+      ${tags}
+      ${body}
+      ${reqs}
+      ${meta}
+    </div>
+  `;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[c]);
+}
+function escapeAttr(s) { return escapeHtml(s); }
+
+// Tiny markdown renderer for entry-body previews.
+// Strategy: escape HTML first, then apply markdown rules to the escaped output.
+// This makes the renderer XSS-safe — any < or > in source content is already
+// neutralized before we add our own tags.
+// Supported: headings, bold, italic, inline code, fenced code, blockquote,
+// ordered/unordered lists, hr, links, paragraphs.
+function renderMarkdown(src) {
+  if (!src) return '';
+  // Normalize line endings, trim ends
+  const text = String(src).replace(/\r\n?/g, '\n').replace(/\s+$/, '');
+
+  const lines = text.split('\n');
+  const html = [];
+  let i = 0;
+
+  const inlineFormat = (s) => {
+    // Already-escaped HTML — apply inline markdown.
+    // Inline code first so its content isn't treated as bold/italic
+    s = s.replace(/`([^`\n]+?)`/g, (_, code) => `<code>${code}</code>`);
+    // Bold (** or __)
+    s = s.replace(/\*\*([^\*\n]+?)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/__([^_\n]+?)__/g, '<strong>$1</strong>');
+    // Italic (* or _) — avoid matching inside bold by requiring single delimiter
+    s = s.replace(/(^|[^\*])\*([^\*\n]+?)\*([^\*]|$)/g, '$1<em>$2</em>$3');
+    s = s.replace(/(^|[^_])_([^_\n]+?)_([^_]|$)/g, '$1<em>$2</em>$3');
+    // Strikethrough
+    s = s.replace(/~~([^~\n]+?)~~/g, '<del>$1</del>');
+    // Links [text](url) — only http/https/mailto for safety
+    s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|mailto:[^\s)]+)\)/g,
+      (_, label, href) => `<a href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`);
+    return s;
+  };
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    // Skip blank lines
+    if (/^\s*$/.test(line)) { i++; continue; }
+
+    // Fenced code block ```
+    const fenceMatch = line.match(/^```(\w*)\s*$/);
+    if (fenceMatch) {
+      i++;
+      const codeLines = [];
+      while (i < lines.length && !/^```\s*$/.test(lines[i])) {
+        codeLines.push(lines[i]);
+        i++;
+      }
+      if (i < lines.length) i++; // consume closing fence
+      html.push(`<pre><code>${escapeHtml(codeLines.join('\n'))}</code></pre>`);
+      continue;
+    }
+
+    // Heading
+    const headMatch = line.match(/^(#{1,6})\s+(.+?)\s*#*\s*$/);
+    if (headMatch) {
+      const level = Math.min(headMatch[1].length + 2, 6); // demote so md h1 → h3 in cards
+      html.push(`<h${level}>${inlineFormat(escapeHtml(headMatch[2]))}</h${level}>`);
+      i++;
+      continue;
+    }
+
+    // Horizontal rule
+    if (/^\s*(-\s*-\s*-+|\*\s*\*\s*\*+|_\s*_\s*_+)\s*$/.test(line)) {
+      html.push('<hr>');
+      i++;
+      continue;
+    }
+
+    // Blockquote
+    if (/^\s*>/.test(line)) {
+      const buf = [];
+      while (i < lines.length && /^\s*>/.test(lines[i])) {
+        buf.push(lines[i].replace(/^\s*>\s?/, ''));
+        i++;
+      }
+      html.push(`<blockquote>${inlineFormat(escapeHtml(buf.join(' ')))}</blockquote>`);
+      continue;
+    }
+
+    // Unordered list
+    if (/^\s*[-*+]\s+/.test(line)) {
+      const items = [];
+      while (i < lines.length && /^\s*[-*+]\s+/.test(lines[i])) {
+        const m = lines[i].match(/^\s*[-*+]\s+(.*)$/);
+        // Strip task-list checkbox if present
+        const text = m[1].replace(/^\[\s*[ xX]?\s*\]\s*/, '');
+        items.push(`<li>${inlineFormat(escapeHtml(text))}</li>`);
+        i++;
+      }
+      html.push(`<ul>${items.join('')}</ul>`);
+      continue;
+    }
+
+    // Ordered list
+    if (/^\s*\d+\.\s+/.test(line)) {
+      const items = [];
+      while (i < lines.length && /^\s*\d+\.\s+/.test(lines[i])) {
+        const m = lines[i].match(/^\s*\d+\.\s+(.*)$/);
+        items.push(`<li>${inlineFormat(escapeHtml(m[1]))}</li>`);
+        i++;
+      }
+      html.push(`<ol>${items.join('')}</ol>`);
+      continue;
+    }
+
+    // Paragraph: collect consecutive non-blank, non-block lines
+    const paraLines = [];
+    while (i < lines.length && !/^\s*$/.test(lines[i])
+        && !/^```/.test(lines[i])
+        && !/^#{1,6}\s/.test(lines[i])
+        && !/^\s*>/.test(lines[i])
+        && !/^\s*[-*+]\s/.test(lines[i])
+        && !/^\s*\d+\.\s/.test(lines[i])
+        && !/^\s*(-\s*-\s*-+|\*\s*\*\s*\*+|_\s*_\s*_+)\s*$/.test(lines[i])) {
+      paraLines.push(lines[i]);
+      i++;
+    }
+    if (paraLines.length) {
+      html.push(`<p>${inlineFormat(escapeHtml(paraLines.join(' ')))}</p>`);
+    }
+  }
+  return html.join('');
+}
+
+// Deterministic tag color: hash the (lowercased) tag to a hue, derive HSL bg/fg.
+// Same tag → same color every time, across sessions and devices.
+// 24 evenly-spaced hues, plus small per-bucket lightness/saturation tweaks to
+// compensate for HSL's perceptual non-uniformity (yellows/greens look brighter
+// than blues/purples at the same lightness).
+const TAG_PALETTE = [
+  // [hue, lightnessBoost, satBoost]  applied additively to base values
+  [0,   0,  0], [15,  0, -2], [30, -3, -3], [45, -5, -5], [60, -8, -8], [75, -5, -5],
+  [90, -3, -3], [110,-2, -2], [130, 0,  0], [150, 0,  0], [170, 0,  2], [190, 0,  4],
+  [210, 2,  4], [225, 3,  4], [275, 4,  4], [290, 4,  3], [305, 3,  2], [320, 2,  0],
+  [335, 0,  0], [350, 0,  0], [200, 1,  3], [240, 4,  3], [120,-1, -1], [160, 0,  0]
+];
+
+function tagColors(tag) {
+  const s = String(tag).toLowerCase();
+  // FNV-1a primary hash...
+  let h1 = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h1 ^= s.charCodeAt(i);
+    h1 = Math.imul(h1, 0x01000193) >>> 0;
+  }
+  // ...DJB2 in reverse for a decorrelated secondary hash.
+  let h2 = 5381;
+  for (let i = s.length - 1; i >= 0; i--) {
+    h2 = ((h2 << 5) + h2 + s.charCodeAt(i)) >>> 0;
+  }
+  // Splitmix-style finalizer scrambles bits so adjacent inputs map to far-apart palette slots.
+  let mixed = (h1 ^ Math.imul(h2, 0x9e3779b1)) >>> 0;
+  mixed = Math.imul(mixed ^ (mixed >>> 16), 0x85ebca6b) >>> 0;
+  mixed = Math.imul(mixed ^ (mixed >>> 13), 0xc2b2ae35) >>> 0;
+  mixed = (mixed ^ (mixed >>> 16)) >>> 0;
+
+  const slot = TAG_PALETTE[mixed % TAG_PALETTE.length];
+  const [baseHue, lBoost, sBoost] = slot;
+
+  // Per-tag jitter using secondary hash bits — keeps colors distinguishable
+  // even when two tags happen to land on the same palette slot.
+  const hueShift = ((h2 >>> 4) % 11) - 5;     // ±5 degrees
+  const satJitter = ((h2 >>> 12) % 9) - 4;    // ±4
+  const lightJitter = ((h2 >>> 20) % 7) - 3;  // ±3
+  const hue = (baseHue + hueShift + 360) % 360;
+
+  const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (isDark) {
+    const bgSat = Math.max(20, 38 + sBoost + satJitter);
+    const bgLight = Math.max(15, 24 + lBoost + lightJitter);
+    const fgSat = Math.max(50, 70 + sBoost + satJitter);
+    const fgLight = Math.min(90, 78 + lBoost + lightJitter);
+    const bdSat = Math.max(20, 32 + sBoost + satJitter);
+    const bdLight = Math.max(20, 34 + lBoost + lightJitter);
+    return {
+      bg: `hsl(${hue}, ${bgSat}%, ${bgLight}%)`,
+      fg: `hsl(${hue}, ${fgSat}%, ${fgLight}%)`,
+      border: `hsl(${hue}, ${bdSat}%, ${bdLight}%)`,
+    };
+  }
+  const bgSat = Math.max(40, 72 + sBoost + satJitter);
+  const bgLight = Math.min(96, 91 + lBoost + lightJitter);
+  const fgSat = Math.max(35, 60 + sBoost + satJitter);
+  const fgLight = Math.max(20, 30 + lBoost + lightJitter);
+  const bdSat = Math.max(30, 52 + sBoost + satJitter);
+  const bdLight = Math.min(90, 78 + lBoost + lightJitter);
+  return {
+    bg: `hsl(${hue}, ${bgSat}%, ${bgLight}%)`,
+    fg: `hsl(${hue}, ${fgSat}%, ${fgLight}%)`,
+    border: `hsl(${hue}, ${bdSat}%, ${bdLight}%)`,
+  };
+}
+
+function tagStyleAttr(tag, { active = false } = {}) {
+  if (active) {
+    // Active filter state — use accent for visual hierarchy regardless of tag
+    return 'background: var(--accent); color: white; border-color: var(--accent);';
+  }
+  const { bg, fg, border } = tagColors(tag);
+  return `background: ${bg}; color: ${fg}; border: 1px solid ${border};`;
+}
+
+function wireMain() {
+  document.getElementById('refresh')?.addEventListener('click', refreshNow);
+  document.getElementById('reload-input')?.addEventListener('change', e => {
+    handleFileInput(e.target.files);
+    e.target.value = '';
+  });
+  document.getElementById('change-folder')?.addEventListener('click', pickFolder);
+  document.getElementById('disconnect')?.addEventListener('click', disconnectFolder);
+  document.getElementById('new-entry')?.addEventListener('click', () => openNewEntryModal(state.selectedDate));
+  document.getElementById('new-entry-here')?.addEventListener('click', () => openNewEntryModal(state.selectedDate));
+
+  // View toggle
+  document.getElementById('view-calendar')?.addEventListener('click', () => {
+    state.view = 'calendar';
+    render();
+  });
+  document.getElementById('view-week')?.addEventListener('click', () => {
+    state.view = 'week';
+    if (!state.summaryWeekStart) {
+      state.summaryWeekStart = startOfWeek(state.selectedDate, 1);
+    }
+    render();
+  });
+  document.getElementById('view-timeline')?.addEventListener('click', () => {
+    state.view = 'timeline';
+    render();
+  });
+
+  // Week view navigation
+  document.getElementById('week-prev')?.addEventListener('click', () => {
+    const cur = state.summaryWeekStart || startOfWeek(state.selectedDate, 1);
+    const prev = new Date(cur);
+    prev.setDate(prev.getDate() - 7);
+    state.summaryWeekStart = prev;
+    render();
+  });
+  document.getElementById('week-next')?.addEventListener('click', () => {
+    const cur = state.summaryWeekStart || startOfWeek(state.selectedDate, 1);
+    const nxt = new Date(cur);
+    nxt.setDate(nxt.getDate() + 7);
+    state.summaryWeekStart = nxt;
+    render();
+  });
+  document.getElementById('week-this')?.addEventListener('click', () => {
+    state.summaryWeekStart = startOfWeek(new Date(), 1);
+    state.selectedDate = startOfDay(new Date());
+    render();
+  });
+  // Click a day-column header to select that day
+  document.querySelectorAll('.week-day-headers .day-col[data-week-day-index]').forEach(el => {
+    el.addEventListener('click', () => {
+      const i = parseInt(el.dataset.weekDayIndex, 10);
+      const weekStart = startOfWeek(state.summaryWeekStart || state.selectedDate, 1);
+      const d = new Date(weekStart);
+      d.setDate(d.getDate() + i);
+      state.selectedDate = startOfDay(d);
+      render();
+    });
+  });
+  // Click an event in the week view to open edit modal
+  document.querySelectorAll('.week-event[data-entry-id], .week-allday-event[data-entry-id]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = el.getAttribute('data-entry-id');
+      const entry = state.entries.find(x => x.id === id);
+      if (entry) openEditEntryModal(entry);
+    });
+  });
+  // Double-click an empty day column to create a new entry
+  document.querySelectorAll('.week-time-grid .day-column[data-date]').forEach(el => {
+    el.addEventListener('dblclick', (e) => {
+      if (e.target !== el) return; // ignore clicks on event blocks
+      if (!state.rootHandle && !state.uploadedFiles) return;
+      const d = startOfDay(new Date(el.dataset.date));
+      openNewEntryModal(d);
+    });
+  });
+
+  // Summary panel
+  document.getElementById('toggle-summary')?.addEventListener('click', () => {
+    state.showSummary = !state.showSummary;
+    if (state.showSummary && !state.summaryWeekStart) {
+      state.summaryWeekStart = startOfWeek(state.selectedDate, 1);
+    }
+    render();
+  });
+  document.getElementById('close-summary')?.addEventListener('click', () => {
+    state.showSummary = false;
+    render();
+  });
+  document.getElementById('prev-week')?.addEventListener('click', () => {
+    const cur = state.summaryWeekStart || startOfWeek(state.selectedDate, 1);
+    const prev = new Date(cur);
+    prev.setDate(prev.getDate() - 7);
+    state.summaryWeekStart = prev;
+    render();
+  });
+  document.getElementById('next-week')?.addEventListener('click', () => {
+    const cur = state.summaryWeekStart || startOfWeek(state.selectedDate, 1);
+    const nxt = new Date(cur);
+    nxt.setDate(nxt.getDate() + 7);
+    state.summaryWeekStart = nxt;
+    render();
+  });
+  document.getElementById('this-week')?.addEventListener('click', () => {
+    state.summaryWeekStart = startOfWeek(new Date(), 1);
+    render();
+  });
+  document.getElementById('summary-aggregated')?.addEventListener('click', () => {
+    state.summaryMode = 'aggregated';
+    render();
+  });
+  document.getElementById('summary-breakdown')?.addEventListener('click', () => {
+    state.summaryMode = 'breakdown';
+    render();
+  });
+
+  // Tag filter dropdown
+  document.getElementById('tag-filter')?.addEventListener('change', (e) => {
+    state.filterTag = e.target.value || null;
+    render();
+  });
+  document.getElementById('clear-tag')?.addEventListener('click', () => {
+    state.filterTag = null;
+    render();
+  });
+
+  // Clickable tag pills (in entry cards and timeline)
+  document.querySelectorAll('.tag.clickable[data-tag]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation(); // don't trigger the entry-card or timeline-item click
+      const tag = el.getAttribute('data-tag');
+      state.filterTag = state.filterTag === tag ? null : tag;
+      render();
+    });
+  });
+
+  // Calendar nav (only present in calendar view)
+  document.getElementById('prev-month')?.addEventListener('click', () => {
+    state.displayedMonth = new Date(state.displayedMonth.getFullYear(), state.displayedMonth.getMonth() - 1, 1);
+    render();
+  });
+  document.getElementById('next-month')?.addEventListener('click', () => {
+    state.displayedMonth = new Date(state.displayedMonth.getFullYear(), state.displayedMonth.getMonth() + 1, 1);
+    render();
+  });
+  document.getElementById('today')?.addEventListener('click', () => {
+    const t = new Date();
+    state.displayedMonth = new Date(t.getFullYear(), t.getMonth(), 1);
+    state.selectedDate = startOfDay(t);
+    render();
+  });
+  document.querySelectorAll('.day').forEach(el => {
+    el.addEventListener('click', () => {
+      state.selectedDate = startOfDay(new Date(el.dataset.date));
+      const d = state.selectedDate;
+      if (!isSameMonth(d, state.displayedMonth)) {
+        state.displayedMonth = new Date(d.getFullYear(), d.getMonth(), 1);
+      }
+      render();
+    });
+    el.addEventListener('dblclick', (e) => {
+      e.stopPropagation();
+      if (state.rootHandle) {
+        const d = startOfDay(new Date(el.dataset.date));
+        openNewEntryModal(d);
+      }
+    });
+  });
+
+  // Entry cards (calendar detail pane)
+  document.querySelectorAll('.entry-card[data-entry-id]').forEach(el => {
+    const open = () => {
+      const id = el.getAttribute('data-entry-id');
+      const entry = state.entries.find(e => e.id === id);
+      if (entry) openEditEntryModal(entry);
+    };
+    el.addEventListener('click', open);
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        open();
+      }
+    });
+  });
+
+  // Timeline items
+  document.querySelectorAll('.timeline-item[data-entry-id]').forEach(el => {
+    const open = () => {
+      const id = el.getAttribute('data-entry-id');
+      const entry = state.entries.find(e => e.id === id);
+      if (entry) openEditEntryModal(entry);
+    };
+    el.addEventListener('click', open);
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        open();
+      }
+    });
+  });
+}
+
+// ---------- New entry modal ----------
+async function openNewEntryModal(forDate) {
+  let subfolders = [''];
+  if (state.rootHandle) {
+    try {
+      subfolders = await listSubfolders(state.rootHandle);
+    } catch (e) {
+      console.warn('Could not list subfolders', e);
+    }
+  } else if (state.uploadedFiles) {
+    // Derive subfolders from uploaded file paths
+    const set = new Set(['']);
+    for (const rec of state.uploadedFiles) {
+      const parts = rec.relpath.split('/');
+      // skip the root folder name (first part) and the filename (last part)
+      for (let i = 1; i < parts.length - 1; i++) {
+        set.add(parts.slice(1, i + 1).join('/'));
+      }
+    }
+    subfolders = Array.from(set).sort();
+  }
+
+  const isUploadMode = !state.rootHandle && !!state.uploadedFiles;
+
+  const dateStr = `${forDate.getFullYear()}-${pad(forDate.getMonth() + 1)}-${pad(forDate.getDate())}`;
+  const now = new Date();
+  const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+
+  const backdrop = document.createElement('div');
+  backdrop.className = 'modal-backdrop';
+  backdrop.innerHTML = `
+    <div class="modal" role="dialog" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <h3 id="modal-title">New entry</h3>
+      </div>
+      <div class="modal-body">
+        ${isUploadMode ? `
+          <div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; font-size: 12px; color: var(--text-muted); line-height: 1.5;">
+            Your browser can't write directly to the folder. The entry will be downloaded as a <code>.md</code> file — drop it into your folder, then click <strong>Reload files</strong> to see it stick.
+          </div>
+        ` : ''}
+        <div class="field">
+          <label for="ne-title">Title</label>
+          <input id="ne-title" type="text" placeholder="Meeting notes, journal, etc." autocomplete="off">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="ne-date">Date</label>
+            <input id="ne-date" type="date" value="${dateStr}">
+          </div>
+          <div class="field">
+            <label for="ne-time">Start time (optional)</label>
+            <input id="ne-time" type="time" value="${timeStr}">
+          </div>
+          <div class="field">
+            <label for="ne-end-time">End time (optional)</label>
+            <input id="ne-end-time" type="time" value="">
+          </div>
+        </div>
+        <div class="field-hint" id="ne-duration-hint" style="margin-top: -6px;">Set a start time first to enable duration.</div>
+        <div class="field">
+          <label for="ne-tags">Tags</label>
+          <input id="ne-tags" type="text" placeholder="comma-separated, e.g. work, meeting" autocomplete="off">
+        </div>
+        <div class="field">
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: normal; font-size: 13px; color: var(--text);">
+            <input id="ne-repeat" type="checkbox" style="width: auto; margin: 0;">
+            Repeat weekly until
+          </label>
+          <div id="ne-repeat-row" style="display: none; margin-top: 6px;">
+            <input id="ne-until" type="date">
+            <div class="field-hint" id="ne-occurrence-count" style="margin-top: 4px;">—</div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="ne-subfolder">Folder</label>
+          <select id="ne-subfolder">
+            ${subfolders.map(s => `<option value="${escapeAttr(s)}">${s ? escapeHtml(s) : '(root)'}</option>`).join('')}
+          </select>
+          <div class="field-hint">${isUploadMode
+            ? 'Folder choice is informational only — you decide where to save the download.'
+            : 'File saves as <code>yyyy-MM-dd-title-slug.md</code>'}</div>
+        </div>
+        <div class="field">
+          <label for="ne-body">Body (markdown)</label>
+          <textarea id="ne-body" placeholder="Write your entry here..."></textarea>
+        </div>
+        <div class="field">
+          <label for="ne-requirements">Requirements (one per line)</label>
+          <textarea id="ne-requirements" placeholder="e.g.&#10;projector&#10;handouts&#10;coffee for 8" style="min-height: 80px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px;"></textarea>
+          <div class="field-hint">Saved as a <code>## Requirements</code> section at the end of the body.</div>
+        </div>
+        ${renderExtrasSection('ne-extras', [])}
+        <p class="modal-error" id="ne-error" style="display: none;"></p>
+      </div>
+      <div class="modal-footer">
+        <button id="ne-cancel">Cancel</button>
+        <button class="primary" id="ne-create">${isUploadMode ? 'Download entry' : 'Create entry'}</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(backdrop);
+
+  const titleInput = backdrop.querySelector('#ne-title');
+  const dateInput = backdrop.querySelector('#ne-date');
+  const timeInput = backdrop.querySelector('#ne-time');
+  const tagsInput = backdrop.querySelector('#ne-tags');
+  const subfolderSelect = backdrop.querySelector('#ne-subfolder');
+  const bodyInput = backdrop.querySelector('#ne-body');
+  const errorEl = backdrop.querySelector('#ne-error');
+  const cancelBtn = backdrop.querySelector('#ne-cancel');
+  const createBtn = backdrop.querySelector('#ne-create');
+  const repeatCheckbox = backdrop.querySelector('#ne-repeat');
+  const repeatRow = backdrop.querySelector('#ne-repeat-row');
+  const untilInput = backdrop.querySelector('#ne-until');
+  const occurrenceCount = backdrop.querySelector('#ne-occurrence-count');
+  const endTimeInput = backdrop.querySelector('#ne-end-time');
+  const durationHint = backdrop.querySelector('#ne-duration-hint');
+  const extrasContainer = backdrop.querySelector('#ne-extras');
+  const requirementsInput = backdrop.querySelector('#ne-requirements');
+  wireExtrasSection(backdrop);
+
+  function updateDurationHint() {
+    const hasStart = !!timeInput.value;
+    const hasEnd = !!endTimeInput.value;
+    endTimeInput.disabled = !hasStart;
+    if (!hasStart) {
+      durationHint.textContent = 'Set a start time first to enable an end time.';
+      durationHint.style.color = '';
+      return;
+    }
+    if (!hasEnd) {
+      durationHint.textContent = 'Add an end time to record duration.';
+      durationHint.style.color = '';
+      return;
+    }
+    durationHint.textContent = formatDurationLabel(timeInput.value, endTimeInput.value);
+    durationHint.style.color = '';
+  }
+  timeInput.addEventListener('input', updateDurationHint);
+  endTimeInput.addEventListener('input', updateDurationHint);
+  updateDurationHint();
+
+  // Default the "until" date to ~3 months out
+  const defaultUntil = new Date(forDate);
+  defaultUntil.setMonth(defaultUntil.getMonth() + 3);
+  untilInput.value = `${defaultUntil.getFullYear()}-${pad(defaultUntil.getMonth() + 1)}-${pad(defaultUntil.getDate())}`;
+
+  function updateOccurrenceCount() {
+    if (!repeatCheckbox.checked || !dateInput.value || !untilInput.value) {
+      occurrenceCount.textContent = '—';
+      occurrenceCount.style.color = '';
+      return;
+    }
+    const start = new Date(`${dateInput.value}T00:00`);
+    const until = new Date(`${untilInput.value}T23:59`);
+    if (until < start) {
+      occurrenceCount.textContent = 'End date must be on or after the start date';
+      occurrenceCount.style.color = '#d24747';
+      return;
+    }
+    const occs = buildOccurrences(start, { kind: 'weekly', until: untilInput.value });
+    const weekday = start.toLocaleDateString(undefined, { weekday: 'long' });
+    occurrenceCount.textContent = `${occs.length} ${occs.length === 1 ? 'occurrence' : 'occurrences'} — every ${weekday}`;
+    occurrenceCount.style.color = '';
+  }
+
+  repeatCheckbox.addEventListener('change', () => {
+    repeatRow.style.display = repeatCheckbox.checked ? '' : 'none';
+    updateButtonLabel();
+    updateOccurrenceCount();
+  });
+  untilInput.addEventListener('input', updateOccurrenceCount);
+  dateInput.addEventListener('input', updateOccurrenceCount);
+
+  function updateButtonLabel() {
+    const repeating = repeatCheckbox.checked;
+    if (isUploadMode) {
+      createBtn.textContent = repeating ? 'Download entries' : 'Download entry';
+    } else {
+      createBtn.textContent = repeating ? 'Create entries' : 'Create entry';
+    }
+  }
+
+  setTimeout(() => titleInput.focus(), 50);
+
+  function close() {
+    backdrop.remove();
+    document.removeEventListener('keydown', escHandler);
+  }
+  function escHandler(e) {
+    if (e.key === 'Escape') close();
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) submit();
+  }
+  document.addEventListener('keydown', escHandler);
+  backdrop.addEventListener('click', (e) => {
+    if (e.target === backdrop) close();
+  });
+  cancelBtn.addEventListener('click', close);
+
+  async function submit() {
+    errorEl.style.display = 'none';
+    const title = titleInput.value.trim();
+    if (!title) {
+      errorEl.textContent = 'Title is required';
+      errorEl.style.display = 'block';
+      titleInput.focus();
+      return;
+    }
+    if (!dateInput.value) {
+      errorEl.textContent = 'Date is required';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    let recurrence = null;
+    if (repeatCheckbox.checked) {
+      if (!untilInput.value) {
+        errorEl.textContent = 'End date is required for repeating entries';
+        errorEl.style.display = 'block';
+        untilInput.focus();
+        return;
+      }
+      const start = new Date(`${dateInput.value}T00:00`);
+      const until = new Date(`${untilInput.value}T23:59`);
+      if (until < start) {
+        errorEl.textContent = 'End date must be on or after the start date';
+        errorEl.style.display = 'block';
+        return;
+      }
+      recurrence = { kind: 'weekly', until: untilInput.value };
+
+      // Safety check on burst-downloads in upload mode
+      if (isUploadMode) {
+        const occs = buildOccurrences(start, recurrence);
+        if (occs.length > 12) {
+          if (!confirm(`This will trigger ${occs.length} downloads. Continue?`)) return;
+        }
+      }
+    }
+
+    const tags = tagsInput.value
+      .split(',')
+      .map(t => t.trim())
+      .filter(Boolean);
+
+    createBtn.disabled = true;
+    createBtn.textContent = isUploadMode ? 'Downloading…' : 'Creating…';
+
+    try {
+      const result = await createEntry({
+        title,
+        dateString: dateInput.value,
+        timeString: timeInput.value,
+        endTimeString: endTimeInput.value,
+        tags,
+        body: bodyInput.value,
+        requirements: parseRequirementsList(requirementsInput.value),
+        subfolder: subfolderSelect.value,
+        recurrence,
+        extraFields: collectExtrasFromContainer(extrasContainer),
+      });
+      close();
+      render();
+      if (result.mode === 'downloaded') {
+        showToast(result.count > 1
+          ? `Downloaded ${result.count} entries — drop them into your folder`
+          : `Downloaded ${result.relpath} — drop it into your folder`);
+      } else {
+        showToast(result.count > 1
+          ? `Created ${result.count} entries`
+          : `Created ${result.relpath}`);
+      }
+    } catch (err) {
+      console.error(err);
+      errorEl.textContent = `Could not create file: ${err.message}`;
+      errorEl.style.display = 'block';
+      createBtn.disabled = false;
+      updateButtonLabel();
+    }
+  }
+  createBtn.addEventListener('click', submit);
+}
+
+// ---------- Edit entry modal ----------
+async function openEditEntryModal(entry) {
+  const isUploadMode = !state.rootHandle && !!state.uploadedFiles;
+
+  const date = entry.date;
+  const dateStr = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+  // Determine if the original had a time component by checking the front-matter date string
+  const rawDate = entry.frontMatter.date || entry.frontMatter.created || entry.frontMatter.published || '';
+  const hadTime = /\d{1,2}:\d{2}/.test(String(rawDate));
+  const timeStr = hadTime ? `${pad(date.getHours())}:${pad(date.getMinutes())}` : '';
+
+  // Pre-fill end time if entry has one
+  let endTimeStr = '';
+  if (entry.endDate && hadTime) {
+    endTimeStr = `${pad(entry.endDate.getHours())}:${pad(entry.endDate.getMinutes())}`;
+  }
+
+  const tagsStr = (entry.tags || []).join(', ');
+
+  // Capture extra front-matter fields (anything not in our standard or duration-related set)
+  const standardKeys = new Set(['title', 'date', 'tags', 'created', 'published', 'end', 'end_date', 'enddate', 'duration']);
+  const extraEntries = Object.entries(entry.frontMatter).filter(([k]) => !standardKeys.has(k.toLowerCase()));
+
+  const backdrop = document.createElement('div');
+  backdrop.className = 'modal-backdrop';
+  backdrop.innerHTML = `
+    <div class="modal" role="dialog" aria-labelledby="edit-modal-title">
+      <div class="modal-header">
+        <h3 id="edit-modal-title">Edit entry</h3>
+      </div>
+      <div class="modal-body">
+        ${isUploadMode ? `
+          <div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; font-size: 12px; color: var(--text-muted); line-height: 1.5;">
+            Your browser can't write directly to the folder. Saving will download a replacement <code>.md</code> file with the same name — overwrite the original in your folder, then click <strong>Reload files</strong>.
+          </div>
+        ` : ''}
+        <div class="field">
+          <label>File</label>
+          <div class="field-hint" style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--text-muted); padding: 8px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); word-break: break-all;">
+            ${escapeHtml(entry.relpath)}
+          </div>
+          <div class="field-hint">Filename stays the same — change the title to update display only, or delete and recreate to rename.</div>
+        </div>
+        <div class="field">
+          <label for="ee-title">Title</label>
+          <input id="ee-title" type="text" autocomplete="off" value="${escapeAttr(entry.title)}">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="ee-date">Date</label>
+            <input id="ee-date" type="date" value="${dateStr}">
+          </div>
+          <div class="field">
+            <label for="ee-time">Start time (optional)</label>
+            <input id="ee-time" type="time" value="${timeStr}">
+          </div>
+          <div class="field">
+            <label for="ee-end-time">End time (optional)</label>
+            <input id="ee-end-time" type="time" value="${endTimeStr}">
+          </div>
+        </div>
+        <div class="field-hint" id="ee-duration-hint" style="margin-top: -6px;"></div>
+        <div class="field">
+          <label for="ee-tags">Tags</label>
+          <input id="ee-tags" type="text" placeholder="comma-separated" autocomplete="off" value="${escapeAttr(tagsStr)}">
+        </div>
+        <div class="field">
+          <label for="ee-body">Body (markdown)</label>
+          <textarea id="ee-body" style="min-height: 160px;">${escapeHtml(entry.bodyWithoutRequirements ?? entry.body)}</textarea>
+        </div>
+        <div class="field">
+          <label for="ee-requirements">Requirements (one per line)</label>
+          <textarea id="ee-requirements" placeholder="e.g.&#10;projector&#10;handouts" style="min-height: 80px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px;">${escapeHtml(entry.requirements.join('\n'))}</textarea>
+          <div class="field-hint">Saved as a <code>## Requirements</code> section at the end of the body.</div>
+        </div>
+        ${renderExtrasSection('ee-extras', extraEntries)}
+        <p class="modal-error" id="ee-error" style="display: none;"></p>
+      </div>
+      <div class="modal-footer">
+        <button class="danger" id="ee-delete">Delete</button>
+        <div style="flex: 1;"></div>
+        <button id="ee-cancel">Cancel</button>
+        <button class="primary" id="ee-save">${isUploadMode ? 'Download changes' : 'Save changes'}</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(backdrop);
+
+  const titleInput = backdrop.querySelector('#ee-title');
+  const dateInput = backdrop.querySelector('#ee-date');
+  const timeInput = backdrop.querySelector('#ee-time');
+  const endTimeInput = backdrop.querySelector('#ee-end-time');
+  const durationHint = backdrop.querySelector('#ee-duration-hint');
+  const tagsInput = backdrop.querySelector('#ee-tags');
+  const bodyInput = backdrop.querySelector('#ee-body');
+  const requirementsInput = backdrop.querySelector('#ee-requirements');
+  const errorEl = backdrop.querySelector('#ee-error');
+  const cancelBtn = backdrop.querySelector('#ee-cancel');
+  const saveBtn = backdrop.querySelector('#ee-save');
+  const deleteBtn = backdrop.querySelector('#ee-delete');
+  const extrasContainer = backdrop.querySelector('#ee-extras');
+  wireExtrasSection(backdrop);
+
+  function updateDurationHint() {
+    const hasStart = !!timeInput.value;
+    const hasEnd = !!endTimeInput.value;
+    endTimeInput.disabled = !hasStart;
+    if (!hasStart) {
+      durationHint.textContent = 'Set a start time first to enable an end time.';
+      return;
+    }
+    if (!hasEnd) {
+      durationHint.textContent = 'Add an end time to record duration.';
+      return;
+    }
+    durationHint.textContent = formatDurationLabel(timeInput.value, endTimeInput.value);
+  }
+  timeInput.addEventListener('input', updateDurationHint);
+  endTimeInput.addEventListener('input', updateDurationHint);
+  updateDurationHint();
+
+  setTimeout(() => titleInput.focus(), 50);
+
+  function close() {
+    backdrop.remove();
+    document.removeEventListener('keydown', escHandler);
+  }
+  function escHandler(e) {
+    if (e.key === 'Escape') close();
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) submit();
+  }
+  document.addEventListener('keydown', escHandler);
+  backdrop.addEventListener('click', (e) => {
+    if (e.target === backdrop) close();
+  });
+  cancelBtn.addEventListener('click', close);
+
+  async function submit() {
+    errorEl.style.display = 'none';
+    const title = titleInput.value.trim();
+    if (!title) {
+      errorEl.textContent = 'Title is required';
+      errorEl.style.display = 'block';
+      titleInput.focus();
+      return;
+    }
+    if (!dateInput.value) {
+      errorEl.textContent = 'Date is required';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    const tags = tagsInput.value.split(',').map(t => t.trim()).filter(Boolean);
+    const extraFields = collectExtrasFromContainer(extrasContainer);
+
+    saveBtn.disabled = true;
+    deleteBtn.disabled = true;
+    saveBtn.textContent = isUploadMode ? 'Downloading…' : 'Saving…';
+
+    try {
+      const result = await updateEntry(entry, {
+        title,
+        dateString: dateInput.value,
+        timeString: timeInput.value,
+        endTimeString: endTimeInput.value,
+        tags,
+        body: bodyInput.value,
+        requirements: parseRequirementsList(requirementsInput.value),
+        extraFields,
+      });
+      close();
+      render();
+      showToast(result.mode === 'downloaded'
+        ? `Downloaded ${entry.relpath.split('/').pop()} — overwrite the original`
+        : `Saved ${result.relpath}`);
+    } catch (err) {
+      console.error(err);
+      errorEl.textContent = `Could not save: ${err.message}`;
+      errorEl.style.display = 'block';
+      saveBtn.disabled = false;
+      deleteBtn.disabled = false;
+      saveBtn.textContent = isUploadMode ? 'Download changes' : 'Save changes';
+    }
+  }
+  saveBtn.addEventListener('click', submit);
+
+  deleteBtn.addEventListener('click', async () => {
+    const message = isUploadMode
+      ? `Remove "${entry.title}" from the calendar? The original file in your folder won't be deleted — you'll need to remove it manually.`
+      : `Permanently delete "${entry.title}"?\n\n${entry.relpath}\n\nThis cannot be undone.`;
+    if (!confirm(message)) return;
+
+    saveBtn.disabled = true;
+    deleteBtn.disabled = true;
+    deleteBtn.textContent = 'Deleting…';
+    try {
+      await deleteEntry(entry);
+      close();
+      render();
+      showToast(isUploadMode ? 'Removed from calendar' : `Deleted ${entry.relpath}`);
+    } catch (err) {
+      console.error(err);
+      errorEl.textContent = `Could not delete: ${err.message}`;
+      errorEl.style.display = 'block';
+      saveBtn.disabled = false;
+      deleteBtn.disabled = false;
+      deleteBtn.textContent = 'Delete';
+    }
+  });
+}
+
+// ---------- Boot ----------
+async function boot() {
+  render();
+  // Try to restore last folder
+  try {
+    const handle = await loadHandle();
+    if (handle) {
+      // Don't auto-prompt — show a banner-style refresh button instead
+      // We'll attempt silent permission check
+      const perm = await handle.queryPermission({ mode: 'readwrite' });
+      if (perm === 'granted') {
+        await loadFromHandle(handle, { firstLoad: true });
+        startPolling();
+        render();
+      } else {
+        // User must re-grant. Show a button in the welcome.
+        const app = document.getElementById('app');
+        app.innerHTML = `
+          <div class="welcome">
+            <div class="welcome-icon">▦</div>
+            <h2>Markdown calendar</h2>
+            <p>Reconnect to <code>${escapeHtml(handle.name)}</code> to resume live watching.</p>
+            <div class="actions">
+              <button class="primary" id="reconnect">Reconnect</button>
+              <button id="pick-different">Pick different folder</button>
+              <button id="forget">Forget</button>
+            </div>
+          </div>
+        `;
+        document.getElementById('reconnect').addEventListener('click', async () => {
+          if (await verifyPermission(handle, 'readwrite')) {
+            await loadFromHandle(handle, { firstLoad: true });
+            startPolling();
+            render();
+          }
+        });
+        document.getElementById('pick-different').addEventListener('click', pickFolder);
+        document.getElementById('forget').addEventListener('click', async () => {
+          await clearHandle();
+          render();
+        });
+      }
+    }
+  } catch (e) {
+    console.warn('Could not restore handle', e);
+  }
+}
+
+window.addEventListener('beforeunload', stopPolling);
+// Re-render tag colors when the system color scheme changes
+if (window.matchMedia) {
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => render());
+}
+
+// ---------- Electron desktop integration ----------
+// `window.electronAPI` is exposed by preload.js when running inside the Electron shell.
+// In a regular browser it doesn't exist, so all this is a no-op outside the desktop app.
+if (window.electronAPI) {
+  // Push today's entries to the main process so it can populate the tray menu.
+  function syncTodayToTray() {
+    const today = startOfDay(new Date());
+    const todays = state.entries
+      .filter(e => isSameDay(e.date, today))
+      .sort(compareEntriesForDay);
+    const fmtTime = (d) => d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+    const payload = {
+      date: `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`,
+      entries: todays.map(e => ({
+        id: e.id,
+        title: e.title,
+        time: entryHasTime(e) ? fmtTime(e.date) : '',
+        allDay: !entryHasTime(e),
+      })),
+    };
+    window.electronAPI.updateTrayToday(payload);
+  }
+
+  // Hook into render() so the tray refreshes whenever entries do.
+  // (Simpler than threading IPC through every entry-loading code path.)
+  const origRender = window.render || render;
+  // We can't reassign `render` if it's a const; instead, watch for entries changes.
+  // Easiest: poll the entries-array reference + length once a second. Cheap and simple.
+  let lastSig = '';
+  setInterval(() => {
+    const sig = state.entries.length + ':' + state.fileSignature;
+    if (sig !== lastSig) {
+      lastSig = sig;
+      syncTodayToTray();
+    }
+  }, 1000);
+  // Also sync once at startup after first render
+  setTimeout(syncTodayToTray, 500);
+
+  // Tray clicked "Open Markdown Calendar" or chose Go to Today / ⌘T
+  window.electronAPI.onNavigateToday(() => {
+    const today = new Date();
+    state.view = 'calendar';
+    state.displayedMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    state.selectedDate = startOfDay(today);
+    render();
+  });
+
+  // Tray menu item for a specific entry was clicked
+  window.electronAPI.onOpenEntry((entryId) => {
+    const entry = state.entries.find(e => e.id === entryId);
+    if (entry) {
+      state.selectedDate = startOfDay(entry.date);
+      state.displayedMonth = new Date(entry.date.getFullYear(), entry.date.getMonth(), 1);
+      render();
+      // Defer modal open until after render has settled
+      setTimeout(() => openEditEntryModal(entry), 50);
+    }
+  });
+}
+
+boot();
+</script>
+
