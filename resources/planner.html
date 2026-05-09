@@ -1,0 +1,258 @@
+---
+layout: bare
+title: "Markdown Teacher Planner"
+permalink: /planner/
+---
+
+<style>
+  .planner-hero {
+    background: linear-gradient(160deg, #1a1a18 0%, #25241f 100%);
+    padding: 5rem 0 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .planner-hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse, rgba(83,74,183,0.25) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .planner-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #afa9ec;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  .planner-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    color: #f1efe8;
+    margin-bottom: 1rem;
+    position: relative;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+  .planner-title em { font-style: italic; color: #afa9ec; }
+  .planner-sub {
+    font-size: 1rem;
+    color: rgba(241,239,232,0.55);
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+    position: relative;
+  }
+  .planner-ctas {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    position: relative;
+  }
+  .planner-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.75rem 1.5rem; border-radius: 8px;
+    font-size: 0.9rem; font-weight: 500; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .planner-btn-primary { background: #534ab7; color: white; }
+  .planner-btn-primary:hover { background: #3c3489; color: white; }
+  .planner-btn-outline { border: 1.5px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); }
+  .planner-btn-outline:hover { border-color: #afa9ec; color: #afa9ec; }
+
+  /* Screenshots */
+  .planner-wrap { max-width: 960px; margin: 0 auto; padding: 4rem 2rem 6rem; }
+  .planner-section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--reef); margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .planner-section-label::after { content: ''; flex: 1; height: 1px; background: rgba(10,37,64,0.1); }
+
+  /* Mock screenshot using CSS */
+  .screenshot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 3rem; }
+  @media (max-width: 640px) { .screenshot-grid { grid-template-columns: 1fr; } }
+
+  .screenshot {
+    border-radius: 12px; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  .screenshot-bar {
+    background: #f0ede6; padding: 0.5rem 0.8rem;
+    display: flex; align-items: center; gap: 0.4rem;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .screenshot-bar.dark { background: #25241f; border-bottom-color: rgba(255,255,255,0.06); }
+  .s-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .screenshot-body { background: #fafaf7; padding: 1rem; min-height: 200px; }
+  .screenshot-body.dark { background: #1a1a18; }
+
+  /* Light mode mock */
+  .mock-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
+  .mock-month { font-size: 0.85rem; font-weight: 600; color: #2c2c2a; }
+  .mock-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .mock-day-label { font-size: 7px; text-align: center; color: #9a9a95; padding: 2px 0; font-weight: 500; }
+  .mock-day { font-size: 8px; text-align: center; padding: 3px 2px; border-radius: 4px; color: #6a6a66; }
+  .mock-day.today { background: #d85a30; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; margin: auto; }
+  .mock-day.has-entry { color: #534ab7; font-weight: 600; }
+  .mock-day.has-entry::after { content: '•'; display: block; font-size: 6px; color: #534ab7; text-align: center; line-height: 1; }
+  .mock-entry { background: #eeedfe; border-left: 2px solid #534ab7; padding: 4px 6px; border-radius: 0 4px 4px 0; margin-top: 0.5rem; }
+  .mock-entry-title { font-size: 8px; font-weight: 600; color: #3c3489; }
+  .mock-entry-text { font-size: 7px; color: #6a6a66; line-height: 1.5; margin-top: 1px; }
+
+  /* Dark mode mock */
+  .mock-month-dark { font-size: 0.85rem; font-weight: 600; color: #f1efe8; }
+  .mock-day-label-dark { font-size: 7px; text-align: center; color: #888780; padding: 2px 0; font-weight: 500; }
+  .mock-day-dark { font-size: 8px; text-align: center; padding: 3px 2px; border-radius: 4px; color: #b4b2a9; }
+  .mock-day-dark.today { background: #f0997b; color: #1a1a18; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; margin: auto; }
+  .mock-day-dark.has-entry { color: #afa9ec; font-weight: 600; }
+  .mock-entry-dark { background: #2a2546; border-left: 2px solid #afa9ec; padding: 4px 6px; border-radius: 0 4px 4px 0; margin-top: 0.5rem; }
+  .mock-entry-title-dark { font-size: 8px; font-weight: 600; color: #cecbf6; }
+  .mock-entry-text-dark { font-size: 7px; color: #888780; line-height: 1.5; margin-top: 1px; }
+
+  /* Features */
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.2rem; margin-bottom: 3rem; }
+  .feature-card { background: white; border-radius: 12px; padding: 1.5rem; border: 1px solid rgba(0,0,0,0.06); }
+  .feature-icon { font-size: 1.5rem; margin-bottom: 0.6rem; }
+  .feature-title { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--ocean); font-weight: 700; margin-bottom: 0.4rem; }
+  .feature-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+  /* Download section */
+  .download-box {
+    background: linear-gradient(135deg, #061828 0%, #0a3040 100%);
+    border-radius: 16px; padding: 2.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1.5rem;
+  }
+  .download-box-text h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: white; margin-bottom: 0.4rem; }
+  .download-box-text p { font-size: 0.88rem; color: rgba(255,255,255,0.55); }
+  .download-btns { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+  .dl-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.3rem; border-radius: 7px; font-size: 0.85rem; font-weight: 500; text-decoration: none; transition: all 0.2s; }
+  .dl-btn-primary { background: var(--coral); color: white; }
+  .dl-btn-primary:hover { background: #d05e37; color: white; }
+  .dl-btn-ghost { border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); }
+  .dl-btn-ghost:hover { border-color: white; color: white; }
+</style>
+
+<!-- HERO -->
+<div class="planner-hero">
+  <p class="planner-eyebrow">Open Source · For Teachers</p>
+  <h1 class="planner-title">Markdown<br><em>Teacher Planner</em></h1>
+  <p class="planner-sub">A distraction-free planning tool built for teachers. Write your lessons, mark your days, and keep notes in plain Markdown — no accounts, no cloud, no faff.</p>
+  <div class="planner-ctas">
+    <a class="planner-btn planner-btn-primary" href="https://github.com/jrowing/markdown-calendar" target="_blank" rel="noopener">View on GitHub ↗</a>
+    <a class="planner-btn planner-btn-outline" href="{{ '/resources/teacher-calendar' | relative_url }}">Try it in browser →</a>
+  </div>
+</div>
+
+<div class="planner-wrap">
+
+  <!-- Screenshots -->
+  <p class="planner-section-label">How it looks</p>
+  <div class="screenshot-grid">
+
+    <!-- Light mode mock -->
+    <div class="screenshot">
+      <div class="screenshot-bar">
+        <div class="s-dot" style="background:#ff5f57"></div>
+        <div class="s-dot" style="background:#febc2e"></div>
+        <div class="s-dot" style="background:#28c840"></div>
+      </div>
+      <div class="screenshot-body">
+        <div class="mock-header">
+          <span class="mock-month">May 2026</span>
+          <span style="font-size:8px;color:#9a9a95">← →</span>
+        </div>
+        <div class="mock-grid">
+          <div class="mock-day-label">Mo</div><div class="mock-day-label">Tu</div><div class="mock-day-label">We</div><div class="mock-day-label">Th</div><div class="mock-day-label">Fr</div><div class="mock-day-label">Sa</div><div class="mock-day-label">Su</div>
+          <div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day has-entry">1</div><div class="mock-day has-entry">2</div><div class="mock-day" style="color:#ccc">3</div><div class="mock-day" style="color:#ccc">4</div>
+          <div class="mock-day has-entry">5</div><div class="mock-day">6</div><div class="mock-day has-entry">7</div><div class="mock-day">8</div><div class="mock-day today">9</div><div class="mock-day" style="color:#ccc">10</div><div class="mock-day" style="color:#ccc">11</div>
+          <div class="mock-day">12</div><div class="mock-day has-entry">13</div><div class="mock-day">14</div><div class="mock-day">15</div><div class="mock-day">16</div><div class="mock-day" style="color:#ccc">17</div><div class="mock-day" style="color:#ccc">18</div>
+        </div>
+        <div class="mock-entry">
+          <div class="mock-entry-title">## Y12 Physics — Waves</div>
+          <div class="mock-entry-text">- Recap interference patterns<br>- Young's double slit demo<br>- **Set:** problem sheet 4</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dark mode mock -->
+    <div class="screenshot">
+      <div class="screenshot-bar dark">
+        <div class="s-dot" style="background:#ff5f57"></div>
+        <div class="s-dot" style="background:#febc2e"></div>
+        <div class="s-dot" style="background:#28c840"></div>
+      </div>
+      <div class="screenshot-body dark">
+        <div class="mock-header">
+          <span class="mock-month-dark">May 2026</span>
+          <span style="font-size:8px;color:#888780">← →</span>
+        </div>
+        <div class="mock-grid">
+          <div class="mock-day-label-dark">Mo</div><div class="mock-day-label-dark">Tu</div><div class="mock-day-label-dark">We</div><div class="mock-day-label-dark">Th</div><div class="mock-day-label-dark">Fr</div><div class="mock-day-label-dark">Sa</div><div class="mock-day-label-dark">Su</div>
+          <div class="mock-day-dark"></div><div class="mock-day-dark"></div><div class="mock-day-dark"></div><div class="mock-day-dark has-entry">1</div><div class="mock-day-dark has-entry">2</div><div class="mock-day-dark" style="color:#4a4940">3</div><div class="mock-day-dark" style="color:#4a4940">4</div>
+          <div class="mock-day-dark has-entry">5</div><div class="mock-day-dark">6</div><div class="mock-day-dark has-entry">7</div><div class="mock-day-dark">8</div><div class="mock-day-dark today">9</div><div class="mock-day-dark" style="color:#4a4940">10</div><div class="mock-day-dark" style="color:#4a4940">11</div>
+          <div class="mock-day-dark">12</div><div class="mock-day-dark has-entry">13</div><div class="mock-day-dark">14</div><div class="mock-day-dark">15</div><div class="mock-day-dark">16</div><div class="mock-day-dark" style="color:#4a4940">17</div><div class="mock-day-dark" style="color:#4a4940">18</div>
+        </div>
+        <div class="mock-entry-dark">
+          <div class="mock-entry-title-dark">## Y13 — Quantum &amp; Nuclear</div>
+          <div class="mock-entry-text-dark">- Photoelectric effect recap<br>- de Broglie wavelength problems<br>- **Remind:** coursework deadline</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <p class="planner-section-label">Features</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📝</div>
+      <div class="feature-title">Markdown-first</div>
+      <p class="feature-desc">Write lesson notes, reminders and plans in plain Markdown. Full formatting — headings, bold, lists, code blocks.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌙</div>
+      <div class="feature-title">Dark mode</div>
+      <p class="feature-desc">Follows your system preference automatically. Easy on the eyes for late-night planning sessions.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📅</div>
+      <div class="feature-title">Calendar view</div>
+      <p class="feature-desc">Monthly calendar with visual indicators for days that have entries. Navigate by month, jump to today.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💾</div>
+      <div class="feature-title">Stays in your browser</div>
+      <p class="feature-desc">All data saved locally — no account, no cloud, no tracking. Your plans stay on your device.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <div class="feature-title">Search &amp; filter</div>
+      <p class="feature-desc">Quickly find any note or lesson plan across all your entries.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📤</div>
+      <div class="feature-title">Export &amp; import</div>
+      <p class="feature-desc">Export all your data as JSON for backup or import into a new device. Your data, your format.</p>
+    </div>
+  </div>
+
+  <!-- Download -->
+  <div class="download-box">
+    <div class="download-box-text">
+      <h2>Free &amp; open source</h2>
+      <p>MIT licensed. Use it, fork it, improve it.</p>
+    </div>
+    <div class="download-btns">
+      <a class="dl-btn dl-btn-primary" href="{{ '/resources/teacher-calendar' | relative_url }}">🚀 Try in browser</a>
+      <a class="dl-btn dl-btn-ghost" href="https://github.com/jrowing/markdown-calendar/blob/main/MarkdownCalendar-1.0.0.dmg.zip" target="_blank" rel="noopener">⬇ Download for Mac</a>
+      <a class="dl-btn dl-btn-ghost" href="https://github.com/jrowing/markdown-calendar" target="_blank" rel="noopener">⭐ GitHub</a>
+    </div>
+  </div>
+
+</div>
