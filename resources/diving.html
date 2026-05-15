@@ -1,208 +1,210 @@
 ---
 layout: bare
 title: "Diving"
+is_resource: false
 ---
 
 <style>
+  /* ── BASE ── */
+  .dive-wrap { max-width: 900px; margin: 0 auto; padding: 4rem 2rem 6rem; }
+  .back-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--reef); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color 0.2s; }
+  .back-link:hover { color: var(--coral); }
+
+  /* ── LATEST DIVE CARD ── */
   .dive-hero {
     background: linear-gradient(160deg, #061828 0%, #0a3040 100%);
-    border-radius: 20px;
-    padding: 2.5rem;
-    margin: 2rem 0;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+    border-radius: 20px; padding: 2.5rem; margin-bottom: 4rem;
+    position: relative; overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.25);
   }
   .dive-hero::before {
-    content: '';
-    position: absolute;
-    top: -80px; right: -80px;
+    content: ''; position: absolute; top: -80px; right: -80px;
     width: 360px; height: 360px;
     background: radial-gradient(circle, rgba(26,107,114,0.35) 0%, transparent 70%);
     pointer-events: none;
   }
-
-  /* Orange elements */
-  .dive-eyebrow        { color: #e8734a; font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 0.7rem; font-weight: 600; position: relative; }
-  .dive-stat-label     { color: #e8734a; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.35rem; display: block; }
-  .dive-profile-label  { color: #e8734a; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.7rem; }
-
-  /* White elements */
-  .dive-site-name {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: 700;
-    color: #ffffff;
-    line-height: 1.05;
-    margin-bottom: 0.35rem;
-    margin-top: 0;
-    position: relative;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.6);
-    letter-spacing: -0.01em;
-  }
-  .dive-location-line {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.78rem;
-    color: rgba(255,255,255,0.5);
-    margin-bottom: 0;
-    letter-spacing: 0.04em;
-    position: relative;
-  }
-
-  /* Stats row */
-  .dive-stats {
-    display: flex;
-    gap: 0;
-    margin: 1.8rem 0;
-    position: relative;
-    border-top: 1px solid rgba(255,255,255,0.07);
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    padding: 1.2rem 0;
-  }
+  .dive-hero p, .dive-hero div, .dive-hero h2, .dive-hero span { color: #fff; margin: 0; }
+  .dive-eyebrow { font-family: 'DM Mono', monospace !important; font-size: 0.68rem !important; letter-spacing: 0.18em !important; text-transform: uppercase; color: #e8734a !important; margin-bottom: 0.7rem !important; position: relative; }
+  .dive-site-name { font-family: 'Playfair Display', serif !important; font-size: clamp(2rem, 5vw, 3rem) !important; color: #ffffff !important; font-weight: 700 !important; line-height: 1.05 !important; margin-bottom: 0.35rem !important; position: relative; }
+  .dive-location-line { font-family: 'DM Mono', monospace !important; font-size: 0.78rem !important; color: rgba(255,255,255,0.55) !important; margin-bottom: 0 !important; letter-spacing: 0.04em !important; position: relative; }
+  .dive-stats { display: flex; gap: 0; margin: 1.8rem 0; position: relative; border-top: 1px solid rgba(255,255,255,0.07); border-bottom: 1px solid rgba(255,255,255,0.07); padding: 1.2rem 0; }
   .dive-stat { flex: 1; padding-right: 1.5rem; }
   .dive-stat + .dive-stat { padding-left: 1.5rem; border-left: 1px solid rgba(255,255,255,0.07); }
-  .dive-stat-value {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.9rem;
-    color: #ffffff;
-    line-height: 1;
-  }
-  .dive-stat-unit {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.45);
-    margin-left: 0.15rem;
-  }
-
-  /* Profile */
-  .dive-profile {
-    background: rgba(0,0,0,0.25);
-    border-radius: 10px;
-    padding: 1rem 1rem 0.6rem;
-    margin-bottom: 1.5rem;
-    position: relative;
-  }
+  .dive-stat-label { font-family: 'DM Mono', monospace !important; font-size: 0.6rem !important; letter-spacing: 0.15em !important; text-transform: uppercase !important; color: #e8734a !important; margin-bottom: 0.4rem !important; display: block; }
+  .dive-stat-value { font-family: 'Playfair Display', serif !important; font-size: 1.9rem !important; color: #ffffff !important; line-height: 1 !important; }
+  .dive-stat-unit { font-family: 'DM Sans', sans-serif !important; font-size: 0.8rem !important; color: rgba(255,255,255,0.45) !important; margin-left: 0.15rem !important; }
+  .dive-profile { background: rgba(0,0,0,0.25); border-radius: 10px; padding: 0.9rem 0.9rem 0.5rem; margin-bottom: 1.2rem; position: relative; }
+  .dive-profile-label { font-family: 'DM Mono', monospace !important; font-size: 0.6rem !important; letter-spacing: 0.12em !important; text-transform: uppercase !important; color: #e8734a !important; margin-bottom: 0.6rem !important; }
   .dive-profile svg { width: 100%; height: auto; display: block; }
   .depth-label { font-family: 'DM Mono', monospace; font-size: 3px; fill: rgba(255,255,255,0.4); }
+  .dive-footer { padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.07); position: relative; }
+  .dive-fetched { font-family: 'DM Mono', monospace !important; font-size: 0.62rem !important; color: rgba(255,255,255,0.25) !important; }
 
-  /* Footer */
-  .dive-footer {
-    padding-top: 1rem;
-    border-top: 1px solid rgba(255,255,255,0.07);
-    position: relative;
-  }
-  .dive-fetched {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.62rem;
-    color: rgba(255,255,255,0.25);
-  }
+  /* ── SECTION HEADING ── */
+  .dive-section-label { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--reef); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem; }
+  .dive-section-label::after { content: ''; flex: 1; height: 1px; background: rgba(10,37,64,0.1); }
+  .dive-section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 3vw, 2.2rem); color: var(--ocean); margin-bottom: 0.6rem; font-weight: 700; line-height: 1.15; }
+  .dive-section-intro { font-size: 0.97rem; color: #374151; line-height: 1.8; margin-bottom: 2.5rem; max-width: 680px; }
+
+  /* ── DIVE SITE CARDS ── */
+  .site-card { background: white; border-radius: 16px; border: 1px solid rgba(0,0,0,0.07); overflow: hidden; margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: box-shadow 0.2s; }
+  .site-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+  .site-card-header { background: var(--ocean); padding: 1.8rem 2rem 1.5rem; position: relative; overflow: hidden; }
+  .site-card-header::before { content: ''; position: absolute; top: -40px; right: -40px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(26,107,114,0.4) 0%, transparent 70%); }
+  .site-card-number { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--coral); margin-bottom: 0.5rem; position: relative; }
+  .site-card-name { font-family: 'Playfair Display', serif; font-size: clamp(1.4rem, 3vw, 1.9rem); color: white; font-weight: 700; line-height: 1.1; margin-bottom: 0.3rem; position: relative; }
+  .site-card-tagline { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: rgba(255,255,255,0.5); letter-spacing: 0.04em; position: relative; }
+  .site-card-meta { display: flex; gap: 1.5rem; padding: 1rem 2rem; background: var(--foam); flex-wrap: wrap; border-bottom: 1px solid rgba(0,0,0,0.05); }
+  .site-meta-item { display: flex; align-items: center; gap: 0.4rem; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--reef); letter-spacing: 0.05em; }
+  .site-meta-icon { font-size: 0.9rem; }
+  .site-card-body { padding: 1.8rem 2rem; }
+  .site-card-body p { font-size: 0.95rem; color: #374151; line-height: 1.8; margin-bottom: 1rem; }
+  .site-card-body p:last-child { margin-bottom: 0; }
+  .site-wildlife { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.2rem; }
+  .wildlife-tag { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.08em; color: var(--ocean); background: var(--foam); padding: 0.25rem 0.6rem; border-radius: 4px; border: 1px solid rgba(10,37,64,0.08); }
+  .wildlife-tag.highlight { background: var(--ocean); color: white; }
+
+  /* ── OPERATOR CARDS ── */
+  .operators-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem; margin-top: 1.5rem; }
+  .op-card { background: var(--foam); border-radius: 12px; padding: 1.5rem; border: 1px solid rgba(10,37,64,0.08); text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 0.5rem; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden; }
+  .op-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--reef), var(--coral)); opacity: 0; transition: opacity 0.2s; }
+  .op-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.09); }
+  .op-card:hover::before { opacity: 1; }
+  .op-star { color: var(--coral); font-size: 0.72rem; letter-spacing: 0.04em; }
+  .op-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--ocean); font-weight: 700; }
+  .op-location { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); letter-spacing: 0.04em; }
+  .op-desc { font-size: 0.85rem; color: #374151; line-height: 1.65; }
+  .op-link { margin-top: auto; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--reef); letter-spacing: 0.04em; }
 </style>
 
-<div style="max-width:860px;margin:0 auto;padding:2rem 2rem 5rem;">
-<a href="{{ '/' | relative_url }}" style="display:inline-flex;align-items:center;gap:0.4rem;margin-bottom:2rem;color:var(--reef);text-decoration:none;font-size:0.9rem;">← Back to jrowing.com</a>
-<h1 style="font-family:'Playfair Display',serif;font-size:2.4rem;color:var(--ocean);margin-bottom:2rem;">Diving</h1>
+<div class="dive-wrap">
+  <a href="{{ '/' | relative_url }}" class="back-link">← Home</a>
 
-{% assign dive = site.data.latest_dive %}
+  <p style="font-size:0.97rem;color:#374151;line-height:1.8;margin-bottom:3rem;max-width:680px;">
+    Moving to the Seychelles opened up an entirely new world below the waterline. The Indian Ocean around these islands is extraordinary — ancient granite boulders draped in coral, sharks patrolling the blue, and a warmth and clarity that makes every dive feel like flying.
+  </p>
 
-<p>After moving to the Seychelles I've rekindled my love of diving. The Indian Ocean around the islands is extraordinary — coral gardens, reef sharks, turtles, and visibility that makes you feel like you're flying.</p>
+  <!-- FAVOURITE SITES -->
+  <p class="dive-section-label">Favourite dive sites</p>
+  <h2 class="dive-section-title">Three dives that stay with you</h2>
+  <p class="dive-section-intro">The Seychelles has over 50 named dive sites across the inner islands. These three have stuck with me — for very different reasons.</p>
 
-<div class="dive-hero">
-  <p class="dive-eyebrow">🤿 Dive #{{ dive.number }} of {{ dive.total_dives }}</p>
-  <h2 class="dive-site-name">{{ dive.divesite }}</h2>
-  <p class="dive-location-line">{{ dive.location }} &nbsp;·&nbsp; {{ dive.date }}{% if dive.time %} at {{ dive.time }}{% endif %}</p>
-
-  <div class="dive-stats">
-    <div class="dive-stat">
-      <span class="dive-stat-label">Max Depth</span>
-      <div class="dive-stat-value">{{ dive.max_depth | split: ' ' | first }}<span class="dive-stat-unit">m</span></div>
+  <!-- ENNERDALE -->
+  <div class="site-card">
+    <div class="site-card-header">
+      <p class="site-card-number">Site 01 · Mahé · Advanced</p>
+      <h3 class="site-card-name">The Ennerdale</h3>
+      <p class="site-card-tagline">My first wreck — and the most dramatic dive in the Indian Ocean</p>
     </div>
-    <div class="dive-stat">
-      <span class="dive-stat-label">Duration</span>
-      <div class="dive-stat-value" style="font-family:'DM Sans',sans-serif!important;font-size:1.6rem!important">{{ dive.duration }}</div>
+    <div class="site-card-meta">
+      <span class="site-meta-item"><span class="site-meta-icon">📏</span> 30–35m</span>
+      <span class="site-meta-item"><span class="site-meta-icon">⚓</span> Wreck</span>
+      <span class="site-meta-item"><span class="site-meta-icon">⏱</span> ~30 min bottom time</span>
+      <span class="site-meta-item"><span class="site-meta-icon">🎓</span> Deep Diver / AOW required</span>
     </div>
-    <div class="dive-stat">
-      <span class="dive-stat-label">Total Logged</span>
-      <div class="dive-stat-value">{{ dive.total_dives }}</div>
+    <div class="site-card-body">
+      <p>On 1 June 1970, the RFA Ennerdale — a 215-metre British Royal Fleet Auxiliary tanker — struck an uncharted pinnacle off the north-east coast of Mahé. With no way to pump the oil before she sank and weather conditions closing in, the decision was made to blow her open. Wessex helicopters attached explosive charges to the hull; speedboats plucked the divers clear with seconds to spare. She was destroyed deliberately to save the islands.</p>
+      <p>Now she lies in two enormous sections at around 30 metres, the largest shipwreck in the Seychelles. The stern is relatively intact — vast, eerie and covered in life. Giant groupers drift through the engine room. Schools of fusiliers twist through the superstructure. Eagle rays pass overhead. She is, without question, the most poignant dive I have ever done: a fine ship reduced to rubble, and in doing so, she became something extraordinary.</p>
+      <p>At 30+ metres you get limited bottom time — around 20–30 minutes — so it repays multiple visits. Take a mandatory safety stop at 5 metres, and if you're lucky, dolphins will join you on the way up.</p>
+      <div class="site-wildlife">
+        <span class="wildlife-tag highlight">Giant Groupers</span>
+        <span class="wildlife-tag highlight">Eagle Rays</span>
+        <span class="wildlife-tag">Giant Moray Eels</span>
+        <span class="wildlife-tag">Scorpion Fish</span>
+        <span class="wildlife-tag">Schools of Fusiliers</span>
+        <span class="wildlife-tag">Barracuda</span>
+        <span class="wildlife-tag">Lion Fish</span>
+        <span class="wildlife-tag">Sharks</span>
+        <span class="wildlife-tag">Dolphins (safety stop!)</span>
+      </div>
     </div>
   </div>
 
-  {% if dive.profile_points %}
-  <div class="dive-profile">
-    <p class="dive-profile-label">Depth profile · {{ dive.duration }} · {{ dive.max_depth }} max</p>
-    <svg viewBox="-2 -3 96 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-      <defs>
-        <linearGradient id="divegrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%"   style="stop-color:#1a6b72;stop-opacity:0.9"/>
-          <stop offset="100%" style="stop-color:#0a2540;stop-opacity:0.5"/>
-        </linearGradient>
-      </defs>
-      <line x1="0" y1="13.2" x2="90" y2="13.2" stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
-      <line x1="0" y1="26.3" x2="90" y2="26.3" stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
-      <line x1="0" y1="39.5" x2="90" y2="39.5" stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
-      <text class="depth-label" x="89" y="12.5" text-anchor="end">5m</text>
-      <text class="depth-label" x="89" y="25.5" text-anchor="end">10m</text>
-      <text class="depth-label" x="89" y="38.5" text-anchor="end">15m</text>
-      <text class="depth-label" x="89" y="50"   text-anchor="end" style="font-size:3.5px;fill:rgba(255,255,255,0.6)">{{ dive.max_depth }}</text>
-      <polygon points="{{ dive.profile_points }}" style="fill:url(#divegrad);stroke:#e8734a;stroke-width:0.4;stroke-linejoin:round"/>
-    </svg>
+  <!-- SOUTH MARIANNE -->
+  <div class="site-card">
+    <div class="site-card-header">
+      <p class="site-card-number">Site 02 · Praslin / La Digue · Advanced</p>
+      <h3 class="site-card-name">South Marianne</h3>
+      <p class="site-card-tagline">Granite cathedrals, ripping current, and grey reef sharks in every direction</p>
+    </div>
+    <div class="site-card-meta">
+      <span class="site-meta-item"><span class="site-meta-icon">📏</span> 19–25m avg</span>
+      <span class="site-meta-item"><span class="site-meta-icon">🪨</span> Granite pinnacles</span>
+      <span class="site-meta-item"><span class="site-meta-icon">💨</span> Strong current — drift dive</span>
+      <span class="site-meta-item"><span class="site-meta-icon">🚤</span> 40 min from Praslin</span>
+    </div>
+    <div class="site-card-body">
+      <p>South Marianne is due east of La Digue, close enough to the open ocean to feel the difference the moment you descend. You make a negative entry straight into the current, dropping fast into a maze of granite pinnacles that reach from the seafloor to the island walls above. The boulders are enormous — house-sized — covered in swaying soft coral. Between them run sand channels and canyons, narrow enough in places to feel almost enclosed.</p>
+      <p>The ocean moves through this place. You can either hunker down behind a boulder and watch the pelagics cruise past in the blue, or let the current take you on a fast drift through the gullies. Grey reef sharks are regulars here — not the occasional glimpse you get at shallower sites, but proper encounters. They patrol the walls with total indifference. Eagle rays, barracuda, and schools of jack tumble past in the current. Giant moray eels peer from the crevices. The boulders creak and groan in the surge.</p>
+      <p>This is the most demanding site accessible from Praslin, and the most rewarding. Excellent visibility year-round. Not suitable for beginners — the current is serious.</p>
+      <div class="site-wildlife">
+        <span class="wildlife-tag highlight">Grey Reef Sharks</span>
+        <span class="wildlife-tag highlight">Eagle Rays</span>
+        <span class="wildlife-tag">Hawksbill Turtles</span>
+        <span class="wildlife-tag">Guitarfish</span>
+        <span class="wildlife-tag">Giant Moray Eels</span>
+        <span class="wildlife-tag">Schooling Jacks</span>
+        <span class="wildlife-tag">Barracuda</span>
+        <span class="wildlife-tag">Napoleon Wrasse</span>
+        <span class="wildlife-tag">Whitetip Reef Sharks</span>
+        <span class="wildlife-tag">Batfish</span>
+      </div>
+    </div>
   </div>
-  {% endif %}
 
-  <div class="dive-footer">
-    <span class="dive-fetched">Updated {{ dive.fetched }}</span>
+  <!-- BOOBY ROCK -->
+  <div class="site-card">
+    <div class="site-card-header">
+      <p class="site-card-number">Site 03 · Praslin · All levels</p>
+      <h3 class="site-card-name">Booby Rock</h3>
+      <p class="site-card-tagline">A rock in the ocean that punches wildly above its weight</p>
+    </div>
+    <div class="site-card-meta">
+      <span class="site-meta-item"><span class="site-meta-icon">📏</span> 15–25m</span>
+      <span class="site-meta-item"><span class="site-meta-icon">🦈</span> Sharks year-round</span>
+      <span class="site-meta-item"><span class="site-meta-icon">🐟</span> Outstanding fish life</span>
+      <span class="site-meta-item"><span class="site-meta-icon">🚤</span> 30–35 min from Praslin</span>
+    </div>
+    <div class="site-card-body">
+      <p>Booby Rock barely exists above the surface — it's named after the boobies that roost on it, and from the boat it looks like nothing much at all. Beneath the surface is a different story entirely. The sloping granite walls of this little island are covered in crevices and overhangs, every one of them sheltering something — lobster, octopus, scorpion fish, moray eels — while above, the open water teems with pelagics.</p>
+      <p>This site is renowned for its sharks. At depth you can routinely see up to fifteen grey reef sharks at once, patrolling the walls in loose formation. Nurse sharks rest in the deeper ledges. Whitetip reef sharks are almost always present. On a good day you'll also see yellowfin tuna, amberjacks and stingrays in the blue, with bumphead parrotfish foraging along the reef and turtles drifting overhead. Dolphins have been seen here too.</p>
+      <p>Good visibility and manageable depth make this a wonderful dive for a wide range of experience levels, and there's enough biodiversity to keep you very busy. One of the best dives on Praslin — full stop.</p>
+      <div class="site-wildlife">
+        <span class="wildlife-tag highlight">Grey Reef Sharks (up to 15)</span>
+        <span class="wildlife-tag highlight">Nurse Sharks</span>
+        <span class="wildlife-tag">Whitetip Reef Sharks</span>
+        <span class="wildlife-tag">Turtles</span>
+        <span class="wildlife-tag">Stingrays</span>
+        <span class="wildlife-tag">Yellowfin Tuna</span>
+        <span class="wildlife-tag">Bumphead Parrotfish</span>
+        <span class="wildlife-tag">Amberjacks</span>
+        <span class="wildlife-tag">Eagle Rays</span>
+        <span class="wildlife-tag">Lobsters</span>
+        <span class="wildlife-tag">Octopus</span>
+        <span class="wildlife-tag">Dolphins</span>
+      </div>
+    </div>
   </div>
-</div>
 
-<style>
-  .dive-operators { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem; margin-top: 1.5rem; }
-  .dive-op-card {
-    background: var(--foam);
-    border-radius: 12px;
-    padding: 1.5rem;
-    border: 1px solid rgba(10,37,64,0.08);
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    transition: transform 0.2s, box-shadow 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-  .dive-op-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, var(--reef), var(--coral));
-    opacity: 0; transition: opacity 0.2s;
-  }
-  .dive-op-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
-  .dive-op-card:hover::before { opacity: 1; }
-  .dive-op-star { color: var(--coral); font-size: 0.75rem; letter-spacing: 0.05em; }
-  .dive-op-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--ocean); font-weight: 700; }
-  .dive-op-location { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.06em; }
-  .dive-op-desc { font-size: 0.88rem; color: #374151; line-height: 1.6; }
-  .dive-op-link { margin-top: auto; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--reef); letter-spacing: 0.06em; }
-</style>
+  <!-- OPERATORS -->
+  <p class="dive-section-label" style="margin-top:3.5rem;">Where to dive from Praslin</p>
+  <h2 class="dive-section-title">Dive Centres</h2>
+  <p class="dive-section-intro">Both operators are based on Anse Volbert on the Côte d'Or, Praslin's main beach.</p>
 
-<h2>Where to dive on Praslin</h2>
-<p>Praslin's waters are exceptional — around 17 sites, rarely deeper than 20m, teeming with reef sharks, turtles, rays and clouds of colourful fish among granite boulders. Both operators below are based on Anse Volbert on the Côte d'Or.</p>
-
-<div class="dive-operators">
-  <a class="dive-op-card" href="https://www.whitetipdivers.com" target="_blank" rel="noopener">
-    <span class="dive-op-star">⭐ Highly recommended</span>
-    <span class="dive-op-name">White Tip Divers</span>
-    <span class="dive-op-location">Anse Volbert, Praslin</span>
-    <p class="dive-op-desc">A multilingual team with 10+ years diving the waters around Praslin — some of the most biodiverse in the archipelago. They tailor every dive to your experience level, across a wide range of marine environments. Genuinely hospitable, professional, and great fun. Fun dives, PADI courses, and unique sites including some they're still exploring.</p>
-    <span class="dive-op-link">whitetipdivers.com ↗</span>
-  </a>
-
-  <a class="dive-op-card" href="https://www.praslinprodivers.com" target="_blank" rel="noopener">
-    <span class="dive-op-star">4.9 ⭐ on TripAdvisor · 78 reviews</span>
-    <span class="dive-op-name">Praslin Pro Divers</span>
-    <span class="dive-op-location">Anse Gouvernement · Hotel L'Archipel</span>
-    <p class="dive-op-desc">Run by Jean-Paul, who has over 4,000 logged dives and 20 years' experience on Praslin's reefs. Small groups, meticulous briefings, and a passion for conservation. Reviewers rave about the lemongrass tea between dives. Whale sharks, white-tip reef sharks, turtles and rays are regulars.</p>
-    <span class="dive-op-link">praslinprodivers.com ↗</span>
-  </a>
-</div>
+  <div class="operators-grid">
+    <a class="op-card" href="https://www.whitetipdivers.com" target="_blank" rel="noopener">
+      <span class="op-star">⭐ Highly recommended</span>
+      <span class="op-name">White Tip Divers</span>
+      <span class="op-location">Anse Volbert, Côte d'Or · Praslin</span>
+      <p class="op-desc">A multilingual team with 10+ years diving the waters around Praslin. They tailor every dive to your experience level, across a wide range of marine environments. Genuinely hospitable, professional, and great fun. Free hotel transfers. Booby Rock with Whitetip is a particular highlight.</p>
+      <span class="op-link">whitetipdivers.com ↗</span>
+    </a>
+    <a class="op-card" href="https://www.praslinprodivers.com" target="_blank" rel="noopener">
+      <span class="op-star">4.9 ⭐ on TripAdvisor</span>
+      <span class="op-name">Praslin Pro Divers</span>
+      <span class="op-location">Anse Gouvernement · Hotel L'Archipel</span>
+      <p class="op-desc">Run by Jean-Paul, who has over 4,000 logged dives and 20 years' experience on Praslin's reefs. Small groups, meticulous briefings, and a passion for conservation. Reviewers rave about the lemongrass tea between dives. Whale sharks, whitetip reef sharks, turtles and rays are regulars.</p>
+      <span class="op-link">praslinprodivers.com ↗</span>
+    </a>
+  </div>
 </div>
