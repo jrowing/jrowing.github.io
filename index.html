@@ -3,87 +3,129 @@ layout: default
 title: Home
 ---
 
-<!-- HERO -->
-<section class="hero" id="about">
-  <div class="hero-text">
-    <p class="hero-eyebrow">Educator · Physicist · Explorer</p>
-    <h1 class="hero-name">Joe<br><em>Rowing</em></h1>
-    <p class="hero-subtitle">Seychelles · United Kingdom</p>
-    <p class="hero-bio">
-      Chartered Physicist, educator, and author based in the Seychelles. Founding member of Exeter Mathematics School, IoP Physics Coach, and textbook author for Pearson, OUP and Hodder. 20+ years teaching physics from West Sussex to the Indian Ocean — currently at Vijay International School on Praslin. Passionate about inspiring, diverse science education and making physics accessible to everyone.
-    </p>
-    <div class="hero-links">
-      <a href="#projects" class="btn btn-primary">See Projects</a>
-      <a href="{{ '/resources/' | relative_url }}" class="btn btn-outline">Resources</a>
-      <a href="{{ '/cv/' | relative_url }}" class="btn btn-outline">CV</a>
+<div class="tufte-wrap" id="about">
+  <div class="tufte-main">
+    <div class="t-label">Educator · Physicist · Explorer</div>
+
+    <h1 class="t-name">Joe<br><em>Rowing</em></h1>
+    <div class="t-subtitle">CPhys MInstP — Praslin, Seychelles</div>
+    <div class="t-rule"></div>
+
+    <div class="t-body">
+      <p>Chartered Physicist, educator, and author. Founding member of <em>Exeter Mathematics School</em> — one of two pioneering state-funded specialist mathematics schools in England. IoP Physics Coach. Textbook author for Pearson, OUP, and Hodder.</p>
+      <p>Currently teaching physics, chemistry, and biology at Vijay International School on Praslin. Twenty years in classrooms from West Sussex to the Indian Ocean. Passionate about making physics feel real.</p>
     </div>
+
+    <div class="t-btns">
+      <a href="#projects" class="t-btn t-btn-primary">projects</a>
+      <a href="{{ '/resources/' | relative_url }}" class="t-btn t-btn-ghost">resources</a>
+      <a href="{{ '/cv/' | relative_url }}" class="t-btn t-btn-ghost">cv</a>
+    </div>
+
+    <div class="t-rule" id="projects" style="margin-top:3rem;"></div>
+    <div class="t-label" style="margin-top:2rem;">Current work</div>
+
+    <ul class="t-project-list">
+      <li class="t-project-item">
+        <span class="t-project-num">i.</span>
+        <div>
+          <div class="t-project-title"><a href="{{ '/resources/physics-notes.html' | relative_url }}">Cambridge International Physics Notes</a></div>
+          <div class="t-project-meta">179pp · LaTeX/Tufte · CC BY-NC-SA · free download</div>
+        </div>
+      </li>
+      <li class="t-project-item">
+        <span class="t-project-num">ii.</span>
+        <div>
+          <div class="t-project-title"><a href="https://mybinder.org/v2/gh/jrowing/Jupyter_lab_book/HEAD" target="_blank" rel="noopener">Jupyter Physics Lab Books</a></div>
+          <div class="t-project-meta">Interactive practicals · mybinder.org · work in progress</div>
+        </div>
+      </li>
+      <li class="t-project-item">
+        <span class="t-project-num">iii.</span>
+        <div>
+          <div class="t-project-title"><a href="{{ '/planner/' | relative_url }}">Markdown Teacher Planner</a></div>
+          <div class="t-project-meta">Open source · Mac + browser · plain markdown</div>
+        </div>
+      </li>
+      <li class="t-project-item">
+        <span class="t-project-num">iv.</span>
+        <div>
+          <div class="t-project-title">Bioacoustics</div>
+          <div class="t-project-meta">Bat detection · automated bird-call logging · Praslin field research</div>
+        </div>
+      </li>
+      <li class="t-project-item">
+        <span class="t-project-num">v.</span>
+        <div>
+          <div class="t-project-title"><a href="{{ '/resources/diving.html' | relative_url }}">Diving</a></div>
+          <div class="t-project-meta">Ennerdale · Booby Rock · South Marianne · 51 logged dives</div>
+        </div>
+      </li>
+      <li class="t-project-item">
+        <span class="t-project-num">vi.</span>
+        <div>
+          <div class="t-project-title"><a href="{{ '/bikes/' | relative_url }}">Black Lab Bikes</a></div>
+          <div class="t-project-meta">Steel frame building · named after the dog and the other black dog</div>
+        </div>
+      </li>
+      <li class="t-project-item">
+        <span class="t-project-num">vii.</span>
+        <div>
+          <div class="t-project-title"><a href="https://jrowing.substack.com" target="_blank" rel="noopener">Substack</a></div>
+          <div class="t-project-meta">Physics education · geekery · ideas for curious teachers</div>
+        </div>
+      </li>
+    </ul>
   </div>
 
-  <div class="hero-visual">
-    <svg class="ocean-anim" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-      <rect width="1000" height="600" fill="#1a6b72" opacity="0.25"/>
-      <g class="wave1">
-        <path d="M-100,100 C100,140 300,60 500,100 C700,140 900,60 1100,100 L1100,350 L-100,350 Z" fill="#1a6b72" opacity="0.5"/>
-      </g>
-      <g class="wave2">
-        <path d="M-100,180 C150,220 350,140 550,180 C750,220 950,140 1150,180 L1150,450 L-100,450 Z" fill="#0d4f57" opacity="0.45"/>
-      </g>
-      <g class="wave1" style="animation-duration:15s">
-        <path d="M-100,260 C200,290 400,230 600,260 C800,290 1000,230 1200,260 L1200,600 L-100,600 Z" fill="#0a2540" opacity="0.6"/>
-      </g>
-    </svg>
-    <div class="hero-card">
-      <p class="hero-card-label">Currently exploring</p>
-      <span class="hero-card-tag">🔭 Physics Education</span>
-      <span class="hero-card-tag">🦇 Bioacoustics</span>
-      <span class="hero-card-tag">🐟 Diving</span>
-      <span class="hero-card-tag">📓 Jupyter Notebooks</span>
-      <span class="hero-card-tag">🌊 Marine Science</span>
-      <span class="hero-card-tag">🎓 Teacher Training</span>
-      <div class="hero-card-loc">
-        <strong>📍 Seychelles</strong>
-        Indian Ocean · 4°37'S 55°27'E
+  <div class="tufte-margin" style="padding-top:5.5rem;">
+    <div class="t-sidenote">
+      <div class="t-sidenote-label">Location</div>
+      <div class="t-sidenote-body">
+        <em>Praslin</em>, Seychelles<br>
+        Indian Ocean<br>
+        4°37′S 55°27′E
+      </div>
+    </div>
+
+    <div class="t-sidenote">
+      <div class="t-sidenote-label">Interests</div>
+      <div class="t-sidenote-tags">
+        <span class="t-stag">physics</span>
+        <span class="t-stag">bioacoustics</span>
+        <span class="t-stag">diving</span>
+        <span class="t-stag">jupyter</span>
+        <span class="t-stag">marine science</span>
+        <span class="t-stag">frame building</span>
+        <span class="t-stag">teacher training</span>
+      </div>
+    </div>
+
+    <div class="t-sidenote">
+      <div class="t-sidenote-label">Credentials</div>
+      <div class="t-sidenote-body">
+        CPhys · MInstP<br>
+        BSc Physics with Photonics<br>
+        Durham PGCE<br>
+        NPQSL
+      </div>
+    </div>
+
+    <div class="t-sidenote">
+      <div class="t-sidenote-label">Publications</div>
+      <div class="t-sidenote-body">
+        Gender Balance in Science Education<br>
+        YEN in the Physics Classroom
+      </div>
+    </div>
+
+    <div class="t-sidenote">
+      <div class="t-sidenote-label">Find me</div>
+      <div class="t-sidenote-body">
+        <a href="https://www.linkedin.com/in/jrowing/" style="color:var(--teal);text-decoration:none;">linkedin ↗</a><br>
+        <a href="https://jrowing.substack.com" style="color:var(--teal);text-decoration:none;">substack ↗</a><br>
+        <a href="https://www.instagram.com/blacklabbikes/" style="color:var(--teal);text-decoration:none;">@blacklabbikes ↗</a>
       </div>
     </div>
   </div>
-</section>
-
-<!-- PROJECTS -->
-<section class="site-section" id="projects">
-  <p class="section-label">Work &amp; Projects</p>
-  <h2 class="section-title">Current Projects &amp; Interests</h2>
-  <div class="projects-grid">
-    <a class="project-card" href="https://mybinder.org/v2/gh/jrowing/Jupyter_lab_book/HEAD" target="_blank" rel="noopener">
-      <h3>Jupyter Physics Lab Books</h3>
-      <p>Lab report templates and experiments in Jupyter Notebook form. An evolving collection of interactive science practicals.</p>
-      <span class="project-tag">Work in progress</span>
-    </a>
-    <a class="project-card" href="https://github.com/jrowing/EMS-Physics-Notes" target="_blank" rel="noopener">
-      <h3>Physics Notes</h3>
-      <p>A complete, syllabus-agnostic textbook covering the full A-level Physics course. Open source and freely available.</p>
-      <span class="project-tag">Open source</span>
-    </a>
-    <div class="project-card">
-      <h3>Bioacoustics</h3>
-      <p>Automated bird-call identification and logging. Bat detectors large and small — listening to the natural world.</p>
-      <span class="project-tag">Field research</span>
-    </div>
-    <a class="project-card" href="/resources/diving.html">
-      <h3>Diving</h3>
-      <p>After moving to the Seychelles, a rekindled love of the ocean. Exploring coral reefs and marine ecosystems up close.</p>
-      <span class="project-tag">Seychelles</span>
-    </a>
-    <a class="project-card" href="{{ '/planner/' | relative_url }}">
-      <h3>Markdown Teacher Planner</h3>
-      <p>A distraction-free planning tool for teachers. Write lesson notes in Markdown, visualise your term in a calendar. Free and open source.</p>
-      <span class="project-tag">Open source</span>
-    </a>
-
-    <a class="project-card" href="https://jrowing.substack.com" target="_blank" rel="noopener">
-      <h3>Substack</h3>
-      <p>Thoughts on education and physics teaching — resources, geekery, and ideas for curious educators and learners.</p>
-      <span class="project-tag">Writing</span>
-    </a>
-  </div>
-</section>
-
+</div>
