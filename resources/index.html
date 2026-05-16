@@ -1,131 +1,35 @@
 ---
 layout: default
-title: Home
+title: Resources
+description: Teaching and learning materials — physics notes, simulations, and worksheets.
 ---
+<div class="page-wrap">
+  <a href="{{ '/' | relative_url }}" class="back-link">← jrowing.com</a>
+  <div class="section-label">Teaching &amp; learning materials</div>
 
-<section class="hero" id="about">
-  <div class="hero-eyebrow">Praslin · Seychelles · 4°37′S 55°27′E</div>
-  <h1 class="hero-name">Joe <em>Rowing</em></h1>
-  <div class="hero-role">CPhys MInstP &ensp;·&ensp; Educator &ensp;·&ensp; Physicist &ensp;·&ensp; Explorer</div>
-  <p class="hero-bio">
-    Chartered Physicist, educator, and author. Founding member of <strong>Exeter Mathematics School</strong> — one of two pioneering state-funded specialist mathematics schools in England. IoP Physics Coach. Textbook author for Pearson, OUP, and Hodder. Currently teaching physics, chemistry, and biology at Vijay International School on Praslin. Twenty years in classrooms from West Sussex to the Indian Ocean. Passionate about making physics feel real.
-  </p>
-  <div class="hero-links">
-    <a href="#projects" class="btn btn-dark">Projects</a>
-    <a href="{{ '/resources/' | relative_url }}" class="btn btn-outline">Resources</a>
-    <a href="{{ '/cv/' | relative_url }}" class="btn btn-outline">CV</a>
-  </div>
-</section>
-
-<div class="site-body" id="projects">
-  <main class="site-content">
-    <div class="section-label">Current work</div>
-    <ul class="project-list">
-
-      <li class="project-item">
-        <span class="project-num">i.</span>
-        <div>
-          <a href="{{ '/resources/physics-notes.html' | relative_url }}" class="project-title">Cambridge International Physics Notes</a>
-          <div class="project-meta">179pp · LaTeX / Tufte layout · CC BY-NC-SA · free download</div>
-          <div class="project-tags"><span class="tag">Physics</span><span class="tag">Open access</span></div>
-        </div>
+  <ul class="project-list">
+    {% assign resource_pages = site.pages | where: "is_resource", true | sort: "title" %}
+    {% if resource_pages.size > 0 %}
+      {% for r in resource_pages %}
+        <li class="project-item">
+          <span class="project-num">→</span>
+          <div>
+            <a href="{{ r.url | relative_url }}" class="project-title">{{ r.title }}</a>
+            {% if r.description %}
+              <div class="project-meta">{{ r.description }}</div>
+            {% endif %}
+            {% if r.tags %}
+              <div class="project-tags">
+                {% for tag in r.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    {% else %}
+      <li style="padding:20px 0; color:var(--ink-4); font-family:var(--sans); font-size:15px;">
+        No resources yet — add <code>.html</code> files to <code>resources/</code> with <code>is_resource: true</code>.
       </li>
-
-      <li class="project-item">
-        <span class="project-num">ii.</span>
-        <div>
-          <a href="https://mybinder.org/v2/gh/jrowing/Jupyter_lab_book/HEAD" class="project-title" target="_blank" rel="noopener">Jupyter Physics Lab Books</a>
-          <div class="project-meta">Interactive practicals · mybinder.org · work in progress</div>
-          <div class="project-tags"><span class="tag">Jupyter</span><span class="tag">Interactive</span></div>
-        </div>
-      </li>
-
-      <li class="project-item">
-        <span class="project-num">iii.</span>
-        <div>
-          <a href="{{ '/planner/' | relative_url }}" class="project-title">Markdown Teacher Planner</a>
-          <div class="project-meta">Open source · Mac + browser · plain markdown</div>
-          <div class="project-tags"><span class="tag">Open source</span><span class="tag">Tools</span></div>
-        </div>
-      </li>
-
-      <li class="project-item">
-        <span class="project-num">iv.</span>
-        <div>
-          <span class="project-title">Bioacoustics</span>
-          <div class="project-meta">Bat detection · automated bird-call logging · Praslin field research</div>
-          <div class="project-tags"><span class="tag">Field research</span><span class="tag">Seychelles</span></div>
-        </div>
-      </li>
-
-      <li class="project-item">
-        <span class="project-num">v.</span>
-        <div>
-          <a href="{{ '/resources/diving.html' | relative_url }}" class="project-title">Diving</a>
-          <div class="project-meta">Ennerdale · Booby Rock · South Marianne</div>
-          <div class="project-tags"><span class="tag">Marine</span><span class="tag">Seychelles</span></div>
-        </div>
-      </li>
-
-      <li class="project-item">
-        <span class="project-num">vi.</span>
-        <div>
-          <a href="https://jrowing.substack.com" class="project-title" target="_blank" rel="noopener">Substack — Physics &amp; Geekery</a>
-          <div class="project-meta">Ideas for curious teachers · jrowing.substack.com</div>
-          <div class="project-tags"><span class="tag">Writing</span><span class="tag">Education</span></div>
-        </div>
-      </li>
-
-    </ul>
-  </main>
-
-  <aside class="site-sidebar">
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">Location</div>
-      <div class="sidebar-item">
-        <span class="sidebar-sub">Current</span>
-        Praslin, Seychelles
-      </div>
-      <div class="sidebar-item">
-        <span class="sidebar-sub">Coordinates</span>
-        4°37′S 55°27′E
-      </div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">Credentials</div>
-      <div class="sidebar-cred">CPhys · MInstP</div>
-      <div class="sidebar-cred">BSc Physics with Photonics</div>
-      <div class="sidebar-cred">Durham PGCE</div>
-      <div class="sidebar-cred">NPQSL</div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">Publications</div>
-      <div class="sidebar-item">Gender Balance in Science Education</div>
-      <div class="sidebar-item">YEN in the Physics Classroom</div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">Interests</div>
-      <div class="tag-cloud">
-        <span class="tag">Physics</span>
-        <span class="tag">Bioacoustics</span>
-        <span class="tag">Diving</span>
-        <span class="tag">Jupyter</span>
-        <span class="tag">Marine science</span>
-        <span class="tag">Bicycle frames</span>
-        <span class="tag">Teacher training</span>
-      </div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">Find me</div>
-      <a href="https://www.linkedin.com/in/jrowing/" class="sidebar-link" target="_blank" rel="noopener">LinkedIn ↗</a>
-      <a href="https://jrowing.substack.com" class="sidebar-link" target="_blank" rel="noopener">Substack ↗</a>
-      <a href="https://github.com/jrowing" class="sidebar-link" target="_blank" rel="noopener">GitHub ↗</a>
-    </div>
-
-  </aside>
+    {% endif %}
+  </ul>
 </div>
