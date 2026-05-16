@@ -1,0 +1,56 @@
+---
+layout: bare
+---
+
+<style>
+  .post-wrap { max-width: 720px; margin: 0 auto; padding: 4rem 2rem 6rem; }
+  .back-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--reef); text-decoration: none; font-size: 0.9rem; margin-bottom: 2.5rem; transition: color 0.2s; }
+  .back-link:hover { color: var(--coral); }
+
+  .post-header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(0,0,0,0.08); }
+  .post-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+  .post-tag { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--reef); background: var(--foam); padding: 0.2rem 0.55rem; border-radius: 4px; border: 1px solid rgba(26,107,114,0.15); text-decoration: none; transition: all 0.2s; }
+  .post-tag:hover { background: var(--reef); color: white; }
+  .post-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); color: var(--ocean); font-weight: 700; line-height: 1.15; margin-bottom: 0.8rem; }
+  .post-meta { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.05em; }
+
+  /* Post body typography */
+  .post-body { font-size: 1.02rem; line-height: 1.85; color: #374151; }
+  .post-body h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--ocean); margin: 2.5rem 0 0.8rem; line-height: 1.2; }
+  .post-body h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--ocean); margin: 2rem 0 0.6rem; }
+  .post-body p { margin-bottom: 1.4rem; }
+  .post-body a { color: var(--reef); text-decoration: underline; text-decoration-color: rgba(26,107,114,0.3); text-underline-offset: 3px; }
+  .post-body a:hover { color: var(--coral); }
+  .post-body strong { color: var(--ocean); font-weight: 600; }
+  .post-body em { font-style: italic; }
+  .post-body ul, .post-body ol { padding-left: 1.5rem; margin-bottom: 1.4rem; }
+  .post-body li { margin-bottom: 0.4rem; }
+  .post-body blockquote { border-left: 3px solid var(--coral); padding: 0.8rem 1.4rem; margin: 2rem 0; background: var(--foam); border-radius: 0 8px 8px 0; }
+  .post-body blockquote p { margin-bottom: 0; font-style: italic; color: #4b5563; }
+  .post-body code { font-family: 'DM Mono', monospace; font-size: 0.85em; background: var(--foam); padding: 0.15em 0.4em; border-radius: 4px; color: var(--ocean); }
+  .post-body pre { background: var(--ocean); color: var(--foam); border-radius: 10px; padding: 1.4rem; overflow-x: auto; margin: 1.8rem 0; }
+  .post-body pre code { background: none; color: inherit; padding: 0; font-size: 0.88rem; }
+  .post-body img { max-width: 100%; border-radius: 10px; margin: 1.5rem 0; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+  .post-body hr { border: none; border-top: 1px solid rgba(0,0,0,0.08); margin: 2.5rem 0; }
+  .post-body table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.92rem; }
+  .post-body th, .post-body td { padding: 0.65rem 1rem; text-align: left; border-bottom: 1px solid rgba(0,0,0,0.07); }
+  .post-body th { font-weight: 600; color: var(--ocean); background: var(--foam); }
+</style>
+
+<div class="post-wrap">
+  <a href="{{ '/blog/' | relative_url }}" class="back-link">← Blog</a>
+
+  <div class="post-header">
+    <div class="post-tags">
+      {% for tag in page.tags %}
+        <a class="post-tag" href="{{ '/blog/' | relative_url }}#{{ tag | slugify }}">{{ tag }}</a>
+      {% endfor %}
+    </div>
+    <h1 class="post-title">{{ page.title }}</h1>
+    <p class="post-meta">{{ page.date | date: "%B %-d, %Y" }}{% if page.author %} · {{ page.author }}{% endif %}</p>
+  </div>
+
+  <div class="post-body">
+    {{ content }}
+  </div>
+</div>
