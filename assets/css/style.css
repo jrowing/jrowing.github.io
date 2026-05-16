@@ -17,8 +17,8 @@
 
   /* Text hierarchy — clear contrast */
   --text-1:     #e8e5dc;   /* headings, names */
-  --text-2:     #d4d1c8;   /* body text */
-  --text-3:     #a8a59c;   /* secondary / metadata */
+  --text-2:     #e0ddd4;   /* body text */
+  --text-3:     #b8b5ac;   /* secondary / metadata */
   --text-4:     rgba(255,255,255,0.25); /* hints */
 
   /* Accents */
@@ -174,7 +174,7 @@ h3.subsection-head {
 }
 
 /* ── BODY TEXT ── */
-.t-body { font-size: 16.5px; line-height: 1.85; color: var(--text-2); }
+.t-body { font-size: 16.5px; line-height: 1.85; color: #e0ddd4; }
 .t-body p { margin-bottom: 1.1em; }
 .t-body em { font-style: italic; }
 .t-body strong { color: var(--text-1); font-weight: 400; font-style: italic; }
