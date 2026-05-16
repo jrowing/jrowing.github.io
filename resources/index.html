@@ -4,32 +4,18 @@ title: Resources
 description: Teaching and learning materials — physics notes, simulations, and worksheets.
 ---
 <div class="page-wrap">
-  <a href="{{ '/' | relative_url }}" class="back-link">← jrowing.com</a>
+  <a href="/" class="back-link">← jrowing.com</a>
   <div class="section-label">Teaching &amp; learning materials</div>
-
   <ul class="project-list">
     {% assign resource_pages = site.pages | where: "is_resource", true | sort: "title" %}
-    {% if resource_pages.size > 0 %}
-      {% for r in resource_pages %}
-        <li class="project-item">
-          <span class="project-num">→</span>
-          <div>
-            <a href="{{ r.url | relative_url }}" class="project-title">{{ r.title }}</a>
-            {% if r.description %}
-              <div class="project-meta">{{ r.description }}</div>
-            {% endif %}
-            {% if r.tags %}
-              <div class="project-tags">
-                {% for tag in r.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
-              </div>
-            {% endif %}
-          </div>
-        </li>
-      {% endfor %}
-    {% else %}
-      <li style="padding:20px 0; color:var(--ink-4); font-family:var(--sans); font-size:15px;">
-        No resources yet — add <code>.html</code> files to <code>resources/</code> with <code>is_resource: true</code>.
+    {% for r in resource_pages %}
+      <li class="project-item">
+        <span class="project-num">→</span>
+        <div>
+          <a href="{{ r.url }}" class="project-title">{{ r.title }}</a>
+          {% if r.description %}<div class="project-meta">{{ r.description }}</div>{% endif %}
+        </div>
       </li>
-    {% endif %}
+    {% endfor %}
   </ul>
 </div>
