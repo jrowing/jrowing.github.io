@@ -1,43 +1,20 @@
 ---
 layout: default
 ---
-
-<div class="tufte-wrap">
-  <div class="tufte-main">
-    <a href="{{ '/blog/' | relative_url }}" class="t-back">← blog</a>
-
-    <div class="post-header">
-      <div class="post-tags-line">
-        {% for tag in page.tags %}
-          <span class="post-tag-h">{{ tag }}</span>
-        {% endfor %}
-      </div>
-      <h1 class="page-title" style="font-size:clamp(28px,4vw,40px);line-height:1.15;margin-bottom:0;">{{ page.title }}</h1>
-      <div class="post-meta-line">{{ page.date | date: "%-d %B %Y" }}</div>
-      <div class="t-rule"></div>
-    </div>
-
-    <div class="t-body">
-      {{ content }}
+<div class="page-wrap">
+  <a href="{{ '/blog/' | relative_url }}" class="back-link">← Blog</a>
+  <div class="post-header">
+    <h1>{{ page.title }}</h1>
+    <div class="post-meta-row">
+      <span class="post-date">{{ page.date | date: "%d %B %Y" }}</span>
+      {% if page.tags %}
+        <div class="project-tags">
+          {% for tag in page.tags %}
+            <span class="tag">{{ tag }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
     </div>
   </div>
-
-  <div class="tufte-margin" style="padding-top:4.5rem;">
-    {% if page.tags.size > 0 %}
-    <div class="t-sidenote">
-      <div class="t-sidenote-label">Tags</div>
-      <div class="t-sidenote-tags">
-        {% for tag in page.tags %}
-          <span class="t-stag">{{ tag }}</span>
-        {% endfor %}
-      </div>
-    </div>
-    {% endif %}
-    <div class="t-sidenote">
-      <div class="t-sidenote-label">More</div>
-      <div class="t-sidenote-body">
-        <a href="{{ '/blog/' | relative_url }}" style="color:var(--teal);text-decoration:none;border-bottom:0.5px solid var(--teal);">← all posts</a>
-      </div>
-    </div>
-  </div>
+  {{ content }}
 </div>
