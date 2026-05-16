@@ -1,11 +1,13 @@
 title: Joe Rowing
 description: Educator, Physicist, Explorer
-url: "https://www.jrowing.com"
 baseurl: ""
+url: "https://jrowing.com"
+permalink: /:categories/:title/
 
-# Tell Jekyll to process the resources folder
-include:
-  - resources
+plugins:
+  - jekyll-feed
 
-# Don't need posts
-plugins: []
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
