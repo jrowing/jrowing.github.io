@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,6 +7,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
+  <script>
+    (function() {
+      var t = localStorage.getItem('theme') ||
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
 </head>
 <body>
 
@@ -16,16 +23,20 @@
     <li><a href="{{ '/' | relative_url }}#about">About</a></li>
     <li><a href="{{ '/' | relative_url }}#projects">Projects</a></li>
     <li><a href="{{ '/resources/' | relative_url }}">Resources</a></li>
-<li><a href="{{ '/planner/' | relative_url }}">Planner</a></li>
-    <li><a href="{{ '/bikes/' | relative_url }}">Bikes</a></li>
+    <li><a href="{{ '/planner/' | relative_url }}">Planner</a></li>
     <li><a href="{{ '/blog/' | relative_url }}">Blog</a></li>
     <li><a href="{{ '/cv/' | relative_url }}">CV</a></li>
     <li><a href="https://jrowing.substack.com" target="_blank" rel="noopener">Substack ↗</a></li>
-    <li><a href="https://www.linkedin.com/in/jrowing/" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+    <li>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <span class="icon-moon">☽</span>
+        <span class="icon-sun">☀</span>
+      </button>
+    </li>
   </ul>
 </nav>
 
-<div style="padding-top: 4.5rem;">
+<div style="padding-top: 4rem;">
   {{ content }}
 </div>
 
@@ -35,6 +46,15 @@
     <a href="https://jrowing.substack.com">Substack</a>
   </p>
 </footer>
+
+<script>
+  function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme');
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  }
+</script>
 
 </body>
 </html>
