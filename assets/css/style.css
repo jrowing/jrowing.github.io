@@ -17,8 +17,8 @@
 
   /* Text hierarchy — clear contrast */
   --text-1:     #e8e5dc;   /* headings, names */
-  --text-2:     #c0bdb4;   /* body text */
-  --text-3:     #8a877e;   /* secondary / metadata */
+  --text-2:     #d4d1c8;   /* body text */
+  --text-3:     #a8a59c;   /* secondary / metadata */
   --text-4:     rgba(255,255,255,0.25); /* hints */
 
   /* Accents */
@@ -290,7 +290,7 @@ h3.subsection-head {
 .t-post-entry:hover .t-post-title { color: var(--teal); }
 .t-post-excerpt {
   font-family: var(--mono); font-size: 11px;
-  color: var(--text-3); line-height: 1.65; margin-bottom: 8px;
+  color: var(--text-2); line-height: 1.65; margin-bottom: 8px;
 }
 .t-post-tags { display: flex; gap: 8px; flex-wrap: wrap; }
 .t-post-tag {
