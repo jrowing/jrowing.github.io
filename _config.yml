@@ -2,11 +2,7 @@ title: Joe Rowing
 description: Educator, Physicist, Explorer
 baseurl: ""
 url: "https://jrowing.com"
-permalink: /:year/:month/:day/:title/
-plugins:
-  - jekyll-feed
 exclude:
   - README.md
   - Gemfile
   - Gemfile.lock
-  - node_modules

@@ -4,6 +4,7 @@ title: Resources
 ---
 <div class="page-wrap">
   <a href="/" class="back-link">← jrowing.com</a>
+  <hr class="page-divider">
   <div class="section-label">Teaching &amp; learning materials</div>
   <ul class="project-list">
     {% assign resource_pages = site.pages | where: "is_resource", true | sort: "title" %}
@@ -18,9 +19,7 @@ title: Resources
         </li>
       {% endfor %}
     {% else %}
-      <li style="padding:20px 0;color:var(--ink-4);font-family:var(--sans);font-size:15px;">
-        No resources yet — add <code>.html</code> files to <code>resources/</code> with <code>is_resource: true</code> in the front matter.
-      </li>
+      <li style="padding:20px 0;color:var(--ink-4);font-family:var(--sans);font-size:15px;">No resources yet.</li>
     {% endif %}
   </ul>
 </div>

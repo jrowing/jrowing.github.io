@@ -20,16 +20,13 @@
       <div class="dropdown-menu">
         {% assign resource_pages = site.pages | where: "is_resource", true | sort: "title" %}
         {% if resource_pages.size > 0 %}
-          {% for r in resource_pages %}
-            <a href="{{ r.url }}">{{ r.title }}</a>
-          {% endfor %}
+          {% for r in resource_pages %}<a href="{{ r.url }}">{{ r.title }}</a>{% endfor %}
         {% else %}
           <span class="dropdown-empty">No resources yet</span>
         {% endif %}
       </div>
     </li>
     <li><a href="/planner.html">Planner</a></li>
-    <li><a href="/blog.html">Blog</a></li>
     <li><a href="/cv.html">CV</a></li>
     <li><a href="https://jrowing.substack.com" target="_blank" rel="noopener">Substack ↗</a></li>
   </ul>
