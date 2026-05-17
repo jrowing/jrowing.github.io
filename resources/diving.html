@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Scuba diving — Seychelles & beyond. Dive sites, recommendations, and notes from the Indian Ocean." />
+  <title>Diving — Joe Rowing</title>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --text:   #1a1a1a;
+      --muted:  #666;
+      --faint:  #999;
+      --border: #e0e0e0;
+      --bg:     #fafafa;
+      --white:  #ffffff;
+      --accent: #1a1a1a;
+      --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+      --mono: 'IBM Plex Mono', 'Courier New', monospace;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,500;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: var(--sans);
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--white);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+    a:hover { opacity: 0.6; }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 52px;
+    }
+
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-style: italic;
+      text-decoration: none;
+      letter-spacing: 0.01em;
+    }
+
+    .nav-logo span { font-style: normal; }
+
+    .nav-links {
+      display: flex;
+      gap: 1.75rem;
+      list-style: none;
+      font-size: 0.875rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover { color: var(--text); opacity: 1; }
+    .nav-links .active { color: var(--text); font-weight: 500; }
+
+    .nav-links .external::after {
+      content: ' ↗';
+      font-size: 0.75rem;
+      opacity: 0.6;
+    }
+
+    /* ── Layout ── */
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 3.5rem 2rem 5rem;
+    }
+
+    /* ── Back link ── */
+    .back {
+      display: inline-block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 2.5rem;
+    }
+    .back:hover { color: var(--text); opacity: 1; }
+
+    /* ── Page header ── */
+    .page-header {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-coords {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--faint);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .page-header h1 {
+      font-family: var(--serif);
+      font-size: 2.2rem;
+      font-weight: 500;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .page-header .lede {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 520px;
+    }
+
+    .page-header .lede em {
+      font-style: italic;
+      color: var(--text);
+    }
+
+    /* ── Section headings ── */
+    h2 {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 500;
+      font-style: italic;
+      margin: 2.75rem 0 1.25rem;
+    }
+
+    /* ── About section ── */
+    .about p {
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      font-size: 0.975rem;
+    }
+
+    .about p:last-child { margin-bottom: 0; }
+
+    .cert-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .cert {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 3px 10px;
+      border-radius: 2px;
+      letter-spacing: 0.03em;
+    }
+
+    /* ── Dive sites ── */
+    .sites-list {
+      list-style: none;
+      counter-reset: site-counter;
+      border-top: 1px solid var(--border);
+    }
+
+    .site-item {
+      counter-increment: site-counter;
+      border-bottom: 1px solid var(--border);
+      padding: 1.4rem 0;
+      display: grid;
+      grid-template-columns: 2.5rem 1fr;
+      gap: 0 1rem;
+      align-items: start;
+    }
+
+    .site-num {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--faint);
+      padding-top: 0.15rem;
+      letter-spacing: 0.05em;
+    }
+
+    .site-body {}
+
+    .site-name {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 0.2rem;
+    }
+
+    .site-location {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--faint);
+      letter-spacing: 0.04em;
+      margin-bottom: 0.6rem;
+    }
+
+    .site-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .site-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      font-family: var(--mono);
+      color: var(--faint);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 1px;
+      letter-spacing: 0.03em;
+    }
+
+    /* ── Recommendations ── */
+    .rec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 520px) {
+      .rec-grid { grid-template-columns: 1fr; }
+    }
+
+    .rec-card {
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      border-radius: 2px;
+    }
+
+    .rec-card h3 {
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 0.3rem;
+    }
+
+    .rec-card .rec-type {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--faint);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    .rec-card p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.55;
+      margin-bottom: 0.75rem;
+    }
+
+    .rec-card a.rec-link {
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1px;
+    }
+
+    .rec-card a.rec-link:hover {
+      border-color: var(--text);
+      opacity: 1;
+    }
+
+    .rec-card a.rec-link::after {
+      content: ' ↗';
+      font-size: 0.7rem;
+      opacity: 0.6;
+    }
+
+    /* ── Divider ── */
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      font-size: 0.8rem;
+      color: var(--faint);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    footer a {
+      color: var(--faint);
+      text-decoration: none;
+    }
+
+    footer a:hover { color: var(--text); opacity: 1; }
+
+    .footer-links { display: flex; gap: 1.25rem; }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <a class="nav-logo" href="https://www.jrowing.com/"><span>J.</span> <em>Rowing</em></a>
+  <ul class="nav-links">
+    <li><a href="https://www.jrowing.com/#about">About</a></li>
+    <li><a href="https://www.jrowing.com/resources.html">Resources</a></li>
+    <li><a href="https://www.jrowing.com/planner.html">Planner</a></li>
+    <li><a href="https://www.jrowing.com/cv.html">CV</a></li>
+    <li><a href="https://jrowing.substack.com" class="external">Substack</a></li>
+  </ul>
+</nav>
+
+<main>
+  <a class="back" href="https://www.jrowing.com/#projects">← Projects</a>
+
+  <!-- Header -->
+  <header class="page-header">
+    <p class="page-coords">Praslin · Seychelles · 4°37′S 55°27′E</p>
+    <h1>Diving</h1>
+    <p class="lede">
+      Scuba diving in the Seychelles — wrecks, reef walls, and granite boulder gardens in
+      the Indian Ocean. Notes on the best sites around Praslin and Mahé, and operators worth
+      diving with.
+    </p>
+  </header>
+
+  <!-- About -->
+  <section class="about">
+    <h2>About</h2>
+    <p>
+      Living on Praslin puts me within twenty minutes of some of the most biodiverse reef
+      systems in the western Indian Ocean. The granitic seabed here is unlike anywhere else —
+      cathedral-scale boulders colonised by soft corals, patrolled by whitetip sharks and
+      hawksbill turtles year-round.
+    </p>
+    <p>
+      I dive recreational depths, mostly in the 12–30 m range, with a preference for slow
+      drift dives over reef walls and boulder gardens. The Ennerdale wreck off Mahé is a
+      particular favourite — there's something about diving a ship that was deliberately blown
+      apart that stays with you.
+    </p>
+    <div class="cert-row">
+      <span class="cert">PADI Open Water</span>
+      <span class="cert">PADI Advanced Open Water</span>
+      <span class="cert">Nitrox</span>
+    </div>
+  </section>
+
+  <!-- Top 5 sites -->
+  <section>
+    <h2>Top five dive sites</h2>
+    <ol class="sites-list">
+
+      <li class="site-item">
+        <span class="site-num">i.</span>
+        <div class="site-body">
+          <p class="site-name">Ennerdale Wreck</p>
+          <p class="site-location">off Mamelles Island · north-east Mahé · 4°33′S 55°28′E</p>
+          <p class="site-desc">
+            A 270 m British Royal Fleet Auxiliary oil tanker that struck an unmarked pinnacle off
+            north-east Mahé in 1970. Unable to be saved, she was deliberately scuttled with
+            explosives — the charges blown with divers plucked from the water by speedboat at the
+            last moment. Now the largest wreck in the Seychelles, lying at 20–27 m and colonised
+            by nurse sharks, giant groupers, grey reef sharks, and dense schools of barracuda.
+            The stern section, with propeller and wheelhouse intact, is the highlight. An AOW dive;
+            bottom time is short at depth.
+          </p>
+          <div class="site-tags">
+            <span class="tag">wreck</span>
+            <span class="tag">20–27 m</span>
+            <span class="tag">nurse sharks</span>
+            <span class="tag">giant grouper</span>
+            <span class="tag">AOW</span>
+          </div>
+        </div>
+      </li>
+
+      <li class="site-item">
+        <span class="site-num">ii.</span>
+        <div class="site-body">
+          <p class="site-name">Booby Rock</p>
+          <p class="site-location">Seychelles · 4°18′S 55°44′E</p>
+          <p class="site-desc">
+            A seamount rising from 40 m to within 8 m of the surface, roughly halfway between
+            Mahé and Praslin. Strong currents concentrate pelagics — eagle rays, whitetip and
+            nurse sharks, and occasional hammerheads. Best on a slack or gentle incoming tide.
+          </p>
+          <div class="site-tags">
+            <span class="tag">pelagic</span>
+            <span class="tag">current dive</span>
+            <span class="tag">sharks</span>
+            <span class="tag">eagle rays</span>
+          </div>
+        </div>
+      </li>
+
+      <li class="site-item">
+        <span class="site-num">iii.</span>
+        <div class="site-body">
+          <p class="site-name">Ave Maria</p>
+          <p class="site-location">Seychelles · near Praslin · 4°22′S 55°42′E</p>
+          <p class="site-desc">
+            A cluster of granite pinnacles covered in hard and soft corals, sitting in 18–28 m.
+            One of the most reliably productive sites near Praslin — Napoleon wrasse, moray eels,
+            lionfish, and resident hawksbill turtles on almost every dive. Sheltered enough to
+            dive year-round.
+          </p>
+          <div class="site-tags">
+            <span class="tag">granite pinnacles</span>
+            <span class="tag">turtles</span>
+            <span class="tag">year-round</span>
+            <span class="tag">18–28 m</span>
+          </div>
+        </div>
+      </li>
+
+      <li class="site-item">
+        <span class="site-num">iv.</span>
+        <div class="site-body">
+          <p class="site-name">South Marianne</p>
+          <p class="site-location">Île Marianne · Seychelles · 4°20′S 55°49′E</p>
+          <p class="site-desc">
+            The southern wall of Île Marianne drops into deep blue water past boulder gardens
+            encrusted with sea fans. Remote and rarely dived — Marianne is uninhabited and requires
+            a longer crossing from Praslin, but rewards the effort with near-pristine corals and
+            genuine solitude underwater.
+          </p>
+          <div class="site-tags">
+            <span class="tag">wall dive</span>
+            <span class="tag">sea fans</span>
+            <span class="tag">remote</span>
+            <span class="tag">pristine</span>
+          </div>
+        </div>
+      </li>
+
+      <li class="site-item">
+        <span class="site-num">v.</span>
+        <div class="site-body">
+          <p class="site-name">Cousin Protected Reef</p>
+          <p class="site-location">Cousin Island Special Reserve · Praslin · 4°20′S 55°40′E</p>
+          <p class="site-desc">
+            The marine reserve surrounding Cousin Island supports one of the densest hawksbill
+            turtle populations in the Indian Ocean. Strict no-take enforcement since the 1970s
+            means the reef structure is in excellent condition — thick coral heads, abundant
+            reef fish, and turtles that have no fear of divers.
+          </p>
+          <div class="site-tags">
+            <span class="tag">marine reserve</span>
+            <span class="tag">hawksbill turtles</span>
+            <span class="tag">reef</span>
+            <span class="tag">Cousin Island</span>
+          </div>
+        </div>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- Recommendations -->
+  <section>
+    <h2>Recommended operators</h2>
+    <div class="rec-grid">
+
+      <div class="rec-card">
+        <h3>Praslin Pro Divers</h3>
+        <p class="rec-type">Dive centre · Praslin</p>
+        <p>
+          Based at Anse Volbert, Praslin Pro Divers runs well-organised two-tank morning trips
+          to the best sites around Praslin and the outer islands. Knowledgeable guides, good
+          equipment, and sensible group sizes. The go-to choice for residents.
+        </p>
+        <a class="rec-link" href="https://www.praslinprodivers.com" target="_blank" rel="noopener">praslinprodivers.com</a>
+      </div>
+
+      <div class="rec-card">
+        <h3>Whitetip Divers</h3>
+        <p class="rec-type">Dive centre · Praslin</p>
+        <p>
+          Smaller, more personal operation with excellent guides who know the granitic seabed
+          intimately. Particularly good for night dives and for reaching remoter sites like
+          South Marianne and Booby Rock on good weather days.
+        </p>
+        <a class="rec-link" href="https://www.whitetipdivers.com" target="_blank" rel="noopener">whitetipdivers.com</a>
+      </div>
+
+    </div>
+  </section>
+
+  <hr />
+
+  <p style="font-size: 0.85rem; color: var(--faint); line-height: 1.6;">
+    Site conditions, operators, and access change — always check current information before
+    planning a dive trip. Coordinates are approximate.
+  </p>
+</main>
+
+<footer>
+  <span>© 2026 Joe Rowing</span>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/jrowing/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://jrowing.substack.com" target="_blank" rel="noopener">Substack</a>
+    <a href="https://github.com/jrowing" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</footer>
+
+</body>
+</html>
