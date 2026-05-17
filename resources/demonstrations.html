@@ -1,188 +1,183 @@
 ---
-layout: resource
-title: "60+ Demos to make students think"
-is_resource: true
-description: " - "
+layout: default
+title: 60+ Demonstrations
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="60+ physics demonstrations and observations — hands-on experiments for teachers and students." />
-  <title>60 Demonstrations — Joe Rowing</title>
-  <link rel="stylesheet" href="/assets/css/style.css" />
-  <style>
-    .demo-controls {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
-    }
-    .demo-search {
-      flex: 1;
-      min-width: 200px;
-      font-family: var(--sans);
-      font-size: 14px;
-      padding: 8px 14px;
-      border: 1px solid var(--rule);
-      border-radius: 4px;
-      background: var(--paper);
-      color: var(--ink);
-      outline: none;
-      transition: border-color 0.15s;
-    }
-    .demo-search:focus { border-color: var(--accent); }
-    .filter-btns { display: flex; gap: 6px; flex-wrap: wrap; }
-    .filter-btn {
-      font-family: var(--mono);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 5px 12px;
-      border: 1px solid var(--rule);
-      border-radius: 3px;
-      background: none;
-      color: var(--ink-4);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .filter-btn:hover { border-color: var(--ink-3); color: var(--ink-2); }
-    .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+<style>
+  .demo-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .demo-search {
+    flex: 1;
+    min-width: 200px;
+    font-family: var(--sans);
+    font-size: 14px;
+    padding: 8px 14px;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .demo-search:focus { border-color: var(--accent); }
+  .filter-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-btn {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: none;
+    color: var(--ink-4);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--ink-3); color: var(--ink-2); }
+  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-    .demo-count {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--ink-4);
-      letter-spacing: 0.06em;
-      margin-bottom: 20px;
-    }
+  .demo-count {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-4);
+    letter-spacing: 0.06em;
+    margin-bottom: 20px;
+  }
 
-    .demo-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 16px;
-    }
-    .demo-card {
-      border: 1px solid var(--rule);
-      border-radius: 4px;
-      padding: 18px 20px;
-      background: var(--paper);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      transition: border-color 0.15s;
-    }
-    .demo-card:hover { border-color: var(--ink-3); }
-    .demo-card.hidden { display: none; }
+  .demo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  .demo-card {
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 18px 20px;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    transition: border-color 0.15s;
+  }
+  .demo-card:hover { border-color: var(--ink-3); }
+  .demo-card.hidden { display: none; }
 
-    .demo-card-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 8px;
-    }
-    .demo-num {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--ink-4);
-      letter-spacing: 0.06em;
-      flex-shrink: 0;
-      padding-top: 3px;
-    }
-    .demo-title {
-      font-family: var(--tight);
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--ink);
-      line-height: 1.3;
-      flex: 1;
-      letter-spacing: -0.01em;
-    }
-    .demo-topic {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-      background: var(--accent-lt);
-      padding: 2px 7px;
-      border-radius: 3px;
-      flex-shrink: 0;
-      align-self: flex-start;
-    }
-    .demo-body {
-      font-size: 13px;
-      line-height: 1.6;
-      color: var(--ink-3);
-    }
-    .demo-body strong { color: var(--ink-2); font-weight: 600; }
-    .demo-body a { color: var(--accent); }
+  .demo-card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .demo-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-4);
+    letter-spacing: 0.06em;
+    flex-shrink: 0;
+    padding-top: 3px;
+  }
+  .demo-title {
+    font-family: var(--tight);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+    flex: 1;
+    letter-spacing: -0.01em;
+  }
+  .demo-topic {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-lt);
+    padding: 2px 7px;
+    border-radius: 3px;
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
 
-    .demo-toggle {
-      background: none;
-      border: none;
-      padding: 0;
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--ink-4);
-      cursor: pointer;
-      align-self: flex-start;
-      transition: color 0.15s;
-    }
-    .demo-toggle:hover { color: var(--accent); }
-    .demo-detail { display: none; }
-    .demo-detail.open { display: block; }
+  .demo-setup {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--ink-2);
+    margin-bottom: 10px;
+  }
+  .demo-setup strong {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-4);
+    display: block;
+    margin-bottom: 3px;
+  }
 
-    .no-results {
-      grid-column: 1/-1;
-      font-family: var(--mono);
-      font-size: 13px;
-      color: var(--ink-4);
-      padding: 40px 0;
-      text-align: center;
-      letter-spacing: 0.06em;
-    }
+  .demo-why {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--ink-3);
+    border-top: 1px solid var(--rule);
+    padding-top: 10px;
+    margin-top: 4px;
+    margin-bottom: 10px;
+  }
+  .demo-why strong {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-4);
+    display: block;
+    margin-bottom: 3px;
+  }
+  .demo-why a { color: var(--accent); }
 
-    .intro-refs {
-      background: var(--paper-2);
-      border: 1px solid var(--rule);
-      border-radius: 4px;
-      padding: 20px 24px;
-      margin-bottom: 2.4em;
-      font-size: 14px;
-      line-height: 1.7;
-      color: var(--ink-3);
-    }
-    .intro-refs a { color: var(--accent); }
-    .intro-refs p { margin-bottom: 0.6em; }
-    .intro-refs p:last-child { margin-bottom: 0; }
-  </style>
-</head>
-<body>
+  .demo-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: auto;
+    padding-top: 10px;
+  }
+  .demo-tags .tag {
+    font-size: 10px;
+    background: var(--paper-3);
+    color: var(--ink-3);
+  }
 
-<nav class="site-nav">
-  <a class="nav-logo" href="/">J. <span>Rowing</span></a>
-  <ul class="nav-links">
-    <li><a href="/#about">About</a></li>
-    <li class="nav-dropdown">
-      <a href="/resources.html">Resources</a>
-      <div class="dropdown-menu">
-        <a href="/resources/0654_coordinated_sciences_spinner.html">0654 Revision Spinner</a>
-        <a href="/resources/physics-notes.html">9702 Physics Notes</a>
-        <a href="/resources/9702_as_physics_spinner.html">9702 Revision Spinner</a>
-      </div>
-    </li>
-    <li><a href="/planner.html">Planner</a></li>
-    <li><a href="/cv.html">CV</a></li>
-    <li><a href="https://thesciencelab.substack.com">Substack ↗</a></li>
-  </ul>
-</nav>
+  .no-results {
+    grid-column: 1/-1;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink-4);
+    padding: 40px 0;
+    text-align: center;
+    letter-spacing: 0.06em;
+  }
+
+  .intro-refs {
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin-bottom: 2.4em;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink-3);
+  }
+  .intro-refs a { color: var(--accent); }
+  .intro-refs p { margin-bottom: 0.6em; }
+  .intro-refs p:last-child { margin-bottom: 0; }
+</style>
 
 <div class="page-wrap">
   <a class="back-link" href="/resources.html">← Resources</a>
@@ -191,25 +186,23 @@ description: " - "
   <p class="page-sub">Physics · Demonstrations · Classroom</p>
   <h1>60+ Demonstrations</h1>
   <p style="font-size:17px; color:var(--ink-3); margin: 12px 0 28px; max-width: 560px; line-height:1.7;">
-    Hands-on physics demonstrations using everyday objects — designed to spark curiosity
-    and make abstract concepts tangible. Collected over twenty years in classrooms.
+    Hands-on physics demonstrations using everyday objects — designed to spark curiosity and make abstract concepts tangible. Collected over twenty years in classrooms.
   </p>
 
   <div class="intro-refs">
-    <p>I highly recommend the work of <strong>David Featonby</strong>, who often has a piece on one of these demos at the end of <em>Physics Education</em>. More can be found in <strong>Keith Gibbs'</strong> <em>The Resourceful Physics Teacher</em> — a book that ought to be required reading on any teacher training programme.</p>
+    <p>I highly recommend the work of <strong>David Featonby</strong>, who often has a piece on one of these at the end of <em>Physics Education</em>. More can be found in <strong>Keith Gibbs'</strong> <em>The Resourceful Physics Teacher</em> — required reading on any teacher training programme.</p>
     <p>Also worth bookmarking: <a href="https://physicsdemos.caltech.edu/" target="_blank" rel="noopener">Caltech Physics Demonstration Archive ↗</a></p>
   </div>
 
   <div class="demo-controls">
     <input class="demo-search" type="search" placeholder="Search demonstrations…" id="demo-search" aria-label="Search demonstrations" />
-    <div class="filter-btns" id="filter-btns">
+    <div class="filter-btns">
       <button class="filter-btn active" data-topic="all">All</button>
       <button class="filter-btn" data-topic="density">Density</button>
       <button class="filter-btn" data-topic="forces">Forces</button>
       <button class="filter-btn" data-topic="fluids">Fluids</button>
       <button class="filter-btn" data-topic="electromagnetism">EM</button>
       <button class="filter-btn" data-topic="optics">Optics</button>
-      <button class="filter-btn" data-topic="waves">Waves</button>
       <button class="filter-btn" data-topic="thermal">Thermal</button>
     </div>
   </div>
@@ -218,684 +211,581 @@ description: " - "
 
   <div class="demo-grid" id="demo-grid">
 
+    <!-- 01 -->
     <div class="demo-card" data-topic="density">
-      <div class="demo-card-top">
-        <span class="demo-num">01</span>
-        <span class="demo-title">Two Martini Glasses</span>
-        <span class="demo-topic">Density</span>
-      </div>
-      <div class="demo-body">Fill two martini glasses halfway — they look ¾ full. Empty one into the other and it fills exactly to the brim.</div>
-      <button class="demo-toggle" onclick="toggleDemo(this)">+ more</button>
-      <div class="demo-detail"><strong>Why:</strong> A surprising lesson in how vessel shape affects perceived volume.</div>
+      <div class="demo-card-top"><span class="demo-num">01</span><span class="demo-title">Two Martini Glasses</span><span class="demo-topic">Density</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Fill two martini glasses to half their volume — they appear ¾ full. Ask students to predict what will happen when one is emptied into the other.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The second glass fills exactly to its rim. The conical shape of a martini glass means the upper half holds the same volume as the lower half — a vivid demonstration of how vessel geometry deceives our intuition about volume.</div>
+      <div class="demo-tags"><span class="tag">Volume</span><span class="tag">Geometry</span><span class="tag">Estimation</span></div>
     </div>
 
+    <!-- 02 -->
     <div class="demo-card" data-topic="density">
-      <div class="demo-card-top">
-        <span class="demo-num">02</span>
-        <span class="demo-title">Filling or Spilling Bottles</span>
-        <span class="demo-topic">Density</span>
-      </div>
-      <div class="demo-body">A selection of bottles and beakers — fill one, predict whether the liquid will fill or spill the others.</div>
-      <button class="demo-toggle" onclick="toggleDemo(this)">+ more</button>
-      <div class="demo-detail"><strong>Why:</strong> Leads into discussion of packaging and how bottle shapes create misleading impressions of volume.</div>
+      <div class="demo-card-top"><span class="demo-num">02</span><span class="demo-title">Filling or Spilling Bottles</span><span class="demo-topic">Density</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Collect a range of bottles, beakers, and containers of different shapes. Fill one to a marked level and ask students to predict which others it will fill exactly, overfill, or not reach.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>Results are often surprising. Tall thin bottles hold far less than squat wide ones of the same apparent height. Leads naturally into a discussion of how packaging exploits this — and why "value size" bottles sometimes contain less than they appear to.</div>
+      <div class="demo-tags"><span class="tag">Volume</span><span class="tag">Estimation</span><span class="tag">Consumer science</span></div>
     </div>
 
+    <!-- 03 -->
     <div class="demo-card" data-topic="density">
-      <div class="demo-card-top">
-        <span class="demo-num">03</span>
-        <span class="demo-title">Floating Orange</span>
-        <span class="demo-topic">Density</span>
-      </div>
-      <div class="demo-body">Float an orange in water. Peel it. It sinks — the aerated peel reduces the orange's average density.</div>
+      <div class="demo-card-top"><span class="demo-num">03</span><span class="demo-title">Floating Orange</span><span class="demo-topic">Density</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Place an unpeeled orange in a large bowl of water — it floats. Now peel it completely, removing all pith, and return it to the water.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The peeled orange sinks. The peel is full of air pockets that reduce the orange's average density below 1 g/cm³. Remove them and the denser fruit flesh sinks. A simple and striking demonstration of average density.</div>
+      <div class="demo-tags"><span class="tag">Average density</span><span class="tag">Buoyancy</span><span class="tag">Archimedes</span></div>
     </div>
 
+    <!-- 04 -->
     <div class="demo-card" data-topic="density">
-      <div class="demo-card-top">
-        <span class="demo-num">04</span>
-        <span class="demo-title">Floating Various Fruits</span>
-        <span class="demo-topic">Density</span>
-      </div>
-      <div class="demo-body">Apples float. Lemons float (thick pith). Limes sink (thin skin, little pith). Same principle, different results.</div>
+      <div class="demo-card-top"><span class="demo-num">04</span><span class="demo-title">Floating Various Fruits</span><span class="demo-topic">Density</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Float a lemon, lime, and apple in a large tank of water. Ask students to predict the outcome before each one goes in.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>Apples float (average density just below 1). Lemons float — their thick, pithy, air-filled skin keeps average density low. Limes sink — their thinner skin and denser flesh tips the average density just above 1. Great for discussing what "density" actually means for a composite object.</div>
+      <div class="demo-tags"><span class="tag">Average density</span><span class="tag">Buoyancy</span><span class="tag">Prediction</span></div>
     </div>
 
+    <!-- 05 -->
     <div class="demo-card" data-topic="density">
-      <div class="demo-card-top">
-        <span class="demo-num">05</span>
-        <span class="demo-title">Floating Egg in Saltwater</span>
-        <span class="demo-topic">Density</span>
-      </div>
-      <div class="demo-body">An egg sinks in fresh water but floats once salt is dissolved. Compare with the Dead Sea or Blue Lagoon, Iceland.</div>
+      <div class="demo-card-top"><span class="demo-num">05</span><span class="demo-title">Floating Egg in Saltwater</span><span class="demo-topic">Density</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Place a raw egg in a glass of fresh water — it sinks. Dissolve a large quantity of table salt into the water, a spoonful at a time, and ask students to watch carefully.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>As salt concentration rises, the water's density increases until it exceeds the egg's density (~1.03 g/cm³) and the egg floats. Compare with the Dead Sea (~1.24 g/cm³) where humans float effortlessly, or the Blue Lagoon in Iceland.</div>
+      <div class="demo-tags"><span class="tag">Fluid density</span><span class="tag">Buoyancy</span><span class="tag">Solutions</span><span class="tag">Dead Sea</span></div>
     </div>
 
+    <!-- 06 -->
     <div class="demo-card" data-topic="density">
-      <div class="demo-card-top">
-        <span class="demo-num">06</span>
-        <span class="demo-title">Coke vs. Diet Coke</span>
-        <span class="demo-topic">Density</span>
-      </div>
-      <div class="demo-body">Unopened cans in a tank of water: Diet Coke floats higher. The sugar in regular Coke significantly increases density.</div>
+      <div class="demo-card-top"><span class="demo-num">06</span><span class="demo-title">Coke vs. Diet Coke</span><span class="demo-topic">Density</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Take new, sealed, room-temperature cans of regular Coke and Diet Coke. Lower both gently into a large tank or bucket of cold water.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>Regular Coke sinks; Diet Coke floats. A 330 ml can of regular Coke contains about 35 g of sugar — enough to raise the average density of the contents above 1 g/cm³. Artificial sweeteners in Diet Coke are used in much smaller quantities, leaving the density below 1. A memorable density demo that uses objects students know well.</div>
+      <div class="demo-tags"><span class="tag">Density</span><span class="tag">Solutions</span><span class="tag">Buoyancy</span><span class="tag">Everyday science</span></div>
     </div>
 
+    <!-- 07 -->
     <div class="demo-card" data-topic="density">
-      <div class="demo-card-top">
-        <span class="demo-num">07</span>
-        <span class="demo-title">Cartesian Diver</span>
-        <span class="demo-topic">Density</span>
-      </div>
-      <div class="demo-body">A sauce packet balanced with paperclips just floats in a sealed 2L bottle. Squeeze the bottle — it sinks.</div>
-      <button class="demo-toggle" onclick="toggleDemo(this)">+ more</button>
-      <div class="demo-detail"><strong>Why:</strong> Squeezing compresses the air pocket in the packet, increasing its density.</div>
+      <div class="demo-card-top"><span class="demo-num">07</span><span class="demo-title">Cartesian Diver</span><span class="demo-topic">Density</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Attach small paperclips to a ketchup or soy sauce sachet until it just barely floats in a 2 L bottle filled to the brim with water. Screw the top on tightly.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>Squeezing the bottle increases the pressure, which compresses the small air pocket inside the sachet. The sachet's volume decreases while its mass stays the same, so its density increases above 1 g/cm³ and it sinks. Release the pressure — it rises again. Named after René Descartes. Introduces pressure transmission and compressibility.</div>
+      <div class="demo-tags"><span class="tag">Pressure</span><span class="tag">Compressibility</span><span class="tag">Density</span><span class="tag">Pascal's law</span></div>
     </div>
 
+    <!-- 08 -->
     <div class="demo-card" data-topic="density">
-      <div class="demo-card-top">
-        <span class="demo-num">08</span>
-        <span class="demo-title">Dancing Sultanas</span>
-        <span class="demo-topic">Density</span>
-      </div>
-      <div class="demo-body">Drop sultanas into cheap fizzy lemonade. They sink, accumulate bubbles, rise, pop at the surface, and repeat.</div>
+      <div class="demo-card-top"><span class="demo-num">08</span><span class="demo-title">Dancing Sultanas</span><span class="demo-topic">Density</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Pour a glass of cheap, very fizzy lemonade and drop in several sultanas. Watch — this takes a minute or two to develop fully.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>Sultanas sink initially (denser than the liquid). CO₂ bubbles nucleate on the rough surface of the sultana, accumulating until the combined density of sultana + bubbles is less than 1. The sultana rises, the bubbles pop at the surface, and it sinks again. The cycle repeats until the lemonade goes flat. A simple and endlessly watchable demo of buoyancy and nucleation.</div>
+      <div class="demo-tags"><span class="tag">Buoyancy</span><span class="tag">Nucleation</span><span class="tag">CO₂</span><span class="tag">Average density</span></div>
     </div>
 
+    <!-- 09 -->
     <div class="demo-card" data-topic="density">
-      <div class="demo-card-top">
-        <span class="demo-num">09</span>
-        <span class="demo-title">Grapes in Lemonade</span>
-        <span class="demo-topic">Density</span>
-      </div>
-      <div class="demo-body">Peeled grape stays at the bottom; unpeeled grape rises and falls — the skin provides nucleation sites for bubbles.</div>
+      <div class="demo-card-top"><span class="demo-num">09</span><span class="demo-title">Grapes in Lemonade</span><span class="demo-topic">Density</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Drop one peeled grape and one unpeeled grape into a glass of fizzy lemonade simultaneously.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The peeled grape stays at the bottom — its smooth surface provides almost no nucleation sites, so no bubbles form to lift it. The unpeeled grape rises and falls repeatedly — its textured skin provides sites where CO₂ bubbles form readily. A neat controlled comparison of nucleation surface effects.</div>
+      <div class="demo-tags"><span class="tag">Nucleation</span><span class="tag">Surface texture</span><span class="tag">Buoyancy</span><span class="tag">CO₂</span></div>
     </div>
 
+    <!-- 10 -->
     <div class="demo-card" data-topic="thermal">
-      <div class="demo-card-top">
-        <span class="demo-num">10</span>
-        <span class="demo-title">Burning Tea Bag</span>
-        <span class="demo-topic">Thermal</span>
-      </div>
-      <div class="demo-body">Empty a cylindrical teabag, stand it upright, light it. It burns down — then the ash floats up on the convection current.</div>
+      <div class="demo-card-top"><span class="demo-num">10</span><span class="demo-title">Burning Tea Bag</span><span class="demo-topic">Thermal</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Open a cylindrical teabag, remove the staple, and shake out the contents. Stand the empty tube upright on a heatproof surface and light the top.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The bag burns steadily downward. As it nears the base, the remaining ash is so light that the convection current of hot air rising from the flame is enough to lift it — the glowing ash rises dramatically into the air. Demonstrates convection, combustion, and the density of hot gases. Works best in still air.</div>
+      <div class="demo-tags"><span class="tag">Convection</span><span class="tag">Hot gas density</span><span class="tag">Combustion</span></div>
     </div>
 
+    <!-- 11 -->
     <div class="demo-card" data-topic="thermal">
-      <div class="demo-card-top">
-        <span class="demo-num">11</span>
-        <span class="demo-title">Three Candles</span>
-        <span class="demo-topic">Thermal</span>
-      </div>
-      <div class="demo-body">Three candles of different heights under an inverted jar. Which goes out first? The tallest — hot CO₂ is less dense than air.</div>
+      <div class="demo-card-top"><span class="demo-num">11</span><span class="demo-title">Three Candles</span><span class="demo-topic">Thermal</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Light three candles of different heights inside a glass jar or bell jar. Ask students which will go out first when the jar is inverted over them.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>Most students predict the tallest candle goes out last (it's furthest from the CO₂ that sinks). In fact it goes out first. Hot CO₂ from combustion is less dense than the surrounding air and rises — it fills from the top. The tallest candle is smothered first. A reliable counterintuitive result that rewards careful thinking about hot vs. cold gas density.</div>
+      <div class="demo-tags"><span class="tag">Hot gas density</span><span class="tag">Convection</span><span class="tag">CO₂</span><span class="tag">Combustion</span></div>
     </div>
 
+    <!-- 12 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">12</span>
-        <span class="demo-title">Inertia with a Toy Truck</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Egg on a toy truck, truck stopped suddenly. The egg keeps moving — Newton's first law made very vivid.</div>
+      <div class="demo-card-top"><span class="demo-num">12</span><span class="demo-title">Inertia with a Toy Truck</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Balance a raw egg on top of a toy truck. Push the truck into a fixed barrier so it stops suddenly.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The egg continues forward, falls, and breaks spectacularly. The truck experiences a large contact force from the barrier that decelerates it; the egg has no such force applied and continues at its original velocity — Newton's first law. Use a hard-boiled egg for a less messy version, or do it over a tray. An unforgettable demo of inertia.</div>
+      <div class="demo-tags"><span class="tag">Newton's 1st law</span><span class="tag">Inertia</span><span class="tag">Momentum</span></div>
     </div>
 
+    <!-- 13 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">13</span>
-        <span class="demo-title">Spinning Eggs</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Stop a spinning raw egg and release — it restarts. Stop a hard-boiled one — it stays stopped.</div>
-      <button class="demo-toggle" onclick="toggleDemo(this)">+ more</button>
-      <div class="demo-detail"><strong>Why:</strong> The fluid inside the raw egg continues rotating and drags on the shell.</div>
+      <div class="demo-card-top"><span class="demo-num">13</span><span class="demo-title">Spinning Eggs</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Have one hard-boiled and one raw egg, unlabelled. Spin both on a smooth surface. Briefly touch each to stop it, then immediately release your finger.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The hard-boiled egg stays stopped. The raw egg restarts spinning after you release it. Inside the raw egg, the fluid yolk and white continue rotating when the shell is momentarily stopped — the fluid's angular momentum is transferred back to the shell via viscous drag, restarting the spin. A useful and elegant way to identify a cooked egg without cracking it.</div>
+      <div class="demo-tags"><span class="tag">Rotational inertia</span><span class="tag">Angular momentum</span><span class="tag">Viscosity</span></div>
     </div>
 
+    <!-- 14 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">14</span>
-        <span class="demo-title">Tablecloth Trick</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Pull a cloth sharply from under crockery. Objects stay put if the cloth is pulled quickly — inertia in action.</div>
+      <div class="demo-card-top"><span class="demo-num">14</span><span class="demo-title">Tablecloth Trick</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Lay a smooth cloth on a table with crockery, a teapot, or other objects placed on it. Pull the cloth sharply downward and away in one fast, smooth motion.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>Done correctly, the crockery barely moves. The key is the very short contact time — the friction force between cloth and crockery acts for only a fraction of a second, so the impulse (F × t) is tiny, and the change in momentum of the crockery is negligible. A slower pull gives the friction force longer to act and everything slides off. Classic Newton's first law with a quantitative element.</div>
+      <div class="demo-tags"><span class="tag">Newton's 1st law</span><span class="tag">Inertia</span><span class="tag">Impulse</span><span class="tag">Friction</span></div>
     </div>
 
+    <!-- 15 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">15</span>
-        <span class="demo-title">Rope on a Cylinder</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">A few turns of string around a rolling pin holds a 1kg mass without slipping when the pin is lifted.</div>
+      <div class="demo-card-top"><span class="demo-num">15</span><span class="demo-title">Rope on a Cylinder</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Tie a 1 kg mass (or tin of beans) to a length of thick string. Wrap the string three or four times around a smooth rolling pin or wine bottle and lift the rod.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>A few turns of rope hold the mass without any slipping. Each wrap multiplies the friction force exponentially — this is the capstan equation (T₂/T₁ = e^μθ). With each complete turn, the holding force increases by a factor of e^(2πμ). Used by sailors to hold massive loads with small forces. Leads beautifully into demo #16.</div>
+      <div class="demo-tags"><span class="tag">Friction</span><span class="tag">Capstan equation</span><span class="tag">Exponential</span></div>
     </div>
 
+    <!-- 16 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">16</span>
-        <span class="demo-title">The Falling Cup</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">A cup on a string over a pencil, a cork on the other end. Released, the cup stops before hitting the ground.</div>
-      <button class="demo-toggle" onclick="toggleDemo(this)">+ more</button>
-      <div class="demo-detail"><strong>Why:</strong> Conservation of angular momentum — the cork speeds up as the string shortens and wraps around the pencil, creating enough friction to arrest the fall.</div>
+      <div class="demo-card-top"><span class="demo-num">16</span><span class="demo-title">The Falling Cup</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Thread about 1 m of string over a pencil. Tie a china cup close to the pencil at one end. Tie a cork to the long end. Hold the string just below horizontal and release.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The cup falls — but stops before hitting the ground. Conservation of angular momentum causes the cork to spin faster as the string shortens. The increasing speed wraps string around the pencil, and the growing friction slows and stops the cup's descent. The exact stopping point depends on the string length, mass ratio, and friction. A lovely piece of coupled mechanics.</div>
+      <div class="demo-tags"><span class="tag">Angular momentum</span><span class="tag">Conservation</span><span class="tag">Friction</span><span class="tag">Coupled systems</span></div>
     </div>
 
+    <!-- 17 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">17</span>
-        <span class="demo-title">Ball Drop Test</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Table tennis ball vs. golf ball dropped together — both land simultaneously, unless dropped from high enough for terminal velocity to differ.</div>
+      <div class="demo-card-top"><span class="demo-num">17</span><span class="demo-title">Ball Drop Test</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Hold a table tennis ball and a golf ball at the same height. Drop them simultaneously from about 1 m. Then repeat from 3 m or higher if possible.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>From 1 m they land together — gravitational acceleration is the same regardless of mass (Galileo). From greater height, air resistance becomes significant. The table tennis ball has a much lower terminal velocity (~9 m/s) than the golf ball (~32 m/s), so from sufficient height the golf ball lands first. Two demonstrations in one: equivalence principle, then real-world air resistance.</div>
+      <div class="demo-tags"><span class="tag">Equivalence principle</span><span class="tag">Air resistance</span><span class="tag">Terminal velocity</span><span class="tag">Galileo</span></div>
     </div>
 
+    <!-- 18 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">18</span>
-        <span class="demo-title">Coin and Paper Drop</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Drop separately (coin wins), edge-on together (simultaneous), coin on paper (coin slips free). Air resistance demonstrated three ways.</div>
+      <div class="demo-card-top"><span class="demo-num">18</span><span class="demo-title">Coin and Paper Drop</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Drop a coin and a sheet of A4 paper separately. Then hold the paper edge-on alongside the coin. Finally, balance the paper flat on top of the coin and drop both.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>Separately, coin lands first. Edge-on, they land together — the paper's cross-section is tiny so air resistance is negligible. Paper on top of coin: the coin falls away first, paper slips off. The coin moves into undisturbed air and falls faster. Three distinct outcomes from one prop, illustrating how air resistance depends on speed, area, and relative motion.</div>
+      <div class="demo-tags"><span class="tag">Air resistance</span><span class="tag">Cross-section</span><span class="tag">Newton's 2nd law</span></div>
     </div>
 
+    <!-- 19 -->
     <div class="demo-card" data-topic="fluids">
-      <div class="demo-card-top">
-        <span class="demo-num">19</span>
-        <span class="demo-title">Water Jet in Free Fall</span>
-        <span class="demo-topic">Fluids</span>
-      </div>
-      <div class="demo-body">A bottle with a hole jets water — throw it into the air and the jet stops. Bottle and water fall together; weightlessness analogue.</div>
+      <div class="demo-card-top"><span class="demo-num">19</span><span class="demo-title">Water Jet in Free Fall</span><span class="demo-topic">Fluids</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Make a small hole near the base of a plastic bottle and fill it with water — the jet flows freely. Now throw the bottle upward so it goes into free fall.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The jet stops completely while the bottle is in free fall. The water only flows because gravity accelerates it faster than the bottle — when both are in free fall together, there is no relative acceleration. The water experiences weightlessness inside the bottle. This is exactly the same reason astronauts float in the ISS — they are in free fall together with the station.</div>
+      <div class="demo-tags"><span class="tag">Free fall</span><span class="tag">Weightlessness</span><span class="tag">Fluid pressure</span><span class="tag">Orbital mechanics</span></div>
     </div>
 
+    <!-- 20 -->
     <div class="demo-card" data-topic="fluids">
-      <div class="demo-card-top">
-        <span class="demo-num">20</span>
-        <span class="demo-title">Straw in a Sealed Bottle</span>
-        <span class="demo-topic">Fluids</span>
-      </div>
-      <div class="demo-body">Blow air into a sealed bottle to raise water in a straw. Jump off a chair holding the bottle — water shoots out.</div>
-      <button class="demo-toggle" onclick="toggleDemo(this)">+ more</button>
-      <div class="demo-detail"><strong>Why:</strong> In free fall, the air pressure no longer has to support the water's weight.</div>
+      <div class="demo-card-top"><span class="demo-num">20</span><span class="demo-title">Straw in a Sealed Bottle</span><span class="demo-topic">Fluids</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Insert a vertical straw through a sealed plastic bottle lid. Blow air into the bottle so the increased pressure pushes water up the straw. Hold it sealed. Stand on a chair and jump off (carefully).</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>As the bottle goes into free fall, the water shoots up and out of the straw. In free fall, the effective weight of the water column disappears — the compressed air inside now has nothing to support and violently expels the water. A dramatic demonstration of free fall and pressure.</div>
+      <div class="demo-tags"><span class="tag">Free fall</span><span class="tag">Air pressure</span><span class="tag">Fluid statics</span></div>
     </div>
 
+    <!-- 21 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">21</span>
-        <span class="demo-title">Groan Tube Drop</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Drop a groan tube — it goes silent in free fall, then groans again when caught. A nice analogue of weightlessness in orbit.</div>
+      <div class="demo-card-top"><span class="demo-num">21</span><span class="demo-title">Groan Tube Drop</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Hold a groan tube vertically — it makes its characteristic sound as the internal mechanism rattles. Drop it and catch it again.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The tube falls silently — the internal rattling mechanism and the tube are both in free fall, so there's no relative motion between them and no sound. When caught, the tube decelerates while the internal mechanism continues momentarily — the groaning restarts. The same physics explains why objects feel weightless in orbit: they are in continuous free fall around the Earth.</div>
+      <div class="demo-tags"><span class="tag">Free fall</span><span class="tag">Weightlessness</span><span class="tag">Relative motion</span></div>
     </div>
 
+    <!-- 22 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">22</span>
-        <span class="demo-title">Slinky Spring Drop</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Hold a slinky and drop it. The bottom remains stationary until the top arrives — the centre of mass falls at g while the ends are drawn inward.</div>
+      <div class="demo-card-top"><span class="demo-num">22</span><span class="demo-title">Slinky Spring Drop</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Hold a slinky at the top, let it hang fully extended, and ask students to watch the bottom carefully. Release the top.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The bottom of the slinky remains completely stationary until the top arrives and the whole spring collapses onto it. The centre of mass falls at g, but the bottom link is in equilibrium (spring tension balances gravity) and receives no information about the release until the compression wave reaches it. A genuinely strange result — works beautifully in slow-motion video.</div>
+      <div class="demo-tags"><span class="tag">Centre of mass</span><span class="tag">Wave propagation</span><span class="tag">Free fall</span><span class="tag">Spring forces</span></div>
     </div>
 
+    <!-- 23 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">23</span>
-        <span class="demo-title">Tennis Ball on a Basketball</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Drop a tennis ball balanced on a basketball — the tennis ball shoots up dramatically. Great Y12 momentum analysis (see also: Astroblaster).</div>
-      <button class="demo-toggle" onclick="toggleDemo(this)">+ more</button>
-      <div class="demo-detail"><strong>Why:</strong> The basketball bounces and meets the still-falling tennis ball, transferring energy at twice the relative velocity.</div>
+      <div class="demo-card-top"><span class="demo-num">23</span><span class="demo-title">Tennis Ball on a Basketball</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Balance a tennis ball on top of a basketball. Hold them both at shoulder height and drop together onto a hard floor.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The tennis ball rebounds to approximately 9× the drop height — it appears to shoot violently upward. The basketball bounces first and is travelling upward when it collides with the still-downward-moving tennis ball. In this frame the relative speed is doubled, and since the basketball is much more massive, almost all the kinetic energy is transferred to the tennis ball. See also: Astroblaster toy. Excellent Y12 momentum problem.</div>
+      <div class="demo-tags"><span class="tag">Conservation of momentum</span><span class="tag">Elastic collision</span><span class="tag">Energy transfer</span><span class="tag">Newton's cradle</span></div>
     </div>
 
+    <!-- 24 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">24</span>
-        <span class="demo-title">Two Metre Rules with Weights</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">One rule weighted at the top, another at the centre — dropped simultaneously. The centre-weighted one lands first.</div>
+      <div class="demo-card-top"><span class="demo-num">24</span><span class="demo-title">Two Metre Rules with Weights</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Clamp a weight to the top of one metre rule and to the centre of another. Hold both at the same angle and release simultaneously.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The rule with the weight at the centre hits first. When a rod falls freely, its tip accelerates faster than g because the rod rotates about its pivot point. The rate of rotation depends on the moment of inertia — moving mass toward the centre reduces it and increases the angular acceleration, so the tip sweeps faster.</div>
+      <div class="demo-tags"><span class="tag">Moment of inertia</span><span class="tag">Rotational dynamics</span><span class="tag">Centre of mass</span></div>
     </div>
 
+    <!-- 25 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">25</span>
-        <span class="demo-title">Weighted vs. Unweighted Rules</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">A rod with a weight at the centre vs. one with no weight — they land at the same time. Equal acceleration regardless of mass.</div>
+      <div class="demo-card-top"><span class="demo-num">25</span><span class="demo-title">Weighted vs. Unweighted Rules</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Repeat demo #24 but compare a rule with a weight at its centre against a plain rule with no weight. Drop simultaneously from the same angle.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>They land at exactly the same time. The added mass at the centre increases the gravitational torque and the moment of inertia by the same proportion, so the angular acceleration — and thus the fall time — is unchanged. A precise analogue of the equivalence principle for rotational motion.</div>
+      <div class="demo-tags"><span class="tag">Equivalence principle</span><span class="tag">Moment of inertia</span><span class="tag">Rotational dynamics</span></div>
     </div>
 
+    <!-- 26 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">26</span>
-        <span class="demo-title">Broom Handle on Fingers</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Rest a broom on two fingers, slide them together. They meet at the centre of mass — friction is tied to the normal reaction force.</div>
+      <div class="demo-card-top"><span class="demo-num">26</span><span class="demo-title">Broom Handle on Fingers</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Rest a broom handle horizontally on two index fingers — one about ¼ of the way along, the other near the far end. Slowly slide both fingers toward the centre.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>Both fingers always meet at the centre of mass, regardless of starting position. The finger closer to the CoM bears more of the weight and experiences greater normal force — and therefore greater friction — so it moves less easily. The other finger slips first. They alternate in tiny steps, always converging on the CoM. A self-correcting mechanical system.</div>
+      <div class="demo-tags"><span class="tag">Centre of mass</span><span class="tag">Friction</span><span class="tag">Normal force</span><span class="tag">Moments</span></div>
     </div>
 
+    <!-- 27 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">27</span>
-        <span class="demo-title">Shifting Centre of Mass</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Repeat #26 with a weight tied to one end. Fingers now meet at the new, shifted centre of mass.</div>
+      <div class="demo-card-top"><span class="demo-num">27</span><span class="demo-title">Shifting Centre of Mass</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Tie a mass (e.g. a heavy bunch of keys) firmly to one end of a broom handle. Repeat demo #26 with your fingers.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>Fingers now meet at the new centre of mass — shifted toward the weighted end. A clean extension of #26 that makes the concept of centre of mass as a physical location concrete and measurable.</div>
+      <div class="demo-tags"><span class="tag">Centre of mass</span><span class="tag">Moments</span><span class="tag">Friction</span></div>
     </div>
 
+    <!-- 28 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">28</span>
-        <span class="demo-title">Egg Thrown at a Sheet</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Throw a raw egg hard at a vertical hung sheet — it doesn't break. The deceleration is too gentle to crack the shell.</div>
+      <div class="demo-card-top"><span class="demo-num">28</span><span class="demo-title">Egg Thrown at a Sheet</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Two people hold a thin vertical sheet (old bed sheet works well), with a trough or folded lip at the bottom. Throw a raw egg hard at the centre of the sheet.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The egg does not break. The sheet stretches and billows, increasing the stopping distance enormously and spreading the deceleration over a long time. F = Δp/t — if t is large, the peak force on the egg is small. The same principle is used in safety nets, crumple zones, and airbags. Works every time if you hit the sheet cleanly.</div>
+      <div class="demo-tags"><span class="tag">Impulse</span><span class="tag">Force-time graphs</span><span class="tag">Safety engineering</span><span class="tag">Newton's 2nd law</span></div>
     </div>
 
+    <!-- 29 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">29</span>
-        <span class="demo-title">Spinning Cream Egg</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Spin a Cadbury's Cream Egg fast horizontally — it rises up onto one end, like a tippe top. See <a href="https://iopscience.iop.org/article/10.1088/1361-6404/aa997b" target="_blank" rel="noopener">IOP analysis ↗</a></div>
+      <div class="demo-card-top"><span class="demo-num">29</span><span class="demo-title">Spinning Cream Egg</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Spin a Cadbury's Cream Egg fast on a flat, rough surface. Watch carefully from the side.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>As it spins, the egg rises up onto one end and balances there — similar to a "tippe top". The viscous fondant filling sloshes as the egg spins, shifting the centre of mass. The resulting gyroscopic and frictional torques cause the egg to precess upright. The full analysis is non-trivial; see <a href="https://iopscience.iop.org/article/10.1088/1361-6404/aa997b" target="_blank" rel="noopener">IOP analysis ↗</a>. A great discussion starter on gyroscopes.</div>
+      <div class="demo-tags"><span class="tag">Gyroscopic motion</span><span class="tag">Precession</span><span class="tag">Angular momentum</span><span class="tag">Tippe top</span></div>
     </div>
 
+    <!-- 30 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">30</span>
-        <span class="demo-title">Newspaper and Thin Wood</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">A thin strip of wood under newspaper on a table, end protruding. Strike sharply — the wood snaps. F = Δmv/t in action.</div>
+      <div class="demo-card-top"><span class="demo-num">30</span><span class="demo-title">Newspaper and Thin Wood</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Place a large sheet of newspaper flat on a table with a thin (3–4 mm) strip of wood underneath it, one end protruding about 20 cm. Strike the protruding end sharply downward with a stick.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The wood snaps cleanly. Surprisingly large force is needed to accelerate the mass of air above the newspaper — F = ma applies to air too. The paper acts as a seal preventing the air above from rushing in to equalise pressure quickly. The newspaper exerts a large downward force on the wood, which acts as a fulcrum. Quantitative comparison: F = Δmv/t for a large column of air is significant.</div>
+      <div class="demo-tags"><span class="tag">Newton's 2nd law</span><span class="tag">Impulse</span><span class="tag">Air pressure</span><span class="tag">Moments</span></div>
     </div>
 
+    <!-- 31 -->
     <div class="demo-card" data-topic="fluids">
-      <div class="demo-card-top">
-        <span class="demo-num">31</span>
-        <span class="demo-title">Blowing Between Paper Strips</span>
-        <span class="demo-topic">Fluids</span>
-      </div>
-      <div class="demo-body">Hold two paper strips and blow between them — they move together. Faster air = lower pressure (Bernoulli).</div>
+      <div class="demo-card-top"><span class="demo-num">31</span><span class="demo-title">Blowing Between Paper Strips</span><span class="demo-topic">Fluids</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Hold two strips of paper vertically, parallel and about 5 cm apart. Blow a steady stream of air between them.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The strips are drawn together. Faster-moving air between the strips has lower pressure than the still air on the outer faces (Bernoulli's principle). The pressure difference pushes the strips inward. Students often predict the opposite. Note: the full explanation involves streamlines and is more subtle than often taught — good for discussion of model limitations.</div>
+      <div class="demo-tags"><span class="tag">Bernoulli</span><span class="tag">Pressure</span><span class="tag">Fluid dynamics</span><span class="tag">Streamlines</span></div>
     </div>
 
+    <!-- 32 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">32</span>
-        <span class="demo-title">Newton's Cradle Variations</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">What if metal is placed between stationary balls? What if one end is struck by a hammer heavier than all the balls combined?</div>
+      <div class="demo-card-top"><span class="demo-num">32</span><span class="demo-title">Newton's Cradle Variations</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Use a standard Newton's cradle. Try: (a) placing a piece of metal between two stationary balls, then releasing one; (b) striking one end with a small hammer whose mass exceeds the total mass of all balls.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>(a) With metal inserted: the behaviour changes as the effective mass of the struck ball increases. (b) Heavy hammer: all balls move — conservation of momentum requires it when the impacting mass exceeds the total struck mass. These variations break students' expectation that Newton's cradles always "just work" and reveal the underlying conservation laws.</div>
+      <div class="demo-tags"><span class="tag">Conservation of momentum</span><span class="tag">Elastic collision</span><span class="tag">Newton's 3rd law</span></div>
     </div>
 
+    <!-- 33 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">33</span>
-        <span class="demo-title">Newton's Cradle — Bowling Balls</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Roll an 8lb ball into three 6lb ones — one 6lb ball moves away. Vary the masses and observe conservation of momentum at scale.</div>
+      <div class="demo-card-top"><span class="demo-num">33</span><span class="demo-title">Newton's Cradle — Bowling Balls</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Set up three 6 lb bowling balls in contact on a smooth floor. Roll an 8 lb ball into them.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>One 6 lb ball exits the far end while the 8 lb ball slows but doesn't stop — momentum and energy are conserved but not by the simple "one-in, one-out" rule of equal-mass cradles. Change the incoming mass to 12 lb and two balls exit. The demonstration makes the role of mass in momentum conservation unavoidable.</div>
+      <div class="demo-tags"><span class="tag">Conservation of momentum</span><span class="tag">Elastic collision</span><span class="tag">Mass dependence</span></div>
     </div>
 
+    <!-- 34 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">34</span>
-        <span class="demo-title">Waddling Animal on a Slope</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Add mass to a waddling toy animal. Speed up or slow it down depending on placement — centre of mass and stability.</div>
+      <div class="demo-card-top"><span class="demo-num">34</span><span class="demo-title">Waddling Animal on a Slope</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Use a commercially available waddling toy that walks down a ramp. Add a small mass to different positions along its body and release from the same point.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>Placement matters: adding mass above the centre of mass raises it and increases the tendency to topple, speeding the waddle. Adding mass low or at the pivot has less effect. This provides a tangible entry point into stability, centre of mass height, and potential energy in mechanical systems.</div>
+      <div class="demo-tags"><span class="tag">Centre of mass</span><span class="tag">Stability</span><span class="tag">Potential energy</span></div>
     </div>
 
+    <!-- 35 -->
     <div class="demo-card" data-topic="fluids">
-      <div class="demo-card-top">
-        <span class="demo-num">35</span>
-        <span class="demo-title">Wine Glass and Cork</span>
-        <span class="demo-topic">Fluids</span>
-      </div>
-      <div class="demo-body">Half a cork inside a wine glass. Blow sharply over the top — the cork jumps out. Bernoulli / Venturi effect.</div>
+      <div class="demo-card-top"><span class="demo-num">35</span><span class="demo-title">Wine Glass and Cork</span><span class="demo-topic">Fluids</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Place half a cork inside a wine glass so it rests on the base. Blow a sharp, steady stream of air across the rim of the glass.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The cork shoots upward out of the glass. Fast-moving air across the rim reduces pressure above the cork (Bernoulli effect), and the higher-pressure air below pushes it up. A Venturi / Bernoulli demonstration that works reliably and surprises students who expect the cork to blow sideways.</div>
+      <div class="demo-tags"><span class="tag">Bernoulli</span><span class="tag">Venturi</span><span class="tag">Pressure</span><span class="tag">Fluid dynamics</span></div>
     </div>
 
+    <!-- 36 -->
     <div class="demo-card" data-topic="fluids">
-      <div class="demo-card-top">
-        <span class="demo-num">36</span>
-        <span class="demo-title">Soap-Powered Boat</span>
-        <span class="demo-topic">Fluids</span>
-      </div>
-      <div class="demo-body">Shape a lolly stick into a hull. Drop soap powder on the stern — it chugs forward. Soap reduces surface tension at the rear.</div>
+      <div class="demo-card-top"><span class="demo-num">36</span><span class="demo-title">Soap-Powered Boat</span><span class="demo-topic">Fluids</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Cut a small boat shape from a lolly stick or thin card, with a small notch at the stern. Float it on perfectly still water in a large dish. Drop a tiny grain of soap powder into the notch.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The boat moves forward. Soap molecules reduce surface tension wherever they spread — but they spread backwards first, pulling the boat forward by the unequal surface tension forces. Works only once per dish of water (the soap spreads to equilibrium). A demonstration of surface tension as a real, directional force.</div>
+      <div class="demo-tags"><span class="tag">Surface tension</span><span class="tag">Marangoni effect</span><span class="tag">Surfactants</span></div>
     </div>
 
+    <!-- 37 -->
     <div class="demo-card" data-topic="fluids">
-      <div class="demo-card-top">
-        <span class="demo-num">37</span>
-        <span class="demo-title">Cocktail Sticks and Soap</span>
-        <span class="demo-topic">Fluids</span>
-      </div>
-      <div class="demo-body">Sticks arranged as radii on water — touch centre with paper (they move in), then soap (they spring outward).</div>
+      <div class="demo-card-top"><span class="demo-num">37</span><span class="demo-title">Cocktail Sticks and Soap</span><span class="demo-topic">Fluids</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Arrange 5–6 cocktail sticks in a star pattern on still water. Touch the centre with a small piece of dry absorbent paper, then (on a fresh surface) touch the centre with a tiny drop of soap.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>Paper: sticks move inward as a small amount of water is absorbed, locally increasing surface tension. Soap: sticks shoot outward as the soap dramatically reduces surface tension at the centre — the higher surface tension at the periphery pulls them out. Two distinct surface tension effects demonstrated in sequence.</div>
+      <div class="demo-tags"><span class="tag">Surface tension</span><span class="tag">Marangoni effect</span><span class="tag">Surfactants</span></div>
     </div>
 
+    <!-- 38 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">38</span>
-        <span class="demo-title">Knees Against a Wall</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Stand with heels against a wall and try to bend down. You fall forward — centre of gravity moves outside the base of support.</div>
+      <div class="demo-card-top"><span class="demo-num">38</span><span class="demo-title">Knees Against a Wall</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Stand with both heels touching a wall. Attempt to bend your knees and crouch down without leaning forward or taking your heels off the floor.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>It's impossible — you immediately fall forward. Normally when you bend your knees, your centre of gravity moves backward and your torso leans forward to compensate. The wall prevents the necessary rearward shift, so your centre of gravity moves outside your base of support and you topple. A bodily demonstration of CoG and stability.</div>
+      <div class="demo-tags"><span class="tag">Centre of gravity</span><span class="tag">Stability</span><span class="tag">Base of support</span></div>
     </div>
 
+    <!-- 39 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">39</span>
-        <span class="demo-title">Breaking a Suspended Tin</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Tin of beans on two threads. Pull the lower sharply — it breaks. Pull slowly — the upper breaks. F = Δmv/t demonstrated neatly.</div>
+      <div class="demo-card-top"><span class="demo-num">39</span><span class="demo-title">Breaking a Suspended Tin</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Tie a piece of thread around a tin of beans and suspend it from a support. Attach a second piece of thread below the tin. Pull the lower thread — first slowly, then (with a fresh setup) very sharply.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>Slow pull: the upper thread breaks (it bears the tin's weight plus the pulling force). Sharp pull: the lower thread breaks (the force is applied faster than the tin's inertia can be overcome — the tin barely moves, so the tension in the lower thread briefly exceeds that in the upper). A definitive demonstration of the role of time in F = Δp/t.</div>
+      <div class="demo-tags"><span class="tag">Impulse</span><span class="tag">Inertia</span><span class="tag">F = Δp/t</span><span class="tag">Newton's 2nd law</span></div>
     </div>
 
+    <!-- 40 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">40</span>
-        <span class="demo-title">Candle at Both Ends</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Needle through the centre of a candle, both ends shaved and lit. It rocks like a seesaw — a lovely moments demonstration.</div>
+      <div class="demo-card-top"><span class="demo-num">40</span><span class="demo-title">Candle at Both Ends</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Push a long needle through the centre of a long candle. Shave the wax from both ends to expose wicks. Balance the needle horizontally on the rims of two glasses. Light both wicks.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The candle rocks like a seesaw and keeps going. As one end burns and drips wax, it becomes lighter, that end rises, the other dips and burns faster, then that end lightens — the system oscillates indefinitely. A self-sustaining moments demonstration with no input of energy beyond the candles themselves.</div>
+      <div class="demo-tags"><span class="tag">Moments</span><span class="tag">Torque</span><span class="tag">Equilibrium</span><span class="tag">Oscillation</span></div>
     </div>
 
+    <!-- 41 -->
     <div class="demo-card" data-topic="optics">
-      <div class="demo-card-top">
-        <span class="demo-num">41</span>
-        <span class="demo-title">Mirror Writing</span>
-        <span class="demo-topic">Optics</span>
-      </div>
-      <div class="demo-body">Write TOM, DICK, HARRY under a mirror. Only DICK appears unaltered — a trick of bilateral symmetry. See <a href="https://www.iflscience.com/how-can-a-mirror-see-an-object-that-is-hidden-by-a-piece-of-paper-68363" target="_blank" rel="noopener">IFLScience ↗</a></div>
+      <div class="demo-card-top"><span class="demo-num">41</span><span class="demo-title">Mirror Writing</span><span class="demo-topic">Optics</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Write the names TOM, DICK, and HARRY in clear capital letters and hold the paper horizontally beneath a vertical mirror.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>Only DICK appears completely unchanged in the reflection. TOM and HARRY are reversed because their letters lack vertical symmetry. DICK is made entirely of letters with left-right symmetry (D, I, C, K) so the mirror reflection is identical to the original. Triggers great discussion on what mirrors actually do — they reverse front-to-back, not left-to-right. See also: <a href="https://www.iflscience.com/how-can-a-mirror-see-an-object-that-is-hidden-by-a-piece-of-paper-68363" target="_blank" rel="noopener">IFLScience ↗</a></div>
+      <div class="demo-tags"><span class="tag">Reflection</span><span class="tag">Symmetry</span><span class="tag">Plane mirrors</span><span class="tag">Lateral inversion</span></div>
     </div>
 
+    <!-- 42 -->
     <div class="demo-card" data-topic="electromagnetism">
-      <div class="demo-card-top">
-        <span class="demo-num">42</span>
-        <span class="demo-title">The Big Circuit</span>
-        <span class="demo-topic">EM</span>
-      </div>
-      <div class="demo-body">Wires running to the back of the room and back. Does the bulb come on immediately? Yes — leads into high-frequency trading and signal latency.</div>
+      <div class="demo-card-top"><span class="demo-num">42</span><span class="demo-title">The Big Circuit</span><span class="demo-topic">EM</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Run wires from a power supply at the front of the room to the back wall and back to a bulb. The total wire length should be as long as practically possible — 20–30 m works well.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The bulb lights instantly when the switch is closed. Students expect a delay — the "electricity travelling through the wire" mental model suggests it should take time. In fact, the electromagnetic field propagates at close to c (~3×10⁸ m/s). At 30 m, the delay is 0.1 μs — completely imperceptible. Extend the discussion: signals around the Earth (~130 ms), speed-of-light constraints in high-frequency trading, and latency in global networks.</div>
+      <div class="demo-tags"><span class="tag">Speed of light</span><span class="tag">EM field propagation</span><span class="tag">Electric circuits</span><span class="tag">Signal latency</span></div>
     </div>
 
+    <!-- 43 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">43</span>
-        <span class="demo-title">Whacking a Suspended Broom</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Broom handle suspended on two thin threads, struck with another broom. Hit hard enough — the handle breaks, threads survive. ⚠️ Beware fragments.</div>
+      <div class="demo-card-top"><span class="demo-num">43</span><span class="demo-title">Whacking a Suspended Broom</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Suspend a broom handle horizontally by two thin threads attached to its ends. Strike the centre of the handle sharply with another broom handle. ⚠️ Wear eye protection; warn students to stand clear.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>Struck hard enough, the handle snaps — but the threads survive intact. The inertia of the handle resists the sudden force; the impulse is absorbed by the wood before it can be transmitted to the ends and thence to the threads. The threads experience almost no force. Classic inertia demonstration — the same principle as tablecloth trick, but more dramatic.</div>
+      <div class="demo-tags"><span class="tag">Inertia</span><span class="tag">Impulse</span><span class="tag">Newton's 1st law</span></div>
     </div>
 
+    <!-- 44 -->
     <div class="demo-card" data-topic="thermal">
-      <div class="demo-card-top">
-        <span class="demo-num">44</span>
-        <span class="demo-title">Ice on Different Surfaces</span>
-        <span class="demo-topic">Thermal</span>
-      </div>
-      <div class="demo-body">Identical ice blocks on a plastic box (cold to touch) and a metal pan (also cold to touch). The metal one melts within a minute — thermal conductivity.</div>
+      <div class="demo-card-top"><span class="demo-num">44</span><span class="demo-title">Ice on Different Surfaces</span><span class="demo-topic">Thermal</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Place identical ice cubes simultaneously on: (a) a plastic chopping board, and (b) an upturned metal frying pan. Both feel cold to the touch — ask students to predict which will melt faster.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The ice on metal melts dramatically faster — often within a minute. Both surfaces are at room temperature, but metal has a thermal conductivity ~1000× higher than plastic. It conducts heat from the room to the ice far more rapidly. "Cold to the touch" is not temperature — it is rate of heat transfer. One of the most reliable misconception-busters in the collection.</div>
+      <div class="demo-tags"><span class="tag">Thermal conductivity</span><span class="tag">Rate of heat transfer</span><span class="tag">Misconceptions</span><span class="tag">Temperature vs. heat</span></div>
     </div>
 
+    <!-- 45 -->
     <div class="demo-card" data-topic="electromagnetism">
-      <div class="demo-card-top">
-        <span class="demo-num">45</span>
-        <span class="demo-title">Magnet on Japanese Yen</span>
-        <span class="demo-topic">EM</span>
-      </div>
-      <div class="demo-body">Place a neodymium magnet on yen coins. Lift quickly — the coins come with it. A striking Lenz's law demonstration.</div>
+      <div class="demo-card-top"><span class="demo-num">45</span><span class="demo-title">Magnet on Japanese Yen</span><span class="demo-topic">EM</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Stack a few Japanese yen coins on a flat surface. Place a strong neodymium magnet on top. Lift the magnet quickly upward.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The coins lift with the magnet momentarily before falling away. Yen coins are made of an aluminium alloy — non-magnetic. But moving the magnet away rapidly induces eddy currents in the coins (Lenz's law). These currents create a magnetic field opposing the change, temporarily attracting the coins to the magnet. The effect disappears as the currents decay. A more striking Lenz's law demo than the copper pipe.</div>
+      <div class="demo-tags"><span class="tag">Lenz's law</span><span class="tag">Eddy currents</span><span class="tag">Electromagnetic induction</span><span class="tag">Faraday's law</span></div>
     </div>
 
+    <!-- 46 -->
     <div class="demo-card" data-topic="electromagnetism">
-      <div class="demo-card-top">
-        <span class="demo-num">46</span>
-        <span class="demo-title">Suspended Yen Near Magnet</span>
-        <span class="demo-topic">EM</span>
-      </div>
-      <div class="demo-body">A yen coin on a thread — move a neodymium magnet toward it and the coin retreats. Lenz's law again.</div>
+      <div class="demo-card-top"><span class="demo-num">46</span><span class="demo-title">Suspended Yen Near Magnet</span><span class="demo-topic">EM</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Stick a thread to a yen coin and suspend it so it hangs freely. Slowly bring a strong neodymium magnet toward the coin.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The coin swings away from the approaching magnet. As the magnet approaches, eddy currents induced in the aluminium alloy create a repulsive magnetic field (Lenz's law — the induced effect opposes the cause). The coin is repelled. A non-magnetic coin behaving magnetically: reliably astonishing to students who think only iron is affected by magnets.</div>
+      <div class="demo-tags"><span class="tag">Lenz's law</span><span class="tag">Eddy currents</span><span class="tag">Electromagnetic induction</span><span class="tag">Non-ferrous metals</span></div>
     </div>
 
+    <!-- 47 -->
     <div class="demo-card" data-topic="fluids">
-      <div class="demo-card-top">
-        <span class="demo-num">47</span>
-        <span class="demo-title">Floating a Yen on Water</span>
-        <span class="demo-topic">Fluids</span>
-      </div>
-      <div class="demo-body">Float a yen on still water using surface tension. Add drops until it sinks. Add soap — it sinks immediately.</div>
+      <div class="demo-card-top"><span class="demo-num">47</span><span class="demo-title">Floating a Yen on Water</span><span class="demo-topic">Fluids</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Lower a yen coin very carefully onto still water using a small piece of tissue paper — let the tissue absorb water and sink, leaving the coin floating. Add drops of water to the top of the coin one at a time.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The coin floats, supported by surface tension acting along its rim. You can add several drops before it sinks. Then add a single drop of washing-up liquid — the coin sinks immediately. Surface tension provides a measurable upward force; soap (a surfactant) disrupts the hydrogen-bonded water surface and it fails. The contact angle between water and the coin edge is key.</div>
+      <div class="demo-tags"><span class="tag">Surface tension</span><span class="tag">Surfactants</span><span class="tag">Contact angle</span><span class="tag">Water structure</span></div>
     </div>
 
+    <!-- 48 -->
     <div class="demo-card" data-topic="density">
-      <div class="demo-card-top">
-        <span class="demo-num">48</span>
-        <span class="demo-title">Two Test Tubes</span>
-        <span class="demo-topic">Density</span>
-      </div>
-      <div class="demo-body">Small test tube floating inside a larger water-filled one. Invert them — the small tube rises.</div>
+      <div class="demo-card-top"><span class="demo-num">48</span><span class="demo-title">Two Test Tubes</span><span class="demo-topic">Density</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Find two test tubes where the smaller just fits loosely inside the larger. Fill the large tube with water, place the small tube inside (open end down) so it floats, then invert the whole assembly with your thumb over the mouth.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>When inverted, the small tube rises to the bottom (now the top). The air trapped in the small tube makes its average density less than water, so it floats upward — which, when inverted, is the closed end. A neat Archimedes demonstration with a counterintuitive twist.</div>
+      <div class="demo-tags"><span class="tag">Buoyancy</span><span class="tag">Average density</span><span class="tag">Archimedes</span></div>
     </div>
 
+    <!-- 49 -->
     <div class="demo-card" data-topic="electromagnetism">
-      <div class="demo-card-top">
-        <span class="demo-num">49</span>
-        <span class="demo-title">Glass Rod vs. Foil Rod Near Magnet</span>
-        <span class="demo-topic">EM</span>
-      </div>
-      <div class="demo-body">Suspended glass rod orients at right angles to the magnetic field. Foil rod aligns along the field lines. Diamagnetism vs. paramagnetism.</div>
+      <div class="demo-card-top"><span class="demo-num">49</span><span class="demo-title">Glass Rod vs. Foil Rod Near Magnet</span><span class="demo-topic">EM</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Suspend a short (~3 cm) glass rod on a thread, and separately a similarly sized rolled aluminium foil rod. Hold a strong neodymium magnet near each in turn.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The glass rod orients perpendicular to the field — glass is diamagnetic and is weakly repelled, aligning across field lines. The foil rod aligns parallel to the field — aluminium is paramagnetic and is weakly attracted, aligning along field lines. Most students only know ferromagnetism; this demonstrates that all materials interact with magnetic fields, just very weakly.</div>
+      <div class="demo-tags"><span class="tag">Diamagnetism</span><span class="tag">Paramagnetism</span><span class="tag">Magnetic properties of materials</span></div>
     </div>
 
+    <!-- 50 -->
     <div class="demo-card" data-topic="electromagnetism">
-      <div class="demo-card-top">
-        <span class="demo-num">50</span>
-        <span class="demo-title">Magnet Rolling on a Slope</span>
-        <span class="demo-topic">EM</span>
-      </div>
-      <div class="demo-body">Roll a small cylindrical magnet down a gentle slope in the N–S direction. It follows a curved arc — not a straight line.</div>
+      <div class="demo-card-top"><span class="demo-num">50</span><span class="demo-title">Magnet Rolling on a Slope</span><span class="demo-topic">EM</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Set up a very gentle slope aligned precisely north–south. Release a small but strong cylindrical magnet to roll freely.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The magnet follows a curved arc rather than a straight path. As it rolls, its magnetic moment interacts with the Earth's magnetic field — the field exerts a torque that causes the magnet to veer. A rare and surprising demonstration of the Earth's field doing mechanical work on a rolling object.</div>
+      <div class="demo-tags"><span class="tag">Earth's magnetic field</span><span class="tag">Magnetic torque</span><span class="tag">Gyroscopic effects</span></div>
     </div>
 
+    <!-- 51 -->
     <div class="demo-card" data-topic="optics">
-      <div class="demo-card-top">
-        <span class="demo-num">51</span>
-        <span class="demo-title">Eclipse of Mars Afterimage</span>
-        <span class="demo-topic">Optics</span>
-      </div>
-      <div class="demo-body">Stare at a red disc for 20+ seconds. Look away — a cyan afterimage appears. Opponent process theory in the retina.</div>
+      <div class="demo-card-top"><span class="demo-num">51</span><span class="demo-title">Eclipse of Mars Afterimage</span><span class="demo-topic">Optics</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Project or display a bright red disc on a screen. Ask students to stare at its centre without blinking for 20–30 seconds. Then show a plain white screen or ask them to look at a white wall.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>A cyan disc appears — the complementary colour. The red-sensitive cones in the retina become fatigued (bleached) by prolonged stimulation. When you look away, those cones respond less strongly to the white light, so the eye perceives the colour that would result from green and blue cones alone — cyan. A reliable, striking entry into colour perception and the biology of vision.</div>
+      <div class="demo-tags"><span class="tag">Afterimage</span><span class="tag">Colour vision</span><span class="tag">Cone cells</span><span class="tag">Complementary colours</span></div>
     </div>
 
+    <!-- 52 -->
     <div class="demo-card" data-topic="fluids">
-      <div class="demo-card-top">
-        <span class="demo-num">52</span>
-        <span class="demo-title">Skewers Through a Water Bag</span>
-        <span class="demo-topic">Fluids</span>
-      </div>
-      <div class="demo-body">Push a skewer through a water-filled plastic bag — it self-seals and doesn't leak. Works dramatically over someone's head.</div>
+      <div class="demo-card-top"><span class="demo-num">52</span><span class="demo-title">Skewers Through a Water Bag</span><span class="demo-topic">Fluids</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Fill a resealable plastic bag with water. Carefully push a sharpened barbeque skewer through one side and out the other in one smooth motion.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>No water leaks. The polymer chains of the plastic bag are long and flexible — the skewer parts them and they seal around it under pressure from the water inside. This is the same property that makes self-sealing tyres and surgical gloves work. Works equally well with a sharpened pencil. Dramatic done over a student's head (having practised first).</div>
+      <div class="demo-tags"><span class="tag">Polymer properties</span><span class="tag">Surface sealing</span><span class="tag">Materials science</span></div>
     </div>
 
+    <!-- 53 -->
     <div class="demo-card" data-topic="thermal">
-      <div class="demo-card-top">
-        <span class="demo-num">53</span>
-        <span class="demo-title">Elastic Band Temperature</span>
-        <span class="demo-topic">Thermal</span>
-      </div>
-      <div class="demo-body">Stretch an elastic band against your lip — it warms. Let it retract — it cools. Entropy and molecular structure made tactile.</div>
+      <div class="demo-card-top"><span class="demo-num">53</span><span class="demo-title">Elastic Band Temperature</span><span class="demo-topic">Thermal</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Hold an elastic band to your lip (sensitive to temperature). Note its temperature. Stretch it rapidly and fully, then immediately hold it to your lip again. Wait 5 seconds, then let it snap back and immediately hold it to your lip.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>Stretching warms it; retracting cools it. Rubber consists of long polymer chains that become more ordered (lower entropy) when stretched. To conserve total entropy, the thermal energy increases — warming. Releasing restores disorder, absorbing thermal energy — cooling. A tangible, personal introduction to entropy and the thermodynamics of rubber elasticity.</div>
+      <div class="demo-tags"><span class="tag">Entropy</span><span class="tag">Rubber elasticity</span><span class="tag">Polymer thermodynamics</span><span class="tag">Thermodynamics</span></div>
     </div>
 
+    <!-- 54 -->
     <div class="demo-card" data-topic="fluids">
-      <div class="demo-card-top">
-        <span class="demo-num">54</span>
-        <span class="demo-title">Two Balloons Connected</span>
-        <span class="demo-topic">Fluids</span>
-      </div>
-      <div class="demo-body">A large and a small balloon connected. Open the valve — the small one inflates the large one. Counterintuitive surface tension physics.</div>
-      <button class="demo-toggle" onclick="toggleDemo(this)">+ more</button>
-      <div class="demo-detail"><strong>Why:</strong> Pressure inside a balloon depends on the ratio of surface tension to radius — a smaller balloon has higher internal pressure.</div>
+      <div class="demo-card-top"><span class="demo-num">54</span><span class="demo-title">Two Balloons Connected</span><span class="demo-topic">Fluids</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Inflate one balloon large and one balloon just slightly. Connect them via a tube with clips, then open the clips simultaneously.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The small balloon deflates into the large one. Counterintuitive — students expect equalisation. Internal pressure in a rubber balloon is P = P₀ + 4T/r, where T is surface tension and r is radius. A smaller balloon has a smaller radius and therefore higher internal pressure. When connected, the pressure gradient drives air from small to large. Only equalises if both are in the flat or very large regime.</div>
+      <div class="demo-tags"><span class="tag">Pressure</span><span class="tag">Surface tension</span><span class="tag">Laplace pressure</span><span class="tag">Rubber balloons</span></div>
     </div>
 
+    <!-- 55 -->
     <div class="demo-card" data-topic="fluids">
-      <div class="demo-card-top">
-        <span class="demo-num">55</span>
-        <span class="demo-title">Inflating Two Balloons Together</span>
-        <span class="demo-topic">Fluids</span>
-      </div>
-      <div class="demo-body">Connect two balloons to a T-piece, try to inflate simultaneously. One always inflates more — same principle as #54.</div>
+      <div class="demo-card-top"><span class="demo-num">55</span><span class="demo-title">Inflating Two Balloons Together</span><span class="demo-topic">Fluids</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Connect two uninflated balloons to the arms of a Y-piece (or T-piece) of tubing. Blow into the stem and try to inflate both simultaneously.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>One balloon inflates much more than the other. Whichever balloon starts slightly larger has a slightly lower internal pressure (same P = 4T/r argument as #54), so air preferentially flows into it, making it larger still. A positive feedback loop — the system is unstable. The other balloon stays small. Works every time, regardless of effort.</div>
+      <div class="demo-tags"><span class="tag">Pressure</span><span class="tag">Laplace pressure</span><span class="tag">Positive feedback</span><span class="tag">Instability</span></div>
     </div>
 
+    <!-- 56 -->
     <div class="demo-card" data-topic="density">
-      <div class="demo-card-top">
-        <span class="demo-num">56</span>
-        <span class="demo-title">Floating Beaker in a Bottle</span>
-        <span class="demo-topic">Density</span>
-      </div>
-      <div class="demo-body">Float a beaker with a weight in a large bottle of water. Remove the weight into the bottle — the water level falls.</div>
+      <div class="demo-card-top"><span class="demo-num">56</span><span class="demo-title">Floating Beaker in a Bottle</span><span class="demo-topic">Density</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Float a small beaker containing a heavy object (e.g. a stone) in a 2 L bottle of water. Note the water level. Remove the stone from the beaker and place it directly in the bottle water. Note the level again.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>When the stone is in the floating beaker, it displaces water equal to its weight. When placed directly in the bottle, it sinks and displaces only its own volume (much less, since it's denser than water). The water level falls. Classic Archimedes — the difference between displacement by weight and displacement by volume.</div>
+      <div class="demo-tags"><span class="tag">Archimedes</span><span class="tag">Displacement</span><span class="tag">Buoyancy</span><span class="tag">Floating vs. sinking</span></div>
     </div>
 
+    <!-- 57 -->
     <div class="demo-card" data-topic="density">
-      <div class="demo-card-top">
-        <span class="demo-num">57</span>
-        <span class="demo-title">Sealed Jar From a Boat</span>
-        <span class="demo-topic">Density</span>
-      </div>
-      <div class="demo-body">Float a boat with a sealed jar. Remove the jar and float it separately — no change in water level. Archimedes carefully examined.</div>
+      <div class="demo-card-top"><span class="demo-num">57</span><span class="demo-title">Sealed Jar From a Boat</span><span class="demo-topic">Density</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Float a toy boat carrying a sealed, empty glass jar in a bowl of water. Note the water level carefully. Remove the jar from the boat and float it separately alongside.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>No change in water level. The jar is sealed and floats — in both cases the total weight of boat + jar is the same, and by Archimedes the total displaced volume (= total weight / ρg) is unchanged. Compare with demo #56 where an object sinks: a sealed jar remains a floating object regardless of whether it's on the boat or beside it.</div>
+      <div class="demo-tags"><span class="tag">Archimedes</span><span class="tag">Displacement</span><span class="tag">Buoyancy</span></div>
     </div>
 
+    <!-- 58 -->
     <div class="demo-card" data-topic="electromagnetism">
-      <div class="demo-card-top">
-        <span class="demo-num">58</span>
-        <span class="demo-title">Paper Clip Near a Magnet</span>
-        <span class="demo-topic">EM</span>
-      </div>
-      <div class="demo-body">Lower a paper clip on a thread toward a strong magnet — it spins one way going down, the other coming up.</div>
+      <div class="demo-card-top"><span class="demo-num">58</span><span class="demo-title">Paper Clip on Thread Near a Magnet</span><span class="demo-topic">EM</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Tie a paper clip to a long thread. Lower it slowly toward a strong magnet, then raise it again.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The paper clip rotates in one direction as it descends, the opposite direction as it rises. The magnetic field lines curve around the magnet, and the paper clip (a small magnetic dipole) aligns with the local field direction. As it traverses different regions of the field geometry, the torque on it reverses. A low-key but precise demonstration of field geometry.</div>
+      <div class="demo-tags"><span class="tag">Magnetic field lines</span><span class="tag">Magnetic dipole</span><span class="tag">Field geometry</span></div>
     </div>
 
+    <!-- 59 -->
     <div class="demo-card" data-topic="density">
-      <div class="demo-card-top">
-        <span class="demo-num">59</span>
-        <span class="demo-title">Measuring Cylinders of Different Diameters</span>
-        <span class="demo-topic">Density</span>
-      </div>
-      <div class="demo-body">Pour a volume from the wider cylinder into one with half the diameter. The liquid stands four times higher — ratio and fractions made concrete.</div>
+      <div class="demo-card-top"><span class="demo-num">59</span><span class="demo-title">Measuring Cylinders of Different Diameters</span><span class="demo-topic">Density</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Take two measuring cylinders where one has exactly twice the diameter of the other. Pour a fixed volume from the larger into the smaller.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The liquid stands four times higher in the narrower cylinder. Cross-sectional area scales as r², so halving the diameter quarters the area. For the same volume, the height must be four times greater. A simple but powerful illustration of why ratio reasoning with areas and volumes requires squaring and cubing — not just proportional scaling.</div>
+      <div class="demo-tags"><span class="tag">Volume</span><span class="tag">Area scaling</span><span class="tag">Ratio reasoning</span><span class="tag">Geometry</span></div>
     </div>
 
+    <!-- 60 -->
     <div class="demo-card" data-topic="density">
-      <div class="demo-card-top">
-        <span class="demo-num">60</span>
-        <span class="demo-title">Balancing Tin Cans on a Metre Rule</span>
-        <span class="demo-topic">Density</span>
-      </div>
-      <div class="demo-body">Two cans balance a rule horizontally. Lower your finger into one can of water — the balance tips. Buoyancy and reaction forces.</div>
+      <div class="demo-card-top"><span class="demo-num">60</span><span class="demo-title">Balancing Tin Cans on a Metre Rule</span><span class="demo-topic">Density</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Hang two identical tins of water at equal distances from the centre of a metre rule so it balances horizontally. Lower one finger into one of the tins — without touching the sides or bottom.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The rule tips toward the tin your finger is in. Your finger displaces water — by Archimedes, the water exerts an upward buoyancy force on your finger and an equal downward reaction on the tin. The tin effectively gets heavier, tipping the balance. A precise and elegant Archimedes demonstration that works on the first attempt every time.</div>
+      <div class="demo-tags"><span class="tag">Archimedes</span><span class="tag">Buoyancy</span><span class="tag">Newton's 3rd law</span><span class="tag">Moments</span></div>
     </div>
 
+    <!-- 61 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">61</span>
-        <span class="demo-title">Dropping Paper and Book</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Drop separately, together edge-on, then paper below the book, then paper on top. Three different outcomes — air resistance and relative motion.</div>
+      <div class="demo-card-top"><span class="demo-num">61</span><span class="demo-title">Dropping Paper and Book</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Drop a small piece of paper and a large book separately. Then try: (a) paper below the falling book, (b) paper resting flat on top of the book.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>(a) Paper below book: paper falls in the partial vacuum behind the book and lands simultaneously. (b) Paper on top of book: the book pushes through undisturbed air; the paper is carried on top and also falls simultaneously. In both cases the paper avoids encountering the air head-on. A simple sequence revealing the role of relative motion in air resistance.</div>
+      <div class="demo-tags"><span class="tag">Air resistance</span><span class="tag">Drag</span><span class="tag">Relative motion</span><span class="tag">Free fall</span></div>
     </div>
 
+    <!-- 62 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">62</span>
-        <span class="demo-title">Ball in a Whirled Bucket</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">A clear bucket part-filled with water, ball floating on the surface. Whirl in a vertical circle — does the ball stay on the surface?</div>
+      <div class="demo-card-top"><span class="demo-num">62</span><span class="demo-title">Ball in a Whirled Bucket</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Partly fill a clear polythene bucket with water and float a small ball on the surface. Whirl the bucket smoothly in a vertical circle at moderate speed.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The ball stays on the surface throughout the rotation — including when the bucket is inverted. In the rotating frame, the centrifugal effect pushes everything outward (toward the bottom of the bucket, which is always the "outer" wall). The ball floats on the surface relative to the bucket because it is less dense than water — and the effective gravitational field always points "outward" from the axis of rotation.</div>
+      <div class="demo-tags"><span class="tag">Circular motion</span><span class="tag">Centripetal force</span><span class="tag">Rotating frames</span><span class="tag">Buoyancy</span></div>
     </div>
 
+    <!-- 63 -->
     <div class="demo-card" data-topic="density">
-      <div class="demo-card-top">
-        <span class="demo-num">63</span>
-        <span class="demo-title">Floating Orange on Scales</span>
-        <span class="demo-topic">Density</span>
-      </div>
-      <div class="demo-body">Balance a beaker of water with an orange beside it. Place the orange in the water — what happens to the scale reading?</div>
+      <div class="demo-card-top"><span class="demo-num">63</span><span class="demo-title">Floating Orange in a Beaker on Scales</span><span class="demo-topic">Density</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Place a beaker of water on a balance and tare it to zero. Place an orange beside (but not in) the beaker. Note the reading. Now place the orange in the water so it floats.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The reading increases by exactly the weight of the orange. The orange exerts a buoyancy force on the water equal to its own weight (since it floats). By Newton's 3rd law, the water exerts an equal downward force on the beaker — adding exactly the orange's weight to the balance reading. A precise and elegant result: the scale reads total weight regardless of floating.</div>
+      <div class="demo-tags"><span class="tag">Archimedes</span><span class="tag">Newton's 3rd law</span><span class="tag">Buoyancy</span><span class="tag">Scales and balance</span></div>
     </div>
 
+    <!-- 64 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">64</span>
-        <span class="demo-title">Elastic Collision — Bowling Balls</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Roll one bowling ball into another on rails. The collision is nearly elastic — the first starts rotating and follows the second.</div>
+      <div class="demo-card-top"><span class="demo-num">64</span><span class="demo-title">Elastic Collision — Bowling Balls</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Set up two bowling balls on a smooth, level floor or rails. Place one stationary. Roll another into it directly.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>For equal masses, the rolling ball stops and the stationary ball moves away — a classic 1D elastic collision. Interestingly, the struck ball then begins to spin and rolls back toward the first — rotational kinetic energy was not conserved in the collision, and the friction force from the floor causes the non-spinning ball to accelerate rotationally and then reverse. The full treatment is excellent Y13 mechanics.</div>
+      <div class="demo-tags"><span class="tag">Elastic collision</span><span class="tag">Conservation of momentum</span><span class="tag">Rotational dynamics</span><span class="tag">Friction</span></div>
     </div>
 
+    <!-- 65 -->
     <div class="demo-card" data-topic="electromagnetism">
-      <div class="demo-card-top">
-        <span class="demo-num">65</span>
-        <span class="demo-title">Magnet Falling in Copper Pipe</span>
-        <span class="demo-topic">EM</span>
-      </div>
-      <div class="demo-body">Magnet falls slowly through copper pipe; wooden dowel drops normally. Eddy currents induced in the copper oppose the motion.</div>
+      <div class="demo-card-top"><span class="demo-num">65</span><span class="demo-title">Magnet Falling in Copper Pipe</span><span class="demo-topic">EM</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Drop a strong neodymium magnet down a vertical copper pipe. Drop a non-magnetic object of the same size and approximate mass down the same pipe for comparison.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The magnet falls in slow motion — it takes many seconds to descend what should take a fraction of a second. The moving magnetic field induces eddy currents in the copper pipe. By Lenz's law, these currents create a magnetic field opposing the magnet's motion. The braking force is proportional to velocity and eventually balances gravity, giving a constant terminal velocity. A viscous fluid analogy for electromagnetic braking.</div>
+      <div class="demo-tags"><span class="tag">Lenz's law</span><span class="tag">Eddy currents</span><span class="tag">Electromagnetic braking</span><span class="tag">Faraday's law</span></div>
     </div>
 
+    <!-- 66 -->
     <div class="demo-card" data-topic="thermal">
-      <div class="demo-card-top">
-        <span class="demo-num">66</span>
-        <span class="demo-title">Candle in Water</span>
-        <span class="demo-topic">Thermal</span>
-      </div>
-      <div class="demo-body">Candle in a beaker, water filled to just below the wick. It burns all the way down — the wax wall keeps the water out.</div>
+      <div class="demo-card-top"><span class="demo-num">66</span><span class="demo-title">Candle in Water</span><span class="demo-topic">Thermal</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Place a candle in a beaker and fill with water until it reaches precisely the level of the top of the candle, without wetting the wick. Light the candle.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The candle burns all the way down into the water, forming a thin wax cylinder that keeps the water out. The wax melts from the inside but the outer layer in contact with the cool water solidifies immediately, building a self-reinforcing wall. The candle can burn below the water line indefinitely. A surprising demonstration of thermal conduction, phase change, and material properties.</div>
+      <div class="demo-tags"><span class="tag">Thermal conduction</span><span class="tag">Phase change</span><span class="tag">Melting point</span><span class="tag">Combustion</span></div>
     </div>
 
+    <!-- 67 -->
     <div class="demo-card" data-topic="optics">
-      <div class="demo-card-top">
-        <span class="demo-num">67</span>
-        <span class="demo-title">Vanishing Test Tubes</span>
-        <span class="demo-topic">Optics</span>
-      </div>
-      <div class="demo-body">Small test tube submerged in baby oil — it vanishes. Refractive indices match. Works as a magic trick: "shatter" and "restore" a test tube.</div>
+      <div class="demo-card-top"><span class="demo-num">67</span><span class="demo-title">Vanishing Test Tubes</span><span class="demo-topic">Optics</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Place a small test tube inside a larger beaker. Fill the beaker with baby oil (mineral oil) until the small tube is fully submerged.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The inner test tube disappears completely. Glass and baby oil have almost identical refractive indices (~1.47). Light passes from oil into glass without bending at the interface — there is no refraction and no reflection to make the glass visible. We see glass because it refracts light differently from its surroundings. Remove that difference and it vanishes. As a performance piece: lower a "broken" test tube and retrieve an intact one — the oil conceals the swap.</div>
+      <div class="demo-tags"><span class="tag">Refractive index</span><span class="tag">Refraction</span><span class="tag">Reflection</span><span class="tag">Optics</span></div>
     </div>
 
+    <!-- 68 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">68</span>
-        <span class="demo-title">Balancing a Coin on a Banknote</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">Challenge: balance a coin on the edge of a flat note. Gently bow the note, balance the coin, then carefully straighten — it stays. Centre of mass trick.</div>
+      <div class="demo-card-top"><span class="demo-num">68</span><span class="demo-title">Balancing a Coin on a Banknote</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Challenge students to balance a coin on the edge of a flat banknote without bending or folding it. Then demonstrate: gently bow the note into a slight curve (like a very gentle arch), balance the coin on the edge at the midpoint, then slowly, carefully straighten the note back to flat.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>The coin balances on the flat note. When curved, the coin's centre of gravity sits directly above the contact point and any small perturbation causes a restoring force — stable equilibrium. Straightening the note while the coin is balanced preserves this equilibrium. Similar to balancing a broomstick: the contact point is below the CoG but with the right geometry, small tilts self-correct.</div>
+      <div class="demo-tags"><span class="tag">Centre of gravity</span><span class="tag">Stable equilibrium</span><span class="tag">Restoring force</span></div>
     </div>
 
+    <!-- 69 -->
     <div class="demo-card" data-topic="forces">
-      <div class="demo-card-top">
-        <span class="demo-num">69</span>
-        <span class="demo-title">The Free-Fall Paradox</span>
-        <span class="demo-topic">Forces</span>
-      </div>
-      <div class="demo-body">A ball and cup on a stick, arranged so that when the apparatus is released, the ball lands in the cup every time.</div>
+      <div class="demo-card-top"><span class="demo-num">69</span><span class="demo-title">The Free-Fall Paradox</span><span class="demo-topic">Forces</span></div>
+      <div class="demo-setup"><strong>Setup</strong>Attach a cup to the end of a stick with a ball resting in a holder above it, positioned so that if the ball fell straight down it would miss the cup. When the apparatus is released to fall freely, the ball lands in the cup every time.</div>
+      <div class="demo-why"><strong>What happens &amp; why</strong>In free fall, both ball and cup accelerate at g. The ball's horizontal position relative to the cup doesn't change — it falls exactly as far as the cup does. The geometry is arranged so that this relative motion guides the ball in. It works at any drop height. A beautiful application of the principle of superposition of motions, and a cousin of the "monkey and hunter" problem in projectile physics.</div>
+      <div class="demo-tags"><span class="tag">Free fall</span><span class="tag">Projectile motion</span><span class="tag">Superposition</span><span class="tag">Equivalence principle</span></div>
     </div>
 
     <div class="no-results" id="no-results" style="display:none;">No demonstrations match.</div>
   </div>
 
   <p style="margin-top:3em; font-size:13px; color:var(--ink-4);">
-    69 demonstrations · collected over twenty years · sources include David Featonby,
-    Keith Gibbs, and the Caltech Physics Demonstration Archive.
+    69 demonstrations · collected over twenty years · sources include David Featonby, Keith Gibbs, and the Caltech Physics Demonstration Archive.
   </p>
 </div>
 
-<footer class="site-footer">
-  <span class="footer-copy">© 2026 Joe Rowing</span>
-  <div class="footer-links">
-    <a href="https://www.linkedin.com/in/jrowing/" target="_blank" rel="noopener">LinkedIn</a>
-    <a href="https://thesciencelab.substack.com" target="_blank" rel="noopener">Substack</a>
-    <a href="https://github.com/jrowing" target="_blank" rel="noopener">GitHub</a>
-  </div>
-</footer>
-
 <script>
-  function toggleDemo(btn) {
-    const detail = btn.nextElementSibling;
-    const open = detail.classList.toggle('open');
-    btn.textContent = open ? '− less' : '+ more';
-  }
-
-  const cards   = Array.from(document.querySelectorAll('.demo-card'));
-  const search  = document.getElementById('demo-search');
+  const cards      = Array.from(document.querySelectorAll('.demo-card'));
+  const search     = document.getElementById('demo-search');
   const filterBtns = document.querySelectorAll('.filter-btn');
-  const countEl = document.getElementById('demo-count');
-  const noRes   = document.getElementById('no-results');
-  let activeTopic = 'all';
+  const countEl    = document.getElementById('demo-count');
+  const noRes      = document.getElementById('no-results');
+  let activeTopic  = 'all';
 
   function applyFilters() {
     const q = search.value.toLowerCase().trim();
     let visible = 0;
     cards.forEach(card => {
-      const topic   = card.dataset.topic;
-      const text    = card.textContent.toLowerCase();
-      const topicOk = activeTopic === 'all' || topic === activeTopic;
-      const searchOk = !q || text.includes(q);
-      const show = topicOk && searchOk;
+      const topicOk  = activeTopic === 'all' || card.dataset.topic === activeTopic;
+      const searchOk = !q || card.textContent.toLowerCase().includes(q);
+      const show     = topicOk && searchOk;
       card.classList.toggle('hidden', !show);
       if (show) visible++;
     });
@@ -904,7 +794,6 @@ description: " - "
   }
 
   search.addEventListener('input', applyFilters);
-
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       filterBtns.forEach(b => b.classList.remove('active'));
@@ -914,6 +803,3 @@ description: " - "
     });
   });
 </script>
-
-</body>
-</html>
