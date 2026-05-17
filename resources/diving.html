@@ -3,345 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Scuba diving — Seychelles & beyond. Dive sites, recommendations, and notes from the Indian Ocean." />
+  <meta name="description" content="Scuba diving — Seychelles. Dive sites, recommendations, and notes from the Indian Ocean." />
   <title>Diving — Joe Rowing</title>
-  <style>
-    /* ── Reset & base ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --text:   #1a1a1a;
-      --muted:  #666;
-      --faint:  #999;
-      --border: #e0e0e0;
-      --bg:     #fafafa;
-      --white:  #ffffff;
-      --accent: #1a1a1a;
-      --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
-      --mono: 'IBM Plex Mono', 'Courier New', monospace;
-    }
-
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,500;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap');
-
-    html { font-size: 16px; }
-
-    body {
-      font-family: var(--sans);
-      font-size: 1rem;
-      line-height: 1.7;
-      color: var(--text);
-      background: var(--white);
-      -webkit-font-smoothing: antialiased;
-    }
-
-    a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
-    a:hover { opacity: 0.6; }
-
-    /* ── Nav ── */
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 52px;
-    }
-
-    .nav-logo {
-      font-family: var(--serif);
-      font-size: 1.05rem;
-      font-style: italic;
-      text-decoration: none;
-      letter-spacing: 0.01em;
-    }
-
-    .nav-logo span { font-style: normal; }
-
-    .nav-links {
-      display: flex;
-      gap: 1.75rem;
-      list-style: none;
-      font-size: 0.875rem;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: var(--muted);
-      transition: color 0.15s;
-    }
-
-    .nav-links a:hover { color: var(--text); opacity: 1; }
-    .nav-links .active { color: var(--text); font-weight: 500; }
-
-    .nav-links .external::after {
-      content: ' ↗';
-      font-size: 0.75rem;
-      opacity: 0.6;
-    }
-
-    /* ── Layout ── */
-    main {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 3.5rem 2rem 5rem;
-    }
-
-    /* ── Back link ── */
-    .back {
-      display: inline-block;
-      font-size: 0.85rem;
-      color: var(--muted);
-      text-decoration: none;
-      margin-bottom: 2.5rem;
-    }
-    .back:hover { color: var(--text); opacity: 1; }
-
-    /* ── Page header ── */
-    .page-header {
-      margin-bottom: 3rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .page-coords {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--faint);
-      letter-spacing: 0.05em;
-      margin-bottom: 0.75rem;
-    }
-
-    .page-header h1 {
-      font-family: var(--serif);
-      font-size: 2.2rem;
-      font-weight: 500;
-      line-height: 1.2;
-      margin-bottom: 0.75rem;
-    }
-
-    .page-header .lede {
-      font-size: 1rem;
-      color: var(--muted);
-      line-height: 1.6;
-      max-width: 520px;
-    }
-
-    .page-header .lede em {
-      font-style: italic;
-      color: var(--text);
-    }
-
-    /* ── Section headings ── */
-    h2 {
-      font-family: var(--serif);
-      font-size: 1.25rem;
-      font-weight: 500;
-      font-style: italic;
-      margin: 2.75rem 0 1.25rem;
-    }
-
-    /* ── About section ── */
-    .about p {
-      color: var(--text);
-      margin-bottom: 0.75rem;
-      font-size: 0.975rem;
-    }
-
-    .about p:last-child { margin-bottom: 0; }
-
-    .cert-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 1.25rem;
-    }
-
-    .cert {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 3px 10px;
-      border-radius: 2px;
-      letter-spacing: 0.03em;
-    }
-
-    /* ── Dive sites ── */
-    .sites-list {
-      list-style: none;
-      counter-reset: site-counter;
-      border-top: 1px solid var(--border);
-    }
-
-    .site-item {
-      counter-increment: site-counter;
-      border-bottom: 1px solid var(--border);
-      padding: 1.4rem 0;
-      display: grid;
-      grid-template-columns: 2.5rem 1fr;
-      gap: 0 1rem;
-      align-items: start;
-    }
-
-    .site-num {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--faint);
-      padding-top: 0.15rem;
-      letter-spacing: 0.05em;
-    }
-
-    .site-body {}
-
-    .site-name {
-      font-size: 1rem;
-      font-weight: 500;
-      margin-bottom: 0.2rem;
-    }
-
-    .site-location {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      color: var(--faint);
-      letter-spacing: 0.04em;
-      margin-bottom: 0.6rem;
-    }
-
-    .site-desc {
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .site-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      margin-top: 0.75rem;
-    }
-
-    .tag {
-      font-size: 0.7rem;
-      font-family: var(--mono);
-      color: var(--faint);
-      border: 1px solid var(--border);
-      padding: 2px 8px;
-      border-radius: 1px;
-      letter-spacing: 0.03em;
-    }
-
-    /* ── Recommendations ── */
-    .rec-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    @media (max-width: 520px) {
-      .rec-grid { grid-template-columns: 1fr; }
-    }
-
-    .rec-card {
-      border: 1px solid var(--border);
-      padding: 1.25rem;
-      border-radius: 2px;
-    }
-
-    .rec-card h3 {
-      font-size: 0.95rem;
-      font-weight: 500;
-      margin-bottom: 0.3rem;
-    }
-
-    .rec-card .rec-type {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      color: var(--faint);
-      letter-spacing: 0.05em;
-      margin-bottom: 0.75rem;
-      text-transform: uppercase;
-    }
-
-    .rec-card p {
-      font-size: 0.875rem;
-      color: var(--muted);
-      line-height: 1.55;
-      margin-bottom: 0.75rem;
-    }
-
-    .rec-card a.rec-link {
-      font-size: 0.8rem;
-      font-family: var(--mono);
-      color: var(--text);
-      text-decoration: none;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 1px;
-    }
-
-    .rec-card a.rec-link:hover {
-      border-color: var(--text);
-      opacity: 1;
-    }
-
-    .rec-card a.rec-link::after {
-      content: ' ↗';
-      font-size: 0.7rem;
-      opacity: 0.6;
-    }
-
-    /* ── Divider ── */
-    hr {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 3rem 0;
-    }
-
-    /* ── Footer ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 1.5rem 2rem;
-      font-size: 0.8rem;
-      color: var(--faint);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    footer a {
-      color: var(--faint);
-      text-decoration: none;
-    }
-
-    footer a:hover { color: var(--text); opacity: 1; }
-
-    .footer-links { display: flex; gap: 1.25rem; }
-  </style>
+  <link rel="stylesheet" href="/assets/css/style.css" />
 </head>
 <body>
 
-<!-- Nav -->
 <nav>
-  <a class="nav-logo" href="https://www.jrowing.com/"><span>J.</span> <em>Rowing</em></a>
+  <a class="nav-logo" href="/">J. <em>Rowing</em></a>
   <ul class="nav-links">
-    <li><a href="https://www.jrowing.com/#about">About</a></li>
-    <li><a href="https://www.jrowing.com/resources.html">Resources</a></li>
-    <li><a href="https://www.jrowing.com/planner.html">Planner</a></li>
-    <li><a href="https://www.jrowing.com/cv.html">CV</a></li>
+    <li><a href="/#about">About</a></li>
+    <li><a href="/resources.html">Resources</a></li>
+    <li><a href="/planner.html">Planner</a></li>
+    <li><a href="/cv.html">CV</a></li>
     <li><a href="https://jrowing.substack.com" class="external">Substack</a></li>
   </ul>
 </nav>
 
 <main>
-  <a class="back" href="https://www.jrowing.com/#projects">← Projects</a>
+  <a class="back" href="/#projects">← Projects</a>
 
-  <!-- Header -->
   <header class="page-header">
     <p class="page-coords">Praslin · Seychelles · 4°37′S 55°27′E</p>
     <h1>Diving</h1>
@@ -352,7 +33,6 @@
     </p>
   </header>
 
-  <!-- About -->
   <section class="about">
     <h2>About</h2>
     <p>
@@ -374,7 +54,6 @@
     </div>
   </section>
 
-  <!-- Top 5 sites -->
   <section>
     <h2>Top five dive sites</h2>
     <ol class="sites-list">
@@ -426,7 +105,7 @@
         <span class="site-num">iii.</span>
         <div class="site-body">
           <p class="site-name">Ave Maria</p>
-          <p class="site-location">Seychelles · near Praslin · 4°22′S 55°42′E</p>
+          <p class="site-location">near Praslin · Seychelles · 4°22′S 55°42′E</p>
           <p class="site-desc">
             A cluster of granite pinnacles covered in hard and soft corals, sitting in 18–28 m.
             One of the most reliably productive sites near Praslin — Napoleon wrasse, moray eels,
@@ -485,7 +164,6 @@
     </ol>
   </section>
 
-  <!-- Recommendations -->
   <section>
     <h2>Recommended operators</h2>
     <div class="rec-grid">
@@ -517,10 +195,11 @@
 
   <hr />
 
-  <p style="font-size: 0.85rem; color: var(--faint); line-height: 1.6;">
+  <p class="footnote">
     Site conditions, operators, and access change — always check current information before
     planning a dive trip. Coordinates are approximate.
   </p>
+
 </main>
 
 <footer>
