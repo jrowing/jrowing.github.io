@@ -1,17 +1,10 @@
 ---
-layout: resource
-title: "9702 Revision Spinner"
+layout: default
+title: 9702 Revision Spinner
 is_resource: true
-description: "Revision at random"
+description: Revision at random
 ---
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CAIE 9702 AS Physics — Revision Spinner</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
   :root {
     --bg:      #0a0c12;
@@ -24,22 +17,18 @@ description: "Revision at random"
     --visible: 5;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { width: 100%; }
-
-  body {
-    font-family: 'Outfit', sans-serif;
+  .spinner-wrap {
     background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
+    border-radius: 8px;
+    padding: 28px 24px 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 28px 24px 40px;
     gap: 28px;
+    margin: 0 -40px;
   }
 
-  header {
+  .spinner-header {
     width: 100%;
     max-width: 1100px;
     display: flex;
@@ -47,11 +36,20 @@ description: "Revision at random"
     justify-content: space-between;
   }
 
-  
+  .spinner-header h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(22px, 3vw, 34px);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: #f0ede4;
+    margin: 0;
+  }
+
   .badge {
     font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
     text-transform: uppercase; padding: 7px 18px; border-radius: 100px;
     background: var(--surf2); color: var(--muted); border: 1px solid var(--border);
+    font-family: 'Outfit', sans-serif;
   }
 
   .machine {
@@ -65,11 +63,11 @@ description: "Revision at random"
   }
 
   .reel-label {
+    font-family: 'Outfit', sans-serif;
     font-size: 11px; font-weight: 700; letter-spacing: 3px;
     text-transform: uppercase; color: var(--muted);
   }
 
-  /* Fixed-height clipping window */
   .reel-window {
     width: 100%;
     height: calc(var(--row-h) * var(--visible));
@@ -80,7 +78,6 @@ description: "Revision at random"
     position: relative;
   }
 
-  /* Top & bottom fade */
   .reel-window::before,
   .reel-window::after {
     content: ''; position: absolute; left: 0; right: 0;
@@ -95,7 +92,6 @@ description: "Revision at random"
     background: linear-gradient(to top, var(--surface) 0%, transparent 100%);
   }
 
-  /* Centre highlight — sits exactly over the middle row */
   .reel-highlight {
     position: absolute;
     top: calc(var(--row-h) * 2);
@@ -106,7 +102,6 @@ description: "Revision at random"
     z-index: 9; pointer-events: none;
   }
 
-  /* The scrolling strip — positioned with JS */
   .reel-strip {
     position: absolute;
     top: 0; left: 0; right: 0;
@@ -117,6 +112,7 @@ description: "Revision at random"
     height: var(--row-h);
     display: flex; align-items: center;
     padding: 0 22px;
+    font-family: 'Outfit', sans-serif;
     font-size: 20px; font-weight: 700; line-height: 1.2;
     border-bottom: 1px solid rgba(255,255,255,0.04);
     user-select: none;
@@ -162,6 +158,7 @@ description: "Revision at random"
   }
 
   .result-placeholder {
+    font-family: 'Outfit', sans-serif;
     font-size: 14px; color: var(--muted); text-align: center;
     font-weight: 500; line-height: 1.7;
   }
@@ -172,78 +169,102 @@ description: "Revision at random"
   .result-block + .result-block { border-top: 1px solid var(--border); }
 
   .result-lbl {
+    font-family: 'Outfit', sans-serif;
     font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
     text-transform: uppercase; color: var(--muted); margin-bottom: 5px;
   }
-  .result-val { font-size: 19px; font-weight: 800; line-height: 1.2; }
+  .result-val {
+    font-family: 'Outfit', sans-serif;
+    font-size: 19px; font-weight: 800; line-height: 1.2;
+  }
   .result-val.topic-col    { color: #6ab0ff; }
   .result-val.activity-col { color: #2fd4a6; }
-  .result-spec { font-size: 11px; color: var(--muted); font-weight: 500; margin-top: 4px; }
+  .result-spec { font-family: 'Outfit', sans-serif; font-size: 11px; color: var(--muted); font-weight: 500; margin-top: 4px; }
 
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(6px); }
     to   { opacity: 1; transform: translateY(0); }
   }
   .anim-in { animation: fadeUp 0.3s ease forwards; }
+
+  @media (max-width: 700px) {
+    .spinner-wrap { margin: 0 -24px; padding: 20px 16px 32px; }
+    .machine { flex-direction: column; }
+    .centre-col { width: 100%; padding-top: 0; }
+  }
 </style>
-</head>
-<body>
 
-<div class="machine">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
-  <div class="reel-col">
-    <div class="reel-label">Topic</div>
-    <div class="reel-window">
-      <div class="reel-highlight"></div>
-      <div class="reel-strip" id="topicStrip"></div>
-    </div>
-    <button class="spin-btn" id="topicBtn" onclick="spinTopic()">Spin Topic</button>
+<div class="page-wrap">
+  <a class="back-link" href="/resources.html">← Resources</a>
+  <hr class="page-divider" />
+  <p class="page-sub">CAIE 9702 · 2025–2027 Specification · Topics 1–11</p>
+  <h1>AS Physics Revision Spinner</h1>
+</div>
+
+<div class="spinner-wrap">
+
+  <div class="spinner-header">
+    <h2>9702 Revision Spinner</h2>
+    <span class="badge">AS Level</span>
   </div>
 
-  <div class="centre-col">
-    <button class="spin-both-btn" id="bothBtn" onclick="spinBoth()">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="23 4 23 10 17 10"/>
-        <polyline points="1 20 1 14 7 14"/>
-        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-      </svg>
-      Spin Both
-    </button>
-    <div class="result-card">
-      <p class="result-placeholder" id="resultPlaceholder">Spin to get<br>your task</p>
-      <div class="result-content" id="resultContent">
-        <div class="result-block">
-          <div class="result-lbl">Topic</div>
-          <div class="result-val topic-col" id="resTopic"></div>
-        </div>
-        <div class="result-block">
-          <div class="result-lbl">Activity</div>
-          <div class="result-val activity-col" id="resActivity"></div>
-        </div>
-        <div class="result-block">
-          <div class="result-spec" id="resSpec"></div>
+  <div class="machine">
+
+    <div class="reel-col">
+      <div class="reel-label">Topic</div>
+      <div class="reel-window">
+        <div class="reel-highlight"></div>
+        <div class="reel-strip" id="topicStrip"></div>
+      </div>
+      <button class="spin-btn" id="topicBtn" onclick="spinTopic()">Spin Topic</button>
+    </div>
+
+    <div class="centre-col">
+      <button class="spin-both-btn" id="bothBtn" onclick="spinBoth()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"/>
+          <polyline points="1 20 1 14 7 14"/>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+        </svg>
+        Spin Both
+      </button>
+      <div class="result-card">
+        <p class="result-placeholder" id="resultPlaceholder">Spin to get<br>your task</p>
+        <div class="result-content" id="resultContent">
+          <div class="result-block">
+            <div class="result-lbl">Topic</div>
+            <div class="result-val topic-col" id="resTopic"></div>
+          </div>
+          <div class="result-block">
+            <div class="result-lbl">Activity</div>
+            <div class="result-val activity-col" id="resActivity"></div>
+          </div>
+          <div class="result-block">
+            <div class="result-spec" id="resSpec"></div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="reel-col">
-    <div class="reel-label">Activity</div>
-    <div class="reel-window">
-      <div class="reel-highlight"></div>
-      <div class="reel-strip" id="activityStrip"></div>
+    <div class="reel-col">
+      <div class="reel-label">Activity</div>
+      <div class="reel-window">
+        <div class="reel-highlight"></div>
+        <div class="reel-strip" id="activityStrip"></div>
+      </div>
+      <button class="spin-btn" id="activityBtn" onclick="spinActivity()">Spin Activity</button>
     </div>
-    <button class="spin-btn" id="activityBtn" onclick="spinActivity()">Spin Activity</button>
-  </div>
 
+  </div>
 </div>
 
 <script>
 const ROW_H   = 72;
 const VISIBLE = 5;
-// The centre row of the window is row index 2 (0-based).
-// Its top edge is at VISIBLE_OFFSET px from the top of the window.
-const VISIBLE_OFFSET = Math.floor(VISIBLE / 2) * ROW_H; // 144
+const VISIBLE_OFFSET = Math.floor(VISIBLE / 2) * ROW_H;
 
 const topicData = [
   ["SI units & prefixes",        "1.2 SI units"],
@@ -299,24 +320,12 @@ const activities = [
 
 const topics = topicData.map(d => d[0]);
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Reel class — self-contained, truly infinite barrel
-// ─────────────────────────────────────────────────────────────────────────────
-// Strategy: the DOM strip holds exactly COPIES * n rows, which is enough for
-// the visible window plus plenty of overshoot. We track a "logical offset"
-// that is always kept in the range [0, n*ROW_H) by wrapping after every spin.
-// Because the strip loops, wrapping doesn't change what's visible — the DOM
-// rows are coloured by (item_index % 2) so the pattern is seamless.
-
 class Reel {
   constructor(stripEl, items) {
     this.el    = stripEl;
     this.items = items;
     this.n     = items.length;
     this.raf   = null;
-
-    // Build enough copies that the window (VISIBLE rows) is always filled
-    // even mid-spin. 6 copies is more than enough.
     const COPIES = 6;
     for (let c = 0; c < COPIES; c++) {
       items.forEach((label, i) => {
@@ -326,28 +335,18 @@ class Reel {
         stripEl.appendChild(div);
       });
     }
-
     this.totalRows   = COPIES * this.n;
     this.stripHeight = this.totalRows * ROW_H;
-    this.loopHeight  = this.n * ROW_H; // one full loop in pixels
-
-    // offset = how many px the strip has scrolled upward from its natural top.
-    // When offset=0, row 0 is centred in the window.
-    // We start centred on item 0.
+    this.loopHeight  = this.n * ROW_H;
     this.offset = 0;
     this._applyOffset();
   }
 
-  // translateY so that the row whose top is at `this.offset` sits in centre.
-  // Centre of window = VISIBLE_OFFSET px from top of window.
-  // We want: stripTop + offset = VISIBLE_OFFSET  →  stripTop = VISIBLE_OFFSET - offset
   _applyOffset() {
-    // Wrap offset into [0, loopHeight) so strip never drifts out of bounds.
     this.offset = ((this.offset % this.loopHeight) + this.loopHeight) % this.loopHeight;
     this.el.style.transform = `translateY(${VISIBLE_OFFSET - this.offset}px)`;
   }
 
-  // Which item index is currently centred?
   centredItem() {
     const itemIndex = Math.round(this.offset / ROW_H) % this.n;
     return ((itemIndex % this.n) + this.n) % this.n;
@@ -355,60 +354,39 @@ class Reel {
 
   spin(targetIndex, onDone) {
     if (this.raf) cancelAnimationFrame(this.raf);
-
-    const n = this.n;
-
-    // How many px to scroll so that targetIndex ends up centred.
-    // Current offset (wrapped) tells us where we are in the loop.
     const wrappedOffset = ((this.offset % this.loopHeight) + this.loopHeight) % this.loopHeight;
     const targetOffset  = targetIndex * ROW_H;
-
-    // We always scroll forward (downward strip = upward motion).
-    // Minimum advance = enough px to go past at least 6 full loops for drama.
     const minLoops = 6;
     let delta = targetOffset - wrappedOffset;
-    if (delta <= 0) delta += this.loopHeight; // ensure forward motion
+    if (delta <= 0) delta += this.loopHeight;
     delta += minLoops * this.loopHeight;
-    // Add a random extra 0–2 loops so successive spins look different
     delta += Math.floor(Math.random() * 3) * this.loopHeight;
-
     const startOffset = wrappedOffset;
     const endOffset   = startOffset + delta;
-
     const dur = 2800 + Math.random() * 700;
     let t0 = null;
-
     const animate = (ts) => {
       if (!t0) t0 = ts;
       const p = Math.min((ts - t0) / dur, 1);
       const ease = 1 - Math.pow(1 - p, 4);
       this.offset = startOffset + ease * (endOffset - startOffset);
       this._applyOffset();
-
       if (p < 1) {
         this.raf = requestAnimationFrame(animate);
       } else {
-        // Snap exactly to the target row
         this.offset = targetOffset;
         this._applyOffset();
         this.raf = null;
         onDone(targetIndex);
       }
     };
-
     this.raf = requestAnimationFrame(animate);
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Instantiate reels
-// ─────────────────────────────────────────────────────────────────────────────
 const topicReel    = new Reel(document.getElementById('topicStrip'),    topics);
 const activityReel = new Reel(document.getElementById('activityStrip'), activities);
 
-// ─────────────────────────────────────────────────────────────────────────────
-// State & UI
-// ─────────────────────────────────────────────────────────────────────────────
 let curTopic = null, curAct = null;
 let topicSpinning = false, actSpinning = false;
 
@@ -472,5 +450,3 @@ function spinBoth() {
   spinActivity();
 }
 </script>
-</body>
-</html>
