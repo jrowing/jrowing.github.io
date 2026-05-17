@@ -1,0 +1,576 @@
+---
+layout: resource
+title: "0654 Revision Spinner"
+is_resource: true
+description: "Revision at random"
+---
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAIE IGCSE Co-ordinated Sciences — Revision Spinner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #0a0c12;
+    --surface: #12151e;
+    --surf2:   #1a1e2a;
+    --border:  rgba(255,255,255,0.08);
+    --text:    #f0ede4;
+    --muted:   #6a6a7c;
+    --row-h:   68px;
+    --visible: 5;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 24px 40px;
+    gap: 20px;
+  }
+
+  /* ── Header ── */
+  header {
+    width: 100%; max-width: 1200px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  header h1 { font-size: 24px; font-weight: 900; letter-spacing: -0.5px; }
+  header p  { font-size: 13px; color: var(--muted); margin-top: 3px; }
+  .badge {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 7px 16px; border-radius: 100px;
+    background: var(--surf2); color: var(--muted); border: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  /* ── Subject filter tabs ── */
+  .filter-row {
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+  }
+  .filter-btn {
+    padding: 8px 20px; border-radius: 100px; border: 1.5px solid rgba(255,255,255,0.12);
+    font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700;
+    cursor: pointer; background: var(--surf2); color: var(--muted);
+    transition: all 0.18s ease; letter-spacing: 0.5px;
+  }
+  .filter-btn:hover { border-color: rgba(255,255,255,0.28); color: var(--text); }
+  .filter-btn.active-bio  { background: #0e2e1a; color: #4ade80; border-color: #4ade8055; }
+  .filter-btn.active-chem { background: #1e2a0e; color: #a3e635; border-color: #a3e63555; }
+  .filter-btn.active-phys { background: #0e1e38; color: #60a5fa; border-color: #60a5fa55; }
+  .filter-btn.active-all  { background: #1a1e2a; color: var(--text); border-color: rgba(255,255,255,0.3); }
+
+  /* ── Machine ── */
+  .machine {
+    width: 100%; max-width: 1200px;
+    display: flex; gap: 18px; align-items: stretch;
+  }
+
+  .reel-col {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 12px;
+  }
+
+  .reel-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--muted);
+  }
+
+  .reel-window {
+    width: 100%;
+    height: calc(var(--row-h) * var(--visible));
+    border-radius: 16px;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    background: var(--surface);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .reel-window::before,
+  .reel-window::after {
+    content: ''; position: absolute; left: 0; right: 0;
+    z-index: 10; pointer-events: none;
+  }
+  .reel-window::before {
+    top: 0; height: calc(var(--row-h) * 2);
+    background: linear-gradient(to bottom, var(--surface) 0%, transparent 100%);
+  }
+  .reel-window::after {
+    bottom: 0; height: calc(var(--row-h) * 2);
+    background: linear-gradient(to top, var(--surface) 0%, transparent 100%);
+  }
+
+  .reel-highlight {
+    position: absolute;
+    top: calc(var(--row-h) * 2); left: 0; right: 0;
+    height: var(--row-h);
+    border-top: 1.5px solid rgba(255,255,255,0.18);
+    border-bottom: 1.5px solid rgba(255,255,255,0.18);
+    z-index: 9; pointer-events: none;
+  }
+
+  .reel-strip {
+    position: absolute; top: 0; left: 0; right: 0;
+    will-change: transform;
+  }
+
+  .reel-item {
+    height: var(--row-h);
+    display: flex; align-items: center;
+    padding: 0 18px;
+    font-size: 18px; font-weight: 700; line-height: 1.2;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    user-select: none; gap: 10px;
+  }
+
+  /* Subject colour pairs — even/odd variants */
+  .reel-item.bio-e  { background: #0b2016; color: #4ade80; }
+  .reel-item.bio-o  { background: #0d2a1c; color: #86efac; }
+  .reel-item.chem-e { background: #161e08; color: #a3e635; }
+  .reel-item.chem-o { background: #1c2a0a; color: #d9f99d; }
+  .reel-item.phys-e { background: #0a1628; color: #60a5fa; }
+  .reel-item.phys-o { background: #0c1e36; color: #93c5fd; }
+
+  /* Subject dot badge on each row */
+  .subject-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .dot-bio  { background: #4ade80; }
+  .dot-chem { background: #a3e635; }
+  .dot-phys { background: #60a5fa; }
+
+  /* Activity reel — alternating blue/teal */
+  .reel-item.act-e { background: #12151e; color: #6faaff; }
+  .reel-item.act-o { background: #0e1a16; color: #3ecfa6; }
+
+  .spin-btn {
+    padding: 11px 24px; font-family: 'Outfit', sans-serif;
+    font-size: 12px; font-weight: 800; letter-spacing: 2px;
+    text-transform: uppercase; border: 1.5px solid rgba(255,255,255,0.18);
+    border-radius: 100px; cursor: pointer; background: var(--surf2);
+    color: var(--text); transition: all 0.18s ease;
+  }
+  .spin-btn:hover  { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); }
+  .spin-btn:active { transform: scale(0.96); }
+  .spin-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* ── Centre column ── */
+  .centre-col {
+    width: 240px; flex-shrink: 0;
+    display: flex; flex-direction: column; gap: 12px;
+    justify-content: center; padding-top: 31px;
+  }
+
+  .spin-both-btn {
+    width: 100%; padding: 15px 0; font-family: 'Outfit', sans-serif;
+    font-size: 15px; font-weight: 900; letter-spacing: 0.5px;
+    text-transform: uppercase; border: none; border-radius: 14px;
+    cursor: pointer; background: linear-gradient(135deg, #3b7de8 0%, #1ec99a 100%);
+    color: #fff; transition: opacity 0.18s;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .spin-both-btn:hover    { opacity: 0.88; }
+  .spin-both-btn:active   { transform: scale(0.97); }
+  .spin-both-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .result-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 18px 16px; flex: 1;
+    display: flex; flex-direction: column; justify-content: center;
+    gap: 0; min-height: 190px;
+  }
+
+  .result-placeholder {
+    font-size: 13px; color: var(--muted); text-align: center;
+    font-weight: 500; line-height: 1.7;
+  }
+
+  .result-content { display: none; flex-direction: column; gap: 0; }
+  .result-block { padding: 10px 0; }
+  .result-block + .result-block { border-top: 1px solid var(--border); }
+
+  .result-lbl {
+    font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+  }
+  .result-val { font-size: 17px; font-weight: 800; line-height: 1.2; }
+  .result-val.topic-col    { color: #6ab0ff; }
+  .result-val.activity-col { color: #2fd4a6; }
+  .result-subject { font-size: 11px; font-weight: 600; margin-top: 3px; }
+  .result-subject.bio-c  { color: #4ade80; }
+  .result-subject.chem-c { color: #a3e635; }
+  .result-subject.phys-c { color: #60a5fa; }
+  .result-spec { font-size: 11px; color: var(--muted); font-weight: 500; margin-top: 3px; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .anim-in { animation: fadeUp 0.3s ease forwards; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>IGCSE Co-ordinated Sciences Spinner</h1>
+    <p>CAIE 0654 · 2025–2027 Specification</p>
+  </div>
+  <div class="badge">Biology · Chemistry · Physics</div>
+</header>
+
+<!-- Subject filter -->
+<div class="filter-row">
+  <button class="filter-btn active-all" id="btn-all"  onclick="setFilter('all')">All subjects</button>
+  <button class="filter-btn" id="btn-bio"  onclick="setFilter('bio')">Biology only</button>
+  <button class="filter-btn" id="btn-chem" onclick="setFilter('chem')">Chemistry only</button>
+  <button class="filter-btn" id="btn-phys" onclick="setFilter('phys')">Physics only</button>
+</div>
+
+<div class="machine">
+
+  <!-- Topic reel -->
+  <div class="reel-col">
+    <div class="reel-label">Topic</div>
+    <div class="reel-window">
+      <div class="reel-highlight"></div>
+      <div class="reel-strip" id="topicStrip"></div>
+    </div>
+    <button class="spin-btn" id="topicBtn" onclick="spinTopic()">Spin Topic</button>
+  </div>
+
+  <!-- Centre -->
+  <div class="centre-col">
+    <button class="spin-both-btn" id="bothBtn" onclick="spinBoth()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 4 23 10 17 10"/>
+        <polyline points="1 20 1 14 7 14"/>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+      </svg>
+      Spin Both
+    </button>
+    <div class="result-card">
+      <p class="result-placeholder" id="resultPlaceholder">Spin to get<br>your task</p>
+      <div class="result-content" id="resultContent">
+        <div class="result-block">
+          <div class="result-lbl">Topic</div>
+          <div class="result-val topic-col" id="resTopic"></div>
+          <div class="result-subject" id="resSubject"></div>
+          <div class="result-spec"    id="resSpec"></div>
+        </div>
+        <div class="result-block">
+          <div class="result-lbl">Activity</div>
+          <div class="result-val activity-col" id="resActivity"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity reel -->
+  <div class="reel-col">
+    <div class="reel-label">Activity</div>
+    <div class="reel-window">
+      <div class="reel-highlight"></div>
+      <div class="reel-strip" id="activityStrip"></div>
+    </div>
+    <button class="spin-btn" id="activityBtn" onclick="spinActivity()">Spin Activity</button>
+  </div>
+
+</div>
+
+<script>
+const ROW_H        = 68;
+const VISIBLE      = 5;
+const VISIBLE_OFFSET = Math.floor(VISIBLE / 2) * ROW_H; // 136
+
+// ── All topics: [label, subject ('bio'|'chem'|'phys'), spec ref] ──
+// Biology B1–B19, Chemistry C1–C12, Physics P1–P6
+// Source: CAIE 0654 syllabus 2025–2027
+const ALL_TOPICS = [
+  // Biology
+  ["Characteristics of living organisms", "bio",  "B1"],
+  ["Cell structure",                       "bio",  "B2"],
+  ["Movement into and out of cells",       "bio",  "B3"],
+  ["Biological molecules",                 "bio",  "B4"],
+  ["Enzymes",                              "bio",  "B5"],
+  ["Plant nutrition",                      "bio",  "B6"],
+  ["Human nutrition",                      "bio",  "B7"],
+  ["Transport in plants",                  "bio",  "B8"],
+  ["Transport in animals",                 "bio",  "B9"],
+  ["Diseases and immunity",                "bio",  "B10"],
+  ["Gas exchange in humans",               "bio",  "B11"],
+  ["Respiration",                          "bio",  "B12"],
+  ["Coordination and response",            "bio",  "B13"],
+  ["Drugs",                                "bio",  "B14"],
+  ["Reproduction",                         "bio",  "B15"],
+  ["Inheritance",                          "bio",  "B16"],
+  ["Variation and selection",              "bio",  "B17"],
+  ["Organisms and their environment",      "bio",  "B18"],
+  ["Human influences on ecosystems",       "bio",  "B19"],
+  // Chemistry
+  ["States of matter",                     "chem", "C1"],
+  ["Atoms, elements and compounds",        "chem", "C2"],
+  ["Stoichiometry",                        "chem", "C3"],
+  ["Electrochemistry",                     "chem", "C4"],
+  ["Chemical energetics",                  "chem", "C5"],
+  ["Chemical reactions",                   "chem", "C6"],
+  ["Acids, bases and salts",               "chem", "C7"],
+  ["The Periodic Table",                   "chem", "C8"],
+  ["Metals",                               "chem", "C9"],
+  ["Chemistry of the environment",         "chem", "C10"],
+  ["Organic chemistry",                    "chem", "C11"],
+  ["Experimental techniques & analysis",   "chem", "C12"],
+  // Physics
+  ["Motion, forces and energy",            "phys", "P1"],
+  ["Thermal physics",                      "phys", "P2"],
+  ["Waves",                                "phys", "P3"],
+  ["Electricity and magnetism",            "phys", "P4"],
+  ["Nuclear physics",                      "phys", "P5"],
+  ["Space physics",                        "phys", "P6"],
+];
+
+const ACTIVITIES = [
+  "Past paper Q",
+  "Write definitions",
+  "Worked example",
+  "Flashcards",
+  "Mind map",
+  "Teach it back",
+  "Draw a diagram",
+  "Blurting",
+  "Mark scheme check",
+  "Concept summary",
+  "Practicals recap",
+  "60-sec explain",
+  "Flow chart",
+  "Exam-style answer",
+  "Key words list",
+];
+
+const SUBJECT_LABELS = { bio: "Biology", chem: "Chemistry", phys: "Physics" };
+const SUBJECT_CLASS  = { bio: "bio-c",  chem: "chem-c",    phys: "phys-c"   };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Reel class — infinite barrel, pixel-perfect snap
+// ─────────────────────────────────────────────────────────────────────────────
+class Reel {
+  constructor(stripEl, items, classForItem) {
+    this.el         = stripEl;
+    this.items      = items;
+    this.n          = items.length;
+    this.classFn    = classForItem;
+    this.raf        = null;
+    this.offset     = 0;
+
+    const COPIES    = 6;
+    this.loopHeight = this.n * ROW_H;
+
+    for (let c = 0; c < COPIES; c++) {
+      items.forEach((item, i) => {
+        const div = document.createElement('div');
+        div.className = 'reel-item ' + classForItem(item, i);
+        // Topic reels get a subject dot; activity reels just get text
+        if (item._dot) {
+          const dot = document.createElement('span');
+          dot.className = 'subject-dot dot-' + item.subject;
+          div.appendChild(dot);
+        }
+        const span = document.createElement('span');
+        span.textContent = item.label !== undefined ? item.label : item;
+        div.appendChild(span);
+        stripEl.appendChild(div);
+      });
+    }
+
+    this._apply();
+  }
+
+  _apply() {
+    this.offset = ((this.offset % this.loopHeight) + this.loopHeight) % this.loopHeight;
+    this.el.style.transform = `translateY(${VISIBLE_OFFSET - this.offset}px)`;
+  }
+
+  // Rebuild DOM rows when the item list changes (filter switch)
+  rebuild(items, classForItem) {
+    this.el.innerHTML = '';
+    this.items  = items;
+    this.n      = items.length;
+    this.classFn = classForItem;
+    this.loopHeight = this.n * ROW_H;
+
+    const COPIES = 6;
+    for (let c = 0; c < COPIES; c++) {
+      items.forEach((item, i) => {
+        const div = document.createElement('div');
+        div.className = 'reel-item ' + classForItem(item, i);
+        if (item._dot) {
+          const dot = document.createElement('span');
+          dot.className = 'subject-dot dot-' + item.subject;
+          div.appendChild(dot);
+        }
+        const span = document.createElement('span');
+        span.textContent = item.label !== undefined ? item.label : item;
+        div.appendChild(span);
+        this.el.appendChild(div);
+      });
+    }
+    // Reset offset so we land on item 0 cleanly
+    this.offset = 0;
+    this._apply();
+  }
+
+  spin(targetIndex, onDone) {
+    if (this.raf) cancelAnimationFrame(this.raf);
+
+    const wrappedOffset = ((this.offset % this.loopHeight) + this.loopHeight) % this.loopHeight;
+    const targetOffset  = targetIndex * ROW_H;
+
+    let delta = targetOffset - wrappedOffset;
+    if (delta <= 0) delta += this.loopHeight;
+    delta += 6 * this.loopHeight;
+    delta += Math.floor(Math.random() * 3) * this.loopHeight;
+
+    const startOffset = wrappedOffset;
+    const endOffset   = startOffset + delta;
+    const dur = 2800 + Math.random() * 700;
+    let t0 = null;
+
+    const animate = (ts) => {
+      if (!t0) t0 = ts;
+      const p    = Math.min((ts - t0) / dur, 1);
+      const ease = 1 - Math.pow(1 - p, 4);
+      this.offset = startOffset + ease * (endOffset - startOffset);
+      this._apply();
+      if (p < 1) {
+        this.raf = requestAnimationFrame(animate);
+      } else {
+        this.offset = targetOffset;
+        this._apply();
+        this.raf = null;
+        onDone(targetIndex);
+      }
+    };
+    this.raf = requestAnimationFrame(animate);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Build topic item objects with _dot flag for DOM builder
+// ─────────────────────────────────────────────────────────────────────────────
+function makeTopicItems(filterSubject) {
+  const rows = filterSubject === 'all'
+    ? ALL_TOPICS
+    : ALL_TOPICS.filter(t => t[1] === filterSubject);
+  return rows.map(([label, subject, ref]) => ({ label, subject, ref, _dot: true }));
+}
+
+function topicClass(item, i) {
+  const subj = item.subject;
+  return subj + '-' + (i % 2 === 0 ? 'e' : 'o');
+}
+
+function activityClass(item, i) {
+  return i % 2 === 0 ? 'act-e' : 'act-o';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Initialise
+// ─────────────────────────────────────────────────────────────────────────────
+let currentFilter  = 'all';
+let topicItems     = makeTopicItems('all');
+
+const topicReel    = new Reel(document.getElementById('topicStrip'),    topicItems,  topicClass);
+const activityReel = new Reel(document.getElementById('activityStrip'), ACTIVITIES,  activityClass);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Filter buttons
+// ─────────────────────────────────────────────────────────────────────────────
+function setFilter(subject) {
+  currentFilter = subject;
+  topicItems    = makeTopicItems(subject);
+  topicReel.rebuild(topicItems, topicClass);
+  hideResult();
+
+  // Update button states
+  ['all','bio','chem','phys'].forEach(s => {
+    const btn = document.getElementById('btn-' + s);
+    btn.className = 'filter-btn';
+    if (s === subject) btn.classList.add('active-' + (s === 'all' ? 'all' : s));
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// State & result
+// ─────────────────────────────────────────────────────────────────────────────
+let curTopic = null, curAct = null;
+let topicSpinning = false, actSpinning = false;
+
+function setBusy(busy) {
+  ['topicBtn','activityBtn','bothBtn'].forEach(id => {
+    document.getElementById(id).disabled = busy;
+  });
+}
+
+function showResult() {
+  if (curTopic === null || curAct === null) return;
+  if (topicSpinning || actSpinning) return;
+
+  const item = topicItems[curTopic];
+  document.getElementById('resultPlaceholder').style.display = 'none';
+  const rc = document.getElementById('resultContent');
+  rc.style.display = 'flex';
+  rc.classList.remove('anim-in');
+  void rc.offsetWidth;
+  rc.classList.add('anim-in');
+
+  document.getElementById('resTopic').textContent    = item.label;
+  document.getElementById('resActivity').textContent = ACTIVITIES[curAct];
+
+  const subjEl = document.getElementById('resSubject');
+  subjEl.textContent  = SUBJECT_LABELS[item.subject];
+  subjEl.className    = 'result-subject ' + SUBJECT_CLASS[item.subject];
+
+  document.getElementById('resSpec').textContent = 'Spec ref: ' + item.ref;
+}
+
+function hideResult() {
+  document.getElementById('resultPlaceholder').style.display = 'block';
+  document.getElementById('resultContent').style.display = 'none';
+  curTopic = null; curAct = null;
+}
+
+function spinTopic() {
+  if (topicSpinning) return;
+  topicSpinning = true; curTopic = null; hideResult(); setBusy(true);
+  const target = Math.floor(Math.random() * topicItems.length);
+  topicReel.spin(target, idx => {
+    curTopic = idx; topicSpinning = false;
+    if (!actSpinning) setBusy(false);
+    showResult();
+  });
+}
+
+function spinActivity() {
+  if (actSpinning) return;
+  actSpinning = true; curAct = null; hideResult(); setBusy(true);
+  const target = Math.floor(Math.random() * ACTIVITIES.length);
+  activityReel.spin(target, idx => {
+    curAct = idx; actSpinning = false;
+    if (!topicSpinning) setBusy(false);
+    showResult();
+  });
+}
+
+function spinBoth() { spinTopic(); spinActivity(); }
+</script>
+</body>
+</html>
