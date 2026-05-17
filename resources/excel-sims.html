@@ -1,0 +1,312 @@
+---
+layout: resource
+title: "Excel Simulations"
+is_resource: true
+description: "Interactive Excel simulations for exploring physics concepts — collected from various sources and some home-made."
+---
+
+<style>
+  .exp-intro {
+    font-size: 1.05em;
+    color: var(--ink-3);
+    max-width: 560px;
+    margin-bottom: 2.5rem;
+    line-height: 1.8;
+  }
+
+  .exp-section {
+    margin-bottom: 3rem;
+  }
+
+  .exp-section-title {
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-4);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.4rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .exp-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .exp-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--paper-3);
+  }
+
+  .exp-item:last-child {
+    border-bottom: none;
+  }
+
+  .exp-main {
+    min-width: 0;
+  }
+
+  .exp-name {
+    font-family: var(--serif);
+    font-size: 1em;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 0.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .exp-tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    background: var(--paper-3);
+    color: var(--ink-3);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-weight: 400;
+  }
+
+  .exp-tag.xlsx { background: #e8f0e8; color: #3a5c3a; }
+  .exp-tag.xls  { background: #e8f0e8; color: #3a5c3a; }
+  .exp-tag.sim  { background: #eef2f8; color: #2d4270; }
+
+  .exp-desc {
+    font-size: 0.88em;
+    color: var(--ink-3);
+    line-height: 1.55;
+  }
+
+  .exp-download {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    color: var(--green);
+    text-decoration: none;
+    white-space: nowrap;
+    border: 1px solid currentColor;
+    padding: 3px 10px;
+    border-radius: 3px;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .exp-download:hover {
+    background: var(--green);
+    color: white;
+  }
+</style>
+
+<p class="exp-intro">
+  Interactive Excel simulations for exploring physics concepts — collected from various sources, some home-made. Open in Excel or Google Sheets and adjust the parameters to see the physics respond in real time.
+</p>
+
+<div class="exp-section">
+  <div class="exp-section-title">Mechanics &amp; Motion</div>
+  <ul class="exp-list">
+
+    <li class="exp-item">
+      <div class="exp-main">
+        <div class="exp-name">
+          Stopping Distances
+          <span class="exp-tag xlsx">xlsx</span>
+        </div>
+        <div class="exp-desc">Models thinking distance, braking distance, and total stopping distance as a function of speed. Good for exploring the non-linear relationship between speed and stopping distance and the effect of reaction time.</div>
+      </div>
+      <a class="exp-download" href="/assets/excelsims/Stopping_distances.xlsx">↓ Download</a>
+    </li>
+
+    <li class="exp-item">
+      <div class="exp-main">
+        <div class="exp-name">
+          Terminal Velocity — Parachute Simulation
+          <span class="exp-tag xls">xls</span>
+        </div>
+        <div class="exp-desc">Simulates a falling parachutist with adjustable mass, drag coefficient, and canopy area. Shows the approach to terminal velocity and the step-change when the parachute deploys.</div>
+      </div>
+      <a class="exp-download" href="/assets/excelsims/Terminal_velocity_parachute_simulation.xls">↓ Download</a>
+    </li>
+
+  </ul>
+</div>
+
+<div class="exp-section">
+  <div class="exp-section-title">Oscillations &amp; Waves</div>
+  <ul class="exp-list">
+
+    <li class="exp-item">
+      <div class="exp-main">
+        <div class="exp-name">
+          Spring Energy Simulation
+          <span class="exp-tag xls">xls</span>
+        </div>
+        <div class="exp-desc">Models the kinetic and potential energy of a mass on a spring through a full oscillation cycle. Useful for visualising energy exchange in SHM and verifying conservation of energy.</div>
+      </div>
+      <a class="exp-download" href="/assets/excelsims/SpringEnergySimulationResults.xls">↓ Download</a>
+    </li>
+
+    <li class="exp-item">
+      <div class="exp-main">
+        <div class="exp-name">
+          Simulated Damped Oscillations
+          <span class="exp-tag xlsx">xlsx</span>
+        </div>
+        <div class="exp-desc">Generates displacement–time curves for underdamped, critically damped, and overdamped systems. Adjustable damping constant lets students compare regimes and see how energy is lost per cycle.</div>
+      </div>
+      <a class="exp-download" href="/assets/excelsims/Simulated_damped_osc.xlsx">↓ Download</a>
+    </li>
+
+  </ul>
+</div>
+
+<div class="exp-section">
+  <div class="exp-section-title">Thermal Physics</div>
+  <ul class="exp-list">
+
+    <li class="exp-item">
+      <div class="exp-main">
+        <div class="exp-name">
+          Cooling and Insulation Simulation
+          <span class="exp-tag xls">xls</span>
+        </div>
+        <div class="exp-desc">Models Newton's law of cooling with adjustable initial temperature, ambient temperature, and cooling constant. Good for comparing insulated and uninsulated objects and fitting to real calorimetry data.</div>
+      </div>
+      <a class="exp-download" href="/assets/excelsims/CoolingSimulationResults.xls">↓ Download</a>
+    </li>
+
+  </ul>
+</div>
+
+<div class="exp-section">
+  <div class="exp-section-title">Electricity &amp; Magnetism</div>
+  <ul class="exp-list">
+
+    <li class="exp-item">
+      <div class="exp-main">
+        <div class="exp-name">
+          Coils on an Electromagnet
+          <span class="exp-tag xls">xls</span>
+        </div>
+        <div class="exp-desc">Simulates the magnetic field strength of a solenoid as the number of turns and current are varied. Useful for exploring the relationship B ∝ nI and the effect of a ferromagnetic core.</div>
+      </div>
+      <a class="exp-download" href="/assets/excelsims/ElectromagnetSimulationResults.xls">↓ Download</a>
+    </li>
+
+  </ul>
+</div>
+
+<div class="exp-section">
+  <div class="exp-section-title">Nuclear Physics &amp; Radioactivity</div>
+  <ul class="exp-list">
+
+    <li class="exp-item">
+      <div class="exp-main">
+        <div class="exp-name">
+          Half-Life Simulation
+          <span class="exp-tag xls">xls</span>
+        </div>
+        <div class="exp-desc">Models exponential radioactive decay with adjustable decay constant. Plots both N vs t and ln(N) vs t so students can extract the half-life graphically and confirm the exponential relationship.</div>
+      </div>
+      <a class="exp-download" href="/assets/excelsims/Half-life_simulation.xls">↓ Download</a>
+    </li>
+
+    <li class="exp-item">
+      <div class="exp-main">
+        <div class="exp-name">
+          Integer Dice Decay
+          <span class="exp-tag xls">xls</span>
+        </div>
+        <div class="exp-desc">A spreadsheet analogue of the classic dice experiment — each row represents a "throw" that removes a fixed fraction of remaining nuclei. Demonstrates how random individual events produce smooth exponential decay in aggregate.</div>
+      </div>
+      <a class="exp-download" href="/assets/excelsims/Integer_Dice_Decay.xls">↓ Download</a>
+    </li>
+
+    <li class="exp-item">
+      <div class="exp-main">
+        <div class="exp-name">
+          Decay Series Simulation
+          <span class="exp-tag xlsx">xlsx</span>
+        </div>
+        <div class="exp-desc">Simulates a chain of radioactive decays (parent → daughter → granddaughter), showing how each nuclide's activity grows and falls over time. Useful for discussing secular equilibrium and decay chains like uranium-238.</div>
+      </div>
+      <a class="exp-download" href="/assets/excelsims/Decay_series_simulation.xlsx">↓ Download</a>
+    </li>
+
+    <li class="exp-item">
+      <div class="exp-main">
+        <div class="exp-name">
+          Radioactive Background Exposure Charts
+          <span class="exp-tag xlsx">xlsx</span>
+        </div>
+        <div class="exp-desc">Charts showing the sources and proportions of background radiation exposure. Good for contextualising dose and discussing natural vs artificial sources in a radiation hazard lesson.</div>
+      </div>
+      <a class="exp-download" href="/assets/excelsims/Radioactive_background_exposure_charts.xlsx">↓ Download</a>
+    </li>
+
+    <li class="exp-item">
+      <div class="exp-main">
+        <div class="exp-name">
+          UK Radiation Exposure Data
+          <span class="exp-tag xls">xls</span>
+        </div>
+        <div class="exp-desc">Real UK population data on annual radiation doses broken down by source. Useful for quantitative discussions of risk, dose, and the relative contributions of radon, medical, cosmic, and food sources.</div>
+      </div>
+      <a class="exp-download" href="/assets/excelsims/UK_radiation_exposure_data.xls">↓ Download</a>
+    </li>
+
+  </ul>
+</div>
+
+<div class="exp-section">
+  <div class="exp-section-title">Nuclear Structure</div>
+  <ul class="exp-list">
+
+    <li class="exp-item">
+      <div class="exp-main">
+        <div class="exp-name">
+          Binding Energy Curve (2021)
+          <span class="exp-tag xls">xls</span>
+        </div>
+        <div class="exp-desc">Plots binding energy per nucleon against mass number for a wide range of nuclides. Annotates key features — iron-56 peak, light nuclides suitable for fusion, heavy nuclides suitable for fission.</div>
+      </div>
+      <a class="exp-download" href="/assets/excelsims/Binding_energy_curve_2021.xls">↓ Download</a>
+    </li>
+
+    <li class="exp-item">
+      <div class="exp-main">
+        <div class="exp-name">
+          Binding Energy Curve (Complete)
+          <span class="exp-tag xls">xls</span>
+        </div>
+        <div class="exp-desc">A more comprehensive version of the binding energy dataset with additional nuclides and a fuller range of mass numbers. Useful for more detailed analysis or comparing specific isotopes.</div>
+      </div>
+      <a class="exp-download" href="/assets/excelsims/binding_e_curve_complete.xls">↓ Download</a>
+    </li>
+
+  </ul>
+</div>
+
+<div class="exp-section">
+  <div class="exp-section-title">Astrophysics</div>
+  <ul class="exp-list">
+
+    <li class="exp-item">
+      <div class="exp-main">
+        <div class="exp-name">
+          Radio Telescope Data
+          <span class="exp-tag xlsx">xlsx</span>
+        </div>
+        <div class="exp-desc">Signal intensity data from a radio telescope observation. Students can process the data to reconstruct a basic image or intensity map, linking to resolution, wavelength, and the principles of aperture synthesis.</div>
+      </div>
+      <a class="exp-download" href="/assets/excelsims/Radio_Telescope_data.xlsx">↓ Download</a>
+    </li>
+
+  </ul>
+</div>
