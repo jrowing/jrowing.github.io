@@ -1,9 +1,10 @@
 ---
 layout: default
-title: The Drake equation
+title: Drake Equation Explorer
 is_resource: true
-description: Are we alone?
+permalink: /resources/drake.html
 ---
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,17 +31,17 @@ description: Are we alone?
       padding: 40px 20px;
     }
 
-    .container {
+    #drake-equation-resource .container {
       max-width: 1200px;
       margin: 0 auto;
     }
 
-    .hero {
+    #drake-equation-resource .hero {
       text-align: center;
       margin-bottom: 50px;
     }
 
-    .badge {
+    #drake-equation-resource .badge {
       display: inline-block;
       padding: 10px 18px;
       border-radius: 999px;
@@ -52,13 +53,13 @@ description: Are we alone?
       margin-bottom: 20px;
     }
 
-    h1 {
+    #drake-equation-resource h1 {
       font-size: clamp(3rem, 7vw, 5rem);
       margin-bottom: 20px;
       font-weight: 900;
     }
 
-    .subtitle {
+    #drake-equation-resource .subtitle {
       max-width: 800px;
       margin: 0 auto;
       font-size: 1.15rem;
@@ -66,14 +67,14 @@ description: Are we alone?
       color: #cbd5e1;
     }
 
-    .grid {
+    #drake-equation-resource .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
       gap: 30px;
       margin-bottom: 40px;
     }
 
-    .card {
+    #drake-equation-resource .card {
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 28px;
@@ -82,12 +83,12 @@ description: Are we alone?
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
     }
 
-    .card h2 {
+    #drake-equation-resource .card h2 {
       font-size: 1.8rem;
       margin-bottom: 24px;
     }
 
-    .equation-box {
+    #drake-equation-resource .equation-box {
       background: rgba(0,0,0,0.4);
       padding: 30px;
       border-radius: 20px;
@@ -96,48 +97,48 @@ description: Are we alone?
       overflow-x: auto;
     }
 
-    .equation {
+    #drake-equation-resource .equation {
       font-size: clamp(1.5rem, 4vw, 2.5rem);
       color: #67e8f9;
       font-family: monospace;
       white-space: nowrap;
     }
 
-    .overview-text {
+    #drake-equation-resource .overview-text {
       color: #cbd5e1;
       line-height: 1.8;
       margin-bottom: 25px;
     }
 
-    .info-grid {
+    #drake-equation-resource .info-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 15px;
     }
 
-    .info-box {
+    #drake-equation-resource .info-box {
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 18px;
       padding: 18px;
     }
 
-    .info-box h3 {
+    #drake-equation-resource .info-box h3 {
       margin-bottom: 10px;
       font-size: 1rem;
     }
 
-    .info-box p {
+    #drake-equation-resource .info-box p {
       color: #94a3b8;
       font-size: 0.95rem;
       line-height: 1.5;
     }
 
-    .slider-group {
+    #drake-equation-resource .slider-group {
       margin-bottom: 28px;
     }
 
-    .slider-top {
+    #drake-equation-resource .slider-top {
       display: flex;
       justify-content: space-between;
       gap: 20px;
@@ -145,18 +146,18 @@ description: Are we alone?
       align-items: center;
     }
 
-    .slider-label {
+    #drake-equation-resource .slider-label {
       font-weight: bold;
       margin-bottom: 6px;
     }
 
-    .slider-description {
+    #drake-equation-resource .slider-description {
       font-size: 0.9rem;
       color: #94a3b8;
       line-height: 1.5;
     }
 
-    .slider-value {
+    #drake-equation-resource .slider-value {
       background: rgba(34,211,238,0.12);
       border: 1px solid rgba(34,211,238,0.25);
       color: #67e8f9;
@@ -167,7 +168,7 @@ description: Are we alone?
       font-family: monospace;
     }
 
-    input[type="range"] {
+    #drake-equation-resource input[type="range"] {
       width: 100%;
       appearance: none;
       height: 8px;
@@ -176,7 +177,7 @@ description: Are we alone?
       outline: none;
     }
 
-    input[type="range"]::-webkit-slider-thumb {
+    #drake-equation-resource input[type="range"]::-webkit-slider-thumb {
       appearance: none;
       width: 22px;
       height: 22px;
@@ -187,7 +188,7 @@ description: Are we alone?
       box-shadow: 0 0 10px rgba(103,232,249,0.7);
     }
 
-    .result-card {
+    #drake-equation-resource .result-card {
       text-align: center;
       background: rgba(6,182,212,0.1);
       border: 1px solid rgba(34,211,238,0.25);
@@ -196,7 +197,7 @@ description: Are we alone?
       box-shadow: 0 20px 40px rgba(0,0,0,0.35);
     }
 
-    .result-title {
+    #drake-equation-resource .result-title {
       letter-spacing: 4px;
       text-transform: uppercase;
       color: #67e8f9;
@@ -204,14 +205,14 @@ description: Are we alone?
       margin-bottom: 20px;
     }
 
-    .result-number {
+    #drake-equation-resource .result-number {
       font-size: clamp(3rem, 10vw, 7rem);
       font-weight: 900;
       color: #cffafe;
       margin-bottom: 20px;
     }
 
-    .result-description {
+    #drake-equation-resource .result-description {
       max-width: 800px;
       margin: 0 auto;
       color: #cbd5e1;
@@ -219,7 +220,7 @@ description: Are we alone?
       font-size: 1.05rem;
     }
 
-    footer {
+    #drake-equation-resource footer {
       text-align: center;
       color: #64748b;
       margin-top: 40px;
@@ -236,12 +237,12 @@ description: Are we alone?
     }
 
     @media (max-width: 700px) {
-      .slider-top {
+      #drake-equation-resource #drake-equation-resource .slider-top {
         flex-direction: column;
         align-items: flex-start;
       }
 
-      .slider-value {
+      #drake-equation-resource .slider-value {
         width: 100%;
       }
     }
