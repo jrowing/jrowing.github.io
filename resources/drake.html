@@ -11,17 +11,15 @@ permalink: /resources/drake.html
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Drake Equation Explorer</title>
+
   <style>
-    /* Resource-compatible scoped styles for embedding on external sites like jrowing.com */
     #drake-equation-resource * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
-    body {
-      margin: 0;
-    }
+    body { margin: 0; }
 
     #drake-equation-resource {
       font-family: Arial, Helvetica, sans-serif;
@@ -38,7 +36,7 @@ permalink: /resources/drake.html
 
     #drake-equation-resource .hero {
       text-align: center;
-      margin-bottom: 50px;
+      margin-bottom: 40px;
     }
 
     #drake-equation-resource .badge {
@@ -67,11 +65,38 @@ permalink: /resources/drake.html
       color: #cbd5e1;
     }
 
-    #drake-equation-resource .grid {
+    /* EQUATION TOP */
+    #drake-equation-resource .equation-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 28px;
+      padding: 30px;
+      margin-bottom: 25px;
+      text-align: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    #drake-equation-resource .equation {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      color: #67e8f9;
+      font-family: monospace;
+      white-space: nowrap;
+      overflow-x: auto;
+    }
+
+    /* TWO COLUMN LAYOUT */
+    #drake-equation-resource .two-col {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      grid-template-columns: 1fr 1fr;
       gap: 30px;
-      margin-bottom: 40px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      #drake-equation-resource .two-col {
+        grid-template-columns: 1fr;
+      }
     }
 
     #drake-equation-resource .card {
@@ -84,36 +109,14 @@ permalink: /resources/drake.html
     }
 
     #drake-equation-resource .card h2 {
-      font-size: 1.8rem;
-      margin-bottom: 24px;
-    }
-
-    #drake-equation-resource .equation-box {
-      background: rgba(0,0,0,0.4);
-      padding: 30px;
-      border-radius: 20px;
-      text-align: center;
-      margin-bottom: 25px;
-      overflow-x: auto;
-    }
-
-    #drake-equation-resource .equation {
-      font-size: clamp(1.5rem, 4vw, 2.5rem);
-      color: #67e8f9;
-      font-family: monospace;
-      white-space: nowrap;
+      font-size: 1.6rem;
+      margin-bottom: 20px;
     }
 
     #drake-equation-resource .overview-text {
       color: #cbd5e1;
       line-height: 1.8;
-      margin-bottom: 25px;
-    }
-
-    #drake-equation-resource .info-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
+      margin-bottom: 16px;
     }
 
     #drake-equation-resource .info-box {
@@ -121,6 +124,7 @@ permalink: /resources/drake.html
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 18px;
       padding: 18px;
+      margin-top: 14px;
     }
 
     #drake-equation-resource .info-box h3 {
@@ -134,8 +138,11 @@ permalink: /resources/drake.html
       line-height: 1.5;
     }
 
+    /* SLIDERS */
     #drake-equation-resource .slider-group {
-      margin-bottom: 28px;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
 
     #drake-equation-resource .slider-top {
@@ -148,53 +155,52 @@ permalink: /resources/drake.html
 
     #drake-equation-resource .slider-label {
       font-weight: bold;
-      margin-bottom: 6px;
+      font-size: 0.95rem;
     }
 
     #drake-equation-resource .slider-description {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: #94a3b8;
-      line-height: 1.5;
     }
 
     #drake-equation-resource .slider-value {
       background: rgba(34,211,238,0.12);
       border: 1px solid rgba(34,211,238,0.25);
       color: #67e8f9;
-      padding: 10px 16px;
+      padding: 8px 12px;
       border-radius: 999px;
-      min-width: 90px;
+      min-width: 80px;
       text-align: center;
       font-family: monospace;
     }
 
     #drake-equation-resource input[type="range"] {
       width: 100%;
-      appearance: none;
       height: 8px;
       border-radius: 999px;
       background: #1e293b;
+      appearance: none;
       outline: none;
     }
 
     #drake-equation-resource input[type="range"]::-webkit-slider-thumb {
       appearance: none;
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       background: #67e8f9;
       cursor: pointer;
-      border: none;
       box-shadow: 0 0 10px rgba(103,232,249,0.7);
     }
 
+    /* RESULT */
     #drake-equation-resource .result-card {
       text-align: center;
       background: rgba(6,182,212,0.1);
       border: 1px solid rgba(34,211,238,0.25);
       border-radius: 32px;
       padding: 50px 20px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+      margin-top: 30px;
     }
 
     #drake-equation-resource .result-title {
@@ -212,229 +218,154 @@ permalink: /resources/drake.html
       margin-bottom: 20px;
     }
 
-    #drake-equation-resource .result-description {
-      max-width: 800px;
-      margin: 0 auto;
-      color: #cbd5e1;
-      line-height: 1.8;
-      font-size: 1.05rem;
-    }
-
     #drake-equation-resource footer {
       text-align: center;
       color: #64748b;
       margin-top: 40px;
       font-size: 0.9rem;
     }
-
-    #drake-equation-resource input[type="range"]::-moz-range-thumb {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #67e8f9;
-      cursor: pointer;
-      border: none;
-    }
-
-    @media (max-width: 700px) {
-      #drake-equation-resource #drake-equation-resource .slider-top {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      #drake-equation-resource .slider-value {
-        width: 100%;
-      }
-    }
   </style>
 </head>
+
 <body>
-  <div id="drake-equation-resource">
-    <div class="container">
+<div id="drake-equation-resource">
+  <div class="container">
+
     <section class="hero">
       <div class="badge">Astrobiology Explorer</div>
       <h1>Drake Equation</h1>
       <p class="subtitle">
-        The Drake Equation is a probabilistic formula proposed by astronomer Frank Drake in 1961 to estimate the number of active, communicative extraterrestrial civilizations in the Milky Way galaxy.
+        Estimating communicative civilizations in the Milky Way.
       </p>
     </section>
 
-    <section class="grid">
-      <div class="card">
-        <h2>Equation Overview</h2>
+    <!-- EQUATION TOP -->
+    <div class="equation-card">
+      <div class="equation">N = R* × fp × ne × fl × fi × fc × L</div>
+    </div>
 
-        <div class="equation-box">
-          <div class="equation">
-            N = R* × fp × ne × fl × fi × fc × L
-          </div>
-        </div>
+    <!-- TWO COLUMN LAYOUT -->
+    <section class="two-col">
+
+      <!-- LEFT: OVERVIEW -->
+      <div class="card">
+        <h2>Overview</h2>
 
         <p class="overview-text">
-          Each variable represents a stage in the development of intelligent and detectable civilizations. Since many of these values remain uncertain, the Drake Equation is used as both a scientific framework and a thought experiment about life in the universe.
+          The Drake Equation breaks the question of extraterrestrial civilizations into a structured scientific framework that decomposes a single large unknown—how many communicative civilizations exist in the Milky Way—into a chain of measurable or estimable factors spanning astronomy, planetary science, biology, and sociology. Each term isolates a different stage in cosmic development, from star formation to the emergence of technological intelligence, allowing researchers to reason about uncertainty in a disciplined way rather than treating the problem as a single unknowable quantity.
         </p>
 
-        <div class="info-grid">
-          <div class="info-box">
-            <h3>What it Estimates</h3>
-            <p>The number of civilizations capable of communication in our galaxy.</p>
-          </div>
+        <p class="overview-text">
+          Some terms are now strongly constrained by modern observational astronomy, particularly through missions such as Kepler, Gaia, and large-scale exoplanet surveys that have transformed our understanding of planetary frequency and stellar environments. However, other terms remain deeply uncertain because they depend on processes we have only observed once—on Earth—including abiogenesis, the evolution of complex multicellular life, and the emergence of technological intelligence. This imbalance between well-measured astrophysical inputs and poorly constrained biological outcomes is central to the equation’s interpretive power.
+        </p>
 
-          <div class="info-box">
-            <h3>Why it Matters</h3>
-            <p>It combines astronomy, biology, and sociology into one equation.</p>
-          </div>
+        <p class="overview-text">
+          It is best understood as a framework for exploring uncertainty rather than producing a single definitive answer. Its primary scientific value lies in making assumptions explicit: every estimate forces the user to confront what is known from observation versus what is inferred, speculative, or entirely unknown. In this sense, the Drake Equation functions less like a predictive tool and more like a map of ignorance, highlighting where future astronomical surveys, exoplanet characterization, and origins-of-life research would most reduce uncertainty.
+        </p>
+
+        <div class="info-box">
+          <h3>What it Estimates</h3>
+          <p>The number of communicative civilizations in our galaxy, defined as technological societies capable of emitting detectable signals into space (intentional or unintentional), such as radio waves or laser emissions that could be observed across interstellar distances.</p>
+        </div>
+
+        <div class="info-box">
+          <h3>Why it Matters</h3>
+          <p>It connects astronomy, biology, and sociology into a single conceptual model, showing how cosmic structure, planetary habitability, evolutionary pathways, and technological development collectively contribute to the likelihood of detectable intelligent life.</p>
         </div>
       </div>
 
+      <!-- RIGHT: SLIDERS -->
       <div class="card">
         <h2>Interactive Calculator</h2>
-
         <div id="sliders"></div>
       </div>
+
     </section>
 
+    <!-- RESULT -->
     <section class="result-card">
-      <div class="result-title">Estimated Communicative Civilizations</div>
-
+      <div class="result-title">Estimated Civilizations</div>
       <div class="result-number" id="resultNumber">0</div>
-
       <p class="result-description">
-        Based on your chosen parameters, the Drake Equation estimates approximately
-        <strong id="resultText">0</strong>
-        civilizations in the Milky Way that may currently be capable of communication.
+        <strong id="resultText">0</strong> civilizations estimated.
       </p>
     </section>
 
-    <footer>
-      Inspired by the original Drake Equation proposed by astronomer Frank Drake.
-    </footer>
-    </div>
+    <footer>Inspired by Frank Drake.</footer>
+
   </div>
+</div>
 
-  <script>
-    (function() {
-    const variables = [
-      {
-        key: 'R',
-        label: 'R* — Star Formation Rate',
-        min: 0,
-        max: 20,
-        step: 0.1,
-        value: 2,
-        description: 'Average number of new stars formed each year in the Milky Way.'
-      },
-      {
-        key: 'fp',
-        label: 'fp — Fraction with Planets',
-        min: 0,
-        max: 1,
-        step: 0.01,
-        value: 0.5,
-        description: 'Fraction of stars that have planetary systems.'
-      },
-      {
-        key: 'ne',
-        label: 'ne — Habitable Planets per System',
-        min: 0,
-        max: 10,
-        step: 0.1,
-        value: 2,
-        description: 'Average number of planets that could support life.'
-      },
-      {
-        key: 'fl',
-        label: 'fl — Fraction Where Life Appears',
-        min: 0,
-        max: 1,
-        step: 0.01,
-        value: 0.33,
-        description: 'Fraction of habitable planets where life actually emerges.'
-      },
-      {
-        key: 'fi',
-        label: 'fi — Fraction Developing Intelligence',
-        min: 0,
-        max: 1,
-        step: 0.001,
-        value: 0.01,
-        description: 'Fraction of life-bearing worlds that evolve intelligent life.'
-      },
-      {
-        key: 'fc',
-        label: 'fc — Detectable Civilizations',
-        min: 0,
-        max: 1,
-        step: 0.01,
-        value: 0.1,
-        description: 'Fraction of intelligent civilizations that release detectable signals.'
-      },
-      {
-        key: 'L',
-        label: 'L — Civilization Lifetime',
-        min: 1,
-        max: 100000,
-        step: 100,
-        value: 1000,
-        description: 'How long civilizations emit detectable signals (years).'
-      }
-    ];
-
-    const slidersContainer = document.getElementById('sliders');
-
-    variables.forEach(variable => {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'slider-group';
-
-      wrapper.innerHTML = `
-        <div class="slider-top">
-          <div>
-            <div class="slider-label">${variable.label}</div>
-            <div class="slider-description">${variable.description}</div>
-          </div>
-          <div class="slider-value" id="${variable.key}-value">${variable.value}</div>
-        </div>
-
-        <input
-          type="range"
-          id="${variable.key}"
-          min="${variable.min}"
-          max="${variable.max}"
-          step="${variable.step}"
-          value="${variable.value}"
-        />
-      `;
-
-      slidersContainer.appendChild(wrapper);
-    });
-
-    function calculateDrakeEquation() {
-      let result = 1;
-
-      variables.forEach(variable => {
-        const slider = document.getElementById(variable.key);
-        const value = parseFloat(slider.value);
-
-        document.getElementById(`${variable.key}-value`).textContent = value.toLocaleString();
-
-        result *= value;
-      });
-
-      const formatted = result.toLocaleString(undefined, {
-        maximumFractionDigits: 2
-      });
-
-      document.getElementById('resultNumber').textContent = formatted;
-      document.getElementById('resultText').textContent = formatted;
+<script>
+(function() {
+  const variables = [
+    { key:'R', label:'R* — Star Formation Rate', min:0,max:20,step:0.1,value:2,
+      description:'Average number of new stars formed per year in the Milky Way.',
+      source:'Estimated ~1–3 solar-mass stars/year in the Milky Way based on infrared and H-alpha surveys of star formation regions. Commonly cited in galactic astronomy literature (e.g. Licquia & Newman 2015, The Astrophysical Journal). This reflects present-day measurements of star formation efficiency across spiral arms.'
+    },
+    { key:'fp', label:'fp — Fraction with Planets', min:0,max:1,step:0.01,value:0.5,
+      description:'Fraction of stars that host planetary systems.',
+      source:'Exoplanet surveys (especially NASA Kepler mission) indicate that planets are extremely common. Current estimates suggest fp may be close to 1.0 for most stellar types, supported by statistical analyses of transit detections (e.g. Petigura et al. 2013; NASA Exoplanet Archive).' 
+    },
+    { key:'ne', label:'ne — Habitable Planets per System', min:0,max:10,step:0.1,value:2,
+      description:'Average number of potentially habitable (Earth-like) planets per planetary system.',
+      source:'Derived from Kepler-era exoplanet statistics estimating the frequency of Earth-size planets in the habitable zone of Sun-like stars. Depending on definition of “habitable zone,” values range from ~0.1 to >2 per system in optimistic models.'
+    },
+    { key:'fl', label:'fl — Life Emerges', min:0,max:1,step:0.01,value:0.33,
+      description:'Fraction of habitable planets where life actually arises.',
+      source:'Highly uncertain parameter. Earth provides the only known example, where life emerged relatively early (~3.5–4 billion years ago). Some interpretations argue this suggests abiogenesis may not be extremely rare, but no direct empirical constraints exist (see Lineweaver & Davis 2002 discussions).'
+    },
+    { key:'fi', label:'fi — Intelligence', min:0,max:1,step:0.001,value:0.01,
+      description:'Fraction of life-bearing planets that evolve intelligent life.',
+      source:'Extremely uncertain due to single-data-point problem (Earth). Complex intelligence arose only once in known history, making this term highly speculative. Estimates vary by orders of magnitude depending on assumptions about evolutionary convergence.'
+    },
+    { key:'fc', label:'fc — Detectable Signals', min:0,max:1,step:0.01,value:0.1,
+      description:'Fraction of intelligent civilizations that produce detectable technology.',
+      source:'SETI-based assumption about technological communication (radio, laser, etc.). On Earth, detectable radio leakage is relatively recent (~100 years), suggesting detectability may be a short phase unless deliberately maintained.'
+    },
+    { key:'L', label:'L — Lifetime (years)', min:1,max:100000,step:100,value:1000,
+      description:'Duration a civilization emits detectable signals.',
+      source:'Often considered the most influential and uncertain term in SETI modeling. A default of ~1,000 years is used in educational examples as a conservative midpoint between short technological lifetimes and long-lived civilizations.'
     }
+  ];
 
-    variables.forEach(variable => {
-      document
-        .getElementById(variable.key)
-        .addEventListener('input', calculateDrakeEquation);
+  const sliders = document.getElementById('sliders');
+
+  function calc() {
+    let n = 1;
+    variables.forEach(v => {
+      const el = document.getElementById(v.key);
+      const val = parseFloat(el.value);
+      document.getElementById(v.key+'-value').textContent = val;
+      n *= val;
     });
+    document.getElementById('resultNumber').textContent = n.toFixed(2);
+    document.getElementById('resultText').textContent = n.toFixed(2);
+  }
 
-    calculateDrakeEquation();
-    })();
-  </script>
+  variables.forEach(v => {
+    const el = document.createElement('div');
+    el.className='slider-group';
+    el.innerHTML = `
+      <div class="slider-top">
+        <div>
+          <div class="slider-label">${v.label}</div>
+          <div class="slider-description">${v.description}</div>
+        </div>
+        <div class="slider-value" id="${v.key}-value">${v.value}</div>
+      </div>
+      <input type="range" id="${v.key}" min="${v.min}" max="${v.max}" step="${v.step}" value="${v.value}">
+      <div class="info-box"><p>${v.source}</p></div>
+    `;
+    sliders.appendChild(el);
+  });
+
+  variables.forEach(v => {
+    document.getElementById(v.key).addEventListener('input', calc);
+  });
+
+  calc();
+})();
+</script>
 </body>
 </html>
