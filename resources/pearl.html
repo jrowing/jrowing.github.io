@@ -1,29 +1,9 @@
 ---
 layout: default
-title: 365 Pearls
-is_resource: true
-description: Some reflections on teaching
+title: A Pearl of Physics Teaching Wisdom
+permalink: /pearl/
+isresource: true
 ---
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A Pearl of Physics Teaching Wisdom</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-<style>
-  body {
-    margin: 0;
-    background: #fff;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  }
-</style>
-</head>
-<body>
-
 
 <style>
   /* All styles scoped under .pearl-page so they don't leak into the blog */
@@ -47,25 +27,6 @@ description: Some reflections on teaching
   /* If the user's blog already provides a max-width container, this still looks ok */
   .pearl-page * {
     box-sizing: border-box;
-  }
-
-  .pearl-page .meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 1.5rem;
-    font-size: 0.9rem;
-    color: var(--soft-gray);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  .pearl-page .meta .date {
-    font-weight: 600;
-    color: var(--pearl-blue);
-    font-size: 1rem;
-    text-transform: none;
-    letter-spacing: 0;
   }
 
   .pearl-page .pearl {
@@ -219,16 +180,11 @@ description: Some reflections on teaching
 </style>
 
 <article class="pearl-page" aria-labelledby="pearl-heading">
-  <div class="meta">
-    <span class="day-number" id="day-number">Day —</span>
-    <span class="date" id="date">—</span>
-  </div>
-
   <h1 id="pearl-heading" class="visually-hidden" style="position:absolute;left:-9999px;">A Pearl of Physics Teaching Wisdom</h1>
 
   <blockquote class="pearl" id="pearl">Loading…</blockquote>
 
-  <div class="attribution">— 365 Pearls of Physics Teaching Wisdom</div>
+  <div class="attribution" id="attribution">— Pearl —</div>
 
   <div class="reflection-block">
     <div class="reflection-label">Reflection</div>
@@ -265,8 +221,7 @@ description: Some reflections on teaching
   var pearls = JSON.parse(dataEl.textContent);
 
   // Elements
-  var dayEl = document.getElementById('day-number');
-  var dateEl = document.getElementById('date');
+  var attributionEl = document.getElementById('attribution');
   var pearlEl = document.getElementById('pearl');
   var reflectionEl = document.getElementById('reflection');
   var expositionEl = document.getElementById('exposition');
@@ -309,8 +264,7 @@ description: Some reflections on teaching
   }
 
   function render(entry) {
-    dayEl.textContent = 'Day ' + entry.day + ' of 365';
-    dateEl.textContent = entry.date;
+    attributionEl.textContent = '— Pearl ' + entry.day + ' of 365';
     pearlEl.textContent = entry.pearl;
     reflectionEl.textContent = entry.reflection;
     expositionEl.textContent = entry.exposition;
@@ -366,6 +320,3 @@ description: Some reflections on teaching
   render(initial);
 })();
 </script>
-
-</body>
-</html>
