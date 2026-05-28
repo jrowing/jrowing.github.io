@@ -26,17 +26,17 @@ permalink: /resources/drake.html
       background: linear-gradient(to bottom, #020617, #0f172a, #000000);
       color: white;
       min-height: 100vh;
-      padding: 40px 20px;
+      padding: 40px 20px 60px;
     }
 
     #drake-equation-resource .container {
-      max-width: 1200px;
+      max-width: 1000px;
       margin: 0 auto;
     }
 
     #drake-equation-resource .hero {
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 36px;
     }
 
     #drake-equation-resource .badge {
@@ -65,47 +65,14 @@ permalink: /resources/drake.html
       color: #cbd5e1;
     }
 
-    /* EQUATION TOP */
-    #drake-equation-resource .equation-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 28px;
-      padding: 30px;
-      margin-bottom: 25px;
-      text-align: center;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    }
-
-    #drake-equation-resource .equation {
-      font-size: clamp(1.5rem, 4vw, 2.5rem);
-      color: #67e8f9;
-      font-family: monospace;
-      white-space: nowrap;
-      overflow-x: auto;
-    }
-
-    /* TWO COLUMN LAYOUT */
-    #drake-equation-resource .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 30px;
-      align-items: start;
-    }
-
-    @media (max-width: 900px) {
-      #drake-equation-resource .two-col {
-        grid-template-columns: 1fr;
-      }
-    }
-
     #drake-equation-resource .card {
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 28px;
-      padding: 30px;
+      padding: 34px;
       backdrop-filter: blur(12px);
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      margin-bottom: 25px;
     }
 
     #drake-equation-resource .card h2 {
@@ -119,12 +86,22 @@ permalink: /resources/drake.html
       margin-bottom: 16px;
     }
 
+    #drake-equation-resource .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 700px) {
+      #drake-equation-resource .info-grid { grid-template-columns: 1fr; }
+    }
+
     #drake-equation-resource .info-box {
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 18px;
       padding: 18px;
-      margin-top: 14px;
     }
 
     #drake-equation-resource .info-box h3 {
@@ -138,11 +115,83 @@ permalink: /resources/drake.html
       line-height: 1.5;
     }
 
+    /* STICKY FLOATING EQUATION */
+    #drake-equation-resource .equation-wrap {
+      position: sticky;
+      top: 12px;
+      z-index: 50;
+      margin-bottom: 25px;
+    }
+
+    #drake-equation-resource .equation-card {
+      background: rgba(8,15,35,0.82);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      padding: 22px 26px;
+      text-align: center;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+    }
+
+    #drake-equation-resource .equation {
+      font-size: clamp(1.4rem, 4vw, 2.4rem);
+      font-family: monospace;
+      white-space: nowrap;
+      overflow-x: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35em;
+      padding-bottom: 4px;
+    }
+
+    #drake-equation-resource .eq-term {
+      color: #94a3b8;
+      padding: 2px 8px;
+      border-radius: 10px;
+      transition: all 0.25s ease;
+      border: 1px solid transparent;
+    }
+
+    #drake-equation-resource .eq-op {
+      color: #475569;
+      font-size: 0.7em;
+    }
+
+    #drake-equation-resource .eq-result {
+      color: #cffafe;
+      font-weight: 900;
+    }
+
+    #drake-equation-resource .eq-term.active {
+      color: #022c33;
+      background: #67e8f9;
+      border-color: #67e8f9;
+      box-shadow: 0 0 18px rgba(103,232,249,0.7);
+      transform: translateY(-2px) scale(1.08);
+    }
+
+    #drake-equation-resource .eq-live {
+      margin-top: 8px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: #67e8f9;
+      min-height: 1.2em;
+    }
+
     /* SLIDERS */
     #drake-equation-resource .slider-group {
       margin-bottom: 20px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: all 0.25s ease;
+    }
+
+    #drake-equation-resource .slider-group.active {
+      border-color: rgba(103,232,249,0.45);
+      background: rgba(34,211,238,0.06);
+      box-shadow: 0 0 22px rgba(34,211,238,0.12);
     }
 
     #drake-equation-resource .slider-top {
@@ -161,6 +210,7 @@ permalink: /resources/drake.html
     #drake-equation-resource .slider-description {
       font-size: 0.85rem;
       color: #94a3b8;
+      margin-top: 2px;
     }
 
     #drake-equation-resource .slider-value {
@@ -172,6 +222,7 @@ permalink: /resources/drake.html
       min-width: 80px;
       text-align: center;
       font-family: monospace;
+      flex-shrink: 0;
     }
 
     #drake-equation-resource input[type="range"] {
@@ -180,10 +231,12 @@ permalink: /resources/drake.html
       border-radius: 999px;
       background: #1e293b;
       appearance: none;
+      -webkit-appearance: none;
       outline: none;
     }
 
     #drake-equation-resource input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
       appearance: none;
       width: 20px;
       height: 20px;
@@ -193,6 +246,29 @@ permalink: /resources/drake.html
       box-shadow: 0 0 10px rgba(103,232,249,0.7);
     }
 
+    #drake-equation-resource input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border: none;
+      border-radius: 50%;
+      background: #67e8f9;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(103,232,249,0.7);
+    }
+
+    #drake-equation-resource .source-box {
+      background: rgba(255,255,255,0.04);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-top: 12px;
+    }
+
+    #drake-equation-resource .source-box p {
+      color: #94a3b8;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
     /* RESULT */
     #drake-equation-resource .result-card {
       text-align: center;
@@ -200,7 +276,6 @@ permalink: /resources/drake.html
       border: 1px solid rgba(34,211,238,0.25);
       border-radius: 32px;
       padding: 50px 20px;
-      margin-top: 30px;
     }
 
     #drake-equation-resource .result-title {
@@ -215,8 +290,10 @@ permalink: /resources/drake.html
       font-size: clamp(3rem, 10vw, 7rem);
       font-weight: 900;
       color: #cffafe;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
+
+    #drake-equation-resource .result-description { color: #cbd5e1; }
 
     #drake-equation-resource footer {
       text-align: center;
@@ -239,30 +316,23 @@ permalink: /resources/drake.html
       </p>
     </section>
 
-    <!-- EQUATION TOP -->
-    <div class="equation-card">
-      <div class="equation">N = R* × fp × ne × fl × fi × fc × L</div>
-    </div>
+    <!-- EXPLANATION FIRST (full width, top) -->
+    <div class="card">
+      <h2>Overview</h2>
 
-    <!-- TWO COLUMN LAYOUT -->
-    <section class="two-col">
+      <p class="overview-text">
+        How many civilizations in the Milky Way could we actually detect? It's an impossibly large question to answer all at once. The Drake Equation makes it tractable by breaking it into a chain of smaller factors—each one a separate stage in cosmic development, from how often stars form to how often intelligence eventually builds something we could hear. Multiply them together and you get an estimate; change any single factor and you can see exactly how much it matters.
+      </p>
 
-      <!-- LEFT: OVERVIEW -->
-      <div class="card">
-        <h2>Overview</h2>
+      <p class="overview-text">
+        Some of these factors now rest on solid ground. Missions like Kepler and Gaia have shown that planets are common and mapped the kinds of stars they orbit, pinning down the early terms with real data. Others remain almost pure guesswork, because they hinge on events we have only ever seen happen once: life beginning, complex life evolving, and a species developing technology. That gap—between what we have measured and what we can only imagine—is the heart of the equation.
+      </p>
 
-        <p class="overview-text">
-          The Drake Equation breaks the question of extraterrestrial civilizations into a structured scientific framework that decomposes a single large unknown—how many communicative civilizations exist in the Milky Way—into a chain of measurable or estimable factors spanning astronomy, planetary science, biology, and sociology. Each term isolates a different stage in cosmic development, from star formation to the emergence of technological intelligence, allowing researchers to reason about uncertainty in a disciplined way rather than treating the problem as a single unknowable quantity.
-        </p>
+      <p class="overview-text">
+        So it's better to treat this as a tool for thinking than a way to get a final number. Its real value is that it forces every assumption into the open: each slider below makes you decide what you believe and why. Less a crystal ball than a map of what we don't yet know, it points to exactly where better telescopes and origin-of-life research would tell us the most.
+      </p>
 
-        <p class="overview-text">
-          Some terms are now strongly constrained by modern observational astronomy, particularly through missions such as Kepler, Gaia, and large-scale exoplanet surveys that have transformed our understanding of planetary frequency and stellar environments. However, other terms remain deeply uncertain because they depend on processes we have only observed once—on Earth—including abiogenesis, the evolution of complex multicellular life, and the emergence of technological intelligence. This imbalance between well-measured astrophysical inputs and poorly constrained biological outcomes is central to the equation’s interpretive power.
-        </p>
-
-        <p class="overview-text">
-          It is best understood as a framework for exploring uncertainty rather than producing a single definitive answer. Its primary scientific value lies in making assumptions explicit: every estimate forces the user to confront what is known from observation versus what is inferred, speculative, or entirely unknown. In this sense, the Drake Equation functions less like a predictive tool and more like a map of ignorance, highlighting where future astronomical surveys, exoplanet characterization, and origins-of-life research would most reduce uncertainty.
-        </p>
-
+      <div class="info-grid">
         <div class="info-box">
           <h3>What it Estimates</h3>
           <p>The number of communicative civilizations in our galaxy, defined as technological societies capable of emitting detectable signals into space (intentional or unintentional), such as radio waves or laser emissions that could be observed across interstellar distances.</p>
@@ -273,14 +343,37 @@ permalink: /resources/drake.html
           <p>It connects astronomy, biology, and sociology into a single conceptual model, showing how cosmic structure, planetary habitability, evolutionary pathways, and technological development collectively contribute to the likelihood of detectable intelligent life.</p>
         </div>
       </div>
+    </div>
 
-      <!-- RIGHT: SLIDERS -->
-      <div class="card">
-        <h2>Interactive Calculator</h2>
-        <div id="sliders"></div>
+    <!-- STICKY FLOATING EQUATION -->
+    <div class="equation-wrap">
+      <div class="equation-card">
+        <div class="equation" id="equation">
+          <span class="eq-result">N</span>
+          <span class="eq-op">=</span>
+          <span class="eq-term" data-key="R">R*</span>
+          <span class="eq-op">×</span>
+          <span class="eq-term" data-key="fp">fp</span>
+          <span class="eq-op">×</span>
+          <span class="eq-term" data-key="ne">ne</span>
+          <span class="eq-op">×</span>
+          <span class="eq-term" data-key="fl">fl</span>
+          <span class="eq-op">×</span>
+          <span class="eq-term" data-key="fi">fi</span>
+          <span class="eq-op">×</span>
+          <span class="eq-term" data-key="fc">fc</span>
+          <span class="eq-op">×</span>
+          <span class="eq-term" data-key="L">L</span>
+        </div>
+        <div class="eq-live" id="eqLive"></div>
       </div>
+    </div>
 
-    </section>
+    <!-- CALCULATOR -->
+    <div class="card">
+      <h2>Interactive Calculator</h2>
+      <div id="sliders"></div>
+    </div>
 
     <!-- RESULT -->
     <section class="result-card">
@@ -305,7 +398,7 @@ permalink: /resources/drake.html
     },
     { key:'fp', label:'fp — Fraction with Planets', min:0,max:1,step:0.01,value:0.5,
       description:'Fraction of stars that host planetary systems.',
-      source:'Exoplanet surveys (especially NASA Kepler mission) indicate that planets are extremely common. Current estimates suggest fp may be close to 1.0 for most stellar types, supported by statistical analyses of transit detections (e.g. Petigura et al. 2013; NASA Exoplanet Archive).' 
+      source:'Exoplanet surveys (especially NASA Kepler mission) indicate that planets are extremely common. Current estimates suggest fp may be close to 1.0 for most stellar types, supported by statistical analyses of transit detections (e.g. Petigura et al. 2013; NASA Exoplanet Archive).'
     },
     { key:'ne', label:'ne — Habitable Planets per System', min:0,max:10,step:0.1,value:2,
       description:'Average number of potentially habitable (Earth-like) planets per planetary system.',
@@ -330,22 +423,44 @@ permalink: /resources/drake.html
   ];
 
   const sliders = document.getElementById('sliders');
+  const eqLive = document.getElementById('eqLive');
+  let highlightTimer = null;
+
+  function highlight(key) {
+    document.querySelectorAll('#drake-equation-resource .eq-term').forEach(t => {
+      t.classList.toggle('active', t.dataset.key === key);
+    });
+    document.querySelectorAll('#drake-equation-resource .slider-group').forEach(g => {
+      g.classList.toggle('active', g.dataset.key === key);
+    });
+    clearTimeout(highlightTimer);
+    highlightTimer = setTimeout(clearHighlight, 1400);
+  }
+
+  function clearHighlight() {
+    document.querySelectorAll('#drake-equation-resource .eq-term.active, #drake-equation-resource .slider-group.active')
+      .forEach(el => el.classList.remove('active'));
+  }
 
   function calc() {
     let n = 1;
+    const parts = [];
     variables.forEach(v => {
       const el = document.getElementById(v.key);
       const val = parseFloat(el.value);
       document.getElementById(v.key+'-value').textContent = val;
+      parts.push(val);
       n *= val;
     });
+    eqLive.textContent = parts.join(' × ') + ' = ' + n.toFixed(2);
     document.getElementById('resultNumber').textContent = n.toFixed(2);
     document.getElementById('resultText').textContent = n.toFixed(2);
   }
 
   variables.forEach(v => {
     const el = document.createElement('div');
-    el.className='slider-group';
+    el.className = 'slider-group';
+    el.dataset.key = v.key;
     el.innerHTML = `
       <div class="slider-top">
         <div>
@@ -355,13 +470,15 @@ permalink: /resources/drake.html
         <div class="slider-value" id="${v.key}-value">${v.value}</div>
       </div>
       <input type="range" id="${v.key}" min="${v.min}" max="${v.max}" step="${v.step}" value="${v.value}">
-      <div class="info-box"><p>${v.source}</p></div>
+      <div class="source-box"><p>${v.source}</p></div>
     `;
     sliders.appendChild(el);
   });
 
   variables.forEach(v => {
-    document.getElementById(v.key).addEventListener('input', calc);
+    const input = document.getElementById(v.key);
+    input.addEventListener('input', () => { highlight(v.key); calc(); });
+    input.addEventListener('focus', () => highlight(v.key));
   });
 
   calc();
