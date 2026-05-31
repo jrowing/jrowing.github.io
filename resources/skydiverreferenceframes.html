@@ -259,6 +259,7 @@ description: They don't fall up...
         transform: translateX(-50%) !important;
         font-size: 40px !important;
         line-height: 1 !important;
+        top: 85px; /* Locked down explicit initial position */
     }
 
     .sky-lab-sandbox .render-cloud-element {
@@ -374,8 +375,7 @@ description: They don't fall up...
             camClouds = [];
             cloudContainer.innerHTML = ''; 
             for (let i = 0; i < NUM_CAM_CLOUDS; i++) {
-                // Distribute cloud initial values vertically to prevent clumping/overlapping layout glitch
-                let cloudData = createCloud(40 + (i * 45)); 
+                let cloudData = createCloud(30 + (i * 40)); 
                 let cloudEl = document.createElement('div');
                 cloudEl.className = 'render-cloud-element';
                 cloudEl.style.width = cloudData.width + 'px';
@@ -552,6 +552,12 @@ description: They don't fall up...
             renderStatic();
         }
 
+        // Initialize state fields explicitly, then execute a complete full layout sync once the document object is parsed
+        document.addEventListener("DOMContentLoaded", function() {
+            resetSim();
+        });
+        
+        // Fail-safe manual sync if Jekyll context loads script out-of-order
         initCameraClouds();
         renderStatic();
     })();
