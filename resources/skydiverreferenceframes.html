@@ -518,6 +518,601 @@ description: They don't fall up...
             camJumperElem.innerText = isDeployed ? "🪂" : "🧍";
 
             if (isDeployed && relativeSpeedDelta > 10) {
+                document.getElementById('expText').innerHTML = `<strong>Analyzing Perspective:</strong> The jumper seems to shoot UP on the right screen because the camera operator is falling ${Math.round(relativeSpeedDelta)} mph faster. In the True Earth view, they are both falling down. (Current Flow: ${timeScale}x)`;
+            }
+
+            animationFrameId = requestAnimationFrame(update);
+        }
+
+        window.startSim = function() {
+            if (isRunning) return;
+            isRunning = true;
+            currentJumperMph = terminalMph;
+            currentCameraMph = terminalMph;
+            
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('deployBtn').disabled = false;
+            document.getElementById('recDot').classList.add('blinking');
+            document.getElementById('recText').innerText = "LIVE HD REC";
+            document.getElementById('expText').innerHTML = `Tracking steadily at 120 mph terminal velocity. Match speed is zero delta. Drag the slider to slow down execution time, then click <strong>PULL PARACHUTE</strong>!`;
+            
+            update();
+        }
+
+        window.deployParachute = function() {
+            isDeployed = true;
+            document.getElementById('deployBtn').disabled = true;
+        }
+
+        window.adjustSimSpeed = function(val) {
+            timeScale = parseFloat(val);
+            let displayLabel = val + "x";
+            if (timeScale === 1.0) displayLabel += " (Real-time)";
+            else if (timeScale < 0.4) displayLabel += " (Extreme Slow-Mo)";
+            else if (timeScale < 1.0) displayLabel += " (Slow-Mo)";
+            
+            document.getElementById('sliderVal').innerText = displayLabel;
+        }
+
+        window.resetSim = function() {
+            cancelAnimationFrame(animationFrameId);
+            isRunning = false;
+            isDeployed = false;
+            
+            jumperY = 60;
+            cameraY = 60;
+            currentJumperMph = 0;
+            currentCameraMph = 0;
+            
+            initCameraClouds();
+
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('deployBtn').disabled = true;
+            
+            document.getElementById('speedJumper').innerText = "0";
+            document.getElementById('speedCamera').innerText = "0";
+            document.getElementById('speedRel').innerText = "0";
+            
+            document.getElementById('recDot').classList.remove('blinking');
+            document.getElementById('recText').innerText = "STANDBY";
+            document.getElementById('camJumper').style.top = '95px';
+            document.getElementById('camJumper').innerText = "🧍";
+            
+            document.getElementById('expText').innerHTML = "Engage the <strong>START SIMULATION</strong> system matrix to begin.";
+            
+            renderStatic();
+        }
+
+        initCameraClouds();
+        renderStatic();
+    })();
+</script>---
+layout: default
+title: Skydiving frames of reference
+is_resource: true
+description: They don't fall up...
+---
+
+<style>
+    /* 1. Reset & Scope Isolation to protect against theme bleeding */
+    .lab-sandbox * {
+        box-sizing: border-box !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    .lab-sandbox {
+        --bg-color: #0f172a;
+        --card-bg: #1e293b;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --accent-blue: #38bdf8;
+        --accent-green: #4ade80;
+        --accent-red: #f43f5e;
+        --border-color: rgba(255, 255, 255, 0.1);
+
+        font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif !important;
+        background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%) !important;
+        color: var(--text-main) !important;
+        padding: 30px 20px !important;
+        border-radius: 16px !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+        max-width: 1000px !important;
+        margin: 30px auto !important; /* Centers the app beautifully in your content block */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* 2. Typography Resets */
+    .lab-sandbox h1, .lab-sandbox h3 {
+        font-family: 'Segoe UI', sans-serif !important;
+        text-transform: none !important;
+        letter-spacing: normal !important;
+    }
+
+    .lab-sandbox h1 {
+        font-size: 2rem !important;
+        font-weight: 800 !important;
+        margin-bottom: 8px !important;
+        background: linear-gradient(to right, #38bdf8, #818cf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center !important;
+        line-height: 1.2 !important;
+        border: none !important; /* Removes Jekyll theme default heading underlines */
+    }
+
+    .lab-sandbox .description {
+        max-width: 800px;
+        text-align: center;
+        margin-bottom: 30px;
+        color: var(--text-muted);
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .lab-sandbox .description strong {
+        color: var(--text-main);
+    }
+
+    /* 3. Layout Architecture */
+    .lab-sandbox .sim-container {
+        display: flex;
+        gap: 30px;
+        background: var(--card-bg);
+        padding: 25px;
+        border-radius: 14px;
+        border: 1px solid var(--border-color);
+        width: 100%;
+    }
+
+    .lab-sandbox .canvas-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
+    .lab-sandbox h3 {
+        font-size: 1.05rem !important;
+        font-weight: 600 !important;
+        color: #e2e8f0 !important;
+        margin: 0 0 15px 0 !important;
+        text-align: center !important;
+    }
+
+    .lab-sandbox canvas {
+        background: linear-gradient(to bottom, #0284c7 0%, #0ea5e9 40%, #38bdf8 100%);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        display: block;
+    }
+
+    .lab-sandbox .view-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .lab-sandbox .camera-box {
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 10px;
+        height: 260px;
+        background: linear-gradient(to bottom, #0ea5e9, #7dd3fc);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .lab-sandbox .camera-label {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: rgba(15, 23, 42, 0.85);
+        border: 1px solid var(--border-color);
+        color: #fff;
+        padding: 4px 10px;
+        font-size: 11px;
+        font-weight: bold;
+        border-radius: 4px;
+        font-family: monospace !important;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+    }
+
+    .lab-sandbox .rec-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: var(--accent-red);
+        border-radius: 50%;
+        margin-right: 6px;
+    }
+    
+    .lab-sandbox .blinking {
+        animation: labBlink 1s infinite;
+    }
+
+    @keyframes labBlink {
+        50% { opacity: 0; }
+    }
+
+    .lab-sandbox .crosshair {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 30px;
+        height: 30px;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        opacity: 0.25;
+    }
+    .lab-sandbox .crosshair::before, .lab-sandbox .crosshair::after {
+        content: '';
+        position: absolute;
+        background: white;
+    }
+    .lab-sandbox .crosshair::before { top: 14px; left: 0; width: 30px; height: 2px; }
+    .lab-sandbox .crosshair::after { top: 0; left: 14px; width: 2px; height: 30px; }
+
+    /* 4. Functional UI Modules */
+    .lab-sandbox .telemetry {
+        background: rgba(15, 23, 42, 0.4);
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
+        font-family: 'Courier New', Courier, monospace !important;
+        font-size: 14px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .lab-sandbox .telemetry div {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        padding-bottom: 6px;
+    }
+    .lab-sandbox .telemetry div.full-width {
+        grid-column: span 2;
+        border-bottom: none;
+        color: var(--accent-blue);
+        font-weight: bold;
+        padding-top: 4px;
+    }
+
+    .lab-sandbox .telemetry span {
+        font-weight: bold;
+        color: #fff;
+    }
+
+    .lab-sandbox .slider-section {
+        background: rgba(255,255,255,0.02);
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
+    }
+
+    .lab-sandbox .slider-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+    }
+
+    .lab-sandbox input[type=range] {
+        -webkit-appearance: none;
+        width: 100%;
+        background: #334155 !important;
+        border-radius: 8px;
+        height: 6px;
+        outline: none;
+    }
+
+    .lab-sandbox input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: var(--accent-blue) !important;
+        cursor: pointer;
+    }
+
+    .lab-sandbox .explanation-live {
+        font-size: 13.5px;
+        line-height: 1.6;
+        padding: 15px;
+        background: rgba(56, 189, 248, 0.08);
+        border-radius: 10px;
+        border: 1px solid rgba(56, 189, 248, 0.15);
+        color: #e0f2fe;
+        min-height: 68px;
+    }
+
+    /* 5. Control Interactivity */
+    .lab-sandbox .controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .lab-sandbox button {
+        padding: 12px 16px !important;
+        font-family: inherit !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        border: none !important;
+        border-radius: 6px !important;
+        cursor: pointer !important;
+        transition: opacity 0.2s, transform 0.1s;
+        text-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+    .lab-sandbox button:active {
+        transform: scale(0.98);
+    }
+
+    .lab-sandbox .btn-start { background-color: var(--accent-green) !important; color: #0f172a !important; grid-column: span 2; font-size: 15px !important;}
+    .lab-sandbox .btn-deploy { background-color: var(--accent-red) !important; color: #fff !important; }
+    .lab-sandbox .btn-reset { background-color: #475569 !important; color: #fff !important; }
+    
+    .lab-sandbox button:disabled { 
+        background-color: #1e293b !important; 
+        color: #475569 !important;
+        cursor: not-allowed !important; 
+        transform: none !important;
+        border: 1px solid rgba(255,255,255,0.05) !important;
+        opacity: 0.6;
+    }
+
+    .lab-sandbox .cam-jumper {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 45px;
+    }
+
+    .lab-sandbox .cam-cloud {
+        position: absolute;
+        background: rgba(255,255,255,0.4);
+        border-radius: 50%;
+        filter: blur(8px);
+    }
+
+    /* Responsive Logic */
+    @media (max-width: 820px) {
+        .lab-sandbox .sim-container {
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .lab-sandbox .view-section {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="lab-sandbox">
+    <h1>Skydiving Relative Motion Physics Lab</h1>
+    <div class="description">
+        <strong>The Misconception:</strong> Deploying a parachute generates an upward force that launches the skydiver high into the sky.<br>
+        <strong>The Reality:</strong> The jumper decreases velocity instantly, while the camera operator stays locked at terminal speed. Watch both frames to visually unpack this relative illusion.
+    </div>
+
+    <div class="sim-container">
+        <div class="canvas-section">
+            <h3>True Earth Frame (Side View)</h3>
+            <canvas id="simCanvas" width="280" height="520"></canvas>
+        </div>
+
+        <div class="view-section">
+            <div>
+                <h3>Camera View Frame</h3>
+                <div class="camera-box" id="cameraBox">
+                    <div class="camera-label"><span class="rec-dot" id="recDot"></span><span id="recText">STANDBY</span></div>
+                    <div class="crosshair"></div>
+                    
+                    <div id="camCloudContainer" style="position: absolute; width: 100%; height: 100%; pointer-events: none;"></div>
+                    
+                    <div class="cam-jumper" id="camJumper">🧍</div>
+                </div>
+            </div>
+
+            <div class="telemetry">
+                <div>Jumper V: <span id="speedJumper">0</span> mph</div>
+                <div>Camera V: <span id="speedCamera">0</span> mph</div>
+                <div class="full-width">Relative Velocity Delta: <span id="speedRel" style="color:var(--accent-blue)">0</span> mph</div>
+            </div>
+
+            <div class="slider-section">
+                <div class="slider-label">
+                    <span>Simulation Speed (Time Dilation)</span>
+                    <span id="sliderVal" style="color:var(--accent-blue); font-weight: bold;">0.50x (Slow-Mo)</span>
+                </div>
+                <input type="range" id="timeSlider" min="0.1" max="1.5" value="0.5" step="0.05" oninput="adjustSimSpeed(this.value)">
+            </div>
+
+            <div class="explanation-live" id="expText">
+                Engage the <strong>START SIMULATION</strong> system matrix to begin.
+            </div>
+
+            <div class="controls">
+                <button class="btn-start" id="startBtn" onclick="startSim()">START SIMULATION</button>
+                <button class="btn-deploy" id="deployBtn" onclick="deployParachute()" disabled>PULL PARACHUTE</button>
+                <button class="btn-reset" onclick="resetSim()">Reset System</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+        const cloudContainer = document.getElementById('camCloudContainer');
+        
+        let jumperY = 60;
+        let cameraY = 60;
+        
+        const terminalMph = 120;
+        const deployMph = 12;
+        
+        let currentJumperMph = 0;
+        let currentCameraMph = 0;
+        let timeScale = 0.5; 
+        
+        let isRunning = false;
+        let isDeployed = false;
+        let animationFrameId;
+        
+        let clouds = [
+            {x: -20, y: 40, r: 35, speedMult: 0.5},
+            {x: 180, y: 160, r: 45, speedMult: 0.4},
+            {x: 30, y: 320, r: 55, speedMult: 0.6},
+            {x: 190, y: 440, r: 40, speedMult: 0.45}
+        ];
+
+        let camClouds = [];
+        const NUM_CAM_CLOUDS = 8;
+
+        function createCloud(yPos) {
+            return {
+                y: yPos,
+                x: Math.random() * 260 - 30, 
+                width: Math.random() * 100 + 100, 
+                height: Math.random() * 20 + 30, 
+                speedMult: Math.random() * 0.4 + 0.6 
+            };
+        }
+
+        function initCameraClouds() {
+            camClouds = [];
+            cloudContainer.innerHTML = ''; 
+            for (let i = 0; i < NUM_CAM_CLOUDS; i++) {
+                let cloudData = createCloud(300 + (i * 50)); 
+                let cloudEl = document.createElement('div');
+                cloudEl.className = 'cam-cloud';
+                cloudEl.style.width = cloudData.width + 'px';
+                cloudEl.style.height = cloudData.height + 'px';
+                
+                cloudData.element = cloudEl; 
+                camClouds.push(cloudData);
+                cloudContainer.appendChild(cloudEl);
+            }
+        }
+
+        function drawClouds(velocity) {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = 'rgba(255, 255, 255, 0.2)';
+
+            clouds.forEach(cloud => {
+                if (isRunning) {
+                    cloud.y -= (velocity * cloud.speedMult * timeScale);
+                    if (cloud.y < -60) cloud.y = canvas.height + 60;
+                }
+                ctx.beginPath();
+                ctx.arc(cloud.x, cloud.y, cloud.r, 0, Math.PI * 2);
+                ctx.arc(cloud.x + cloud.r*0.6, cloud.y - cloud.r*0.2, cloud.r*0.8, 0, Math.PI * 2);
+                ctx.arc(cloud.x - cloud.r*0.5, cloud.y - cloud.r*0.1, cloud.r*0.7, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.shadowBlur = 0;
+        }
+
+        function renderStatic() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            let referenceVelocity = isRunning ? (currentCameraMph / 60) * 1.5 : 0;
+            drawClouds(referenceVelocity);
+
+            ctx.fillStyle = isDeployed ? '#4ade80' : '#f43f5e';
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = ctx.fillStyle;
+            ctx.beginPath();
+            ctx.arc(160, jumperY, 9, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            ctx.fillStyle = '#f1f5f9';
+            ctx.font = 'bold 11px sans-serif';
+            ctx.fillText("Skydiver A", 180, jumperY + 4);
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#38bdf8';
+            ctx.beginPath();
+            ctx.arc(60, cameraY, 9, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = '#f1f5f9';
+            ctx.fillText("Camera B", 15, cameraY - 16);
+        }
+
+        function update() {
+            if (!isRunning) return;
+
+            if (isDeployed) {
+                if (currentJumperMph > deployMph) {
+                    currentJumperMph -= (2.5 * timeScale);
+                    if (currentJumperMph < deployMph) currentJumperMph = deployMph;
+                }
+            } else {
+                currentJumperMph = terminalMph;
+            }
+            currentCameraMph = terminalMph;
+
+            jumperY += ((currentJumperMph / 60) * 0.8) * timeScale;
+            cameraY += ((currentCameraMph / 60) * 0.8) * timeScale;
+
+            renderStatic();
+
+            const baseRelativeVelocity = ((currentCameraMph / 60) * 0.8) * timeScale;
+            
+            camClouds.forEach(cloudData => {
+                cloudData.y -= (baseRelativeVelocity * cloudData.speedMult);
+                
+                if (cloudData.y < -cloudData.height) {
+                    const newCloudParams = createCloud(300);
+                    cloudData.x = newCloudParams.x;
+                    cloudData.y = newCloudParams.y;
+                    cloudData.width = newCloudParams.width;
+                    cloudData.height = newCloudParams.height;
+                    cloudData.speedMult = newCloudParams.speedMult;
+                    
+                    cloudData.element.style.width = cloudData.width + 'px';
+                    cloudData.element.style.height = cloudData.height + 'px';
+                }
+                
+                cloudData.element.style.left = cloudData.x + 'px';
+                cloudData.element.style.top = cloudData.y + 'px';
+            });
+
+            if (cameraY > canvas.height - 30) {
+                cancelAnimationFrame(animationFrameId);
+                isRunning = false;
+                document.getElementById('recDot').classList.remove('blinning');
+                document.getElementById('recText').innerText = "STOP";
+                document.getElementById('expText').innerHTML = "<strong>Sim Complete:</strong> Camera operator zipped completely past Skydiver A. Look at the Earth View: <strong>Both trackers moved continuously down.</strong>";
+                return;
+            }
+
+            let relativeSpeedDelta = currentCameraMph - currentJumperMph;
+
+            document.getElementById('speedJumper').innerText = Math.round(currentJumperMph);
+            document.getElementById('speedCamera').innerText = Math.round(currentCameraMph);
+            document.getElementById('speedRel').innerText = Math.round(relativeSpeedDelta);
+
+            let relativeY = 95 + (jumperY - cameraY) * 2.2; 
+            const camJumperElem = document.getElementById('camJumper');
+            camJumperElem.style.top = relativeY + 'px';
+            camJumperElem.innerText = isDeployed ? "🪂" : "🧍";
+
+            if (isDeployed && relativeSpeedDelta > 10) {
                 document.getElementById('expText').innerHTML = `<strong>Analyzing Perspective:</strong> The jumper seems to shoot UP on the right screen because the camera operator is falling **${Math.round(relativeSpeedDelta)} mph faster**. In the True Earth view, they are both falling down. (Current Flow: ${timeScale}x)`;
             }
 
