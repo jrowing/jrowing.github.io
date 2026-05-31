@@ -1,0 +1,472 @@
+---
+layout: default
+title: Inertial vs Non-Inertial Frames of Reference
+is_resource: true
+description: Simulating linear train translation and rotating carousel perspectives.
+---
+
+<style>
+    /* 1. Isolation & Architecture Wrapper */
+    .frames-lab-sandbox {
+        --lab-panel-bg: #f8fafc;
+        --lab-panel-border: #e2e8f0;
+        --lab-panel-text: #0f172a;
+        --lab-muted-text: #64748b;
+        --lab-blue: #0284c7;
+        --lab-orange: #f97316;
+        --lab-yellow: #eab308;
+        --lab-red: #dc2626;
+
+        width: 100%;
+        max-width: 960px;
+        margin: 2rem auto;
+        padding: 0 !important;
+        box-sizing: border-box;
+    }
+
+    body.dark-mode .frames-lab-sandbox,
+    [data-theme="dark"] .frames-lab-sandbox {
+        --lab-panel-bg: #1e293b;
+        --lab-panel-border: #334155;
+        --lab-panel-text: #f8fafc;
+        --lab-muted-text: #94a3b8;
+    }
+
+    /* 2. Sticky Control Panel Dashboard */
+    .frames-lab-sandbox .controls-panel-row {
+        background: var(--lab-panel-bg) !important;
+        border: 2px solid var(--lab-panel-border) !important;
+        border-radius: 12px !important;
+        padding: 16px 20px !important;
+        margin-bottom: 24px !important;
+        display: flex !important;
+        gap: 24px !important;
+        align-items: center !important;
+        flex-wrap: wrap !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+    }
+
+    .frames-lab-sandbox .control-group {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px !important;
+    }
+
+    .frames-lab-sandbox .checkbox-group {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        color: var(--lab-panel-text) !important;
+        cursor: pointer !important;
+        user-select: none !important;
+    }
+
+    .frames-lab-sandbox .checkbox-group input {
+        width: 16px !important;
+        height: 16px !important;
+        cursor: pointer !important;
+        margin: 0 !important;
+    }
+
+    .frames-lab-sandbox label {
+        font-size: 13px !important;
+        color: var(--lab-muted-text) !important;
+        font-weight: 700 !important;
+    }
+
+    .frames-lab-sandbox input[type="range"].lab-range {
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        width: 140px !important;
+        background: var(--lab-panel-border) !important;
+        border-radius: 4px !important;
+        height: 6px !important;
+        outline: none !important;
+    }
+
+    .frames-lab-sandbox input[type="range"].lab-range::-webkit-slider-thumb {
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        height: 16px !important;
+        width: 16px !important;
+        border-radius: 50% !important;
+        background: var(--lab-blue) !important;
+        cursor: pointer !important;
+    }
+
+    .frames-lab-sandbox .val-display {
+        color: var(--lab-blue) !important;
+        font-family: monospace !important;
+        font-weight: 700 !important;
+    }
+
+    /* 3. Layout Display Split Deck Grid */
+    .frames-lab-sandbox .split-deck-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 20px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .frames-lab-sandbox .section-title {
+        grid-column: span 2 !important;
+        font-size: 1.1rem !important;
+        font-weight: 800 !important;
+        color: var(--lab-panel-text) !important;
+        border-bottom: 2px dashed var(--lab-panel-border) !important;
+        padding-bottom: 6px !important;
+        margin-top: 16px !important;
+        text-align: left !important;
+    }
+
+    .frames-lab-sandbox .canvas-card-title {
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        margin: 0 0 8px 0 !important;
+        text-align: center !important;
+    }
+
+    .frames-lab-sandbox canvas.lab-canvas-element {
+        background: #0f172a !important;
+        border: 2px solid var(--lab-panel-border) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    /* 4. Action Buttons */
+    .frames-lab-sandbox .btn-container {
+        display: flex !important;
+        gap: 10px !important;
+        margin-left: auto !important;
+    }
+
+    .frames-lab-sandbox button.lab-btn {
+        font-family: inherit !important;
+        padding: 10px 16px !important;
+        font-size: 13.5px !important;
+        font-weight: 700 !important;
+        border-radius: 8px !important;
+        cursor: pointer !important;
+        transition: transform 0.05s alternate, opacity 0.2s !important;
+        border: none !important;
+    }
+
+    .frames-lab-sandbox button.lab-btn:active { transform: scale(0.98) !important; }
+    .frames-lab-sandbox #dropBtn { background: var(--lab-blue) !important; color: #ffffff !important; }
+    .frames-lab-sandbox #clearBtn { background: var(--lab-panel-border) !important; color: var(--lab-panel-text) !important; }
+
+    @media (max-width: 768px) {
+        .frames-lab-sandbox .split-deck-grid { grid-template-columns: 1fr !important; }
+        .frames-lab-sandbox .section-title { grid-column: span 1 !important; }
+        .frames-lab-sandbox .btn-container { margin-left: 0 !important; width: 100% !important; }
+        .frames-lab-sandbox button.lab-btn { flex: 1 !important; }
+    }
+</style>
+
+<div class="frames-lab-sandbox">
+
+    <div class="controls-panel-row">
+        <div class="control-group">
+            <label for="speedSlider">System Velocity Vector: <span id="speedVal" class="val-display">3.0</span></label>
+            <input type="range" id="speedSlider" class="lab-range" min="0.5" max="6" step="0.1" value="3">
+        </div>
+        
+        <div class="control-group">
+            <label for="accelSlider">Kinetic Force Scalar: <span id="accelVal" class="val-display">1.0</span></label>
+            <input type="range" id="accelSlider" class="lab-range" min="0.2" max="2.5" step="0.1" value="1">
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="traceToggle" checked>
+            <label for="traceToggle">Enable Continuous Trace Trail</label>
+        </div>
+
+        <div class="btn-container">
+            <button id="dropBtn" class="lab-btn">Drop / Launch Particles</button>
+            <button id="clearBtn" class="lab-btn">Clear Trails</button>
+        </div>
+    </div>
+
+    <div class="split-deck-grid">
+        
+        <div class="section-title">Linear Motion Framework (Dropping a mass inside a moving rail carriage)</div>
+        <div>
+            <div class="canvas-card-title" style="color: var(--lab-blue);">Stationary Ground Frame (Inertial System)</div>
+            <canvas id="linearInertial" class="lab-canvas-element" width="480" height="250"></canvas>
+        </div>
+        <div>
+            <div class="canvas-card-title" style="color: var(--lab-orange);">Translating Carriage Frame (Non-Inertial Matrix)</div>
+            <canvas id="linearMoving" class="lab-canvas-element" width="480" height="250"></canvas>
+        </div>
+
+        <div class="section-title">Rotational Motion Framework (Projecting a mass across a spinning platform)</div>
+        <div>
+            <div class="canvas-card-title" style="color: var(--lab-blue);">Fixed Overhead Sky Frame (Inertial System)</div>
+            <canvas id="rotInertial" class="lab-canvas-element" width="480" height="300"></canvas>
+        </div>
+        <div>
+            <div class="canvas-card-title" style="color: var(--lab-orange);">Rotating Disk Platform Frame (Non-Inertial Matrix)</div>
+            <canvas id="rotMoving" class="lab-canvas-element" width="480" height="300"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const btn = document.getElementById('dropBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const speedSlider = document.getElementById('speedSlider');
+        const accelSlider = document.getElementById('accelSlider');
+        const speedVal = document.getElementById('speedVal');
+        const accelVal = document.getElementById('accelVal');
+        const traceToggle = document.getElementById('traceToggle');
+
+        // Canvas Rendering Frame Interface Hooks
+        const ctxLinInertial = document.getElementById('linearInertial').getContext('2d');
+        const ctxLinMoving = document.getElementById('linearMoving').getContext('2d');
+        const ctxRotInertial = document.getElementById('rotInertial').getContext('2d');
+        const ctxRotMoving = document.getElementById('rotMoving').getContext('2d');
+
+        // Telemetry Parameters
+        let trainSpeed = parseFloat(speedSlider.value);
+        let rotSpeed = parseFloat(speedSlider.value) * 0.01; 
+        let gravity = parseFloat(accelSlider.value) * 0.15;  
+        let launchVelocity = parseFloat(accelSlider.value) * -4; 
+
+        // Structural Geometries
+        const carouselRadius = 120;
+        const fixedTrainX = 240 - 50; 
+        let trainX = 50;
+        let time = 0;
+
+        let linearParticles = []; 
+        let rotParticles = [];    
+
+        // Input Monitor Configurations
+        speedSlider.addEventListener('input', (e) => {
+            let val = parseFloat(e.target.value);
+            speedVal.innerText = val.toFixed(1);
+            trainSpeed = val;
+            rotSpeed = val * 0.01; 
+        });
+
+        accelSlider.addEventListener('input', (e) => {
+            let val = parseFloat(e.target.value);
+            accelVal.innerText = val.toFixed(1);
+            gravity = val * 0.15;
+            launchVelocity = val * -4;
+        });
+
+        // Launch Profile Executions
+        btn.addEventListener('click', () => {
+            linearParticles.push({
+                x: trainX + 40, 
+                y: 50, 
+                vx: trainSpeed, 
+                vy: 0, 
+                active: true,
+                relX: 40, 
+                history: [] 
+            });
+
+            rotParticles.push({
+                x: 0,
+                y: 0,
+                vx: 0,
+                vy: launchVelocity, 
+                launchTime: time,
+                active: true,
+                history: [] 
+            });
+        });
+
+        clearBtn.addEventListener('click', () => {
+            linearParticles = linearParticles.filter(p => p.active);
+            linearParticles.forEach(p => p.history = []);
+            
+            rotParticles = rotParticles.filter(p => p.active);
+            rotParticles.forEach(p => p.history = []);
+        });
+
+        function drawLinear() {
+            trainX += trainSpeed;
+            if (trainX > 480) trainX = -100;
+
+            linearParticles.forEach(p => {
+                if(p.active) {
+                    p.vy += gravity;
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    
+                    p.history.push({
+                        absX: p.x, 
+                        absY: p.y, 
+                        relX: p.relX + fixedTrainX, 
+                        trainSnapshotX: trainX
+                    });
+                    
+                    if(p.y > 200) p.active = false;
+                }
+            });
+
+            // 1. INERTIAL GROUND FRAME
+            ctxLinInertial.clearRect(0, 0, 480, 250);
+            ctxLinInertial.strokeStyle = 'rgba(255,255,255,0.15)';
+            ctxLinInertial.lineWidth = 4;
+            ctxLinInertial.beginPath(); ctxLinInertial.moveTo(0, 200); ctxLinInertial.lineTo(480, 200); ctxLinInertial.stroke();
+            
+            ctxLinInertial.fillStyle = 'rgba(2, 132, 199, 0.2)';
+            ctxLinInertial.strokeStyle = '#0284c7';
+            ctxLinInertial.lineWidth = 2;
+            ctxLinInertial.fillRect(trainX, 40, 100, 60);
+            ctxLinInertial.strokeRect(trainX, 40, 100, 60);
+
+            linearParticles.forEach(p => {
+                if(traceToggle.checked && p.history.length > 1) {
+                    ctxLinInertial.strokeStyle = 'rgba(234, 179, 8, 0.5)';
+                    ctxLinInertial.lineWidth = 2;
+                    ctxLinInertial.beginPath();
+                    p.history.forEach((h, idx) => {
+                        if(idx === 0) ctxLinInertial.moveTo(h.absX, h.absY);
+                        else ctxLinInertial.lineTo(h.absX, h.absY);
+                    });
+                    ctxLinInertial.stroke();
+                }
+                if(p.active) {
+                    ctxLinInertial.fillStyle = '#eab308';
+                    ctxLinInertial.beginPath(); ctxLinInertial.arc(p.x, p.y, 6, 0, Math.PI*2); ctxLinInertial.fill();
+                }
+            });
+
+            // 2. NON-INERTIAL TRANSLATING FRAME
+            ctxLinMoving.clearRect(0, 0, 480, 250);
+            ctxLinMoving.strokeStyle = 'rgba(255,255,255,0.15)';
+            ctxLinMoving.lineWidth = 4;
+            ctxLinMoving.beginPath(); ctxLinMoving.moveTo(0, 200); ctxLinMoving.lineTo(480, 200); ctxLinMoving.stroke();
+            
+            ctxLinMoving.fillStyle = 'rgba(249, 115, 22, 0.2)';
+            ctxLinMoving.strokeStyle = '#f97316';
+            ctxLinMoving.fillRect(fixedTrainX, 40, 100, 60);
+            ctxLinMoving.strokeRect(fixedTrainX, 40, 100, 60);
+
+            linearParticles.forEach(p => {
+                if(traceToggle.checked && p.history.length > 1) {
+                    ctxLinMoving.strokeStyle = 'rgba(234, 179, 8, 0.5)';
+                    ctxLinMoving.lineWidth = 2;
+                    ctxLinMoving.beginPath();
+                    p.history.forEach((h, idx) => {
+                        if(idx === 0) ctxLinMoving.moveTo(h.relX, h.absY);
+                        else ctxLinMoving.lineTo(h.relX, h.absY);
+                    });
+                    ctxLinMoving.stroke();
+                }
+                if(p.active) {
+                    ctxLinMoving.fillStyle = '#eab308';
+                    ctxLinMoving.beginPath(); 
+                    ctxLinMoving.arc(p.relX + fixedTrainX, p.y, 6, 0, Math.PI*2); 
+                    ctxLinMoving.fill();
+                }
+            });
+        }
+
+        function drawRotating() {
+            time += rotSpeed;
+
+            rotParticles.forEach(p => {
+                if(p.active) {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    
+                    let relX = p.x * Math.cos(-time) - p.y * Math.sin(-time);
+                    let relY = p.x * Math.sin(-time) + p.y * Math.cos(-time);
+                    p.history.push({relX: relX, relY: relY, absoluteX: p.x, absoluteY: p.y});
+
+                    let dist = Math.sqrt(p.x*p.x + p.y*p.y);
+                    if(dist > carouselRadius) p.active = false;
+                }
+            });
+
+            // 1. INERTIAL ROTATIONAL OVERHEAD SYSTEM
+            ctxRotInertial.clearRect(0, 0, 480, 300);
+            ctxRotInertial.save();
+            ctxRotInertial.translate(240, 150);
+
+            ctxRotInertial.strokeStyle = '#0284c7';
+            ctxRotInertial.lineWidth = 3;
+            ctxRotInertial.beginPath(); ctxRotInertial.arc(0, 0, carouselRadius, 0, Math.PI*2); ctxRotInertial.stroke();
+
+            ctxRotInertial.strokeStyle = 'rgba(2, 132, 199, 0.3)';
+            ctxRotInertial.beginPath(); ctxRotInertial.moveTo(0,0);
+            ctxRotInertial.lineTo(carouselRadius * Math.cos(time), carouselRadius * Math.sin(time));
+            ctxRotInertial.stroke();
+
+            rotParticles.forEach(p => {
+                if(traceToggle.checked && p.history.length > 1) {
+                    ctxRotInertial.strokeStyle = 'rgba(234, 179, 8, 0.5)';
+                    ctxRotInertial.lineWidth = 2;
+                    ctxRotInertial.beginPath();
+                    p.history.forEach((h, idx) => {
+                        if(idx === 0) ctxRotInertial.moveTo(h.absoluteX, h.absoluteY);
+                        else ctxRotInertial.lineTo(h.absoluteX, h.absoluteY);
+                    });
+                    ctxRotInertial.stroke();
+                }
+                if(p.active) {
+                    ctxRotInertial.fillStyle = '#eab308';
+                    ctxRotInertial.beginPath(); ctxRotInertial.arc(p.x, p.y, 6, 0, Math.PI*2); ctxRotInertial.fill();
+                }
+            });
+            ctxRotInertial.restore();
+
+            // 2. NON-INERTIAL ROTATING DECK PLATFORM
+            ctxRotMoving.clearRect(0, 0, 480, 300);
+            ctxRotMoving.save();
+            ctxRotMoving.translate(240, 150);
+
+            ctxRotMoving.strokeStyle = '#f97316';
+            ctxRotMoving.lineWidth = 3;
+            ctxRotMoving.beginPath(); ctxRotMoving.arc(0, 0, carouselRadius, 0, Math.PI*2); ctxRotMoving.stroke();
+            
+            ctxRotMoving.strokeStyle = 'rgba(249, 115, 22, 0.3)';
+            ctxRotMoving.beginPath(); ctxRotMoving.moveTo(0,0); ctxRotMoving.lineTo(carouselRadius, 0); ctxRotMoving.stroke();
+
+            rotParticles.forEach(p => {
+                if(traceToggle.checked && p.history.length > 1) {
+                    ctxRotMoving.strokeStyle = 'rgba(234, 179, 8, 0.5)';
+                    ctxRotMoving.lineWidth = 2;
+                    ctxRotMoving.beginPath();
+                    p.history.forEach((h, index) => {
+                        if(index === 0) ctxRotMoving.moveTo(h.relX, h.relY);
+                        else ctxRotMoving.lineTo(h.relX, h.relY);
+                    });
+                    ctxRotMoving.stroke();
+                }
+
+                if(p.active) {
+                    ctxRotMoving.fillStyle = '#eab308';
+                    let currentX = p.x * Math.cos(-time) - p.y * Math.sin(-time);
+                    let currentY = p.x * Math.sin(-time) + p.y * Math.cos(-time);
+                    ctxRotMoving.beginPath(); ctxRotMoving.arc(currentX, currentY, 6, 0, Math.PI*2); ctxRotMoving.fill();
+                }
+            });
+            ctxRotMoving.restore();
+        }
+
+        function engineExecutionLoop() {
+            drawLinear();
+            drawRotating();
+            requestAnimationFrame(engineExecutionLoop);
+        }
+
+        // Initialize frame renders immediately on load cycle injection
+        drawLinear();
+        drawRotating();
+        engineExecutionLoop();
+    })();
+</script>
