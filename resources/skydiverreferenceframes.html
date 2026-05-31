@@ -259,7 +259,7 @@ description: They don't fall up...
         transform: translateX(-50%) !important;
         font-size: 40px !important;
         line-height: 1 !important;
-        top: 85px; /* Locked down explicit initial position */
+        top: 85px;
     }
 
     .sky-lab-sandbox .render-cloud-element {
@@ -408,6 +408,14 @@ description: They don't fall up...
             let referenceVelocity = isRunning ? (currentCameraMph / 60) * 1.5 : 0;
             drawClouds(referenceVelocity);
 
+            // Draw the viewable focus box tracking region of Camera Operator B inside the True Earth side frame
+            ctx.strokeStyle = 'rgba(2, 132, 199, 0.4)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([6, 4]);
+            // Centered around Camera Operator B (height: 110px matching field scaling limits)
+            ctx.strokeRect(15, cameraY - 40, canvas.width - 30, 110);
+            ctx.setLineDash([]); // Reset line formatting styles
+
             // Jumper point tracking indicator
             ctx.fillStyle = isDeployed ? '#16a34a' : '#dc2626';
             ctx.beginPath();
@@ -552,12 +560,10 @@ description: They don't fall up...
             renderStatic();
         }
 
-        // Initialize state fields explicitly, then execute a complete full layout sync once the document object is parsed
         document.addEventListener("DOMContentLoaded", function() {
             resetSim();
         });
         
-        // Fail-safe manual sync if Jekyll context loads script out-of-order
         initCameraClouds();
         renderStatic();
     })();
