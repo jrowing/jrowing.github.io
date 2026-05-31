@@ -1,0 +1,443 @@
+---
+layout: default
+title: Einstein's Light Clock Simulation
+is_resource: true
+description: Odometer proof demonstrating how the invariant speed of light dilates moving time.
+---
+
+<style>
+    /* 1. Isolation & Architecture Wrapper */
+    .lightclock-lab-sandbox {
+        --lab-panel-bg: #f8fafc;
+        --lab-panel-border: #e2e8f0;
+        --lab-panel-text: #0f172a;
+        --lab-muted-text: #64748b;
+        --lab-blue: #0284c7;
+        --lab-orange: #f97316;
+        --lab-green: #16a34a;
+        --lab-yellow: #eab308;
+        --lab-red: #dc2626;
+
+        width: 100%;
+        max-width: 960px;
+        margin: 2rem auto;
+        padding: 0 !important;
+        box-sizing: border-box;
+    }
+
+    body.dark-mode .lightclock-lab-sandbox,
+    [data-theme="dark"] .lightclock-lab-sandbox {
+        --lab-panel-bg: #1e293b;
+        --lab-panel-border: #334155;
+        --lab-panel-text: #f8fafc;
+        --lab-muted-text: #94a3b8;
+    }
+
+    /* 2. Sticky Control Panel Dashboard */
+    .lightclock-lab-sandbox .controls-panel-row {
+        background: var(--lab-panel-bg) !important;
+        border: 2px solid var(--lab-panel-border) !important;
+        border-radius: 12px !important;
+        padding: 16px 20px !important;
+        margin-bottom: 24px !important;
+        display: flex !important;
+        gap: 24px !important;
+        align-items: center !important;
+        flex-wrap: wrap !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+    }
+
+    .lightclock-lab-sandbox .control-group {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px !important;
+    }
+
+    .lightclock-lab-sandbox label {
+        font-size: 13px !important;
+        color: var(--lab-muted-text) !important;
+        font-weight: 700 !important;
+    }
+
+    .lightclock-lab-sandbox input[type="range"].lab-range {
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        width: 150px !important;
+        background: var(--lab-panel-border) !important;
+        border-radius: 4px !important;
+        height: 6px !important;
+        outline: none !important;
+    }
+
+    .lightclock-lab-sandbox input[type="range"].lab-range::-webkit-slider-thumb {
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        height: 16px !important;
+        width: 16px !important;
+        border-radius: 50% !important;
+        background: var(--lab-blue) !important;
+        cursor: pointer !important;
+    }
+
+    .lightclock-lab-sandbox .val-display {
+        color: var(--lab-blue) !important;
+        font-family: monospace !important;
+        font-weight: 700 !important;
+    }
+
+    /* 3. Layout Card Display Arrays */
+    .lightclock-lab-sandbox .vertical-deck-container {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+        width: 100% !important;
+    }
+
+    .lightclock-lab-sandbox .frame-card-box {
+        background: var(--lab-panel-bg) !important;
+        border: 2px solid var(--lab-panel-border) !important;
+        border-radius: 12px !important;
+        padding: 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 24px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+    }
+
+    .lightclock-lab-sandbox .canvas-area-wrapper {
+        flex-grow: 1 !important;
+        min-width: 0 !important;
+    }
+
+    .lightclock-lab-sandbox .frame-heading {
+        font-size: 1rem !important;
+        font-weight: 800 !important;
+        margin: 0 0 6px 0 !important;
+    }
+
+    .lightclock-lab-sandbox canvas.main-render-canvas {
+        background: #0f172a !important;
+        border: 2px solid var(--lab-panel-border) !important;
+        border-radius: 8px !important;
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    /* Telemetry Indicators */
+    .lightclock-lab-sandbox .telemetry-metrics-bar {
+        display: flex !important;
+        gap: 24px !important;
+        margin-bottom: 8px !important;
+        font-size: 13.5px !important;
+        font-family: monospace !important;
+        color: var(--lab-muted-text) !important;
+    }
+
+    .lightclock-lab-sandbox .telemetry-metrics-bar span strong {
+        color: var(--lab-panel-text) !important;
+        font-size: 14px !important;
+    }
+
+    /* Analog Dial Arrays */
+    .lightclock-lab-sandbox .analog-dial-deck {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-width: 120px !important;
+    }
+
+    .lightclock-lab-sandbox canvas.dial-canvas-element {
+        background: #0f172a !important;
+        border: 2px solid var(--lab-panel-border) !important;
+        border-radius: 50% !important;
+    }
+
+    .lightclock-lab-sandbox .dial-label-caption {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        margin-top: 6px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+    }
+
+    /* 4. Action Engine Dashboard Buttons */
+    .lightclock-lab-sandbox .btn-group-row {
+        display: flex !important;
+        gap: 8px !important;
+    }
+
+    .lightclock-lab-sandbox button.lab-btn {
+        font-family: inherit !important;
+        padding: 10px 16px !important;
+        font-size: 13.5px !important;
+        font-weight: 700 !important;
+        border-radius: 8px !important;
+        cursor: pointer !important;
+        transition: transform 0.05s alternate, opacity 0.2s !important;
+        border: none !important;
+    }
+
+    .lightclock-lab-sandbox button.lab-btn:active { transform: scale(0.98) !important; }
+
+    .lightclock-lab-sandbox #startBtn { background: var(--lab-green) !important; color: #ffffff !important; }
+    .lightclock-lab-sandbox #startBtn.active-state { background: var(--lab-panel-border) !important; color: var(--lab-muted-text) !important; cursor: default !important; }
+    .lightclock-lab-sandbox #pauseBtn { background: var(--lab-blue) !important; color: #ffffff !important; }
+    .lightclock-lab-sandbox #pauseBtn.active-state { background: var(--lab-panel-border) !important; color: var(--lab-muted-text) !important; cursor: default !important; }
+    .lightclock-lab-sandbox #resetBtn { background: var(--lab-panel-border) !important; color: var(--lab-panel-text) !important; }
+    
+    .lightclock-lab-sandbox #slowBtn { background: var(--lab-panel-border) !important; color: var(--lab-panel-text) !important; margin-left: auto !important;}
+    .lightclock-lab-sandbox #slowBtn.active-state { background: var(--lab-orange) !important; color: #ffffff !important; }
+
+    @media (max-width: 768px) {
+        .lightclock-lab-sandbox .controls-panel-row { flex-direction: column !important; align-items: fill !important; gap: 16px !important; }
+        .lightclock-lab-sandbox .btn-group-row { width: 100% !important; }
+        .lightclock-lab-sandbox #slowBtn { margin-left: 0 !important; width: 100% !important; }
+        .lightclock-lab-sandbox .frame-card-box { flex-direction: column !important; align-items: stretch !important; }
+        .lightclock-lab-sandbox .analog-dial-deck { margin-top: 12px !important; }
+    }
+</style>
+
+<div class="lightclock-lab-sandbox">
+
+    <div class="controls-panel-row">
+        <div class="btn-group-row">
+            <button id="startBtn" class="lab-btn">Start</button>
+            <button id="pauseBtn" class="lab-btn">Pause</button>
+            <button id="resetBtn" class="lab-btn">Reset Frame</button>
+        </div>
+
+        <div class="control-group">
+            <label for="speedSlider">Rocket Target Velocity (v): <span id="speedVal" class="val-display">0.60c</span></label>
+            <input id="speedSlider" class="lab-range" type="range" min="0" max="0.95" step="0.01" value="0.60">
+        </div>
+        
+        <div class="control-group">
+            <label>Time Dilation Factor (&gamma;): <span id="gammaVal" class="val-display" style="color: var(--lab-orange);">1.25x</span></label>
+        </div>
+        
+        <button id="slowBtn" class="lab-btn">Slow Motion: OFF</button>
+    </div>
+
+    <div class="vertical-deck-container">
+        
+        <div class="frame-card-box">
+            <div class="canvas-area-wrapper">
+                <h3 class="frame-heading" style="color: var(--lab-blue);">Proper Frame (Clock at Rest)</h3>
+                <div class="telemetry-metrics-bar">
+                    <span>Bounce Count Ticks: <strong id="restTicks">0</strong></span>
+                    <span>Spatial Light Odometer: <strong id="restDist" style="color: var(--lab-blue);">0m</strong></span>
+                </div>
+                <canvas id="restCanvas" class="main-render-canvas" width="700" height="170"></canvas>
+            </div>
+            <div class="analog-dial-deck">
+                <canvas id="restClockDial" class="dial-canvas-element" width="90" height="90"></canvas>
+                <div class="dial-label-caption" style="color: var(--lab-blue);">Normal Time</div>
+            </div>
+        </div>
+
+        <div class="frame-card-box">
+            <div class="canvas-area-wrapper">
+                <h3 class="frame-heading" style="color: var(--lab-orange);">Moving Frame (Clock traveling at velocity v)</h3>
+                <div class="telemetry-metrics-bar" style="color: var(--lab-orange);">
+                    <span>Bounce Count Ticks: <strong id="moveTicks">0</strong></span>
+                    <span>Spatial Light Odometer (Angled Path): <strong id="moveDist" style="color: var(--lab-orange);">0m</strong></span>
+                </div>
+                <canvas id="moveCanvas" class="main-render-canvas" width="700" height="170"></canvas>
+            </div>
+            <div class="analog-dial-deck">
+                <canvas id="moveClockDial" class="dial-canvas-element" width="90" height="90"></canvas>
+                <div class="dial-label-caption" style="color: var(--lab-orange);">Dilated Time</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    (function() {
+        const speedSlider = document.getElementById('speedSlider');
+        const speedVal = document.getElementById('speedVal');
+        const gammaVal = document.getElementById('gammaVal');
+
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const slowBtn = document.getElementById('slowBtn');
+
+        const restTicksDisp = document.getElementById('restTicks');
+        const restDistDisp = document.getElementById('restDist');
+        const moveTicksDisp = document.getElementById('moveTicks');
+        const moveDistDisp = document.getElementById('moveDist');
+
+        const ctxRest = document.getElementById('restCanvas').getContext('2d');
+        const ctxMove = document.getElementById('moveCanvas').getContext('2d');
+        const ctxClockRest = document.getElementById('restClockDial').getContext('2d');
+        const ctxClockMove = document.getElementById('moveClockDial').getContext('2d');
+
+        // Kinematic Calibration Metrics
+        const baseC = 5; 
+        const clockHeight = 100;
+        const mirrorWidth = 50;
+        const yTop = 35;
+        const yBottom = yTop + clockHeight;
+
+        let isRunning = true; 
+        let isSlowMo = false;
+        let timeScale = 1.0;
+
+        let vFactor = parseFloat(speedSlider.value);
+        let c = baseC * timeScale;
+        let v = vFactor * c;
+
+        // Space-Time Framework Objects
+        let restClock = { x: 80, yPhoton: yBottom, dir: -1, ticks: 0, distance: 0, timeElapsed: 0, history: [] };
+        let moveClock = { x: 30, yPhoton: yBottom, dir: -1, ticks: 0, distance: 0, timeElapsed: 0, history: [] };
+
+        // Interface Monitor Pipelines
+        startBtn.addEventListener('click', () => { if (!isRunning) { isRunning = true; updateButtonUI(); } });
+        pauseBtn.addEventListener('click', () => { if (isRunning) { isRunning = false; updateButtonUI(); } });
+        resetBtn.addEventListener('click', () => { isRunning = false; resetSim(); updateButtonUI(); render(); });
+
+        speedSlider.addEventListener('input', (e) => {
+            vFactor = parseFloat(e.target.value);
+            speedVal.innerText = vFactor.toFixed(2) + "c";
+            let gamma = 1 / Math.sqrt(1 - (vFactor * vFactor));
+            gammaVal.innerText = gamma.toFixed(2) + "x";
+            updateVelocityScales();
+            resetSim();
+            if (!isRunning) render();
+        });
+
+        slowBtn.addEventListener('click', () => {
+            isSlowMo = !isSlowMo;
+            timeScale = isSlowMo ? 0.2 : 1.0; 
+            slowBtn.innerText = isSlowMo ? "Slow Motion: ON" : "Slow Motion: OFF";
+            slowBtn.classList.toggle('active-state', isSlowMo);
+            updateVelocityScales();
+        });
+
+        function updateButtonUI() {
+            startBtn.classList.toggle('active-state', isRunning);
+            pauseBtn.classList.toggle('active-state', !isRunning);
+        }
+
+        function updateVelocityScales() {
+            c = baseC * timeScale;
+            v = vFactor * c;
+        }
+
+        function resetSim() {
+            restClock = { x: 80, yPhoton: yBottom, dir: -1, ticks: 0, distance: 0, timeElapsed: 0, history: [] };
+            moveClock = { x: 30, yPhoton: yBottom, dir: -1, ticks: 0, distance: 0, timeElapsed: 0, history: [] };
+        }
+
+        function updatePhysics() {
+            if (!isRunning) return;
+
+            // I. Rest Frame Physics Processor
+            restClock.yPhoton += restClock.dir * c;
+            restClock.distance += (c / timeScale); 
+            restClock.timeElapsed += (1 / timeScale);
+
+            if (restClock.yPhoton <= yTop) { restClock.yPhoton = yTop; restClock.dir = 1; restClock.ticks++; } 
+            else if (restClock.yPhoton >= yBottom) { restClock.yPhoton = yBottom; restClock.dir = -1; restClock.ticks++; }
+            restClock.history.push({x: restClock.x + mirrorWidth/2, y: restClock.yPhoton});
+            if(restClock.history.length > 120) restClock.history.shift();
+
+            // II. Moving Frame Translation Processor
+            let prevX = moveClock.x;
+            let prevY = moveClock.yPhoton;
+
+            moveClock.x += v;
+            let vy = Math.sqrt(c * c - v * v);
+            moveClock.yPhoton += moveClock.dir * vy;
+            
+            // Loop boundary displacement alignment handler
+            if (moveClock.x > 640) {
+                let shift = moveClock.x - 30;
+                moveClock.x = 30;
+                moveClock.history.forEach(h => h.x -= shift);
+                moveClock.distance += Math.sqrt(v * v + vy * vy) / timeScale;
+            } else {
+                let dx = moveClock.x - prevX;
+                let dy = moveClock.yPhoton - prevY;
+                moveClock.distance += Math.sqrt(dx * dx + dy * dy) / timeScale;
+            }
+            
+            moveClock.timeElapsed += (Math.sqrt(1 - vFactor * vFactor) / timeScale);
+
+            if (moveClock.yPhoton <= yTop) { moveClock.yPhoton = yTop; moveClock.dir = 1; moveClock.ticks++; } 
+            else if (moveClock.yPhoton >= yBottom) { moveClock.yPhoton = yBottom; moveClock.dir = -1; moveClock.ticks++; }
+            moveClock.history.push({x: moveClock.x + mirrorWidth/2, y: moveClock.yPhoton});
+            if(moveClock.history.length > 400) moveClock.history.shift();
+        }
+
+        function drawClock(ctx, clock, color) {
+            // Mirrors
+            ctx.fillStyle = 'rgba(255,255,255,0.2)';
+            ctx.fillRect(clock.x, yTop - 6, mirrorWidth, 6);
+            ctx.fillRect(clock.x, yBottom, mirrorWidth, 6);
+
+            // Path Wave Trace Trail Mapping
+            if (clock.history.length > 1) {
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(clock.history[0].x, clock.history[0].y);
+                for(let i=1; i<clock.history.length; i++) { ctx.lineTo(clock.history[i].x, clock.history[i].y); }
+                ctx.stroke();
+            }
+
+            // High Precision Photon Particle Bead
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(clock.x + mirrorWidth/2, clock.yPhoton, 5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function drawAnalogDial(ctx, timeValue, handColor) {
+            ctx.clearRect(0, 0, 90, 90);
+            ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.arc(45, 45, 40, 0, Math.PI*2); ctx.stroke();
+
+            let angle = (timeValue * 0.03) % (Math.PI * 2);
+            ctx.strokeStyle = handColor;
+            ctx.lineWidth = 3;
+            ctx.lineCap = "round";
+            ctx.beginPath(); ctx.moveTo(45, 45); ctx.lineTo(45 + 30 * Math.sin(angle), 45 - 30 * Math.cos(angle)); ctx.stroke();
+
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath(); ctx.arc(45, 45, 2.5, 0, Math.PI*2); ctx.fill();
+        }
+
+        function render() {
+            ctxRest.clearRect(0, 0, 700, 170);
+            ctxMove.clearRect(0, 0, 700, 170);
+
+            drawClock(ctxRest, restClock, '#0284c7');
+            drawClock(ctxMove, moveClock, '#f97316');
+            
+            drawAnalogDial(ctxClockRest, restClock.timeElapsed, '#0284c7');
+            drawAnalogDial(ctxClockMove, moveClock.timeElapsed, '#f97316');
+
+            // Synchronize Display Metric Pipelines
+            restTicksDisp.innerText = restClock.ticks;
+            restDistDisp.innerText = Math.round(restClock.distance * 2) + "m";
+            
+            moveTicksDisp.innerText = moveClock.ticks;
+            moveDistDisp.innerText = Math.round(moveClock.distance * 2) + "m";
+        }
+
+        function loop() {
+            updatePhysics();
+            render();
+            requestAnimationFrame(loop);
+        }
+
+        updateButtonUI();
+        loop();
+    })();
+</script>
