@@ -5,296 +5,303 @@ is_resource: true
 description: They don't fall up...
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skydiving Relative Motion Physics Lab</title>
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent-blue: #38bdf8;
-            --accent-green: #4ade80;
-            --accent-red: #f43f5e;
-            --border-color: rgba(255, 255, 255, 0.1);
-        }
+<style>
+    :root {
+        --bg-color: #0f172a;
+        --card-bg: rgba(30, 41, 59, 0.7);
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --accent-blue: #38bdf8;
+        --accent-green: #4ade80;
+        --accent-red: #f43f5e;
+        --border-color: rgba(255, 255, 255, 0.1);
+    }
 
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
+    .lab-wrapper {
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
+        color: var(--text-main);
+        padding: 40px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        border-radius: 20px;
+        margin: 20px 0;
+    }
 
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin-bottom: 5px;
-            background: linear-gradient(to right, #38bdf8, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-align: center;
-        }
+    .lab-wrapper h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: 5px;
+        background: linear-gradient(to right, #38bdf8, #818cf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+        line-height: 1.2;
+    }
 
-        .description {
-            max-width: 850px;
-            text-align: center;
-            margin-bottom: 25px;
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            line-height: 1.5;
-        }
+    .lab-wrapper .description {
+        max-width: 850px;
+        text-align: center;
+        margin-bottom: 25px;
+        color: var(--text-muted);
+        font-size: 1.05rem;
+        line-height: 1.5;
+    }
 
-        .description strong {
-            color: var(--text-main);
-        }
+    .lab-wrapper .description strong {
+        color: var(--text-main);
+    }
 
+    .sim-container {
+        display: flex;
+        gap: 25px;
+        background: var(--card-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        padding: 25px;
+        border-radius: 20px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        max-width: 950px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .canvas-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .sim-container h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #e2e8f0;
+        margin-top: 0;
+        margin-bottom: 12px;
+        letter-spacing: 0.5px;
+    }
+
+    #simCanvas {
+        background: linear-gradient(to bottom, #0284c7 0%, #0ea5e9 40%, #38bdf8 100%);
+        border-radius: 14px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3), inset 0 0 30px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .view-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    .camera-box {
+        border: 2px solid rgba(255,255,255,0.2);
+        border-radius: 14px;
+        height: 260px;
+        background: linear-gradient(to bottom, #0ea5e9, #7dd3fc);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2), inset 0 0 40px rgba(0,0,0,0.2);
+    }
+
+    .camera-label {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid var(--border-color);
+        color: #fff;
+        padding: 4px 10px;
+        font-size: 11px;
+        font-weight: bold;
+        border-radius: 6px;
+        font-family: monospace;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        letter-spacing: 1px;
+    }
+
+    .rec-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: var(--accent-red);
+        border-radius: 50%;
+        margin-right: 6px;
+    }
+    
+    .blinking {
+        animation: blink 1s infinite;
+        box-shadow: 0 0 8px var(--accent-red);
+    }
+
+    @keyframes blink {
+        50% { opacity: 0; }
+    }
+
+    .crosshair {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 30px;
+        height: 30px;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        opacity: 0.3;
+    }
+    .crosshair::before, .crosshair::after {
+        content: '';
+        position: absolute;
+        background: white;
+    }
+    .crosshair::before { top: 14px; left: 0; width: 30px; height: 2px; }
+    .crosshair::after { top: 0; left: 14px; width: 2px; height: 30px; }
+
+    .telemetry {
+        background: rgba(15, 23, 42, 0.5);
+        padding: 15px;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 14px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .telemetry div {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        padding-bottom: 4px;
+    }
+    .telemetry div.full-width {
+        grid-column: span 2;
+        border-bottom: none;
+        color: var(--accent-blue);
+        font-weight: bold;
+        font-size: 15px;
+        margin-top: 5px;
+    }
+
+    .telemetry span {
+        font-weight: bold;
+        color: #fff;
+    }
+
+    .slider-section {
+        background: rgba(255,255,255,0.03);
+        padding: 12px 15px;
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
+    }
+
+    .slider-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+    }
+
+    .slider-section input[type=range] {
+        width: 100%;
+        background: #334155;
+        border-radius: 8px;
+        height: 6px;
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .slider-section input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: var(--accent-blue);
+        cursor: pointer;
+        box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+    }
+
+    .controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .controls button {
+        padding: 12px;
+        font-size: 14px;
+        font-weight: 700;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        letter-spacing: 0.5px;
+    }
+
+    .controls .btn-start { background-color: var(--accent-green); color: #0f172a; grid-column: span 2; font-size: 16px;}
+    .controls .btn-start:hover { background-color: #22c55e; transform: translateY(-1px); }
+
+    .controls .btn-deploy { background-color: var(--accent-red); color: white; }
+    .controls .btn-deploy:hover { background-color: #e11d48; }
+    
+    .controls .btn-reset { background-color: #475569; color: white; }
+    .controls .btn-reset:hover { background-color: #334155; }
+    
+    .controls button:disabled { 
+        background-color: #1e293b !important; 
+        color: #475569 !important;
+        cursor: not-allowed; 
+        transform: none !important;
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .explanation-live {
+        font-size: 13.5px;
+        line-height: 1.5;
+        padding: 12px;
+        background: rgba(56, 189, 248, 0.1);
+        border-radius: 10px;
+        border: 1px solid rgba(56, 189, 248, 0.2);
+        color: #e0f2fe;
+        min-height: 54px;
+    }
+
+    .cam-jumper {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 45px;
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+    }
+
+    .cam-cloud {
+        position: absolute;
+        background: rgba(255,255,255,0.4);
+        border-radius: 50%;
+        filter: blur(8px);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
         .sim-container {
-            display: flex;
-            gap: 25px;
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            padding: 25px;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            max-width: 950px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .canvas-section {
-            display: flex;
             flex-direction: column;
             align-items: center;
         }
-
-        h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #e2e8f0;
-            margin-top: 0;
-            margin-bottom: 12px;
-            letter-spacing: 0.5px;
-        }
-
-        canvas {
-            background: linear-gradient(to bottom, #0284c7 0%, #0ea5e9 40%, #38bdf8 100%);
-            border-radius: 14px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3), inset 0 0 30px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
         .view-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 15px;
-        }
-
-        .camera-box {
-            border: 2px solid rgba(255,255,255,0.2);
-            border-radius: 14px;
-            height: 260px;
-            background: linear-gradient(to bottom, #0ea5e9, #7dd3fc);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2), inset 0 0 40px rgba(0,0,0,0.2);
-        }
-
-        .camera-label {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid var(--border-color);
-            color: #fff;
-            padding: 4px 10px;
-            font-size: 11px;
-            font-weight: bold;
-            border-radius: 6px;
-            font-family: monospace;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            letter-spacing: 1px;
-        }
-
-        .rec-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: var(--accent-red);
-            border-radius: 50%;
-            margin-right: 6px;
-        }
-        
-        .blinking {
-            animation: blink 1s infinite;
-            box-shadow: 0 0 8px var(--accent-red);
-        }
-
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
-
-        .crosshair {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 30px;
-            height: 30px;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            opacity: 0.3;
-        }
-        .crosshair::before, .crosshair::after {
-            content: '';
-            position: absolute;
-            background: white;
-        }
-        .crosshair::before { top: 14px; left: 0; width: 30px; height: 2px; }
-        .crosshair::after { top: 0; left: 14px; width: 2px; height: 30px; }
-
-        .telemetry {
-            background: rgba(15, 23, 42, 0.5);
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 14px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-
-        .telemetry div {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 4px;
-        }
-        .telemetry div.full-width {
-            grid-column: span 2;
-            border-bottom: none;
-            color: var(--accent-blue);
-            font-weight: bold;
-            font-size: 15px;
-            margin-top: 5px;
-        }
-
-        .telemetry span {
-            font-weight: bold;
-            color: #fff;
-        }
-
-        .slider-section {
-            background: rgba(255,255,255,0.03);
-            padding: 12px 15px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-        }
-
-        .slider-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
-        input[type=range] {
             width: 100%;
-            background: #334155;
-            border-radius: 8px;
-            height: 6px;
-            -webkit-appearance: none;
         }
+    }
+</style>
 
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 16px;
-            width: 16px;
-            border-radius: 50%;
-            background: var(--accent-blue);
-            cursor: pointer;
-            box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
-        }
-
-        .controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        button {
-            padding: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-start { background-color: var(--accent-green); color: #0f172a; grid-column: span 2; font-size: 16px;}
-        .btn-start:hover { background-color: #22c55e; transform: translateY(-1px); }
-
-        .btn-deploy { background-color: var(--accent-red); color: white; }
-        .btn-deploy:hover { background-color: #e11d48; }
-        
-        .btn-reset { background-color: #475569; color: white; }
-        .btn-reset:hover { background-color: #334155; }
-        
-        button:disabled { 
-            background-color: #1e293b !important; 
-            color: #475569 !important;
-            cursor: not-allowed; 
-            transform: none !important;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .explanation-live {
-            font-size: 13.5px;
-            line-height: 1.5;
-            padding: 12px;
-            background: rgba(56, 189, 248, 0.1);
-            border-radius: 10px;
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            color: #e0f2fe;
-            min-height: 54px;
-        }
-
-        .cam-jumper {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 45px;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
-        }
-
-        .cam-cloud {
-            position: absolute;
-            background: rgba(255,255,255,0.4);
-            border-radius: 50%;
-            filter: blur(8px);
-        }
-    </style>
-</head>
-<body>
-
+<div class="lab-wrapper">
     <h1>Skydiving Relative Motion Physics Lab</h1>
     <div class="description">
         <strong>The Misconception:</strong> Deploying a parachute generates an upward force that launches the skydiver high into the sky.<br>
@@ -316,7 +323,7 @@ description: They don't fall up...
                     
                     <div id="camCloudContainer" style="position: absolute; width: 100%; height: 100%; pointer-events: none;"></div>
                     
-                    <div class="cam-jumper" id="camJumper">🧍</div>
+                    <div class="cam-jumper" id="camJumper">🪂</div>
                 </div>
             </div>
 
@@ -345,8 +352,10 @@ description: They don't fall up...
             </div>
         </div>
     </div>
+</div>
 
-    <script>
+<script>
+    (function() {
         const canvas = document.getElementById('simCanvas');
         const ctx = canvas.getContext('2d');
         const cloudContainer = document.getElementById('camCloudContainer');
@@ -354,21 +363,18 @@ description: They don't fall up...
         let jumperY = 60;
         let cameraY = 60;
         
-        // Fixed physiological terminal velocity values
         const terminalMph = 120;
         const deployMph = 12;
         
         let currentJumperMph = 0;
         let currentCameraMph = 0;
         
-        // Time scalar tracking (Changed dynamically via slider)
         let timeScale = 0.5; 
         
         let isRunning = false;
         let isDeployed = false;
         let animationFrameId;
         
-        // --- GLOBAL CANVAS CLOUDS ---
         let clouds = [
             {x: -20, y: 40, r: 35, speedMult: 0.5},
             {x: 180, y: 160, r: 45, speedMult: 0.4},
@@ -376,7 +382,6 @@ description: They don't fall up...
             {x: 190, y: 440, r: 40, speedMult: 0.45}
         ];
 
-        // --- CAMERA VIEW CLOUDS ---
         let camClouds = [];
         const NUM_CAM_CLOUDS = 8;
 
@@ -413,7 +418,6 @@ description: They don't fall up...
 
             clouds.forEach(cloud => {
                 if (isRunning) {
-                    // Factoring timeScale straight into frame reposition mechanics
                     cloud.y -= (velocity * cloud.speedMult * timeScale);
                     if (cloud.y < -60) cloud.y = canvas.height + 60;
                 }
@@ -428,11 +432,9 @@ description: They don't fall up...
 
         function renderStatic() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // Dynamic check of movement
             let referenceVelocity = isRunning ? (currentCameraMph / 60) * 1.5 : 0;
             drawClouds(referenceVelocity);
 
-            // Jumper node rendering
             ctx.fillStyle = isDeployed ? '#4ade80' : '#f43f5e';
             ctx.shadowBlur = 10;
             ctx.shadowColor = ctx.fillStyle;
@@ -443,9 +445,8 @@ description: They don't fall up...
 
             ctx.fillStyle = '#f1f5f9';
             ctx.font = 'bold 11px sans-serif';
-            ctx.fillText(isDeployed ? "🪂 Skydiver A" : "🧍 Skydiver A", 180, jumperY + 4);
+            ctx.fillText(isDeployed ? "🪂 Skydiver A" : "🪂 Skydiver A", 180, jumperY + 4);
 
-            // Camera node rendering
             ctx.fillStyle = '#38bdf8';
             ctx.shadowBlur = 10;
             ctx.shadowColor = '#38bdf8';
@@ -454,16 +455,14 @@ description: They don't fall up...
             ctx.fill();
             ctx.shadowBlur = 0;
             ctx.fillStyle = '#f1f5f9';
-            ctx.fillText("🎥 Camera B", 15, cameraY - 16);
+            ctx.fillText("📹 Camera B", 15, cameraY - 16);
         }
 
         function update() {
             if (!isRunning) return;
 
-            // Deceleration curves applied uniformly
             if (isDeployed) {
                 if (currentJumperMph > deployMph) {
-                    // Deceleration factor scales directly with current timeScale settings
                     currentJumperMph -= (2.5 * timeScale);
                     if (currentJumperMph < deployMph) currentJumperMph = deployMph;
                 }
@@ -472,13 +471,11 @@ description: They don't fall up...
             }
             currentCameraMph = terminalMph;
 
-            // Compute frame step adjustments factoring the active Time Dilation value
             jumperY += ((currentJumperMph / 60) * 0.8) * timeScale;
             cameraY += ((currentCameraMph / 60) * 0.8) * timeScale;
 
             renderStatic();
 
-            // Scrolling view cloud shifts scale relative to selected system framework scale
             const baseRelativeVelocity = ((currentCameraMph / 60) * 0.8) * timeScale;
             
             camClouds.forEach(cloudData => {
@@ -515,7 +512,6 @@ description: They don't fall up...
             document.getElementById('speedCamera').innerText = Math.round(currentCameraMph);
             document.getElementById('speedRel').innerText = Math.round(relativeSpeedDelta);
 
-            // Frame projection offsets
             let relativeY = 95 + (jumperY - cameraY) * 2.2; 
             const camJumperElem = document.getElementById('camJumper');
             camJumperElem.style.top = relativeY + 'px';
@@ -528,7 +524,7 @@ description: They don't fall up...
             animationFrameId = requestAnimationFrame(update);
         }
 
-        function startSim() {
+        window.startSim = function() {
             if (isRunning) return;
             isRunning = true;
             currentJumperMph = terminalMph;
@@ -543,13 +539,12 @@ description: They don't fall up...
             update();
         }
 
-        function deployParachute() {
+        window.deployParachute = function() {
             isDeployed = true;
             document.getElementById('deployBtn').disabled = true;
         }
 
-        // Live engine adjustment handler for tracking modified simulation ticks
-        function adjustSimSpeed(val) {
+        window.adjustSimSpeed = function(val) {
             timeScale = parseFloat(val);
             let displayLabel = val + "x";
             if (timeScale === 1.0) displayLabel += " (Real-time)";
@@ -559,7 +554,7 @@ description: They don't fall up...
             document.getElementById('sliderVal').innerText = displayLabel;
         }
 
-        function resetSim() {
+        window.resetSim = function() {
             cancelAnimationFrame(animationFrameId);
             isRunning = false;
             isDeployed = false;
@@ -588,9 +583,7 @@ description: They don't fall up...
             renderStatic();
         }
 
-        // Execution initiation profile mapping
         initCameraClouds();
         renderStatic();
-    </script>
-</body>
-</html>
+    })();
+</script>
