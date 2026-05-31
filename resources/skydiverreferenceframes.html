@@ -8,7 +8,6 @@ description: They don't fall up...
 <style>
     /* 1. Isolation & Architecture Wrapper */
     .sky-lab-sandbox {
-        /* Design palette explicitly chosen to harmonize with light or dark themes */
         --sky-panel-bg: #f8fafc;
         --sky-panel-border: #e2e8f0;
         --sky-panel-text: #0f172a;
@@ -24,7 +23,6 @@ description: They don't fall up...
         box-sizing: border-box;
     }
 
-    /* Support dark mode if the parent theme uses a dark body class */
     body.dark-mode .sky-lab-sandbox,
     [data-theme="dark"] .sky-lab-sandbox {
         --sky-panel-bg: #1e293b;
@@ -33,7 +31,6 @@ description: They don't fall up...
         --sky-muted-text: #94a3b8;
     }
 
-    /* Force clean grid layout without parent theme list/text alignments interfering */
     .sky-lab-sandbox .lab-grid-container {
         display: grid !important;
         grid-template-columns: 300px 1fr !important;
@@ -64,7 +61,7 @@ description: They don't fall up...
         display: flex !important;
         flex-direction: column !important;
         gap: 16px !important;
-        min-width: 0 !important; /* Prevents flex box blowout */
+        min-width: 0 !important;
     }
 
     .sky-lab-sandbox .lab-heading-style {
@@ -271,7 +268,6 @@ description: They don't fall up...
         filter: blur(6px) !important;
     }
 
-    /* Responsive Configurations */
     @media (max-width: 768px) {
         .sky-lab-sandbox .lab-grid-container {
             grid-template-columns: 1fr !important;
@@ -302,7 +298,7 @@ description: They don't fall up...
                     
                     <div id="camCloudContainer" style="position: absolute; width: 100%; height: 100%; pointer-events: none;"></div>
                     
-                    <div class="jumper-sprite-overlay" id="camJumper">🏃</div>
+                    <div class="jumper-sprite-overlay" id="camJumper">🧍</div>
                 </div>
             </div>
 
@@ -378,11 +374,14 @@ description: They don't fall up...
             camClouds = [];
             cloudContainer.innerHTML = ''; 
             for (let i = 0; i < NUM_CAM_CLOUDS; i++) {
-                let cloudData = createCloud(240 + (i * 60)); 
+                // Distribute cloud initial values vertically to prevent clumping/overlapping layout glitch
+                let cloudData = createCloud(40 + (i * 45)); 
                 let cloudEl = document.createElement('div');
                 cloudEl.className = 'render-cloud-element';
                 cloudEl.style.width = cloudData.width + 'px';
                 cloudEl.style.height = cloudData.height + 'px';
+                cloudEl.style.left = cloudData.x + 'px';
+                cloudEl.style.top = cloudData.y + 'px';
                 
                 cloudData.element = cloudEl; 
                 camClouds.push(cloudData);
@@ -452,7 +451,7 @@ description: They don't fall up...
                 cloudData.y -= (baseRelativeVelocity * cloudData.speedMult);
                 
                 if (cloudData.y < -cloudData.height) {
-                    const newCloudParams = createCloud(260);
+                    const newCloudParams = createCloud(240);
                     cloudData.x = newCloudParams.x;
                     cloudData.y = newCloudParams.y;
                     cloudData.width = newCloudParams.width;
