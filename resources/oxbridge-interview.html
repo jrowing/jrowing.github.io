@@ -1,0 +1,945 @@
+---
+layout: default
+title: Oxbridge Mock Interview questions
+description: A tutorial-style question randomiser for Oxbridge mock interviews. Pick a subject and draw a random mix of general and subject-specific questions across 19 disciplines.
+---
+<h1>Oxbridge Mock Interview questions</h1>
+<p class="oxi-subtitle">Select a subject, set your question counts, draw.</p>
+
+<style>
+.oxi-subtitle {
+  color: #999;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0.25rem 0 2rem;
+}
+.oxi-section-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 0.75rem;
+}
+.oxi-subject-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+.oxi-subject-btn {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 0.65rem 0.9rem;
+  text-align: left;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #111;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.oxi-subject-btn:hover { border-color: #111; background: #f7f7f7; }
+.oxi-subject-btn.active { border-color: #111; background: #111; color: #fff; }
+.oxi-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  padding: 1rem 1.25rem;
+  background: #f7f7f7;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  margin-bottom: 2rem;
+  font-size: 0.82rem;
+  color: #555;
+}
+.oxi-controls label { white-space: nowrap; font-weight: 500; }
+.oxi-count {
+  width: 56px;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.88rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background: #fff;
+  color: #111;
+}
+.oxi-count:focus { outline: none; border-color: #111; }
+.oxi-draw-btn {
+  margin-left: auto;
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.55rem 1.3rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: opacity 0.15s;
+}
+.oxi-draw-btn:hover { opacity: 0.75; }
+.oxi-draw-btn:disabled { background: #e0e0e0; color: #999; cursor: not-allowed; opacity: 1; }
+#oxi-question-area { display: none; }
+#oxi-question-area.visible { display: block; }
+.oxi-session-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+.oxi-session-header h2 {
+  font-size: 1.2rem;
+  flex: 1;
+  margin: 0;
+}
+.oxi-session-tag {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: #f7f7f7;
+  color: #555;
+  border: 1px solid #e0e0e0;
+  border-radius: 3px;
+  padding: 0.2rem 0.45rem;
+}
+.oxi-legend {
+  display: flex;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+.oxi-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: #999;
+}
+.oxi-pip { width: 9px; height: 9px; border-radius: 1px; flex-shrink: 0; }
+.oxi-pip-general { background: #888; }
+.oxi-pip-specific { background: #111; }
+.oxi-question-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1.75rem;
+}
+.oxi-q-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-left: 2px solid #e0e0e0;
+  padding: 1rem 1.2rem;
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  animation: oxiSlideIn 0.2s ease both;
+}
+.oxi-q-card.general { border-left-color: #888; }
+.oxi-q-card.specific { border-left-color: #111; }
+@keyframes oxiSlideIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.oxi-q-num {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #bbb;
+  min-width: 1.3rem;
+  padding-top: 0.15rem;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+.oxi-q-text {
+  font-size: 0.93rem;
+  line-height: 1.55;
+  color: #111;
+  flex: 1;
+}
+.oxi-q-badge {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  border: 1px solid #e0e0e0;
+  background: #f7f7f7;
+  color: #888;
+  border-radius: 2px;
+  padding: 0.18rem 0.4rem;
+  flex-shrink: 0;
+  margin-top: 0.12rem;
+}
+.oxi-redraw-row { display: flex; gap: 0.65rem; flex-wrap: wrap; }
+.oxi-redraw-btn {
+  background: transparent;
+  border: 1px solid #e0e0e0;
+  color: #111;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.oxi-redraw-btn:hover { border-color: #111; background: #f7f7f7; }
+.oxi-empty {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: #bbb;
+  font-size: 0.88rem;
+}
+@media (max-width: 500px) {
+  .oxi-subject-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  .oxi-controls { flex-direction: column; align-items: flex-start; }
+  .oxi-draw-btn { margin-left: 0; width: 100%; }
+}
+</style>
+
+<p class="oxi-section-label">Subject</p>
+<div class="oxi-subject-grid" id="oxiSubjectGrid"></div>
+
+<div class="oxi-controls">
+  <label for="oxiGeneralCount">General questions:</label>
+  <input class="oxi-count" type="number" id="oxiGeneralCount" value="2" min="0" max="10">
+  <label for="oxiSpecificCount">Subject questions:</label>
+  <input class="oxi-count" type="number" id="oxiSpecificCount" value="3" min="0" max="10">
+  <button class="oxi-draw-btn" id="oxiDrawBtn" disabled>Draw questions &#8594;</button>
+</div>
+
+<div id="oxi-question-area">
+  <div class="oxi-session-header">
+    <h2 id="oxiSessionTitle"></h2>
+    <span class="oxi-session-tag" id="oxiSessionTag"></span>
+  </div>
+  <div class="oxi-legend">
+    <div class="oxi-legend-item"><div class="oxi-pip oxi-pip-general"></div> General</div>
+    <div class="oxi-legend-item"><div class="oxi-pip oxi-pip-specific"></div> Subject-specific</div>
+  </div>
+  <div class="oxi-question-list" id="oxiQuestionList"></div>
+  <div class="oxi-redraw-row">
+    <button class="oxi-redraw-btn" id="oxiRedrawBtn">&#8635; New draw</button>
+    <button class="oxi-redraw-btn" id="oxiChangeBtn">&#8592; Change subject</button>
+  </div>
+</div>
+
+<script>
+const OXI_GENERAL = [
+  "If you could invent a new colour, how would you describe it to a blind person?",
+  "How would you weigh your own head?",
+  "How would you design a fair test to evaluate the claim that plants can feel pain?",
+  "If you could choose to live forever, would you? Why or why not?",
+  "How would civilization be different if humans had eyes at the back of their heads as well?",
+  "How many tennis balls can you fit in this room?",
+  "How would society be different if we all lived to be 500 years old?",
+  "Would life be better or worse if we could see infrared light?",
+  "Why do mirrors reverse left and right, but not up and down?",
+  "If all human memories were erased, what would be the first thing you would want to relearn?",
+  "How would you advise an alien visitor to blend into human society?",
+  "What's the most efficient way to sort a million integers?",
+  "What do we gain and lose by categorising things?",
+  "If you were tasked with colonising Mars, what would be your first three steps?",
+  "Is it more important to be happy or to be intelligent? Why?",
+  "How would you calculate the number of blades of grass in a field?",
+  "Is a tomato a fruit or a vegetable and why does it matter?",
+  "Why do round pizzas come in square boxes?",
+  "Can you imagine a new punctuation mark? What purpose would it serve?",
+  "How would you explain the internet to a medieval farmer?",
+  "If you could rewrite one law of physics, which one would it be and why?",
+  "If we discovered that whales could talk, how might this change our relationship with them?",
+  "What ethical issues arise if we could modify our own DNA?",
+  "What would be the consequences if animals could laugh?",
+  "How would you estimate the population density of squirrels in the UK?",
+  "If humans could photosynthesize, how would this change our diet and lifestyle?",
+  "Can machines ever truly think? Why or why not?",
+  "If you could communicate with one species of animal, which would it be and why?",
+  "How would you convince someone that reality exists?",
+  "If trees gave off wifi signals, would we plant more? What does this say about our society?",
+  "How would you solve a dispute between two countries over water rights?",
+  "What would happen if all the bees in the world suddenly disappeared?",
+  "What could be the benefits and drawbacks of a universal language?",
+  "If you had to lose one of your five senses, which one would it be and why?",
+  "What would happen if all jobs were automated?",
+  "If every action you took was live-streamed to the world, how would your behaviour change?",
+  "If you could add one law to the laws of physics, what would it be and why?",
+  "How would you estimate the number of thoughts you have in a day?",
+  "What would happen if we discovered that we could communicate with plants?",
+  "If we could understand and speak every human language, how would society change?",
+  "What would happen if we discovered that animals have a language to communicate with each other?",
+  "What if humans had evolved to have wheels instead of feet?",
+  "What would happen if we found a way to bring back extinct species?",
+  "How would you react if you discovered a new species?",
+  "What would be the consequences if all diseases were eradicated?",
+  "If animals could vote, how might our political landscape change?",
+  "What if you discovered a button that, when pushed, stopped and started time?",
+  "How would society change if humans could reproduce like bacteria, by splitting into two?",
+  "If humans could change the colour of their skin like a chameleon, how would this affect society?"
+];
+
+const OXI_SUBJECTS = {
+  "Physics": { icon: "⚛️", questions: [
+    "How would our understanding of the universe change if gravity were found to repel rather than attract at extremely large distances?",
+    "Discuss the double-slit experiment and its implications for our understanding of light.",
+    "What would be the implications if it were discovered that the speed of light is not a universal constant but changes over time?",
+    "Explain the phenomenon of superposition and how it is used in quantum computing.",
+    "Discuss the role and significance of the Higgs boson in the Standard Model of particle physics.",
+    "Explain the concept of time dilation and its implications for space travel.",
+    "What would be the implications if a fifth fundamental force of nature was discovered?",
+    "Explain the process of nuclear fusion and its potential as an energy source.",
+    "Discuss the concept of black holes and the theories surrounding their behaviour.",
+    "Explain the principles of wave-particle duality and how they shape our understanding of quantum mechanics.",
+    "Discuss the impact of quantum entanglement on our understanding of information transmission.",
+    "Explain the concept of a neutron star and the forces at work within it.",
+    "Discuss the impact of the Michelson-Morley experiment on the development of special relativity.",
+    "Explain the process of stellar nucleosynthesis and its role in the chemical composition of the universe.",
+    "What would be the implications if the existence of wormholes were confirmed?",
+    "Discuss the principles and implications of special relativity.",
+    "Explain the role of virtual particles in the quantum world.",
+    "What would be the implications if we discovered that spacetime has more than four dimensions?",
+    "Discuss the concept of string theory and its potential implications.",
+    "Explain the principles of Bose-Einstein condensation and its implications.",
+    "Discuss the principles of thermodynamics and their relevance to everyday life.",
+    "Explain the phenomenon of quantum tunnelling and its implications.",
+    "Discuss the concept of dark energy and the role it plays in the expansion of the universe.",
+    "Explain the principles and implications of quantum field theory.",
+    "Discuss the nature and detection of gravitational waves.",
+    "What would be the implications if we discovered that antimatter can be used as a fuel source for interstellar travel?",
+    "Explain the principles of quantum superconductivity and their potential applications.",
+    "What would be the implications if we discovered that our universe is a holographic projection?",
+    "Discuss the concept of the multiverse and its implications for our understanding of existence.",
+    "Discuss the concept of the conservation of angular momentum and its implications for celestial mechanics."
+  ]},
+  "Chemistry": { icon: "🧪", questions: [
+    "How would our understanding of chemistry change if it were discovered that electrons do not have a charge?",
+    "Discuss the role and importance of catalysts in chemical reactions.",
+    "What would be the implications if it were discovered that the periodic table had a previously unknown group?",
+    "Explain the process of radioactive decay and its significance in dating ancient materials.",
+    "Discuss the impact of entropy on chemical reactions.",
+    "What would be the implications if a stable element with an atomic number greater than 118 was discovered?",
+    "Explain the principles of quantum mechanics as they apply to the behaviour of electrons in atoms.",
+    "Discuss the concept and implications of the lock and key model in enzyme action.",
+    "Explain the role of functional groups in determining the properties of organic compounds.",
+    "Discuss the principles of chromatography and its importance in the separation of mixtures.",
+    "Explain the process of electrolysis and its applications.",
+    "Discuss the importance of hydrogen bonding in the properties of water.",
+    "Explain the process of combustion and why certain substances are more combustible than others.",
+    "Discuss the principles of redox reactions and their applications.",
+    "Explain the process and importance of protein folding.",
+    "Discuss the concept and significance of pH.",
+    "Explain the principles of crystallography and its importance in determining structures of complex molecules.",
+    "Discuss the principles of stereochemistry and their importance in pharmaceuticals.",
+    "Discuss the properties and applications of polymers.",
+    "Explain the process of fermentation and its significance in producing biofuels.",
+    "Discuss the principles and applications of NMR spectroscopy.",
+    "Explain the process of distillation and its applications.",
+    "Discuss the structure and significance of the benzene ring.",
+    "Explain the principles of thermodynamics as they apply to chemical reactions.",
+    "Discuss the principles of molecular orbital theory.",
+    "Explain the concept and significance of the chemical potential.",
+    "Discuss the importance of isotopes in dating archaeological and geological samples."
+  ]},
+  "Biology": { icon: "🔬", questions: [
+    "How might our understanding of evolution change if it were discovered that genetic mutations are not random but directed towards adaptation?",
+    "Discuss the impact of horizontal gene transfer on our understanding of evolution.",
+    "Explain the process of protein synthesis and its implications for cellular function.",
+    "Discuss the role of the microbiome in human health.",
+    "Explain the principles of genetic engineering and its potential applications and ethical implications.",
+    "Discuss the biological mechanisms of photosynthesis and its role in the global carbon cycle.",
+    "Explain the principles of Mendelian genetics and how they apply to human genetic diseases.",
+    "Discuss the impact of overfishing on marine biodiversity.",
+    "Explain the process of cell division and its significance in growth and development.",
+    "Discuss the role of epigenetics in human health and disease.",
+    "Explain the process of metamorphosis in insects and its evolutionary advantages.",
+    "Discuss the principles of immunology and the workings of the human immune response.",
+    "Explain the process and significance of pollination in plant reproduction.",
+    "Discuss the biological basis of addiction.",
+    "Explain the process of homeostasis and its importance in maintaining the body's internal environment.",
+    "Discuss the role of symbiotic relationships in species survival.",
+    "Explain the biological processes involved in the circadian rhythm.",
+    "Discuss the role of parasites in ecosystem balance.",
+    "Explain the biological mechanisms of muscle contraction.",
+    "Discuss the process and importance of nitrogen fixation in ecosystems.",
+    "Explain the process of apoptosis and its role in development and disease.",
+    "Discuss the principles of population genetics and the Hardy-Weinberg equilibrium.",
+    "Explain the biological processes that lead to speciation.",
+    "Discuss the process of digestion and nutrient absorption in the human body.",
+    "Explain the structure and function of the human nervous system.",
+    "Discuss the role of genetic variation in evolution."
+  ]},
+  "Natural Sciences": { icon: "🌍", questions: [
+    "How might our understanding of the universe change if the laws of physics varied across space-time?",
+    "Discuss the impact of the discovery of DNA's structure on the field of genetics.",
+    "Explain the process of photosynthesis and its importance to life on Earth.",
+    "Discuss the principles of evolution and the evidence supporting them.",
+    "Explain the process and importance of the nitrogen cycle.",
+    "Discuss the structure of an atom and the role each part plays in its properties.",
+    "Explain the principles of quantum mechanics and their implications for our understanding of reality.",
+    "Discuss the process of natural selection and its role in evolution.",
+    "Explain the mechanisms that drive plate tectonics and how they shape our planet.",
+    "Discuss the concept of an ecosystem and the roles of producers, consumers, and decomposers.",
+    "Explain the structure and function of a eukaryotic cell.",
+    "Discuss the laws of thermodynamics and their significance.",
+    "Explain the process by which new species evolve and old ones become extinct.",
+    "Discuss the process of radioactive decay and its uses.",
+    "Explain the phenomenon of superconductivity and its potential applications.",
+    "Discuss the greenhouse effect and its role in global warming.",
+    "Explain the role of enzymes in biological reactions.",
+    "Discuss the process of fertilisation in mammals.",
+    "Discuss the effects of pollution on biodiversity.",
+    "Explain the concept of speciation and how it contributes to biodiversity.",
+    "Discuss the properties and uses of graphene.",
+    "Explain the function of the human immune system and its role in protecting against diseases.",
+    "Discuss the principles and implications of Heisenberg's Uncertainty Principle.",
+    "Explain the process of mitosis and its role in growth and repair.",
+    "Discuss the role of natural disasters in shaping Earth's geography and ecology."
+  ]},
+  "Mathematics": { icon: "∑", questions: [
+    "If we discovered a new number system beyond complex numbers, how might it change our understanding of mathematics?",
+    "What might be the mathematical challenges in modelling a four-dimensional universe?",
+    "How would the discovery of a pattern in prime numbers change the field of number theory?",
+    "Explain how calculus is used in predicting the behaviour of complex systems.",
+    "Discuss the mathematical properties and applications of Euler's number e.",
+    "Explain the concept of infinity and how it is treated in different areas of mathematics.",
+    "How might fractal mathematics contribute to our understanding of the natural world?",
+    "Discuss the concept and applications of imaginary numbers.",
+    "How does the P vs NP problem relate to real-world computational problems?",
+    "Discuss the concept of mathematical symmetry and its role in group theory.",
+    "Explain the concept and implications of Godel's Incompleteness Theorems.",
+    "Explain how probability theory contributes to decision making under uncertainty.",
+    "How does the Fibonacci sequence appear in nature, and why might this be the case?",
+    "Discuss the role of set theory in modern mathematics.",
+    "Explain how mathematical models can help in understanding and controlling the spread of diseases.",
+    "Discuss the mathematical concept of the four-color theorem.",
+    "Explain how the concept of vectors is utilised in physics.",
+    "Discuss the concept of Chaos Theory and its implications.",
+    "Explain how trigonometry aids in the study of periodic phenomena.",
+    "Discuss the significance of zero in mathematics.",
+    "Explain how algorithms are utilised in computer science.",
+    "Discuss the concept of dimension in mathematics.",
+    "Explain the mathematical concept of manifold and its importance in topology.",
+    "How does linear algebra apply to the field of data science?",
+    "Discuss the importance of the fundamental theorem of calculus.",
+    "Explain the role of statistics in interpreting real-world data."
+  ]},
+  "Medicine": { icon: "🩺", questions: [
+    "If a new virus emerged with transmission rates similar to the common cold and fatality rates similar to Ebola, how would you handle it?",
+    "How would you manage the ethical dilemma of distributing a limited supply of a life-saving drug?",
+    "If a pill was invented that could give us all the nutrients we need, eliminating the need to eat, what would be the implications on public health?",
+    "Explain how immunosuppressive drugs balance the risk of rejection and infection in organ transplant patients.",
+    "Discuss the impacts and challenges of personalised medicine brought by advances in genetic technology.",
+    "What will be the implications on healthcare if self-diagnostic medical devices become common in every household?",
+    "What are the ethical implications of creating designer babies?",
+    "Explain the role of junk DNA in our genome.",
+    "How does antibiotic resistance emerge and why is it a public health concern?",
+    "Discuss the advantages and disadvantages of passive and active immunity.",
+    "Describe the physiological basis of a condition like diabetes.",
+    "How would you respond if a patient refused treatment because of religious beliefs?",
+    "Explain the principles of herd immunity and its role in disease control.",
+    "Discuss the potential benefits and drawbacks of using stem cells in regenerative medicine.",
+    "Explain how vaccines work at a physiological level.",
+    "Can you explain how CRISPR technology works and its potential applications in medicine?",
+    "What are the differences between type 1 and type 2 diabetes at a physiological level?",
+    "What are the principles behind the action of ACE inhibitors in managing hypertension?",
+    "Can you explain the process of metastasis in cancer?",
+    "Discuss the risks and benefits of CAR-T therapy in cancer treatment.",
+    "How would you approach a situation where a patient is demanding a treatment that is not scientifically validated?",
+    "Explain the stages of the cell cycle and how disruptions can lead to diseases like cancer.",
+    "Can you explain the differences in lung structure and function between a smoker and non-smoker?",
+    "What is the mechanism of action for immunotherapy in cancer treatment?",
+    "What factors would you consider in the design of a clinical trial for a new drug?"
+  ]},
+  "Law": { icon: "⚖️", questions: [
+    "If AI were to be granted legal personhood, what changes would need to be made in our current legal system?",
+    "How should the law handle disputes over territory or resources in space?",
+    "If teleportation was invented, how would it change our understanding of trespass law?",
+    "Explain the concept of duty of care in negligence law.",
+    "What are the legal implications of AI performing tasks previously conducted by humans?",
+    "Discuss the principle of Separation of Powers. Why is it important for a democratic country?",
+    "How does the legal system address issues of privacy in the digital age?",
+    "If a crime was committed in space, how should it be prosecuted?",
+    "Explain the principle of legal precedent and its significance in English Law.",
+    "What are the principles behind the rule of law, and why is it important?",
+    "Discuss the legal challenges that come with the internet and the proliferation of online content.",
+    "If a machine could replicate anything, how would copyright law be affected?",
+    "What would be the impact on international law if we established a colony on Mars?",
+    "Can you explain the concept of sovereignty in international law?",
+    "Explain the doctrine of judicial review in constitutional law.",
+    "Discuss the relationship between law and morality.",
+    "How should the law address the challenge of deepfake technology?",
+    "What are the key principles of human rights law, and how are these rights enforced?",
+    "Explain the principle of habeas corpus.",
+    "What is the difference between equity and common law?",
+    "Discuss the role of law in addressing climate change.",
+    "Can you explain the concept of double jeopardy and its relevance in criminal law?",
+    "What is the role of statutory interpretation in the justice system?",
+    "Discuss the concept of corporate liability and its importance in corporate governance.",
+    "Explain the role of the European Court of Human Rights.",
+    "Discuss the limitations of freedom of speech in a democratic society.",
+    "Explain the principles of contract law in the context of online agreements.",
+    "How should the law balance individual rights and public health in a pandemic?"
+  ]},
+  "Economics": { icon: "📈", questions: [
+    "How would you redesign an economic system to handle a population that lives for 200 years?",
+    "If teleportation was invented, how would it affect global economies and trade?",
+    "What would be the economic implications if we discovered an unlimited source of clean energy?",
+    "If all jobs were automated tomorrow, how should the economy be restructured?",
+    "Discuss the economic impacts if the entire world switched to a single global currency.",
+    "How does income elasticity affect the demand of a product?",
+    "If everyone was given a universal basic income, how would that impact the economy?",
+    "Discuss the principle of Pareto efficiency. Can a society ever achieve it?",
+    "Explain the concept of marginal utility and its significance in consumer behaviour.",
+    "Explain the concept of opportunity cost and how it influences economic decision making.",
+    "How do changes in interest rates affect the economy?",
+    "What would be the economic implications of a world without debt?",
+    "Discuss the economic impacts of climate change.",
+    "Explain the difference between fiscal policy and monetary policy.",
+    "Can you explain the principle of demand and supply and how they determine market prices?",
+    "Discuss the role of elasticity in market economies.",
+    "What are the potential economic consequences of increasing antibiotic resistance?",
+    "How does inflation impact the economy? How can it be managed?",
+    "Explain the concept of market equilibrium.",
+    "Discuss the implications of a cashless society.",
+    "Explain how trade tariffs impact the economy.",
+    "Discuss the pros and cons of a progressive tax system.",
+    "How does unemployment impact the economy?",
+    "Explain the role of central banks in regulating the economy.",
+    "Discuss the prisoner's dilemma in the context of economic theory.",
+    "Explain how the concept of scarcity drives economic decisions.",
+    "How does game theory apply to economics?",
+    "Explain how economies of scale can influence a firm's production."
+  ]},
+  "Computer Science": { icon: "💻", questions: [
+    "If artificial general intelligence were developed tomorrow, what would be the implications for the field of computer science?",
+    "Discuss the time complexity of sorting algorithms and why this is important in practical applications.",
+    "How might computer science be affected if it were discovered that P equals NP?",
+    "Explain the concept of dynamic programming and its applications in problem-solving.",
+    "Discuss the principle of data encapsulation in object-oriented programming.",
+    "Explain the principles and significance of a relational database management system.",
+    "Discuss the role of computer graphics in gaming and simulation.",
+    "Explain the concept and applications of machine learning in modern technology.",
+    "Discuss the principles and applications of distributed computing.",
+    "Explain the concept of a finite automaton and its role in computer science.",
+    "Discuss the use of neural networks in artificial intelligence.",
+    "Explain the concept of recursion and its use in programming.",
+    "Discuss the role of a compiler in programming.",
+    "Explain the principles and applications of computer vision in real-world scenarios.",
+    "Discuss the concept of heuristics in the context of artificial intelligence.",
+    "Explain the principles of cryptography and its importance in data security.",
+    "Discuss the concepts of deadlock and starvation in the context of operating systems.",
+    "Explain the principles of information theory and their significance in computer science.",
+    "Discuss the principles and applications of graph theory in computer science.",
+    "Explain the principles of error detection and correction in data communication.",
+    "Discuss the significance of Turing machines in the theory of computation.",
+    "Explain the concept of virtual memory in computer systems.",
+    "Discuss the principle of polymorphism in object-oriented programming.",
+    "Discuss the role and importance of software testing in development.",
+    "Explain the working and significance of a search engine's ranking algorithm."
+  ]},
+  "Engineering": { icon: "⚙️", questions: [
+    "Discuss the principles and applications of thermodynamics in the design of engines.",
+    "What are the structural considerations in the design of skyscrapers to withstand earthquakes?",
+    "Discuss the role of fluid dynamics in designing vehicles.",
+    "What would be the engineering challenges of constructing a space elevator?",
+    "Explain the concept of stress and strain and their significance in material engineering.",
+    "Discuss the principles of electrical circuits and their applications in daily life.",
+    "Explain the working and applications of a semiconductor diode.",
+    "What would be the challenges of engineering a city on Mars?",
+    "Discuss the role of differential equations in engineering design.",
+    "How does the principle of conservation of energy apply to mechanical systems?",
+    "Discuss the applications of Fourier's law of heat conduction in engineering.",
+    "Explain the concept and implications of Moore's law in electronics.",
+    "How do the principles of aerodynamics influence the design of an aircraft?",
+    "Discuss the role of control systems in modern technology.",
+    "How might the advent of quantum computers impact the field of software engineering?",
+    "Explain the concept and applications of Bernoulli's principle in engineering.",
+    "Discuss the role and implications of the second law of thermodynamics in energy systems.",
+    "How does the principle of electromagnetic induction apply to power generation?",
+    "Discuss the concept of signal processing in communication systems.",
+    "Explain the role of the finite element method in engineering analysis.",
+    "Discuss the significance of the Navier-Stokes equation in fluid mechanics.",
+    "Explain the concept of feedback control systems in engineering.",
+    "How does the theory of elasticity influence the design of structures?",
+    "Discuss the application of Green's theorem in engineering.",
+    "Explain how Kirchhoff's laws are used in electrical circuits."
+  ]},
+  "History": { icon: "📜", questions: [
+    "If the internet had been available in ancient Rome, how might it have influenced the course of the empire?",
+    "Discuss the impact of the printing press on the Protestant Reformation.",
+    "How might world history be different if Alexander the Great had lived longer?",
+    "Explain the factors that led to the rise of nationalism in 19th century Europe.",
+    "How might the history of the 20th century be different if World War I had not happened?",
+    "Discuss the impact of the Mongol Empire on the Silk Road and Eurasian trade.",
+    "Explain the impact of colonialism on the cultural and economic development of India.",
+    "Discuss the factors leading to the fall of the Berlin Wall and its effects on Germany and Europe.",
+    "Explain the role of the Catholic Church in the political and social structures of medieval Europe.",
+    "Discuss the causes and effects of the Cultural Revolution in China.",
+    "Explain the influence of the Enlightenment on the American and French Revolutions.",
+    "Discuss the impact of the discovery of oil in the Middle East in the 20th century.",
+    "Explain the factors that led to the decline and fall of the Ottoman Empire.",
+    "Discuss the impact of the Cold War on the geopolitical landscape.",
+    "Explain the reasons behind the success of the British Empire.",
+    "Discuss the impact of the slave trade on the economies and societies of the Atlantic world.",
+    "Explain the causes and consequences of the Great Depression.",
+    "Discuss the role of women in society during the Victorian era.",
+    "Explain the political and social changes that resulted from the Black Death in Europe.",
+    "How might world history be different if the Roman Empire had not adopted Christianity?",
+    "Discuss the effect of the Spanish conquest on the indigenous peoples of the Americas.",
+    "Discuss the significance of the signing of the Magna Carta.",
+    "Explain the causes and effects of the Arab-Israeli conflict.",
+    "Explain the impact of the French Revolution on European and world history.",
+    "Discuss the significance of the Treaty of Versailles in the context of World War II.",
+    "Explain the impact of the Persian Wars on the development of Ancient Greece."
+  ]},
+  "English Literature": { icon: "📚", questions: [
+    "If it were discovered that Shakespeare's plays were actually written by someone else, how might that change our interpretation of them?",
+    "Discuss the significance of unreliable narrators in the works of Edgar Allan Poe.",
+    "Explain how the stream of consciousness technique influences character development in Virginia Woolf's novels.",
+    "Discuss the role of social class in Jane Austen's Pride and Prejudice.",
+    "Explain the concept of the other and its significance in postcolonial literature.",
+    "Discuss the role and significance of monologues in theatre, specifically in plays like Hamlet.",
+    "Explain the theme of humanism in Renaissance literature.",
+    "Discuss the impact of World War II on the works of authors such as George Orwell and Kurt Vonnegut.",
+    "Explain the role of allusions in T.S. Eliot's The Waste Land.",
+    "Discuss the portrayal of women in Victorian literature.",
+    "Explain the literary techniques used by James Joyce in Ulysses.",
+    "Discuss the role of the supernatural in the works of Emily Bronte.",
+    "Explain the concept of metafiction and its role in postmodern literature.",
+    "Discuss the influence of Romanticism on the works of William Wordsworth.",
+    "Explain the significance of tragicomedy in Samuel Beckett's Waiting for Godot.",
+    "Discuss the symbolism in F. Scott Fitzgerald's The Great Gatsby.",
+    "Explain the role of nature in the works of the American transcendentalists.",
+    "Discuss the importance of context in interpreting the works of Charles Dickens.",
+    "Explain the significance of the gothic elements in Bram Stoker's Dracula.",
+    "Discuss the treatment of morality in the novels of Fyodor Dostoevsky.",
+    "Explain the narrative techniques used in the works of Gabriel Garcia Marquez.",
+    "Discuss the theme of alienation in the works of Franz Kafka.",
+    "Explain the theme of individualism in Ayn Rand's Atlas Shrugged.",
+    "Discuss the concept of existentialism in the works of Albert Camus.",
+    "Explain the use of irony in the works of Oscar Wilde."
+  ]},
+  "Philosophy": { icon: "🤔", questions: [
+    "How would our understanding of morality change if it were proven that free will does not exist?",
+    "Discuss the implications of utilitarianism in modern societal contexts.",
+    "Explain the principles of Kant's categorical imperative and its implications for ethics.",
+    "How might our understanding of consciousness change if artificial intelligence surpasses human intelligence?",
+    "Discuss the importance of the Allegory of the Cave in Plato's philosophy.",
+    "Explain Nietzsche's concept of eternal recurrence and its impact on existential thought.",
+    "How might our understanding of reality change if it were discovered that time is an illusion?",
+    "Discuss the impact of Descartes' cogito ergo sum on the philosophy of mind.",
+    "Explain the concept of tabula rasa as proposed by John Locke and its influence on psychology.",
+    "Discuss the problem of induction as highlighted by David Hume.",
+    "Explain the principles of consequentialism and its criticisms.",
+    "Discuss the role of paradoxes in Zeno's arguments about motion.",
+    "Explain the principles of deontological ethics and its criticisms.",
+    "Discuss the concept of brain in a vat as a modern version of Descartes' evil demon.",
+    "Explain the Ship of Theseus paradox and its implications for the philosophy of identity.",
+    "Discuss the significance of the Turing Test in the philosophy of artificial intelligence.",
+    "Explain the concept of the Veil of Ignorance in John Rawls' theory of justice.",
+    "Discuss Wittgenstein's language-games and its implications for understanding the limits of language.",
+    "Explain Sartre's concept of bad faith and its relevance in today's society.",
+    "Discuss Bertrand Russell's paradox and its implications for set theory.",
+    "Discuss the ontological argument for the existence of God and its criticisms.",
+    "Explain the principles of existentialism and their impact on psychology and literature.",
+    "Discuss the concept of the Ubermensch in Nietzsche's philosophy.",
+    "Explain the principle of Ockham's razor and its significance in scientific theory formulation.",
+    "Discuss the concept of scepticism and its influence on modern philosophy."
+  ]},
+  "PPE": { icon: "🏛️", questions: [
+    "Discuss the role of fiscal policy in managing a country's economy.",
+    "Explain the concept of social contract theory and its implications for modern democracies.",
+    "Discuss the philosophical concept of utilitarianism and its applicability in policy-making.",
+    "Explain the principles of Keynesian economics and their relevance to the 2008 financial crisis.",
+    "Discuss the impact of social media on political discourse and democracy.",
+    "Explain the concept of the Prisoner's Dilemma and its implications for cooperation in politics.",
+    "Discuss the role of monetary policy in controlling inflation.",
+    "Explain the political theory of realism and its implications for international relations.",
+    "Discuss the philosophical concept of existentialism and its implications for personal identity.",
+    "Explain the principles of neoliberal economics and their impact on globalisation.",
+    "Discuss the role of supranational institutions in global governance.",
+    "Explain the concept of the Veil of Ignorance proposed by John Rawls and its implications for social justice.",
+    "Discuss the impact of political lobbying on democracy.",
+    "Explain the concept of Pareto efficiency in economics.",
+    "Discuss the philosophical concept of determinism and its implications for moral responsibility.",
+    "Explain the concept of liberal democracy and the challenges it faces in the 21st century.",
+    "Discuss the economic concept of moral hazard and its implications for financial markets.",
+    "Explain the role of political ideology in shaping public opinion.",
+    "Explain the concept of negative liberty and positive liberty as proposed by Isaiah Berlin.",
+    "Discuss the impact of identity politics on social cohesion.",
+    "Explain the principles of supply-side economics and its implications for economic inequality.",
+    "Discuss the philosophical concept of free will and its implications for our understanding of morality.",
+    "Discuss the role of central banks in managing a country's economy.",
+    "Explain the principles of behavioural economics and how they challenge traditional economic models.",
+    "Discuss the role of fiscal policy and monetary policy in times of economic crisis."
+  ]},
+  "Psychology": { icon: "🧠", questions: [
+    "How would our understanding of personality change if it were discovered that traits are entirely genetically determined?",
+    "Discuss the strengths and limitations of cognitive behavioural therapy (CBT).",
+    "Explain the principles of operant conditioning and its applications in behaviour modification.",
+    "How might our understanding of emotions change if we found that emotions are culturally constructed and not universal?",
+    "Discuss the importance of the neurotransmitter dopamine in human behaviour.",
+    "Explain the psychological concept of flow and its impact on human productivity.",
+    "Discuss the role of nature versus nurture in intelligence.",
+    "Explain the principles of attachment theory and its implications for child development.",
+    "Discuss the importance of the fight or flight response in evolutionary psychology.",
+    "Explain the concept of cognitive dissonance and its impact on decision making.",
+    "Discuss the principles and applications of psychodynamic therapy.",
+    "Explain the psychological processes underlying the placebo effect.",
+    "Discuss the Milgram experiment and its implications for understanding obedience to authority.",
+    "Explain the role of the hippocampus in memory formation and recall.",
+    "Discuss the psychological impact of social media on mental health.",
+    "Explain the role of mirror neurons in empathy and social cognition.",
+    "Explain the concept of growth mindset and its implications for education.",
+    "Discuss the role of the amygdala in emotional processing.",
+    "Explain the concept and mechanisms of neuroplasticity.",
+    "Discuss the concept of false memories and its implications for eyewitness testimony.",
+    "Explain the psychological principles behind the phenomenon of deja vu.",
+    "Discuss the role of heuristics in decision making and problem solving.",
+    "Explain the role of schemas in perception and memory.",
+    "Discuss the role of nature and nurture in shaping human personality.",
+    "Explain the role of REM sleep in dream formation."
+  ]},
+  "Geography": { icon: "🗺️", questions: [
+    "Explain how the distribution of natural resources can impact global power structures.",
+    "Discuss how human activity has shaped the Amazon rainforest.",
+    "Explain the concept of time-space compression.",
+    "Discuss the impact of gentrification in urban environments.",
+    "Explain the role of GIS in modern geography.",
+    "Discuss how ocean currents impact global climate patterns.",
+    "Explain the concept of a biodiversity hotspot and its importance for conservation efforts.",
+    "Discuss the geographical implications of sea level rise due to climate change.",
+    "Explain the concept of urban heat islands and their potential impacts on climate change.",
+    "Discuss how geographical factors contributed to the spread of the Black Death in the 14th century.",
+    "Explain the concept of ecotones and discuss their ecological significance.",
+    "Discuss how globalisation has impacted patterns of disease spread.",
+    "Explain the geographical concept of hinterland and its importance in trade and economics.",
+    "Discuss how topography affects local climates.",
+    "Explain the geographic factors that contribute to the creation of a megacity.",
+    "Discuss the effects of deforestation on local and global climates.",
+    "Explain how geopolitics can impact access to natural resources.",
+    "Discuss the social and economic implications of river diversion projects.",
+    "Explain the demographic transition model and its usefulness in predicting population trends.",
+    "Discuss how colonialism has shaped the geopolitical landscape.",
+    "Explain the concept of desertification and its impacts on human societies.",
+    "Discuss the physical and human factors that contribute to flood risk.",
+    "Explain the process and potential impacts of glacial retreat due to climate change.",
+    "Discuss the importance of soil health for global food security.",
+    "Explain the geographical challenges and benefits of harnessing geothermal energy."
+  ]},
+  "Classics": { icon: "🏺", questions: [
+    "Discuss the significance of mythology in ancient Greek society.",
+    "Explain the significance of the Trojan War in both historical and mythological contexts.",
+    "Discuss the role of tragedy in Ancient Greek literature.",
+    "Explain the cultural and historical significance of the Iliad and the Odyssey.",
+    "Discuss the role of the Oracle at Delphi in Ancient Greek society.",
+    "Explain the significance of the Latin language in shaping modern languages.",
+    "Discuss the cultural and historical impact of the Roman Emperor Augustus.",
+    "Explain the social and cultural implications of gladiatorial combat in ancient Rome.",
+    "Discuss the significance of Julius Caesar's assassination in the transition from the Roman Republic to the Roman Empire.",
+    "Explain the influence of Greek philosophy on Roman thought.",
+    "Discuss the role of the gods in the works of Homer.",
+    "Explain the significance of the Persian Wars in shaping Greek identity.",
+    "Discuss the use and significance of rhetoric in ancient Roman politics.",
+    "Explain the concept of hubris in Greek tragedy and its effects on the protagonists.",
+    "Discuss the artistic and cultural significance of ancient Greek sculpture.",
+    "Explain the role of the Spartan agoge in shaping Spartan society.",
+    "Discuss the influence of ancient Greek and Roman literature on the Renaissance.",
+    "Discuss the role and significance of the Roman Senate in the Roman Republic.",
+    "Explain the architectural and cultural significance of the Colosseum.",
+    "Discuss the philosophical concepts and debates in Plato's Republic.",
+    "Explain the role of women in ancient Spartan society.",
+    "Discuss the social and political structure of the Roman Republic.",
+    "Explain the importance of oral tradition in preserving the works of Homer.",
+    "Discuss the influence of Epicurean philosophy on modern Western thought."
+  ]},
+  "Linguistics": { icon: "🗣️", questions: [
+    "How would our understanding of linguistics change if we discovered an isolated society with a language that has no verbs?",
+    "Explain the difference between phonetics and phonology, using examples.",
+    "How would you approach the challenge of translating a previously undiscovered language with no written form?",
+    "Discuss the role of language in shaping cultural identity.",
+    "Explain the concept of semantic change and how it occurs over time.",
+    "Discuss the impact of technology on language evolution.",
+    "Explain how a linguistic typology is established and its significance in understanding languages.",
+    "Discuss the concept of linguistic relativity and its implications.",
+    "Explain the role of morphology in language, using examples.",
+    "Discuss how language can be a tool for both inclusion and exclusion in a society.",
+    "Explain the significance of syntax in language comprehension.",
+    "Discuss the implications of language extinction on culture and history.",
+    "Explain the concept of linguistic determinism and its validity.",
+    "Discuss how sociolects and idiolects contribute to linguistic diversity.",
+    "Explain how linguistic anthropology can provide insights into human behaviour.",
+    "Discuss the phenomenon of language convergence and divergence.",
+    "Explain the relevance of studying historical linguistics in understanding language evolution.",
+    "Discuss the role of pidgin and creole languages in linguistic studies.",
+    "Explain the concept of phonemic contrast and its role in differentiating meaning.",
+    "Discuss the potential linguistic implications of the increased use of emojis in written communication.",
+    "Explain the significance of studying discourse analysis in linguistics.",
+    "Discuss the concept of code-switching and its social implications.",
+    "Explain the role of prosody in conveying meaning in speech.",
+    "Discuss the process of language standardisation and its effects on linguistic diversity.",
+    "Explain the role of neurolinguistics in understanding language processing in the brain."
+  ]},
+  "Architecture": { icon: "🏗️", questions: [
+    "Explain how the architectural design of a building can impact its energy efficiency.",
+    "Discuss the impact of Brutalist architecture on urban environments.",
+    "Explain the concept of biophilic design and its relevance in modern architecture.",
+    "Discuss the role of architecture in creating inclusive public spaces.",
+    "Explain the role of CAD and BIM in architectural design.",
+    "Discuss the role of culture in influencing architectural styles.",
+    "Explain the principles of Universal Design in architecture.",
+    "Discuss the impact of the Bauhaus movement on modern architecture.",
+    "Explain the concept of green roofs and their potential benefits.",
+    "Discuss how light and shadow can be used as design elements in architecture.",
+    "Explain the significance of architectural preservation and restoration.",
+    "Discuss the architectural implications of designing for different climates.",
+    "Explain the concept of vernacular architecture and its significance.",
+    "Discuss the impact of skyscrapers on urban landscapes.",
+    "Explain the impact of acoustics on architectural design.",
+    "Discuss how zoning regulations impact architectural design.",
+    "Explain how the form follows function principle is applied in modern architectural design.",
+    "Discuss the influence of religion on architecture.",
+    "Explain the influence of the International Style on 20th-century architecture.",
+    "Discuss the role of architecture in representing societal values and aspirations.",
+    "Explain how the concepts of symmetry and proportion are employed in architectural design.",
+    "Discuss the evolution of architectural styles throughout history.",
+    "Explain the role of landscaping in architectural design.",
+    "Discuss the role of architecture in creating resilient cities.",
+    "Explain the role of an architect in shaping urban environments and influencing social behaviours."
+  ]},
+  "Art": { icon: "🎨", questions: [
+    "Can a piece of art have meaning if the artist intended none?",
+    "How would our understanding of art history change if we discovered a major civilisation whose visual culture had been entirely lost?",
+    "Is the distinction between fine art and craft meaningful, or is it a social construction?",
+    "How has the invention of photography changed what painting is for?",
+    "Discuss the role of the unconscious in Surrealist practice.",
+    "If an AI generates an image indistinguishable from a human painting, should it be considered art? Who, if anyone, is the artist?",
+    "What does Duchamp's Fountain tell us about the nature of art and the role of institutions in defining it?",
+    "How do we evaluate art from cultures or time periods with very different values from our own?",
+    "Is abstract art inherently more or less democratic than representational art?",
+    "Discuss the relationship between political power and artistic patronage.",
+    "How has globalisation changed contemporary art practice and the art market?",
+    "What is the role of the viewer in completing a work of art?",
+    "Discuss the significance of the colour field painters — Rothko, Newman, Frankenthaler — and what they were trying to achieve.",
+    "Should art stolen during colonialism or war be returned to its country of origin? What are the arguments on each side?",
+    "How does site-specificity change the meaning of a work of art?",
+    "Discuss the tension between artistic originality and the influence of tradition.",
+    "How has the internet and social media changed the way art is made, distributed, and consumed?",
+    "Is there a meaningful difference between restoration and forgery?",
+    "What does the concept of the male gaze mean, and how has feminist art history challenged it?",
+    "Discuss the relationship between art and trauma — can making art be a form of testimony?",
+    "How do materials and process shape meaning in art? Give an example.",
+    "What does it mean for a work of art to be of its time? Can great art transcend its historical moment?",
+    "Discuss the role of scale in art — how does the physical size of a work affect the viewer's experience?",
+    "How has the concept of the avant-garde changed since the early 20th century?",
+    "Is public art fundamentally different from gallery art, and if so, what are the implications for how it should be judged?",
+    "Discuss the relationship between art and commerce — does being paid for your work compromise artistic integrity?",
+    "How should we think about the relationship between an artist's biography and the interpretation of their work?",
+    "What is the significance of the death of the author idea for how we interpret visual art?",
+    "Discuss the role of craft and skill in contemporary art — is technical ability still relevant?",
+    "How might our experience of art change if we could no longer see it in person, only through screens?"
+  ]},
+  "Modern Languages": { icon: "🌐", questions: [
+    "How might our understanding of culture change if it were discovered that language shapes our perception of reality more than previously thought?",
+    "Discuss the impact of English as a global lingua franca on linguistic diversity.",
+    "What would be the implications if we discovered a universal grammar inherent to all human languages?",
+    "Explain the concept of linguistic relativity and its implications for cross-cultural communication.",
+    "Discuss the role of language in shaping national identity.",
+    "Explain the concept of register in sociolinguistics and its impact on social interactions.",
+    "Discuss the effects of colonisation on the languages of colonised peoples.",
+    "Discuss the significance of language preservation in the context of globalisation.",
+    "Explain the concept of diglossia and its socio-cultural implications.",
+    "Discuss the impact of dialects and regional accents on societal perceptions and prejudices.",
+    "Explain the process of language standardisation and its socio-political implications.",
+    "Discuss the impact of language death and the loss of linguistic diversity.",
+    "Explain the role of pidgin and creole languages in linguistic evolution.",
+    "Discuss the impact of loanwords on the evolution of languages.",
+    "Explain the significance of phonetics and phonology in understanding the structure of languages.",
+    "Discuss the importance of pragmatics in communication and misunderstanding.",
+    "Explain the concept of code-switching and its implications in bilingual communities.",
+    "Discuss the impact of technology on language change and evolution.",
+    "Explain the importance of semantics in understanding cultural differences.",
+    "Discuss the role of language in the perpetuation of gender stereotypes.",
+    "Explain the concept of linguistic determinism and its impact on cultural diversity.",
+    "Explain the impact of language on identity formation.",
+    "Discuss the role of endangered languages in preserving cultural heritage.",
+    "Explain the importance of syntax in the structure of languages.",
+    "Discuss the impact of multilingualism on cognitive development."
+  ]}
+};
+
+let oxiSelected = null;
+
+function oxiSample(arr, n) {
+  return [...arr].sort(() => Math.random() - 0.5).slice(0, Math.min(n, arr.length));
+}
+
+function oxiBuildGrid() {
+  const grid = document.getElementById('oxiSubjectGrid');
+  Object.entries(OXI_SUBJECTS).forEach(([name, data]) => {
+    const btn = document.createElement('button');
+    btn.className = 'oxi-subject-btn';
+    btn.innerHTML = '<span>' + data.icon + '</span>' + name;
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.oxi-subject-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      oxiSelected = name;
+      document.getElementById('oxiDrawBtn').disabled = false;
+    });
+    grid.appendChild(btn);
+  });
+}
+
+function oxiDraw() {
+  if (!oxiSelected) return;
+  const nG = Math.max(0, parseInt(document.getElementById('oxiGeneralCount').value) || 0);
+  const nS = Math.max(0, parseInt(document.getElementById('oxiSpecificCount').value) || 0);
+  const all = [
+    ...oxiSample(OXI_GENERAL, nG).map(q => ({ text: q, type: 'general' })),
+    ...oxiSample(OXI_SUBJECTS[oxiSelected].questions, nS).map(q => ({ text: q, type: 'specific' }))
+  ];
+
+  const area  = document.getElementById('oxi-question-area');
+  const list  = document.getElementById('oxiQuestionList');
+  const title = document.getElementById('oxiSessionTitle');
+  const tag   = document.getElementById('oxiSessionTag');
+
+  title.textContent = OXI_SUBJECTS[oxiSelected].icon + '  ' + oxiSelected;
+  tag.textContent   = all.length + ' question' + (all.length !== 1 ? 's' : '');
+  list.innerHTML    = '';
+
+  if (all.length === 0) {
+    list.innerHTML = '<div class="oxi-empty">No questions to draw — increase the counts above.</div>';
+  } else {
+    all.forEach(function(q, i) {
+      const card = document.createElement('div');
+      card.className = 'oxi-q-card ' + q.type;
+      card.style.animationDelay = (i * 0.04) + 's';
+      card.innerHTML =
+        '<span class="oxi-q-num">' + String(i + 1).padStart(2, '0') + '</span>' +
+        '<span class="oxi-q-text">' + q.text + '</span>' +
+        '<span class="oxi-q-badge">' + (q.type === 'general' ? 'General' : oxiSelected) + '</span>';
+      list.appendChild(card);
+    });
+  }
+
+  area.classList.add('visible');
+  area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+document.getElementById('oxiDrawBtn').addEventListener('click', oxiDraw);
+document.getElementById('oxiRedrawBtn').addEventListener('click', oxiDraw);
+document.getElementById('oxiChangeBtn').addEventListener('click', function() {
+  document.getElementById('oxi-question-area').classList.remove('visible');
+  document.querySelectorAll('.oxi-subject-btn').forEach(b => b.classList.remove('active'));
+  oxiSelected = null;
+  document.getElementById('oxiDrawBtn').disabled = true;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+oxiBuildGrid();
+</script>
