@@ -1,0 +1,869 @@
+---
+layout: default
+title: Deco Models Compared
+description: An interesting aside into Scuba deco models.
+is_resource: true
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decompression Models Compared | jrowing.com</title>
+<meta name="description" content="An interactive comparison of Bühlmann ZHL-16C, RGBM, VPM-B, and USN decompression models — with adjustable gradient factors and repetitive dive simulation.">
+
+<!-- Google Fonts: Lora (body serif) + JetBrains Mono (code/data) + Inter (UI) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+<style>
+/* ─── Tokens ─── */
+:root {
+  --navy-900: #0a1628;
+  --navy-800: #112240;
+  --navy-700: #1a3357;
+  --navy-600: #22446e;
+  --ocean-400: #3a7ca5;
+  --ocean-300: #5a9fc8;
+  --ocean-100: #cde8f5;
+  --foam:      #e8f4f9;
+  --sand:      #f5f0e8;
+  --text-dark: #0a1628;
+  --text-mid:  #344a65;
+  --text-muted:#6b7c93;
+  --accent:    #e85d26;        /* bioluminescent orange — one bold risk */
+  --buhl:      #2a78d6;
+  --rgbm:      #7c3aed;
+  --vpm:       #059669;
+  --usn:       #d97706;
+  --border:    #d1dce8;
+  --radius:    6px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--text-dark);
+  background: #fff;
+}
+
+/* ─── Depth-gradient hero ─── */
+.hero {
+  background: linear-gradient(
+    to bottom,
+    var(--navy-800) 0%,
+    var(--navy-900) 55%,
+    #060e1c 100%
+  );
+  color: #fff;
+  padding: 5rem 2rem 4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 100%, rgba(58,124,165,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.depth-bar {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 4px;
+  background: linear-gradient(to right, var(--buhl), var(--rgbm), var(--vpm), var(--usn));
+}
+.hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--ocean-300);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.hero h1 {
+  font-family: 'Lora', serif;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 600;
+  line-height: 1.2;
+  max-width: 720px;
+  margin: 0 auto 1.25rem;
+  color: #fff;
+}
+.hero-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: var(--ocean-100);
+  max-width: 560px;
+  margin: 0 auto 2rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+.depth-markers {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+.dm {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.08em;
+}
+
+/* ─── Disclaimer banner ─── */
+.disclaimer {
+  background: #fff8f0;
+  border-left: 4px solid var(--accent);
+  padding: 1rem 1.5rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  color: #5a3a1a;
+  line-height: 1.6;
+}
+.disclaimer strong { color: var(--accent); }
+
+/* ─── Layout ─── */
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+.container-wide {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ─── Sections ─── */
+.section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+.section:last-of-type { border-bottom: none; }
+
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ocean-400);
+  margin-bottom: 0.5rem;
+}
+.section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--navy-800);
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+.section p {
+  color: var(--text-mid);
+  margin-bottom: 1rem;
+}
+.section p:last-child { margin-bottom: 0; }
+
+em { font-style: italic; }
+strong { font-weight: 600; color: var(--text-dark); }
+
+/* ─── Model cards ─── */
+.model-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+.model-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+}
+.model-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.model-card.buhl::before { background: var(--buhl); }
+.model-card.rgbm::before { background: var(--rgbm); }
+.model-card.vpm::before  { background: var(--vpm); }
+.model-card.usn::before  { background: var(--usn); }
+
+.model-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.model-card.buhl .model-name { color: var(--buhl); }
+.model-card.rgbm .model-name { color: var(--rgbm); }
+.model-card.vpm  .model-name { color: var(--vpm); }
+.model-card.usn  .model-name { color: var(--usn); }
+
+.model-full { font-size: 0.85rem; font-weight: 600; color: var(--text-dark); margin-bottom: 0.5rem; }
+.model-desc { font-family: 'Inter', sans-serif; font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
+
+/* ─── Callout box ─── */
+.callout {
+  background: var(--foam);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: var(--text-mid);
+  line-height: 1.6;
+}
+.callout strong { color: var(--navy-800); }
+
+/* ─── Key concepts table ─── */
+.concept-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  margin: 1.5rem 0;
+}
+.concept-table th {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  background: var(--navy-800);
+  color: #fff;
+  font-weight: 500;
+}
+.concept-table td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--text-mid);
+}
+.concept-table tr:nth-child(even) td { background: var(--foam); }
+.concept-table code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  background: var(--ocean-100);
+  color: var(--navy-800);
+  padding: 0 4px;
+  border-radius: 3px;
+}
+
+/* ─── Simulator panel ─── */
+.sim-panel {
+  background: var(--navy-900);
+  padding: 2.5rem 0;
+  margin: 2rem 0 0;
+}
+.sim-panel .sim-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--ocean-300);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+.sim-panel h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+.sim-panel .sim-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: var(--ocean-100);
+  margin-bottom: 1.5rem;
+}
+
+/* ─── Simulator interior (light card) ─── */
+.sim-inner {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+/* Simulator controls */
+.sim-inner *{ box-sizing: border-box; }
+.sim-section-head { font-family:'Inter',sans-serif; font-size:13px; font-weight:600; color:var(--navy-800); margin-bottom:8px; margin-top:12px; }
+.sim-card { background:#f4f7fa; border:1px solid var(--border); border-radius:8px; padding:1rem; margin-bottom:10px; }
+.ctrl { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.ctrl label { font-family:'Inter',sans-serif; font-size:12px; color:var(--text-muted); min-width:180px; }
+.ctrl span { font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; min-width:52px; text-align:right; color:var(--navy-800); }
+input[type=range] { flex:1; accent-color: var(--ocean-400); }
+.model-toggle { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+.mtog { display:flex; align-items:center; gap:6px; padding:5px 10px; border-radius:4px; border:1px solid var(--border); font-family:'Inter',sans-serif; font-size:12px; cursor:pointer; user-select:none; color:var(--text-mid); background:#fff; }
+.badge { display:inline-block; font-family:'JetBrains Mono',monospace; font-size:10px; padding:2px 8px; border-radius:4px; font-weight:600; }
+.bb { background:#e6f1fb; color:#0c447c; }
+.br { background:#ede9fe; color:#5b21b6; }
+.bv { background:#d1fae5; color:#064e3b; }
+.bu { background:#fef3c7; color:#78350f; }
+.dive-tabs { display:flex; gap:8px; margin-bottom:10px; }
+.dtab { padding:5px 14px; border-radius:4px; border:1px solid var(--border); font-family:'Inter',sans-serif; font-size:12px; cursor:pointer; background:#fff; color:var(--text-muted); }
+.dtab.active { background:var(--navy-800); color:#fff; border-color:var(--navy-800); }
+.chart-wrap { position:relative; width:100%; height:280px; margin-bottom:12px; }
+.chart-wrap2 { position:relative; width:100%; height:180px; }
+.sim-legend { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:10px; }
+.legend-item { display:flex; align-items:center; gap:6px; font-family:'Inter',sans-serif; font-size:11px; color:var(--text-muted); }
+.legend-swatch { width:24px; height:3px; }
+.stop-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:8px; margin-bottom:10px; }
+.stop-card { background:#f4f7fa; border:1px solid var(--border); border-radius:6px; padding:10px; }
+.stop-table { width:100%; font-family:'Inter',sans-serif; font-size:11px; border-collapse:collapse; margin-top:4px; }
+.stop-table th { color:var(--text-muted); font-weight:600; text-align:left; padding:2px 5px; border-bottom:1px solid var(--border); }
+.stop-table td { padding:2px 5px; border-bottom:1px solid var(--border); color:var(--text-dark); }
+.stop-table tr:last-child td { border-bottom:none; }
+.sum-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:8px; margin-bottom:10px; }
+.sum-card { background:#f4f7fa; border-radius:6px; padding:10px; text-align:center; }
+.diff-note { font-family:'Inter',sans-serif; font-size:11px; padding:8px 10px; border-radius:6px; background:#eff6ff; color:#1e40af; margin-bottom:10px; line-height:1.5; }
+.toggle-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.si-banner { font-family:'Inter',sans-serif; font-size:11px; color:var(--text-muted); background:#fff; padding:6px 10px; border-radius:4px; margin-bottom:8px; border:1px solid var(--border); }
+.sim-note { font-family:'Inter',sans-serif; font-size:10px; color:var(--text-muted); margin-top:12px; line-height:1.5; }
+
+/* ─── Further reading ─── */
+.ref-list { list-style: none; margin: 1rem 0; }
+.ref-list li {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: var(--text-mid);
+}
+.ref-list li:last-child { border-bottom: none; }
+.ref-list cite { font-style: italic; }
+
+/* ─── Footer ─── */
+footer {
+  background: var(--navy-900);
+  color: var(--ocean-100);
+  text-align: center;
+  padding: 2rem 1.5rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+}
+footer a { color: var(--ocean-300); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* ─── Responsive ─── */
+@media(max-width:600px){
+  .hero { padding: 3rem 1.25rem 2.5rem; }
+  .depth-markers { gap: 1rem; }
+  .model-grid { grid-template-columns: 1fr 1fr; }
+  .sim-inner { padding: 1rem; }
+  .ctrl label { min-width: 140px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     HERO
+═══════════════════════════════════════ -->
+<header class="hero">
+  <div class="hero-eyebrow">Physics of diving · jrowing.com</div>
+  <h1>Decompression Models Compared</h1>
+  <p class="hero-sub">
+    Bühlmann ZHL-16C, RGBM, VPM-B, and the legacy USN tables — what the algorithms actually disagree about, and why it matters at depth.
+  </p>
+  <div class="depth-markers">
+    <span class="dm">0 m ——</span>
+    <span class="dm">—— 10 m ——</span>
+    <span class="dm">—— 20 m ——</span>
+    <span class="dm">—— 40 m ——</span>
+    <span class="dm">—— 60 m</span>
+  </div>
+  <div class="depth-bar"></div>
+</header>
+
+<!-- ═══════════════════════════════════════
+     DISCLAIMER
+═══════════════════════════════════════ -->
+<div class="disclaimer">
+  <div class="container">
+    <strong>Important safety disclaimer.</strong> This page and the simulator below are produced for <em>educational purposes only</em>. The models implemented here are simplified approximations of published algorithms — they are useful for developing intuition about how different decompression theories behave, but they have <strong>not been validated against clinical data or dive-computer implementations</strong> and must not be used for actual dive planning. Decompression sickness (DCS) can cause permanent injury or death. Always plan dives using a properly certified dive computer or validated planning software, follow the training guidance of a recognised agency (PADI, BSAC, SSI, TDI, IANTD), and never dive beyond your training or certification level. The author accepts no responsibility for decisions made on the basis of information presented here.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     INTRODUCTION
+═══════════════════════════════════════ -->
+<section class="section">
+<div class="container">
+  <div class="section-label">Background</div>
+  <h2>Why do dive computers disagree?</h2>
+  <p>
+    Put two divers in the water with different computers after an identical dive profile and you may surface to find their deco obligations differing by ten minutes or more — different first-stop depths, different shallow-stop durations, different total ascent times. This isn't a calibration error. It reflects genuinely different theories about what happens to dissolved and free gas in the body during ascent.
+  </p>
+  <p>
+    Decompression science rests on a disarmingly simple observation made by John Scott Haldane in 1908: nitrogen dissolves into body tissues under pressure and must be allowed to come back out slowly enough that bubbles do not form. The argument that has continued ever since is about <em>how</em> bubbles form, whether preventing them entirely is even possible, and which tissues matter most. The models below represent roughly a century of increasingly sophisticated attempts to answer those questions.
+  </p>
+  <p>
+    What follows is a physicist's tour of the four main families of decompression algorithm in recreational and technical diving, followed by an interactive simulator that lets you compare their deco obligations under identical conditions.
+  </p>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     THE MODELS
+═══════════════════════════════════════ -->
+<section class="section">
+<div class="container">
+  <div class="section-label">The algorithms</div>
+  <h2>Four families, four philosophies</h2>
+
+  <div class="model-grid">
+    <div class="model-card buhl">
+      <div class="model-name">Bühlmann ZHL-16C</div>
+      <div class="model-full">+ Gradient Factors</div>
+      <div class="model-desc">Dissolved-gas model. Tracks N₂ in 16 tissue compartments. Gradient factors add a configurable safety margin above the original M-values.</div>
+    </div>
+    <div class="model-card rgbm">
+      <div class="model-name">RGBM</div>
+      <div class="model-full">Reduced Gradient Bubble Model</div>
+      <div class="model-desc">Hybrid dissolved/bubble model (Wienke, 1990). Penalises fast compartments and carries a bubble-memory term across surface intervals.</div>
+    </div>
+    <div class="model-card vpm">
+      <div class="model-name">VPM-B</div>
+      <div class="model-full">Varying Permeability Model</div>
+      <div class="model-desc">Full bubble-mechanics model (Yount & Hoffman). Tracks critical bubble nuclei radii. Tends to prescribe deeper, shorter stops vs. Bühlmann's long shallow stops.</div>
+    </div>
+    <div class="model-card usn">
+      <div class="model-name">USN Tables</div>
+      <div class="model-full">Haldanean / legacy</div>
+      <div class="model-desc">Original dissolved-gas approach. No gradient factors, no bubble correction, full washout assumed at surface. The most permissive — and historically associated with elevated DCS rates on repetitive dives.</div>
+    </div>
+  </div>
+
+  <h2 style="margin-top:2rem">The dissolved-gas foundation: Bühlmann ZHL-16C</h2>
+  <p>
+    Albert Bühlmann at the University of Zurich spent decades refining Haldane's original two-tissue model into the 16-compartment system that most modern dive computers are ultimately descended from. Each compartment has a characteristic half-time — from 4 minutes (fast, representing blood-rich tissues like brain and spinal cord) to 635 minutes (slow, representing joints and fatty tissue). Nitrogen uptake and elimination in each compartment follows a simple exponential law:
+  </p>
+  <div class="callout">
+    <strong>Schreiner equation:</strong> P(t) = P<sub>i</sub> + (P<sub>0</sub> − P<sub>i</sub>) · e<sup>−kt</sup>, where k = ln2 / t<sub>½</sub>
+    <br><br>
+    Each compartment is allowed to carry a maximum nitrogen partial pressure — its <em>M-value</em> — defined by two coefficients <em>a</em> and <em>b</em> specific to that compartment. The ceiling is the shallowest depth at which any compartment exceeds its M-value.
+  </div>
+  <p>
+    The weakness of raw Bühlmann is that the original M-values were derived from experimental dives and arguably sit close to the edge of clinical safety. <strong>Gradient factors</strong>, introduced by Erik Baker in the 1990s, address this by scaling the M-values down. GF Low controls how conservatively the first stop depth is set; GF High controls how much supersaturation is permitted at the surface. A GF of 45/85 is a common conservative recreational setting. GF 100/100 is the unmodified algorithm.
+  </p>
+
+  <h2 style="margin-top:2rem">Adding bubbles: RGBM</h2>
+  <p>
+    Bruce Wienke's Reduced Gradient Bubble Model, adopted by Suunto dive computers, keeps the dissolved-gas compartment structure but adds a correction term that reduces the effective M-values based on the depth and duration of the dive. The underlying idea is that bubble nuclei — microscopic gas pockets that exist in tissue even at rest — grow during ascent and are harder to suppress on long, deep dives. Crucially, RGBM does not reset this bubble memory fully at the surface: a short surface interval leaves persistent nuclei that make the second dive more dangerous than the first even after tissues have partially off-gassed. This is physically correct and is one of the clearest practical differences between RGBM and Bühlmann.
+  </p>
+
+  <h2 style="margin-top:2rem">Bubble mechanics: VPM-B</h2>
+  <p>
+    The Varying Permeability Model, developed by David Yount and David Hoffman at the University of Hawaii, abandons the dissolved-gas framework for the ascent phase entirely. Instead of asking "how much nitrogen is dissolved?", VPM asks "what is the critical radius below which a bubble nucleus will collapse rather than grow?" The answer depends on the tension in the bubble wall — modelled as a surface with varying permeability. VPM-B tends to prescribe a <em>deeper first stop</em> than Bühlmann but allows a faster ascent through the shallows, because it determines that shallow stops do less work than the dissolved-gas model predicts. Technical divers often report that VPM-B profiles feel smoother physiologically, though the evidence base is limited.
+  </p>
+
+  <h2 style="margin-top:2rem">The legacy baseline: USN tables</h2>
+  <p>
+    The original US Navy tables and their descendants use M-values without any gradient-factor modification or bubble correction. They assume that nitrogen washout during a surface interval is governed entirely by tissue half-times — no bubble persistence. On single, short recreational dives they perform reasonably well. On multi-dive days they are known to underestimate risk: the bubble nuclei generated on dive one are simply not accounted for. This is partly why the DCS incidence data collected from military and commercial diving using USN procedures exceeded what Haldane's theory predicted.
+  </p>
+
+  <h2 style="margin-top:2rem">Key differences at a glance</h2>
+  <table class="concept-table">
+    <thead>
+      <tr><th>Property</th><th>Bühlmann + GF</th><th>RGBM</th><th>VPM-B</th><th>USN</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Framework</td><td>Dissolved gas</td><td>Dissolved + bubble</td><td>Bubble mechanics</td><td>Dissolved gas</td></tr>
+      <tr><td>First stop</td><td>GF-dependent</td><td>Deeper (bubble penalty)</td><td>Deepest</td><td>Shallowest</td></tr>
+      <tr><td>Shallow stops</td><td>Long (GF-dependent)</td><td>Moderate</td><td>Shorter</td><td>Long</td></tr>
+      <tr><td>Repetitive dives</td><td>Tissue half-times only</td><td>Bubble memory persists</td><td>Increased nucleation</td><td>Half-times only (no bubble)</td></tr>
+      <tr><td>GF equivalent</td><td><code>GF Lo / GF Hi</code></td><td>Built-in (~GF 75/85)</td><td>No GF (nucleation offset)</td><td>GF 100/100</td></tr>
+      <tr><td>Used by</td><td>Most modern computers</td><td>Suunto, some Mares</td><td>Shearwater (optional)</td><td>Legacy tables, some military</td></tr>
+    </tbody>
+  </table>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     SIMULATOR
+═══════════════════════════════════════ -->
+<div class="sim-panel">
+<div class="container-wide">
+  <div class="sim-title">Interactive simulator</div>
+  <h2 style="font-family:'Lora',serif;font-size:1.4rem;font-weight:600;color:#fff;margin-bottom:0.5rem">Compare the models yourself</h2>
+  <p class="sim-sub">Adjust depth, time, gradient factors, and surface interval. Enable a second dive to see how bubble memory and residual nitrogen diverge across the models.</p>
+
+  <div class="sim-inner">
+
+    <div class="toggle-row">
+      <label class="mtog"><input type="checkbox" id="enableDive2"> <span style="font-family:'Inter',sans-serif;font-size:12px">Enable second (repetitive) dive</span></label>
+    </div>
+
+    <div class="dive-tabs" id="diveTabs">
+      <div class="dtab active" data-dive="1">Dive 1</div>
+      <div class="dtab" data-dive="2" id="dive2Tab" style="display:none">Dive 2</div>
+    </div>
+
+    <div id="dive1Panel">
+      <div class="sim-section-head">Dive 1 profile</div>
+      <div class="sim-card">
+        <div class="ctrl"><label>Bottom depth (m)</label><input type="range" id="depth1" min="15" max="60" step="3" value="40"><span id="d1V">40 m</span></div>
+        <div class="ctrl"><label>Bottom time (min)</label><input type="range" id="btime1" min="10" max="60" step="1" value="30"><span id="b1V">30 min</span></div>
+      </div>
+    </div>
+
+    <div id="surfaceIntervalPanel" style="display:none">
+      <div class="sim-section-head">Surface interval</div>
+      <div class="sim-card">
+        <div class="ctrl"><label>Surface interval (min)</label><input type="range" id="si" min="15" max="720" step="15" value="60"><span id="siV">60 min</span></div>
+        <div class="si-banner" id="siNote">Short surface intervals leave residual nitrogen — and RGBM penalises this through bubble memory.</div>
+      </div>
+      <div class="sim-section-head">Dive 2 profile</div>
+      <div class="sim-card">
+        <div class="ctrl"><label>Bottom depth (m)</label><input type="range" id="depth2" min="15" max="60" step="3" value="25"><span id="d2V">25 m</span></div>
+        <div class="ctrl"><label>Bottom time (min)</label><input type="range" id="btime2" min="10" max="60" step="1" value="30"><span id="b2V">30 min</span></div>
+      </div>
+    </div>
+
+    <div class="sim-section-head">Shared parameters</div>
+    <div class="sim-card">
+      <div class="ctrl"><label>O₂ fraction (%)</label><input type="range" id="o2" min="21" max="40" step="1" value="21"><span id="oV">21%</span></div>
+      <div class="ctrl"><label>Ascent rate (m/min)</label><input type="range" id="asc" min="3" max="18" step="1" value="9"><span id="aV">9 m/min</span></div>
+    </div>
+
+    <div class="sim-section-head">Bühlmann gradient factors</div>
+    <div class="sim-card">
+      <div class="ctrl"><label>GF Low (first stop conservatism)</label><input type="range" id="gflo" min="10" max="100" step="5" value="45"><span id="gfloV">45%</span></div>
+      <div class="ctrl"><label>GF High (surface limit)</label><input type="range" id="gfhi" min="50" max="100" step="5" value="85"><span id="gfhiV">85%</span></div>
+      <div style="font-family:'Inter',sans-serif;font-size:11px;color:var(--text-muted)">45/85 = conservative recreational · 100/100 = raw Bühlmann · 30/70 = technical conservative</div>
+    </div>
+
+    <div class="sim-section-head">Active models</div>
+    <div class="model-toggle">
+      <label class="mtog"><input type="checkbox" id="mB" checked><span class="badge bb">Bühlmann + GF</span></label>
+      <label class="mtog"><input type="checkbox" id="mR" checked><span class="badge br">RGBM</span></label>
+      <label class="mtog"><input type="checkbox" id="mV" checked><span class="badge bv">VPM-B</span></label>
+      <label class="mtog"><input type="checkbox" id="mU"><span class="badge bu">USN / Haldanean</span></label>
+    </div>
+
+    <div class="sim-legend" id="simLegend"></div>
+    <div class="chart-wrap"><canvas id="pc" role="img" aria-label="Depth vs time decompression profile"></canvas></div>
+    <div id="diffNote" class="diff-note"></div>
+
+    <div class="sim-section-head">Decompression stops <span id="stopsDiveLabel" style="font-weight:400;color:var(--text-muted)"></span></div>
+    <div class="stop-grid" id="stopGrid"></div>
+    <div class="sim-section-head">Total decompression time <span id="sumDiveLabel" style="font-weight:400;color:var(--text-muted)"></span></div>
+    <div class="sum-row" id="sumRow"></div>
+
+    <div class="sim-section-head">Residual tissue loading carried into dive 2 (% of M-value)</div>
+    <div class="chart-wrap2" id="residualWrap" style="display:none"><canvas id="tc" role="img" aria-label="Tissue compartment residual N2 loading"></canvas></div>
+    <div id="residualMsg" style="font-family:'Inter',sans-serif;font-size:12px;color:var(--text-muted)">Enable dive 2 to see residual nitrogen carried across the surface interval.</div>
+
+    <div class="sim-note">
+      Simulation notes: all models use ZHL-16C tissue half-times and a/b coefficients with Schreiner-equation integration. RGBM applies Wienke-style bubble-nucleation M-value reductions, larger on fast compartments, with an exponentially decaying bubble-memory term across the surface interval. VPM-B applies a critical-radius nucleation offset, largest on fast compartments, independent of GFs. USN uses unmodified Haldanean M-values with full surface washout assumed. These are physically-motivated approximations — not validated implementations of the published algorithms. Results are indicative only and must not be used for dive planning.
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     WHAT THE SIM SHOWS
+═══════════════════════════════════════ -->
+<section class="section">
+<div class="container">
+  <div class="section-label">Interpretation</div>
+  <h2>What to look for in the simulator</h2>
+  <p>
+    <strong>Gradient factors and first stop depth.</strong> With GF Low set conservatively (say 30–45%), Bühlmann places its first stop deep — you can see the profile stairstepping far from the surface. Raising GF Low toward 100% pushes the first stop shallower until, at GF 100/100, it reproduces the original Bühlmann ceiling with no safety margin. GF High controls how much supersaturation is allowed as you approach the surface: lowering it lengthens shallow stops significantly.
+  </p>
+  <p>
+    <strong>RGBM versus Bühlmann on a single dive.</strong> On short, shallow dives the two models often agree closely, because the bubble-nucleation penalty is small. Increase depth and bottom time and RGBM's effective M-value reductions grow: you will see its first stop appear deeper and its total deco time lengthen relative to Bühlmann. This is the intended behaviour — RGBM is conservative precisely because it penalises the conditions that generate more bubble nuclei.
+  </p>
+  <p>
+    <strong>VPM-B and deep first stops.</strong> VPM-B often places its first stop deeper than both Bühlmann and RGBM, but compensates with shorter stops in the 6–9 m range. The total deco time may be similar but the profile shape is characteristically different: less time spent hanging at 3–6 m.
+  </p>
+  <p>
+    <strong>Repetitive diving and bubble memory.</strong> Enable dive 2, set a short surface interval (under 60 minutes), and compare RGBM against Bühlmann on the second dive. Bühlmann's deco obligation on dive 2 is governed entirely by the residual tissue loadings from dive 1 — you can see these in the tissue-loading chart. RGBM adds a bubble-memory penalty on top of this that does not wash out with the nitrogen: even if the tissues are partially clear, the algorithm treats the second dive as more dangerous. This is arguably the most physically important difference between the two approaches for recreational divers who do multiple dives in a day.
+  </p>
+
+  <div class="callout">
+    <strong>A note on the USN baseline.</strong> The USN model consistently requires the least decompression. It is tempting to interpret this as "safer" — it means less time hanging in the water — but the logic is inverted. Less deco means less margin. The historical DCS incident data from military and commercial dive programmes using USN procedures is part of why both bubble models and gradient factors were developed in the first place.
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     PHYSICS NOTES
+═══════════════════════════════════════ -->
+<section class="section">
+<div class="container">
+  <div class="section-label">Physics notes</div>
+  <h2>The underlying equations</h2>
+  <p>
+    All four models agree on tissue loading during the bottom phase, because they all use the same exponential saturation equation. The disagreement is entirely in how they define the maximum permissible supersaturation during ascent.
+  </p>
+  <p>
+    In Bühlmann, the ceiling for compartment <em>i</em> at ambient pressure P<sub>amb</sub> is determined by the M-value line: P<sub>i</sub> = a<sub>i</sub> + P<sub>amb</sub> / b<sub>i</sub>. The gradient factor scales this: the permitted tissue tension becomes GF·a<sub>i</sub> + P<sub>amb</sub> / b<sub>i</sub>, which is always below the M-value. The ceiling is the shallowest depth at which all 16 compartments satisfy this inequality.
+  </p>
+  <p>
+    RGBM modifies a<sub>i</sub> by multiplying it by a bubble factor BF &lt; 1 that is a function of the dive's depth–time product. The effect is identical to applying a lower GF Low — but the value of BF is determined by the algorithm, not the diver.
+  </p>
+  <p>
+    VPM-B replaces the M-value constraint with a condition on the critical bubble radius r<sub>c</sub>: a bubble nucleus survives ascent if the gas tension exceeds the pressure required to collapse a bubble of radius r<sub>c</sub>. In practice this produces a compartment-specific offset to the permissible supersaturation that is largest for fast compartments — hence the deeper first stop.
+  </p>
+  <p>
+    The tissue loading chart in the simulator shows, for each ZHL-16C compartment, what fraction of its M-value is occupied after the bottom phase. Red bars indicate compartments close to saturation — typically the fastest compartments (4–27 minute half-times) on short deep dives, and the slower ones (100–300 minute half-times) on very long dives.
+  </p>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     FURTHER READING
+═══════════════════════════════════════ -->
+<section class="section">
+<div class="container">
+  <div class="section-label">Further reading</div>
+  <h2>If you want to go deeper</h2>
+  <ul class="ref-list">
+    <li><cite>Bühlmann, A.A.</cite> (1984). <em>Decompression–Decompression Sickness.</em> Springer. The primary source for ZHL-16 tissue parameters and M-values.</li>
+    <li><cite>Baker, E.C.</cite> (1998). <em>Understanding M-values.</em> Immersed Vol.3 No.3. The original gradient-factor paper — freely available online and highly readable.</li>
+    <li><cite>Wienke, B.R.</cite> (1990). <em>Reduced gradient bubble model.</em> International Journal of Biomedical Computing, 26(4), 237–256. The RGBM source paper.</li>
+    <li><cite>Yount, D.E. &amp; Hoffman, D.C.</cite> (1986). <em>On the use of a bubble formation model to calculate diving tables.</em> Aviation, Space, and Environmental Medicine, 57(2), 149–156. VPM original publication.</li>
+    <li><cite>Mitchell, S.J. &amp; Doolette, D.J.</cite> (2009). Selective vulnerability of the inner ear to decompression sickness in divers with right-to-left shunts: the role of tissue gas supersaturation. <em>Journal of Applied Physiology, 106</em>(1), 298–301. On bubble formation in real tissues.</li>
+    <li><cite>Pollock, N.W.</cite> (ed.) (2011). <em>Diving and Hyperbaric Medicine — Selected Proceedings</em>. Divers Alert Network. Accessible collection covering decompression theory and accident analysis.</li>
+  </ul>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════ -->
+<footer>
+  <div>
+    <a href="https://jrowing.com">jrowing.com</a> · Joe Rowing, Chartered Physicist (CPhys MInstP) · Praslin, Seychelles
+  </div>
+  <div style="margin-top:0.5rem;color:rgba(205,232,245,0.5)">
+    Page for educational purposes only. Not for dive planning. See disclaimer above.
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════
+     SIMULATOR JAVASCRIPT
+═══════════════════════════════════════ -->
+<script>
+const C = [
+  {ht:4,   a:1.2599,b:0.5050},{ht:8,   a:1.0000,b:0.6514},
+  {ht:12.5,a:0.8618,b:0.7222},{ht:18.5,a:0.7562,b:0.7825},
+  {ht:27,  a:0.6200,b:0.8126},{ht:38.3,a:0.5043,b:0.8434},
+  {ht:54.3,a:0.4410,b:0.8693},{ht:77,  a:0.4000,b:0.8910},
+  {ht:109, a:0.3750,b:0.9092},{ht:146, a:0.3500,b:0.9222},
+  {ht:187, a:0.3295,b:0.9319},{ht:239, a:0.3065,b:0.9403},
+  {ht:305, a:0.2835,b:0.9477},{ht:390, a:0.2610,b:0.9544},
+  {ht:498, a:0.2480,b:0.9602},{ht:635, a:0.2327,b:0.9653},
+];
+const N=16;
+function Pamb(d){return d/10+1;}
+function PN2i(d,n2f){return (Pamb(d)-0.0627)*n2f;}
+function loadStep(tissues,fromD,toD,dt,n2f){
+  const steps=Math.max(1,Math.ceil(dt*4)),ddt=dt/steps;
+  for(let s=0;s<steps;s++){
+    const f=(s+0.5)/steps,d=fromD+(toD-fromD)*f,pi=PN2i(d,n2f);
+    for(let i=0;i<N;i++){const k=Math.LN2/C[i].ht;tissues[i]=tissues[i]+(pi-tissues[i])*(1-Math.exp(-k*ddt));}
+  }
+}
+function surfaceInterval(tissues,minutes){
+  const piSurf=(1.0-0.0627)*0.79;
+  for(let i=0;i<N;i++){const k=Math.LN2/C[i].ht;tissues[i]=tissues[i]+(piSurf-tissues[i])*(1-Math.exp(-k*minutes));}
+}
+function buhlCeiling(tissues,gf){
+  let c=0;
+  for(let i=0;i<N;i++){const p=(tissues[i]-C[i].a*gf)/(gf/C[i].b-gf+1);c=Math.max(c,(p-1)*10);}
+  return Math.max(0,c);
+}
+function gfAtDepth(d,fsd,gflo,gfhi){
+  if(fsd<=0)return gfhi/100;
+  return Math.min(gfhi/100,Math.max(gflo/100,gflo/100+(gfhi/100-gflo/100)*((fsd-d)/fsd)));
+}
+function rgbmCeiling(tissues,depth,bt,bm){
+  const bf=Math.max(0.55,1.0-0.006*Math.sqrt(depth*bt)-bm),fp=Math.max(0.65,1.0-0.003*depth-bm*1.4);
+  let c=0;
+  for(let i=0;i<N;i++){
+    const ae=C[i].a*(C[i].ht<=27?fp:bf),ge=0.85,p=(tissues[i]-ae*ge)/(ge/C[i].b-ge+1);
+    c=Math.max(c,(p-1)*10);
+  }
+  return Math.max(0,c);
+}
+function vpmCeiling(tissues){
+  let c=0;
+  for(let i=0;i<N;i++){
+    const co=Math.max(0,0.18-0.008*C[i].ht),ae=C[i].a*(0.80-co),ge=0.80,p=(tissues[i]-ae*ge)/(ge/C[i].b-ge+1);
+    c=Math.max(c,(p-1)*10);
+  }
+  return Math.max(0,c);
+}
+function usnCeiling(tissues){
+  let c=0;
+  for(let i=0;i<N;i++){const p=(tissues[i]-C[i].a)/(1/C[i].b);c=Math.max(c,(p-1)*10);}
+  return Math.max(0,c);
+}
+function getCeil(model,tissues,depth,bt,bm,currD,fsd,gflo,gfhi){
+  if(model==='B'){const gf=gfAtDepth(currD,fsd,gflo,gfhi);return buhlCeiling(tissues,gf);}
+  if(model==='R')return rgbmCeiling(tissues,depth,bt,bm);
+  if(model==='V')return vpmCeiling(tissues);
+  return usnCeiling(tissues);
+}
+function runDive(tissuesIn,depth,bt,n2f,ascRate,gflo,gfhi,model,bm,tStart){
+  let tissues=[...tissuesIn];
+  const descRate=18,dT=depth/descRate;
+  let time=tStart,profile=[];
+  profile.push({t:time,d:0});
+  loadStep(tissues,0,depth,dT,n2f);time+=dT;profile.push({t:time,d:depth});
+  loadStep(tissues,depth,depth,bt,n2f);time+=bt;profile.push({t:time,d:depth});
+  const snapTissues=[...tissues];
+  let currD=depth,stops=[],safety=0;
+  const initCeil=getCeil(model,tissues,depth,bt,bm,currD,0,gflo,gfhi);
+  const fsd=Math.ceil(Math.max(0,initCeil)/3)*3;
+  while(currD>0&&safety<400){
+    safety++;
+    const nextD=Math.max(0,currD-3),ascT=3/ascRate;
+    loadStep(tissues,currD,nextD,ascT,n2f);time+=ascT;currD=nextD;
+    profile.push({t:time,d:currD});
+    if(currD===0)break;
+    const ceil=getCeil(model,tissues,depth,bt,bm,currD,fsd,gflo,gfhi);
+    if(ceil>=currD){
+      let stopT=0;
+      while(stopT<180){
+        const cNow=getCeil(model,tissues,depth,bt,bm,currD,fsd,gflo,gfhi);
+        if(cNow<currD)break;
+        loadStep(tissues,currD,currD,1,n2f);time+=1;stopT++;
+        profile.push({t:time,d:currD});
+      }
+      if(stopT>0)stops.push({depth:currD,time:stopT});
+    }
+  }
+  const totalDeco=stops.reduce((s,x)=>s+x.time,0);
+  return {profile,stops,totalDeco,endTime:Math.round(time),tissues,snapTissues,fsd};
+}
+
+const MODELS=[
+  {id:'B',label:'Bühlmann ZHL-16C + GF',color:'#2a78d6',dash:[],badge:'bb'},
+  {id:'R',label:'RGBM',color:'#7c3aed',dash:[7,3],badge:'br'},
+  {id:'V',label:'VPM-B',color:'#059669',dash:[3,4],badge:'bv'},
+  {id:'U',label:'USN / Haldanean',color:'#d97706',dash:[10,3,2,3],badge:'bu'},
+];
+let pChart,tChart,currentDiveView=1;
+
+document.getElementById('enableDive2').addEventListener('change',e=>{
+  const on=e.target.checked;
+  document.getElementById('dive2Tab').style.display=on?'block':'none';
+  document.getElementById('surfaceIntervalPanel').style.display=on?'block':'none';
+  document.getElementById('residualWrap').style.display=on?'block':'none';
+  document.getElementById('residualMsg').style.display=on?'none':'block';
+  if(!on){currentDiveView=1;setActiveTab(1);}
+  update();
+});
+document.querySelectorAll('.dtab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    const on=document.getElementById('enableDive2').checked;
+    const d=+t.dataset.dive;
+    if(d===2&&!on)return;
+    currentDiveView=d;setActiveTab(d);update();
+  });
+});
+function setActiveTab(d){document.querySelectorAll('.dtab').forEach(t=>t.classList.toggle('active',+t.dataset.dive===d));}
+
+function computeAll(){
+  const depth1=+document.getElementById('depth1').value;
+  const btime1=+document.getElementById('btime1').value;
+  const depth2=+document.getElementById('depth2').value;
+  const btime2=+document.getElementById('btime2').value;
+  const si=+document.getElementById('si').value;
+  const n2f=1-document.getElementById('o2').value/100;
+  const asc=+document.getElementById('asc').value;
+  const gflo=+document.getElementById('gflo').value;
+  const gfhi=+document.getElementById('gfhi').value;
+  const dive2On=document.getElementById('enableDive2').checked;
+  const active=MODELS.filter(m=>document.getElementById('m'+m.id).checked);
+  const surf0=new Array(N).fill(0.79*(1-0.0627));
+  const dive1={};
+  active.forEach(m=>{dive1[m.id]=runDive(surf0,depth1,btime1,n2f,asc,gflo,gfhi,m.id,0,0);});
+  let dive2=null;
+  if(dive2On){
+    dive2={};
+    active.forEach(m=>{
+      const d1res=dive1[m.id];
+      let tAfterSI=[...d1res.tissues];
+      surfaceInterval(tAfterSI,si);
+      const bm2=m.id==='R'?Math.max(0,0.06*Math.exp(-si/90)):0;
+      dive2[m.id]=runDive(tAfterSI,depth2,btime2,n2f,asc,gflo,gfhi,m.id,bm2,d1res.endTime+si);
+      dive2[m.id].bm2=bm2;
+    });
+  }
+  return {active,dive1,dive2,dive2On,depth1,btime1,depth2,btime2,si,gflo,gfhi};
+}
+
+function update(){
+  const {active,dive1,dive2,dive2On,depth1,btime1,depth2,btime2,si}=computeAll();
+  const setV=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  setV('d1V',depth1+' m');setV('b1V',btime1+' min');setV('d2V',depth2+' m');setV('b2V',btime2+' min');
+  setV('siV',si+' min');setV('oV',document.getElementById('o2').value+'%');
+  setV('aV',document.getElementById('asc').value+' m/min');
+  setV('gfloV',document.getElementById('gflo').value+'%');
+  setV('gfhiV',document.getElementById('gfhi').value+'%');
+  const siNote=document.getElementById('siNote');
+  if(si<60)siNote.textContent=`Short SI (${si} min) — RGBM bubble memory penalty will be significant on dive 2.`;
+  else if(si<180)siNote.textContent=`Moderate SI (${si} min) — some bubble memory persists for RGBM.`;
+  else siNote.textContent=`Long SI (${si} min) — most models treat tissues as substantially reset.`;
+  let viewDive=(dive2On&&currentDiveView===2)?2:1;
+  if(!dive2On)currentDiveView=1;
+  setActiveTab(viewDive);
+  const gridC='#d1dce8',tickC='#6b7c93';
+  const legEl=document.getElementById('simLegend');
+  legEl.innerHTML=active.map(m=>`<div class="legend-item"><div class="legend-swatch" style="border-top:3px ${m.dash.length?'dashed':'solid'} ${m.color}"></div><span>${m.label}</span></div>`).join('');
+  let datasets,maxT;
+  if(dive2On&&dive2){
+    datasets=active.map(m=>({label:m.label,data:[...dive1[m.id].profile,...dive2[m.id].profile].map(p=>({x:p.t,y:p.d})),borderColor:m.color,borderWidth:2.5,borderDash:m.dash,tension:0,pointRadius:0,fill:false}));
+    maxT=Math.max(...active.map(m=>dive2[m.id].endTime))+5;
+  } else {
+    datasets=active.map(m=>({label:m.label,data:dive1[m.id].profile.map(p=>({x:p.t,y:p.d})),borderColor:m.color,borderWidth:2.5,borderDash:m.dash,tension:0,pointRadius:0,fill:false}));
+    maxT=Math.max(...active.map(m=>dive1[m.id].endTime),btime1+depth1/18+5);
+  }
+  if(pChart)pChart.destroy();
+  pChart=new Chart(document.getElementById('pc'),{type:'line',data:{datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false,callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y.toFixed(0)} m`}}},scales:{x:{type:'linear',min:0,max:Math.ceil(maxT/5)*5,title:{display:true,text:'Time (min)',color:tickC},ticks:{color:tickC,maxTicksLimit:14,callback:v=>Math.round(v)},grid:{color:gridC}},y:{reverse:true,min:0,max:Math.ceil(Math.max(depth1,dive2On?depth2:0)/5)*5+5,title:{display:true,text:'Depth (m)',color:tickC},ticks:{color:tickC,callback:v=>v+' m'},grid:{color:gridC}}}}});
+  const viewSet=(viewDive===2&&dive2)?dive2:dive1;
+  let notes=[];
+  if(viewSet['B']&&viewSet['R']){
+    const bF=viewSet['B'].fsd,rF=viewSet['R'].fsd;
+    if(rF>bF)notes.push(`RGBM first stop deeper (${rF} m) than Bühlmann (${bF} m) — bubble nucleation penalty`);
+    else if(rF===bF)notes.push(`RGBM and Bühlmann agree on first stop (${rF} m) for this profile`);
+    else notes.push(`Bühlmann first stop (${bF} m) deeper than RGBM here — try deeper/longer dive`);
+  }
+  if(viewDive===2&&dive2&&dive2['R'])notes.push(`RGBM bubble memory: ${(dive2['R'].bm2*100).toFixed(1)}% extra M-value reduction from surface interval of ${si} min`);
+  document.getElementById('diffNote').textContent=notes.join(' · ')||'Adjust parameters to see model divergence.';
+  document.getElementById('stopsDiveLabel').textContent=dive2On?`(Dive ${viewDive})`:'';
+  document.getElementById('sumDiveLabel').textContent=dive2On?`(Dive ${viewDive})`:'';
+  const sg=document.getElementById('stopGrid');
+  sg.innerHTML=active.map(m=>{
+    const r=viewSet[m.id];
+    const stops=r.stops.slice().reverse();
+    const sh=stops.length===0?'<div style="font-size:11px;color:#6b7c93;margin-top:4px">No deco stops</div>':`<table class="stop-table"><tr><th>Depth</th><th>Time</th></tr>${stops.map(s=>`<tr><td>${s.depth} m</td><td>${s.time} min</td></tr>`).join('')}</table>`;
+    return `<div class="stop-card"><span class="badge ${m.badge}">${m.label}</span>${sh}<div style="margin-top:6px;font-size:11px;color:#6b7c93">First stop: <b style="color:#0a1628">${r.fsd||0} m</b></div><div style="font-size:11px;color:#6b7c93">Total deco: <b style="color:${m.color}">${r.totalDeco} min</b></div></div>`;
+  }).join('');
+  const sr=document.getElementById('sumRow');
+  sr.innerHTML=active.map(m=>{
+    const r=viewSet[m.id];
+    return `<div class="sum-card"><div style="font-size:10px;color:#6b7c93;margin-bottom:2px;font-family:'Inter',sans-serif">${m.label}</div><div style="font-size:22px;font-weight:600;color:${m.color};font-family:'JetBrains Mono',monospace">${r.totalDeco}</div><div style="font-size:10px;color:#6b7c93;font-family:'Inter',sans-serif">min deco</div><div style="font-size:10px;color:#6b7c93;font-family:'Inter',sans-serif">first stop: ${r.fsd||0} m</div></div>`;
+  }).join('');
+  if(dive2On&&dive2&&active.length>0){
+    const refId=active.find(m=>m.id==='B')?'B':active[0].id;
+    const tsRes=[...dive1[refId].tissues];
+    surfaceInterval(tsRes,si);
+    const pcts=tsRes.map((t,i)=>{const mv=C[i].a+1.0/C[i].b;return Math.min(100,Math.round((t/mv)*100));});
+    if(tChart)tChart.destroy();
+    tChart=new Chart(document.getElementById('tc'),{type:'bar',data:{labels:C.map(c=>c.ht+''),datasets:[{label:'% of M-value',data:pcts,backgroundColor:pcts.map(p=>p>50?'#e24b4a':p>25?'#d97706':'#2a78d6')}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y+'% of M-value'}}},scales:{x:{title:{display:true,text:'Half-time (min)',color:tickC},ticks:{color:tickC,font:{size:10}},grid:{color:gridC}},y:{min:0,max:100,title:{display:true,text:'% of M-value',color:tickC},ticks:{color:tickC,callback:v=>v+'%'},grid:{color:gridC}}}}});
+  }
+}
+document.querySelectorAll('input').forEach(e=>e.addEventListener('input',update));
+update();
+</script>
+</body>
+</html>
