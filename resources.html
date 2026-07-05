@@ -2,24 +2,146 @@
 layout: default
 title: Resources
 ---
-<div class="page-wrap">
+<div class="resources-wrap">
   <a href="/" class="back-link">← jrowing.com</a>
   <hr class="page-divider">
   <div class="section-label">Teaching &amp; learning materials</div>
-  <ul class="project-list">
-    {% assign resource_pages = site.pages | where: "is_resource", true | sort: "title" %}
+
+  <div class="resource-toolbar">
+    <input type="text" class="resource-search" id="resourceSearch" placeholder="Search resources…" aria-label="Search resources">
+
+    <div class="filter-row">
+      <span class="filter-row-label">Spec</span>
+      <button type="button" class="filter-tag" data-filter-group="spec" data-filter-value="0654">0654</button>
+      <button type="button" class="filter-tag" data-filter-group="spec" data-filter-value="9702">9702</button>
+      <button type="button" class="filter-tag" data-filter-group="spec" data-filter-value="general">General</button>
+    </div>
+
+    <div class="filter-row">
+      <span class="filter-row-label">Type</span>
+      <button type="button" class="filter-tag" data-filter-group="type" data-filter-value="simulation">Simulations</button>
+      <button type="button" class="filter-tag" data-filter-group="type" data-filter-value="revision-tool">Revision Tools</button>
+      <button type="button" class="filter-tag" data-filter-group="type" data-filter-value="database">Databases</button>
+      <button type="button" class="filter-tag" data-filter-group="type" data-filter-value="problem-set">Problem Sets</button>
+      <button type="button" class="filter-tag" data-filter-group="type" data-filter-value="reference">Reference &amp; Tools</button>
+    </div>
+
+    <button type="button" class="filter-clear" id="filterClear" hidden>Clear filters</button>
+  </div>
+
+  {% assign resource_pages = site.pages | where: "is_resource", true | sort: "title" %}
+  {% assign type_order = "simulation,revision-tool,database,problem-set,reference" | split: "," %}
+  {% assign type_labels = "Simulations,Revision Tools,Databases,Problem Sets,Reference & Tools" | split: "," %}
+  {% assign uncategorized = resource_pages | where_exp: "item", "item.type == nil" %}
+
+  <div id="resourceGroups">
     {% if resource_pages.size > 0 %}
-      {% for r in resource_pages %}
-        <li class="project-item">
-          <span class="project-num">→</span>
-          <div>
-            <a href="{{ r.url }}" class="project-title">{{ r.title }}</a>
-            {% if r.description %}<div class="project-meta">{{ r.description }}</div>{% endif %}
+      {% for t in type_order %}
+        {% assign items = resource_pages | where: "type", t %}
+        {% if items.size > 0 %}
+          {% assign idx = forloop.index0 %}
+          <div class="resource-group" id="{{ t }}">
+            <div class="resource-group-heading">{{ type_labels[idx] }}</div>
+            <ul class="project-list">
+              {% for r in items %}
+                <li class="project-item resource-card"
+                    data-type="{{ r.type }}"
+                    data-spec="{{ r.spec }}"
+                    data-search="{{ r.title | downcase }} {{ r.description | downcase }}">
+                  <span class="project-num">→</span>
+                  <div>
+                    <a href="{{ r.url }}" class="project-title">{{ r.title }}</a>
+                    {% if r.description %}<div class="project-meta">{{ r.description }}</div>{% endif %}
+                    {% if r.spec %}
+                      <div class="project-tags">
+                        <span class="tag">{{ r.spec }}</span>
+                      </div>
+                    {% endif %}
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
           </div>
-        </li>
+        {% endif %}
       {% endfor %}
+
+      {% if uncategorized.size > 0 %}
+        <div class="resource-group" id="other">
+          <div class="resource-group-heading">Other</div>
+          <ul class="project-list">
+            {% for r in uncategorized %}
+              <li class="project-item resource-card" data-type="" data-spec="" data-search="{{ r.title | downcase }} {{ r.description | downcase }}">
+                <span class="project-num">→</span>
+                <div>
+                  <a href="{{ r.url }}" class="project-title">{{ r.title }}</a>
+                  {% if r.description %}<div class="project-meta">{{ r.description }}</div>{% endif %}
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <p class="no-results" id="noResults" hidden>No resources match your filters.</p>
     {% else %}
-      <li style="padding:20px 0;color:var(--ink-4);font-family:var(--sans);font-size:15px;">No resources yet.</li>
+      <p style="padding:20px 0;color:var(--ink-4);font-family:var(--sans);font-size:15px;">No resources yet.</p>
     {% endif %}
-  </ul>
+  </div>
 </div>
+
+<script>
+(function () {
+  var search = document.getElementById('resourceSearch');
+  var clearBtn = document.getElementById('filterClear');
+  var groups = Array.prototype.slice.call(document.querySelectorAll('.resource-group'));
+  var noResults = document.getElementById('noResults');
+  var active = { type: new Set(), spec: new Set() };
+
+  document.querySelectorAll('.filter-tag').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var group = btn.dataset.filterGroup;
+      var value = btn.dataset.filterValue;
+      if (active[group].has(value)) {
+        active[group].delete(value);
+        btn.classList.remove('active');
+      } else {
+        active[group].add(value);
+        btn.classList.add('active');
+      }
+      applyFilters();
+    });
+  });
+
+  search.addEventListener('input', applyFilters);
+
+  clearBtn.addEventListener('click', function () {
+    active.type.clear();
+    active.spec.clear();
+    document.querySelectorAll('.filter-tag').forEach(function (b) { b.classList.remove('active'); });
+    search.value = '';
+    applyFilters();
+  });
+
+  function applyFilters() {
+    var q = search.value.trim().toLowerCase();
+    var anyVisible = false;
+    var filtersActive = active.type.size || active.spec.size || q;
+    clearBtn.hidden = !filtersActive;
+
+    groups.forEach(function (group) {
+      var groupHasVisible = false;
+      group.querySelectorAll('.resource-card').forEach(function (card) {
+        var matchesType = active.type.size === 0 || active.type.has(card.dataset.type);
+        var matchesSpec = active.spec.size === 0 || active.spec.has(card.dataset.spec);
+        var matchesSearch = !q || card.dataset.search.indexOf(q) !== -1;
+        var visible = matchesType && matchesSpec && matchesSearch;
+        card.hidden = !visible;
+        if (visible) { groupHasVisible = true; anyVisible = true; }
+      });
+      group.hidden = !groupHasVisible;
+    });
+
+    noResults.hidden = anyVisible;
+  }
+})();
+</script>
