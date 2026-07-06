@@ -5,10 +5,20 @@ title: Resources
 <div class="resources-wrap">
   <a href="/" class="back-link">← jrowing.com</a>
   <hr class="page-divider">
-  <div class="section-label">Teaching &amp; learning materials</div>
+
+  <div class="resources-intro">
+    <div class="section-label">Teaching &amp; learning materials</div>
+    <p class="resources-lede">Interactive tools, revision aids, and reference material built for the classroom — searchable and filterable as the pile grows.</p>
+  </div>
 
   <div class="resource-toolbar">
-    <input type="text" class="resource-search" id="resourceSearch" placeholder="Search resources…" aria-label="Search resources">
+    <div class="resource-search-wrap">
+      <svg class="resource-search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M11.5 11.5L14.5 14.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      <input type="text" class="resource-search" id="resourceSearch" placeholder="Search resources…" aria-label="Search resources">
+    </div>
 
     <div class="filter-row">
       <span class="filter-row-label">Spec</span>
@@ -26,7 +36,7 @@ title: Resources
       <button type="button" class="filter-tag" data-filter-group="type" data-filter-value="reference">Reference &amp; Tools</button>
     </div>
 
-    <button type="button" class="filter-clear" id="filterClear" hidden>Clear filters</button>
+    <button type="button" class="filter-clear" id="filterClear" hidden>Clear filters ✕</button>
   </div>
 
   {% assign resource_pages = site.pages | where: "is_resource", true | sort: "title" %}
@@ -41,44 +51,54 @@ title: Resources
         {% if items.size > 0 %}
           {% assign idx = forloop.index0 %}
           <div class="resource-group" id="{{ t }}">
-            <div class="resource-group-heading">{{ type_labels[idx] }}</div>
-            <ul class="project-list">
+            <div class="resource-group-heading">
+              <span class="resource-group-dot"></span>
+              {{ type_labels[idx] }}
+              <span class="resource-group-count">{{ items.size }}</span>
+            </div>
+            <div class="resource-grid">
               {% for r in items %}
-                <li class="project-item resource-card"
-                    data-type="{{ r.type }}"
-                    data-spec="{{ r.spec }}"
-                    data-search="{{ r.title | downcase }} {{ r.description | downcase }}">
-                  <span class="project-num">→</span>
-                  <div>
-                    <a href="{{ r.url }}" class="project-title">{{ r.title }}</a>
-                    {% if r.description %}<div class="project-meta">{{ r.description }}</div>{% endif %}
+                <a href="{{ r.url }}" class="resource-card resource-card--{{ t }}"
+                   data-type="{{ r.type }}"
+                   data-spec="{{ r.spec }}"
+                   data-search="{{ r.title | downcase }} {{ r.description | downcase }}">
+                  <div class="resource-card-top"></div>
+                  <div class="resource-card-body">
+                    <div class="resource-card-title">{{ r.title }}</div>
+                    {% if r.description %}<div class="resource-card-desc">{{ r.description }}</div>{% endif %}
                     {% if r.spec %}
-                      <div class="project-tags">
+                      <div class="resource-card-tags">
                         <span class="tag">{{ r.spec }}</span>
                       </div>
                     {% endif %}
                   </div>
-                </li>
+                  <span class="resource-card-arrow">→</span>
+                </a>
               {% endfor %}
-            </ul>
+            </div>
           </div>
         {% endif %}
       {% endfor %}
 
       {% if uncategorized.size > 0 %}
         <div class="resource-group" id="other">
-          <div class="resource-group-heading">Other</div>
-          <ul class="project-list">
+          <div class="resource-group-heading">
+            <span class="resource-group-dot"></span>
+            Other
+            <span class="resource-group-count">{{ uncategorized.size }}</span>
+          </div>
+          <div class="resource-grid">
             {% for r in uncategorized %}
-              <li class="project-item resource-card" data-type="" data-spec="" data-search="{{ r.title | downcase }} {{ r.description | downcase }}">
-                <span class="project-num">→</span>
-                <div>
-                  <a href="{{ r.url }}" class="project-title">{{ r.title }}</a>
-                  {% if r.description %}<div class="project-meta">{{ r.description }}</div>{% endif %}
+              <a href="{{ r.url }}" class="resource-card" data-type="" data-spec="" data-search="{{ r.title | downcase }} {{ r.description | downcase }}">
+                <div class="resource-card-top"></div>
+                <div class="resource-card-body">
+                  <div class="resource-card-title">{{ r.title }}</div>
+                  {% if r.description %}<div class="resource-card-desc">{{ r.description }}</div>{% endif %}
                 </div>
-              </li>
+                <span class="resource-card-arrow">→</span>
+              </a>
             {% endfor %}
-          </ul>
+          </div>
         </div>
       {% endif %}
 
