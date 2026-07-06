@@ -1,0 +1,10 @@
+---
+layout: default
+---
+<div class="page-wrap">
+  <a href="/writing.html" class="back-link">← Writing</a>
+  <hr class="page-divider">
+  {% if page.date %}<div class="page-sub">{{ page.date | date: "%-d %B %Y" }}</div>{% endif %}
+  <h1>{{ page.title }}</h1>
+  {{ content }}
+</div>

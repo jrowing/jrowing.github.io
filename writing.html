@@ -1,0 +1,29 @@
+---
+layout: default
+title: Writing
+---
+<div class="writing-wrap">
+  <a href="/" class="back-link">← jrowing.com</a>
+  <hr class="page-divider">
+
+  <div class="section-label">Longer-form writing</div>
+  <p class="writing-lede">Essays and explainers on physics, teaching, and the occasional deep dive.</p>
+
+  {% assign posts = site.pages | where: "is_writing", true | sort: "date" | reverse %}
+
+  {% if posts.size > 0 %}
+    <ul class="writing-list">
+      {% for p in posts %}
+        <li class="writing-item">
+          <div class="writing-date">{{ p.date | date: "%b %Y" }}</div>
+          <div>
+            <a href="{{ p.url }}" class="writing-title">{{ p.title }}</a>
+            {% if p.description %}<div class="writing-excerpt">{{ p.description }}</div>{% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p style="padding:20px 0;color:var(--ink-4);font-family:var(--sans);font-size:15px;">No posts yet.</p>
+  {% endif %}
+</div>
