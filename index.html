@@ -99,9 +99,10 @@ title: Home
     </div>
   </div>
 
-  {% assign latest_candidates = site.pages | where_exp: "item", "item.is_resource or item.is_writing" %}
-  {% assign latest_dated = latest_candidates | where_exp: "item", "item.date" %}
-  {% assign latest = latest_dated | sort: "date" | last %}
+  {% assign resource_dated = site.pages | where: "is_resource", true | where_exp: "item", "item.date" %}
+  {% assign writing_dated = site.pages | where: "is_writing", true | where_exp: "item", "item.date" %}
+  {% assign latest_combined = resource_dated | concat: writing_dated | sort: "date" %}
+  {% assign latest = latest_combined | last %}
 
   <div id="hero-widget" aria-label="Latest addition to the site">
     <div class="hw-eyebrow">Latest addition</div>
