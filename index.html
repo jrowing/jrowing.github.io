@@ -80,22 +80,6 @@ title: Home
     align-self: flex-start;
   }
   .hw-link:hover { text-decoration: underline; }
-  .hw-skeleton {
-    background: linear-gradient(90deg, var(--paper-3) 25%, var(--rule) 50%, var(--paper-3) 75%);
-    background-size: 200% 100%;
-    animation: hw-shimmer 1.4s infinite;
-    border-radius: 3px;
-    height: 12px;
-    margin-bottom: 10px;
-  }
-  @keyframes hw-shimmer {
-    0%   { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-  .hw-skeleton.wide  { width: 90%; }
-  .hw-skeleton.med   { width: 60%; }
-  .hw-skeleton.short { width: 35%; height: 9px; }
-  .hw-skeleton.para  { height: 9px; margin-bottom: 5px; }
   @media (max-width: 900px) {
     .hero { grid-template-columns: 1fr; }
     #hero-widget { display: none; }
@@ -115,14 +99,21 @@ title: Home
     </div>
   </div>
 
-  <div id="hero-widget" aria-label="Latest from Substack">
-    <div class="hw-eyebrow">Latest from Substack</div>
-    <div class="hw-skeleton wide"></div>
-    <div class="hw-skeleton med" style="margin-bottom:14px;"></div>
-    <div class="hw-skeleton short" style="margin-bottom:16px;"></div>
-    <div class="hw-skeleton para wide"></div>
-    <div class="hw-skeleton para wide"></div>
-    <div class="hw-skeleton para med"></div>
+  {% assign latest_candidates = site.pages | where_exp: "item", "item.is_resource or item.is_writing" %}
+  {% assign latest_dated = latest_candidates | where_exp: "item", "item.date" %}
+  {% assign latest = latest_dated | sort: "date" | last %}
+
+  <div id="hero-widget" aria-label="Latest addition to the site">
+    <div class="hw-eyebrow">Latest addition</div>
+    {% if latest %}
+      <a class="hw-title" href="{{ latest.url }}">{{ latest.title }}</a>
+      <div class="hw-date">{{ latest.date | date: "%-d %B %Y" }}</div>
+      {% if latest.description %}<p class="hw-excerpt">{{ latest.description }}</p>{% endif %}
+      <a class="hw-link" href="{{ latest.url }}">Read more →</a>
+    {% else %}
+      <p class="hw-excerpt">New resources and writing appear here as they're added.</p>
+      <a class="hw-link" href="/resources.html">Browse resources →</a>
+    {% endif %}
   </div>
 </section>
 
@@ -173,12 +164,12 @@ title: Home
       <li class="project-item">
         <span class="project-num">vi.</span>
         <div>
-          <a href="https://thesciencelab.substack.com" class="project-title" target="_blank" rel="noopener">Substack — Physics &amp; Geekery</a>
-          <div class="project-meta">Ideas for curious teachers · thesciencelab.substack.com</div>
+          <a href="/writing.html" class="project-title">Writing</a>
+          <div class="project-meta">Essays and explainers on physics and teaching</div>
           <div class="project-tags"><span class="tag">Writing</span><span class="tag">Education</span></div>
         </div>
       </li>
-      
+
       <li class="project-item">
         <span class="project-num">vii.</span>
         <div>
@@ -221,55 +212,7 @@ title: Home
     <div class="sidebar-section">
       <div class="sidebar-label">Find me</div>
       <a href="https://www.linkedin.com/in/jrowing/" class="sidebar-link" target="_blank" rel="noopener">LinkedIn ↗</a>
-      <a href="https://thesciencelab.substack.com" class="sidebar-link" target="_blank" rel="noopener">Substack ↗</a>
       <a href="https://github.com/jrowing" class="sidebar-link" target="_blank" rel="noopener">GitHub ↗</a>
     </div>
   </aside>
 </div>
-
-<script>
-(function () {
-  const FEED  = 'https://thesciencelab.substack.com/feed';
-  const PROXY = 'https://api.allorigins.win/get?url=';
-  const el    = document.getElementById('hero-widget');
-  if (!el) return;
-
-  fetch(PROXY + encodeURIComponent(FEED))
-    .then(r => r.json())
-    .then(data => {
-      const parser  = new DOMParser();
-      const xml     = parser.parseFromString(data.contents, 'text/xml');
-      const item    = xml.querySelector('item');
-      if (!item) throw new Error('no items');
-
-      const title   = item.querySelector('title')?.textContent || '';
-      const link    = item.querySelector('link')?.textContent  || '#';
-      const pubDate = item.querySelector('pubDate')?.textContent || '';
-      const desc    = item.querySelector('description')?.textContent || '';
-
-      const tmp = document.createElement('div');
-      tmp.innerHTML = desc;
-      const excerpt = tmp.textContent.trim().slice(0, 280);
-
-      const date = pubDate
-        ? new Date(pubDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
-        : '';
-
-      el.innerHTML = `
-        <div class="hw-eyebrow">Latest from Substack</div>
-        <a class="hw-title" href="${link}" target="_blank" rel="noopener">${title}</a>
-        <div class="hw-date">${date}</div>
-        <p class="hw-excerpt">${excerpt}…</p>
-        <a class="hw-link" href="${link}" target="_blank" rel="noopener">Read post ↗</a>
-      `;
-    })
-    .catch(() => {
-      el.innerHTML = `
-        <div class="hw-eyebrow">Substack</div>
-        <a class="hw-title" href="https://thesciencelab.substack.com" target="_blank" rel="noopener">Notes from The Science Lab</a>
-        <p class="hw-excerpt">Exploring the art and science of teaching physics — practical insights, experiments, and ideas for curious teachers.</p>
-        <a class="hw-link" href="https://thesciencelab.substack.com" target="_blank" rel="noopener">Visit Substack ↗</a>
-      `;
-    });
-})();
-</script>
