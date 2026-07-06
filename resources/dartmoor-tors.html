@@ -1,539 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>All the Tors — Dartmoor in a Year</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Every named tor on Dartmoor, walked in a single year, raising money for Blood Cancer United — with a physics Einstein action figure along for every step." />
+  <title>All the Tors — Dartmoor in a Year — Joe Rowing</title>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <style>
+    .tor-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0 8px; }
+    .tor-stat { border: 1px solid var(--rule); border-radius: 4px; padding: 18px 16px; text-align: center; }
+    .tor-stat-num { font-family: var(--tight); font-size: 26px; font-weight: 600; color: var(--ink); display: block; }
+    .tor-stat-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-4); margin-top: 4px; display: block; }
 
-  :root {
-    --ink: #1a1a18;
-    --ink-mid: #4a4a45;
-    --ink-light: #8a8a84;
-    --paper: #f8f5ef;
-    --paper-warm: #f0ebe0;
-    --accent: #5c6b3a;
-    --rule: rgba(26,26,24,0.12);
-  }
+    .tor-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 24px 0; }
+    .tor-photo { border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
+    .tor-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .tor-photo figcaption { font-size: 12px; color: var(--ink-4); padding: 10px 14px; border-top: 1px solid var(--rule); }
+    .tor-photo.wide { grid-column: 1 / -1; }
+    .tor-photo.wide img { max-height: 420px; }
 
-  html { font-size: 16px; }
+    .tor-quote { border-left: 2px solid var(--accent); padding-left: 20px; margin: 28px 0; font-size: 16px; color: var(--ink-2); font-style: italic; line-height: 1.7; }
+    .tor-quote cite { display: block; margin-top: 8px; font-style: normal; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-4); }
 
-  body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-  }
+    .tor-info { display: grid; grid-template-columns: 1fr 1fr; gap: 0 32px; margin-top: 8px; }
+    .tor-info-item { padding: 14px 0; border-bottom: 1px solid var(--rule); }
+    .tor-info-key { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 4px; }
+    .tor-info-val { font-family: var(--tight); font-size: 15px; color: var(--ink); }
 
-  /* ── Header ── */
-  .site-header {
-    border-bottom: 1px solid var(--rule);
-    padding: 1.5rem 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    background: var(--paper);
-    z-index: 10;
-  }
-  .site-header a {
-    font-size: 0.8rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink-mid);
-    text-decoration: none;
-  }
-  .site-header a:hover { color: var(--accent); }
-  .nav-links { display: flex; gap: 2rem; }
-
-  /* ── Hero ── */
-  .hero {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 7rem 2rem 5rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: end;
-  }
-  .hero-kicker {
-    font-size: 0.72rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-  }
-  .hero-kicker::before {
-    content: '';
-    display: inline-block;
-    width: 24px;
-    height: 1px;
-    background: var(--accent);
-  }
-  .hero-title {
-    font-family: 'Libre Baskerville', serif;
-    font-size: clamp(2.4rem, 5vw, 3.6rem);
-    font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.01em;
-  }
-  .hero-title em {
-    font-style: italic;
-    color: var(--accent);
-  }
-  .hero-body {
-    border-top: 1px solid var(--rule);
-    padding-top: 2rem;
-  }
-  .hero-body p {
-    font-size: 1.05rem;
-    color: var(--ink-mid);
-    margin-bottom: 1.5rem;
-  }
-  .hero-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: var(--rule);
-    border: 1px solid var(--rule);
-    margin-top: 2.5rem;
-  }
-  .stat {
-    background: var(--paper);
-    padding: 1.25rem 1.5rem;
-  }
-  .stat-num {
-    font-family: 'Libre Baskerville', serif;
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--ink);
-    line-height: 1;
-    display: block;
-  }
-  .stat-label {
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-light);
-    margin-top: 0.3rem;
-    display: block;
-  }
-
-  /* ── Containers ── */
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 2rem;
-  }
-  .section-rule {
-    border: none;
-    border-top: 1px solid var(--rule);
-    margin: 5rem 0;
-  }
-  .section-label {
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 2.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-  }
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--rule);
-  }
-
-  /* ── Hero photo strip ── */
-  .hero-photo {
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 2rem;
-  }
-  .hero-photo img {
-    width: 100%;
-    height: 480px;
-    object-fit: cover;
-    display: block;
-  }
-  .hero-photo figcaption {
-    font-size: 0.75rem;
-    color: var(--ink-light);
-    letter-spacing: 0.06em;
-    margin-top: 0.6rem;
-    text-transform: uppercase;
-  }
-
-  /* ── Photo grid ── */
-  .photo-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-  }
-  .photo-cell {
-    overflow: hidden;
-    position: relative;
-    background: var(--paper-warm);
-  }
-  .photo-cell img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.5s ease;
-  }
-  .photo-cell:hover img { transform: scale(1.04); }
-
-  .photo-cell--tall {
-    aspect-ratio: 3/4;
-  }
-  .photo-cell--wide {
-    grid-column: span 2;
-    aspect-ratio: 16/9;
-  }
-  .photo-cell--square {
-    aspect-ratio: 1;
-  }
-
-  .photo-caption {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    background: linear-gradient(transparent, rgba(26,26,24,0.55));
-    color: #fff;
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 2rem 1rem 0.75rem;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  .photo-cell:hover .photo-caption { opacity: 1; }
-
-  .flickr-note {
-    font-size: 0.8rem;
-    color: var(--ink-light);
-    margin-top: 1rem;
-    text-align: right;
-  }
-  .flickr-note a {
-    color: var(--accent);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  /* ── Einstein callout ── */
-  .einstein-band {
-    background: var(--paper-warm);
-    border-top: 1px solid var(--rule);
-    border-bottom: 1px solid var(--rule);
-    padding: 3rem 2rem;
-    text-align: center;
-    margin: 5rem 0;
-  }
-  .einstein-band p {
-    max-width: 560px;
-    margin: 0 auto;
-    font-family: 'Libre Baskerville', serif;
-    font-style: italic;
-    font-size: 1.15rem;
-    color: var(--ink-mid);
-    line-height: 1.6;
-  }
-  .einstein-band cite {
-    display: block;
-    margin-top: 1rem;
-    font-family: 'DM Sans', sans-serif;
-    font-style: normal;
-    font-size: 0.72rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink-light);
-  }
-
-  /* ── Story ── */
-  .story-grid {
-    display: grid;
-    grid-template-columns: 3fr 2fr;
-    gap: 5rem;
-    align-items: start;
-  }
-  .story-text h2 {
-    font-family: 'Libre Baskerville', serif;
-    font-size: 1.7rem;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 1.5rem;
-  }
-  .story-text p {
-    font-size: 0.97rem;
-    color: var(--ink-mid);
-    margin-bottom: 1.2rem;
-  }
-  .pullquote {
-    border-left: 2px solid var(--accent);
-    padding-left: 1.5rem;
-    margin: 2.5rem 0;
-  }
-  .pullquote p {
-    font-family: 'Libre Baskerville', serif;
-    font-style: italic;
-    font-size: 1.15rem !important;
-    color: var(--ink) !important;
-    line-height: 1.5;
-  }
-
-  /* ── Info sidebar ── */
-  .info-panel {
-    position: sticky;
-    top: 5rem;
-  }
-  .info-item {
-    padding: 1.5rem 0;
-    border-bottom: 1px solid var(--rule);
-  }
-  .info-item:first-child { border-top: 1px solid var(--rule); }
-  .info-key {
-    font-size: 0.68rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--ink-light);
-    margin-bottom: 0.4rem;
-  }
-  .info-val {
-    font-family: 'Libre Baskerville', serif;
-    font-size: 1rem;
-    color: var(--ink);
-  }
-
-  /* ── Tor list ── */
-  .tor-grid {
-    columns: 3;
-    column-gap: 2rem;
-  }
-  .tor-item {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    padding: 0.45rem 0;
-    border-bottom: 1px solid var(--rule);
-    break-inside: avoid;
-    font-size: 0.88rem;
-    color: var(--ink-mid);
-  }
-  .tor-num {
-    font-family: 'Libre Baskerville', serif;
-    font-size: 0.75rem;
-    color: var(--ink-light);
-    min-width: 1.6rem;
-  }
-  .tor-name { flex: 1; }
-  .tor-check { color: var(--accent); font-size: 0.7rem; }
-
-  /* ── Charity CTA ── */
-  .charity-band {
-    background: var(--paper-warm);
-    border-top: 1px solid var(--rule);
-    border-bottom: 1px solid var(--rule);
-    margin: 5rem 0 0;
-    padding: 5rem 2rem;
-    text-align: center;
-  }
-  .charity-band h2 {
-    font-family: 'Libre Baskerville', serif;
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-  }
-  .charity-band p {
-    color: var(--ink-mid);
-    max-width: 480px;
-    margin: 0 auto 2rem;
-    font-size: 0.97rem;
-  }
-  .btn-donate {
-    display: inline-block;
-    background: var(--accent);
-    color: #fff;
-    text-decoration: none;
-    padding: 0.85rem 2.5rem;
-    font-size: 0.8rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
-    transition: background 0.2s ease;
-  }
-  .btn-donate:hover { background: #46522c; }
-
-  footer {
-    text-align: center;
-    padding: 3rem 2rem;
-    font-size: 0.75rem;
-    color: var(--ink-light);
-    letter-spacing: 0.05em;
-  }
-
-  /* ── Animations ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .hero-kicker { animation: fadeUp 0.6s ease both; }
-  .hero-title  { animation: fadeUp 0.6s 0.1s ease both; }
-  .hero-body   { animation: fadeUp 0.6s 0.2s ease both; }
-
-  /* ── Responsive ── */
-  @media (max-width: 720px) {
-    .hero { grid-template-columns: 1fr; gap: 2.5rem; padding: 4rem 1.5rem 3rem; }
-    .story-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-    .info-panel { position: static; }
-    .tor-grid { columns: 2; }
-    .photo-grid { grid-template-columns: 1fr 1fr; }
-    .photo-cell--wide { grid-column: span 2; }
-    .nav-links { display: none; }
-    .hero-photo img { height: 280px; }
-  }
-  @media (max-width: 480px) {
-    .tor-grid { columns: 1; }
-  }
-</style>
+    @media (max-width: 560px) {
+      .tor-stats { grid-template-columns: 1fr 1fr; }
+      .tor-photos { grid-template-columns: 1fr; }
+      .tor-info { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
-<header class="site-header">
-  <a href="/">← Back</a>
-  <nav class="nav-links">
-    <a href="#story">Story</a>
-    <a href="#tors">The Tors</a>
-    <a href="#photos">Photos</a>
-    <a href="#charity">Charity</a>
-  </nav>
-</header>
+<nav class="site-nav">
+  <a class="nav-logo" href="/">J. <span>Rowing</span></a>
+  <ul class="nav-links">
+    <li><a href="/#about">About</a></li>
+    <li><a href="/resources.html">Resources</a></li>
+    <li><a href="/writing.html">Writing</a></li>
+    <li><a href="/resources/pearls.html">Pearls of Wisdom</a></li>
+    <li><a href="/planner.html">Planner</a></li>
+    <li><a href="/cv.html">CV</a></li>
+  </ul>
+</nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-title-col">
-    <div class="hero-kicker">Dartmoor National Park · One year</div>
-    <h1 class="hero-title">All the<br><em>Tors.</em><br>One year.</h1>
-  </div>
-  <div class="hero-body">
-    <p>Every named tor on Dartmoor, walked in a single calendar year — raising money for Leukaemia &amp; Lymphoma Research, now Blood Cancer United.</p>
-    <p>The rule: if Einstein doesn't reach the tor, it doesn't count.</p>
-    <div class="hero-stats">
-      <div class="stat">
-        <span class="stat-num">268</span>
-        <span class="stat-label">Tors completed</span>
-      </div>
-      <div class="stat">
-        <span class="stat-num">52</span>
-        <span class="stat-label">Weeks</span>
-      </div>
-      <div class="stat">
-        <span class="stat-num">16,580</span>
-        <span class="stat-label">Kilometres walked</span>
-      </div>
-      <div class="stat">
-        <span class="stat-num">£2,000+</span>
-        <span class="stat-label">Raised for charity</span>
-      </div>
-    </div>
-  </div>
-</section>
+<div class="page-wrap">
+  <a class="back-link" href="/#projects">← Projects</a>
+  <hr class="page-divider" />
 
-<!-- HERO PHOTO -->
-<figure class="hero-photo">
-  <img src="tor-snow.jpg" alt="Snow-covered Dartmoor viewed from a granite tor, patchwork fields stretching into the distance">
-  <figcaption>Winter on the high moor — snow-covered fields seen from the tor, Einstein surveying the landscape below</figcaption>
-</figure>
+  <p class="page-sub">Dartmoor National Park · Devon</p>
+  <h1>All the Tors — Dartmoor in a Year</h1>
+  <p style="font-size:17px; color:var(--ink-3); margin: 12px 0 32px; max-width: 560px; line-height:1.7;">
+    Every named tor on Dartmoor, walked in a single calendar year — raising money for
+    Leukaemia &amp; Lymphoma Research, now Blood Cancer United. The rule: if Einstein
+    doesn't reach the tor, it doesn't count.
+  </p>
 
-<!-- EINSTEIN BAND -->
-<div class="einstein-band">
-  <p>"Imagination is more important than knowledge. Knowledge is limited. Imagination encircles the world."</p>
-  <cite>— Albert Einstein, faithful walking companion, all 268 tors</cite>
-</div>
-
-<!-- PHOTO GRID -->
-<div class="container" id="photos">
-  <div class="section-label">From the album</div>
-
-  <div class="photo-grid">
-    <div class="photo-cell photo-cell--tall">
-      <img src="tor-einstein-close.jpg" alt="Einstein figure held up in front of dramatic granite tor outcrop on Dartmoor">
-      <div class="photo-caption">Einstein at the tor</div>
-    </div>
-    <div class="photo-cell photo-cell--tall" style="grid-column: span 2; aspect-ratio: unset; min-height: 400px;">
-      <img src="tor-einstein-view.jpg" alt="Einstein figure gazing up at a Dartmoor tor under a bright blue sky">
-      <div class="photo-caption">Surveying the summit</div>
-    </div>
+  <div class="tor-stats">
+    <div class="tor-stat"><span class="tor-stat-num">268</span><span class="tor-stat-label">Tors completed</span></div>
+    <div class="tor-stat"><span class="tor-stat-num">52</span><span class="tor-stat-label">Weeks</span></div>
+    <div class="tor-stat"><span class="tor-stat-num">16,580</span><span class="tor-stat-label">Kilometres walked</span></div>
+    <div class="tor-stat"><span class="tor-stat-num">£2,000+</span><span class="tor-stat-label">Raised for charity</span></div>
   </div>
 
+  <figure class="tor-photo wide" style="margin-top:32px;">
+    <img src="tor-snow.jpg" alt="Snow-covered Dartmoor viewed from a granite tor, patchwork fields stretching into the distance">
+    <figcaption>Winter on the high moor — snow-covered fields seen from the tor, Einstein surveying the landscape below</figcaption>
+  </figure>
 
-</div>
+  <div class="tor-quote">
+    "Imagination is more important than knowledge. Knowledge is limited. Imagination encircles the world."
+    <cite>— Albert Einstein, faithful walking companion, all 268 tors</cite>
+  </div>
 
-<!-- STORY -->
-<div class="container" id="story">
-  <hr class="section-rule">
+  <!-- Story -->
   <div class="section-label">The story</div>
+  <div class="dive-section">
+    <p>
+      I'd fantasised about doing something like this for a while. The trigger to finally get
+      over my inactivity was frustration at my inability to do anything about a friend's
+      misfortune. So I decided to do something — walk every tor on Dartmoor, in one year, and
+      raise money for Leukaemia &amp; Lymphoma Research (now Blood Cancer United) in the process.
+    </p>
+    <p>
+      Dartmoor has 268 named tors — granite outcrops rising above the moorland, scattered over
+      a wide and often unforgiving landscape. Some are famous and well-trodden. Many are tucked
+      into remote valleys, hidden in forest, or surrounded by the kind of bog that makes you
+      reconsider all your choices.
+    </p>
+    <p>
+      I set one rule that made it real: Einstein — a physics action figure I'd been given years
+      ago, one that had already accompanied friends and me on various ridiculous adventures — had
+      to reach every single tor. If he didn't get there, it didn't count.
+    </p>
 
-  <div class="story-grid">
-    <div class="story-text">
-      <h2>Why walk every tor on Dartmoor?</h2>
-      <p>I'd fantasised about doing something like this for a while. The trigger to finally get over my inactivity was frustration at my inability to do anything about a friend's misfortune. So I decided to do something — walk every tor on Dartmoor, in one year, and raise money for Leukaemia &amp; Lymphoma Research (now Blood Cancer United) in the process.</p>
-      <p>Dartmoor has 268 named tors — granite outcrops rising above the moorland, scattered over a wide and often unforgiving landscape. Some are famous and well-trodden. Many are tucked into remote valleys, hidden in forest, or surrounded by the kind of bog that makes you reconsider all your choices.</p>
-      <p>I set one rule that made it real: Einstein — a physics action figure I'd been given years ago, one that had already accompanied friends and me on various ridiculous adventures — had to reach every single tor. If he didn't get there, it didn't count.</p>
-
-      <div class="pullquote">
-        <p>"I still feel a bit bad — after all, you can't say 'sorry, this weekend I'm not up for it' if you have leukaemia."</p>
-      </div>
-
-      <p>Walking the moor in all weathers, often before or after a full day of teaching, often in the dark, occasionally in snow, occasionally waist-deep in bog — Einstein made it to all 268. He handled it with characteristic equanimity. As a physics teacher, I found his company appropriate.</p>
+    <div class="tor-quote">
+      "I still feel a bit bad — after all, you can't say 'sorry, this weekend I'm not up for it'
+      if you have leukaemia."
     </div>
 
-    <aside class="info-panel">
-      <div class="info-item">
-        <div class="info-key">Location</div>
-        <div class="info-val">Dartmoor National Park, Devon</div>
-      </div>
-      <div class="info-item">
-        <div class="info-key">Duration</div>
-        <div class="info-val">One calendar year</div>
-      </div>
-      <div class="info-item">
-        <div class="info-key">Cause</div>
-        <div class="info-val">Blood Cancer United (formerly Leukaemia &amp; Lymphoma Research)</div>
-      </div>
-      <div class="info-item">
-        <div class="info-key">Walking companion</div>
-        <div class="info-val">One Einstein figure, 268 tors, zero complaints</div>
-      </div>
-      <div class="info-item">
-        <div class="info-key">The rule</div>
-        <div class="info-val">If Einstein doesn't reach the tor, it doesn't count</div>
-      </div>
-      <div class="info-item">
-        <div class="info-key">Worst conditions</div>
-        <div class="info-val">Full winter snow, waist-deep bog, sustained gales</div>
-      </div>
-    </aside>
+    <p>
+      Walking the moor in all weathers, often before or after a full day of teaching, often in
+      the dark, occasionally in snow, occasionally waist-deep in bog — Einstein made it to all
+      268. He handled it with characteristic equanimity. As a physics teacher, I found his
+      company appropriate.
+    </p>
   </div>
+
+  <!-- At a glance -->
+  <div class="section-label" style="margin-top:2.4em;">At a glance</div>
+  <div class="tor-info">
+    <div class="tor-info-item"><div class="tor-info-key">Location</div><div class="tor-info-val">Dartmoor National Park, Devon</div></div>
+    <div class="tor-info-item"><div class="tor-info-key">Duration</div><div class="tor-info-val">One calendar year</div></div>
+    <div class="tor-info-item"><div class="tor-info-key">Cause</div><div class="tor-info-val">Blood Cancer United (formerly Leukaemia &amp; Lymphoma Research)</div></div>
+    <div class="tor-info-item"><div class="tor-info-key">Walking companion</div><div class="tor-info-val">One Einstein figure, 268 tors, zero complaints</div></div>
+    <div class="tor-info-item"><div class="tor-info-key">The rule</div><div class="tor-info-val">If Einstein doesn't reach the tor, it doesn't count</div></div>
+    <div class="tor-info-item"><div class="tor-info-key">Worst conditions</div><div class="tor-info-val">Full winter snow, waist-deep bog, sustained gales</div></div>
+  </div>
+
+  <!-- Album -->
+  <div class="section-label" style="margin-top:2.4em;">From the album</div>
+  <div class="tor-photos">
+    <figure class="tor-photo">
+      <img src="tor-einstein-close.jpg" alt="Einstein figure held up in front of dramatic granite tor outcrop on Dartmoor">
+      <figcaption>Einstein at the tor</figcaption>
+    </figure>
+    <figure class="tor-photo">
+      <img src="tor-einstein-view.jpg" alt="Einstein figure gazing up at a Dartmoor tor under a bright blue sky">
+      <figcaption>Surveying the summit</figcaption>
+    </figure>
+  </div>
+
 </div>
 
-
-<footer>
-  &copy; Joe &nbsp;·&nbsp; All the Tors, Dartmoor
+<footer class="site-footer">
+  <span class="footer-copy">© 2026 Joe Rowing</span>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/jrowing/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/jrowing" target="_blank" rel="noopener">GitHub</a>
+  </div>
 </footer>
 
 </body>
