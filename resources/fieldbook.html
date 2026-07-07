@@ -1,0 +1,1009 @@
+---
+is_resource: true
+date:2026:07:07
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fieldbook — non-linear markdown notebook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<style>
+:root{
+  --paper:#f7f6f2;
+  --panel:#efede7;
+  --ink:#20261f;
+  --ink-2:#5c6357;
+  --ink-3:#98a08f;
+  --line:#ddd9cf;
+  --line-2:#c8c3b5;
+  --accent:#245e51;      /* viridian ink */
+  --accent-soft:#dfeae5;
+  --amber:#a4620f;
+  --amber-soft:#f4e7d2;
+  --white:#fdfdfb;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --sans:'IBM Plex Sans',system-ui,sans-serif;
+  --serif:'IBM Plex Serif',Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);font-size:15px;overflow:hidden}
+
+#app{display:grid;grid-template-columns:250px 1fr;height:100vh}
+
+/* ---------- sidebar ---------- */
+#sidebar{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+#brand{padding:16px 16px 12px;border-bottom:1px solid var(--line)}
+#brand h1{font-family:var(--mono);font-size:15px;font-weight:500;letter-spacing:.04em;color:var(--ink)}
+#brand h1 span{color:var(--accent)}
+#vault-row{padding:10px 12px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+#vault-btn{font-family:var(--mono);font-size:12px;padding:7px 10px;border:1px solid var(--line-2);border-radius:6px;background:var(--white);color:var(--ink);cursor:pointer;text-align:left;transition:border-color .12s}
+#vault-btn:hover{border-color:var(--accent)}
+#vault-path{font-family:var(--mono);font-size:11px;color:var(--ink-3);padding:0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#search{margin:10px 12px 4px;padding:7px 10px;font-family:var(--sans);font-size:13px;border:1px solid var(--line-2);border-radius:6px;background:var(--white);color:var(--ink);width:calc(100% - 24px)}
+#search::placeholder{color:var(--ink-3)}
+#search:focus{outline:none;border-color:var(--accent)}
+#note-list{flex:1;overflow-y:auto;padding:6px 8px}
+.note-item{padding:6px 10px;border-radius:6px;cursor:pointer;font-size:13.5px;color:var(--ink-2);display:flex;align-items:baseline;gap:8px;line-height:1.4}
+.note-item:hover{background:rgba(0,0,0,.045);color:var(--ink)}
+.note-item.active{background:var(--accent-soft);color:var(--accent);font-weight:500}
+.note-item .n-links{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);margin-left:auto;flex-shrink:0}
+.note-item.active .n-links{color:var(--accent)}
+#new-btn{margin:8px 12px 12px;padding:8px;font-family:var(--mono);font-size:12px;border:1px dashed var(--line-2);border-radius:6px;background:transparent;color:var(--ink-2);cursor:pointer}
+#new-btn:hover{border-color:var(--accent);color:var(--accent);border-style:solid}
+
+/* ---------- main ---------- */
+#main{display:flex;flex-direction:column;min-width:0}
+#toolbar{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--line);background:var(--paper)}
+#title{flex:1;font-family:var(--serif);font-size:19px;font-weight:500;border:none;background:transparent;color:var(--ink);outline:none;min-width:0;border-bottom:1px solid transparent;padding:2px 0}
+#title:focus{border-bottom-color:var(--line-2)}
+.seg{display:flex;border:1px solid var(--line-2);border-radius:6px;overflow:hidden}
+.seg button{font-family:var(--mono);font-size:11.5px;padding:6px 11px;border:none;background:var(--white);color:var(--ink-2);cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:none}
+.seg button.on{background:var(--accent);color:#fff}
+.tbtn{font-family:var(--mono);font-size:11.5px;padding:6px 11px;border:1px solid var(--line-2);border-radius:6px;background:var(--white);color:var(--ink-2);cursor:pointer}
+.tbtn:hover{border-color:var(--accent);color:var(--accent)}
+.tbtn.danger:hover{border-color:#a33;color:#a33}
+#save-state{font-family:var(--mono);font-size:11px;color:var(--ink-3);min-width:70px;text-align:right}
+#save-state.dirty{color:var(--amber)}
+
+#workspace{flex:1;display:grid;grid-template-columns:1fr;overflow:hidden;position:relative}
+#workspace.mode-split{grid-template-columns:1fr 1fr}
+#workspace.mode-edit #preview,#workspace.mode-edit #live,
+#workspace.mode-live #editor-wrap,#workspace.mode-live #preview,
+#workspace.mode-split #live,
+#workspace.mode-preview #editor-wrap,#workspace.mode-preview #live{display:none}
+
+#editor-wrap{overflow:hidden;display:flex;border-right:1px solid var(--line)}
+#workspace.mode-edit #editor-wrap{border-right:none}
+#editor{flex:1;resize:none;border:none;outline:none;background:var(--paper);color:var(--ink);font-family:var(--mono);font-size:14px;line-height:1.75;padding:26px 30px;tab-size:2}
+#editor.dragging{background:var(--accent-soft)}
+
+.md{overflow-y:auto;padding:26px 36px 60px;background:var(--white)}
+.md{font-family:var(--serif);font-size:16px;line-height:1.75;color:var(--ink)}
+.md h1,.md h2,.md h3,.md h4{font-family:var(--sans);font-weight:600;line-height:1.3;margin:1.4em 0 .5em;color:var(--ink)}
+.md h1:first-child,.md h2:first-child{margin-top:.2em}
+.md h1{font-size:26px}.md h2{font-size:21px}.md h3{font-size:17px}.md h4{font-size:15px}
+.md p{margin:.7em 0}
+.md ul,.md ol{margin:.7em 0;padding-left:1.5em}
+.md li{margin:.25em 0}
+.md blockquote{border-left:3px solid var(--accent);padding:.2em 1em;margin:1em 0;color:var(--ink-2);background:var(--accent-soft);border-radius:0 6px 6px 0}
+.md code{font-family:var(--mono);font-size:.86em;background:var(--panel);padding:.12em .4em;border-radius:4px}
+.md pre{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;margin:1em 0}
+.md pre code{background:none;padding:0;font-size:13px;line-height:1.6}
+.md img{max-width:100%;border-radius:8px;border:1px solid var(--line);margin:.5em 0;display:block}
+.md table{border-collapse:collapse;margin:1em 0;font-family:var(--sans);font-size:14px}
+.md th,.md td{border:1px solid var(--line-2);padding:6px 12px;text-align:left}
+.md th{background:var(--panel);font-weight:500}
+.md hr{border:none;border-top:1px solid var(--line-2);margin:1.6em 0}
+.md a{color:var(--accent)}
+.md .katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0}
+
+/* ---------- live (auto-render) mode ---------- */
+#live .lblock{position:relative;border-radius:6px;padding:2px 10px;margin:0 -10px;cursor:text;transition:background .1s}
+#live .lblock:not(.editing):hover{background:rgba(36,94,81,.05);box-shadow:inset 2px 0 0 var(--line-2)}
+#live .lblock.editing{background:var(--panel);box-shadow:inset 2px 0 0 var(--accent)}
+#live .lblock textarea{width:100%;border:none;outline:none;background:transparent;font-family:var(--mono);font-size:14px;line-height:1.75;resize:none;color:var(--ink);display:block;padding:4px 0;overflow:hidden}
+#live-tail{min-height:140px;cursor:text}
+#live.dropping{outline:2px dashed var(--accent);outline-offset:-8px;background:var(--accent-soft)}
+#editor.dragging{outline:2px dashed var(--accent);outline-offset:-6px}
+#live-hint{font-family:var(--mono);font-size:11px;color:var(--ink-3);padding:10px 0 0;user-select:none;pointer-events:none}
+.wl{color:var(--accent);background:var(--accent-soft);padding:.06em .45em;border-radius:5px;text-decoration:none;cursor:pointer;font-family:var(--sans);font-size:.92em;white-space:nowrap}
+.wl:hover{background:var(--accent);color:#fff}
+.wl.new{color:var(--amber);background:var(--amber-soft);border-bottom:1px dashed var(--amber)}
+.wl.new:hover{background:var(--amber);color:#fff;border-bottom-color:transparent}
+
+/* ---------- footer strip ---------- */
+#footer{border-top:1px solid var(--line);background:var(--panel);padding:9px 18px;display:flex;gap:24px;align-items:baseline;min-height:40px;flex-wrap:wrap}
+.f-label{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);margin-right:8px}
+#f-links,#f-back{display:inline-flex;gap:6px;flex-wrap:wrap;align-items:baseline}
+#footer .none{font-size:12px;color:var(--ink-3);font-style:italic}
+
+/* ---------- graph ---------- */
+#graph-panel{position:absolute;top:0;right:0;bottom:0;width:340px;background:var(--white);border-left:1px solid var(--line);transform:translateX(100%);transition:transform .18s ease;display:flex;flex-direction:column;z-index:5}
+#graph-panel.open{transform:translateX(0)}
+#graph-head{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+#graph-head span{font-family:var(--mono);font-size:12px;color:var(--ink-2);letter-spacing:.05em}
+#graph-close{border:none;background:none;cursor:pointer;color:var(--ink-3);font-size:16px;font-family:var(--mono)}
+#graph-canvas{flex:1;cursor:pointer}
+
+/* ---------- notices ---------- */
+#notice{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:12px;padding:9px 16px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;max-width:80vw;text-align:center}
+#notice.show{opacity:1}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:5px}
+::-webkit-scrollbar-track{background:transparent}
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar">
+    <div id="brand"><h1>field<span>book</span></h1></div>
+    <div id="vault-row">
+      <button id="vault-btn" onclick="openVault()">▸ Open vault folder…</button>
+      <div id="vault-path">demo mode — notes not yet on disk</div>
+    </div>
+    <input id="search" type="search" placeholder="Search titles &amp; text…">
+    <div id="note-list"></div>
+    <button id="new-btn" onclick="newNote()">+ new note</button>
+  </aside>
+
+  <div id="main">
+    <div id="toolbar">
+      <input id="title" spellcheck="false" placeholder="Untitled">
+      <span id="save-state">—</span>
+      <div class="seg">
+        <button data-mode="edit">edit</button>
+        <button data-mode="live" class="on">live</button>
+        <button data-mode="split">split</button>
+        <button data-mode="preview">read</button>
+      </div>
+      <button class="tbtn" onclick="toggleGraph()">graph</button>
+      <button class="tbtn danger" onclick="deleteNote()">delete</button>
+    </div>
+
+    <div id="workspace" class="mode-live">
+      <div id="editor-wrap"><textarea id="editor" spellcheck="false" placeholder="Write markdown. [[Wikilinks]], $inline$ and $$display$$ LaTeX, paste or drop images."></textarea></div>
+      <div id="live" class="md"></div>
+      <div id="preview" class="md"></div>
+      <div id="graph-panel">
+        <div id="graph-head"><span>LINK GRAPH</span><button id="graph-close" onclick="toggleGraph()">×</button></div>
+        <canvas id="graph-canvas"></canvas>
+      </div>
+    </div>
+
+    <div id="footer">
+      <div><span class="f-label">Links out</span><span id="f-links"></span></div>
+      <div><span class="f-label">Linked from</span><span id="f-back"></span></div>
+    </div>
+  </div>
+</div>
+<div id="notice"></div>
+
+<script>
+'use strict';
+
+/* ============================================================
+   Fieldbook — a non-linear markdown notebook
+   - Notes are plain .md files in a folder you choose ("vault")
+   - Images paste/drop into an assets/ subfolder
+   - [[Wikilinks]] connect notes; KaTeX renders $...$ / $$...$$
+   Requires Chrome or Edge (File System Access API) for disk mode.
+   ============================================================ */
+
+const $ = s => document.querySelector(s);
+const editor = $('#editor'), preview = $('#preview'), titleEl = $('#title'), live = $('#live');
+
+let vault = null;            // FileSystemDirectoryHandle or null (demo mode)
+let assetsDir = null;
+let notes = new Map();       // name -> { name, content, handle|null }
+let memAssets = new Map();   // demo mode: 'assets/x.png' -> Blob
+let blobCache = new Map();   // path -> objectURL
+let current = null;
+let saveTimer = null, previewTimer = null;
+let graphOpen = false;
+
+const FS_OK = 'showDirectoryPicker' in window;
+
+/* ---------------- starter content ---------------- */
+const STARTERS = {
+'Welcome': `# Welcome to Fieldbook
+
+A non-linear notebook. Every note is a plain **markdown file** — nothing proprietary, nothing locked in.
+
+## Linking
+Wrap a name in double brackets to link: [[Physics scratchpad]] or [[Reading list]]. Linking to a page that doesn't exist yet shows in amber — click it and the note is created.
+
+## Maths
+Inline maths with single dollars: $F = \\frac{mv^2}{r}$, or display maths:
+
+$$\\Delta E = \\Delta m\\, c^2$$
+
+$$\\oint_C \\mathbf{B}\\cdot d\\boldsymbol{\\ell} = \\mu_0 \\left( I_{enc} + \\varepsilon_0 \\frac{d\\Phi_E}{dt} \\right)$$
+
+## Images
+Paste an image straight from the clipboard, or drag a file onto the editor. It's saved into an \`assets/\` folder inside your vault and referenced with ordinary markdown.
+
+## Saving
+Click **Open vault folder** and choose (or create) a folder. Every note becomes \`Note name.md\` inside it, autosaved as you type. Until then you're in demo mode — nothing touches disk.
+`,
+'Physics scratchpad': `# Physics scratchpad
+
+Working notes. See also [[Welcome]] and [[Reading list]].
+
+## Circular motion
+Centripetal acceleration: $a = \\frac{v^2}{r} = \\omega^2 r$
+
+| Quantity | Symbol | Unit |
+|---|---|---|
+| Angular velocity | $\\omega$ | rad s⁻¹ |
+| Period | $T$ | s |
+| Frequency | $f$ | Hz |
+
+## To derive
+- [ ] Kepler's third law from Newtonian gravity
+- [ ] Escape velocity for Praslin (sea level)
+`,
+'Reading list': `# Reading list
+
+Things to read, linked from [[Welcome]].
+
+- *Longitude* — Dava Sobel
+- *The Character of Physical Law* — Feynman
+
+Add notes on each as separate pages and link them here.
+`};
+
+/* ---------------- vault ---------------- */
+async function openVault(){
+  if(!FS_OK){ notify('This browser lacks the File System Access API — use Chrome or Edge on desktop.'); return; }
+  let dir;
+  try{ dir = await window.showDirectoryPicker({ mode:'readwrite' }); }
+  catch(e){ return; } // user cancelled
+  vault = dir;
+  $('#vault-path').textContent = '📁 ' + dir.name + '/';
+  blobCache.forEach(u => URL.revokeObjectURL(u)); blobCache.clear();
+
+  const hadDemoNotes = notes.size > 0 && [...notes.values()].some(n => !n.handle);
+  const demoSnapshot = hadDemoNotes ? new Map(notes) : null;
+  const demoAssets = hadDemoNotes ? new Map(memAssets) : null;
+
+  notes = new Map(); memAssets = new Map();
+  let count = 0;
+  for await (const [name, handle] of dir.entries()){
+    if(handle.kind === 'file' && name.toLowerCase().endsWith('.md')){
+      const file = await handle.getFile();
+      const content = await file.text();
+      const title = name.slice(0, -3);
+      notes.set(title, { name:title, content, handle });
+      count++;
+    }
+  }
+
+  // Empty folder: offer to seed it with existing demo notes (or starters)
+  if(count === 0){
+    const src = demoSnapshot || null;
+    if(src){
+      for(const [k,v] of src) notes.set(k, { name:k, content:v.content, handle:null });
+      for(const [p,b] of demoAssets){ await writeAsset(p.replace(/^assets\//,''), b); }
+      for(const n of notes.values()) await writeNote(n);
+      notify('Copied your demo notes into ' + dir.name + '/');
+    } else {
+      for(const k of Object.keys(STARTERS)) notes.set(k, { name:k, content:STARTERS[k], handle:null });
+      for(const n of notes.values()) await writeNote(n);
+      notify('New vault created with starter notes.');
+    }
+  } else {
+    notify('Opened vault: ' + count + ' note' + (count===1?'':'s') + '.');
+  }
+  current = notes.has('Welcome') ? 'Welcome' : [...notes.keys()].sort()[0];
+  renderList(); loadCurrent(); setSaveState('saved');
+}
+
+async function ensureAssetsDir(){
+  if(!vault) return null;
+  if(!assetsDir || assetsDir._vault !== vault){
+    assetsDir = await vault.getDirectoryHandle('assets', { create:true });
+    assetsDir._vault = vault;
+  }
+  return assetsDir;
+}
+
+async function writeNote(note){
+  if(!vault){ return; }
+  if(!note.handle){
+    note.handle = await vault.getFileHandle(safeName(note.name) + '.md', { create:true });
+  }
+  const w = await note.handle.createWritable();
+  await w.write(note.content);
+  await w.close();
+}
+
+async function writeAsset(filename, blob){
+  if(vault){
+    const dir = await ensureAssetsDir();
+    const fh = await dir.getFileHandle(filename, { create:true });
+    const w = await fh.createWritable();
+    await w.write(blob); await w.close();
+  } else {
+    memAssets.set('assets/' + filename, blob);
+  }
+  return 'assets/' + filename;
+}
+
+function safeName(s){ return s.replace(/[\/\\:*?"<>|]/g, '-').trim() || 'Untitled'; }
+
+/* ---------------- note ops ---------------- */
+function newNote(base){
+  let name = base || 'Untitled';
+  let i = 2;
+  while(notes.has(name)) name = (base || 'Untitled') + ' ' + (i++);
+  notes.set(name, { name, content:'', handle:null });
+  current = name;
+  renderList(); loadCurrent();
+  titleEl.focus(); titleEl.select();
+  scheduleSave();
+}
+
+async function deleteNote(){
+  if(!current) return;
+  if(notes.size <= 1){ notify('Keep at least one note.'); return; }
+  if(!confirm('Delete “' + current + '”? The .md file is removed from the vault.')) return;
+  const n = notes.get(current);
+  notes.delete(current);
+  if(vault && n.handle){
+    try{ await vault.removeEntry(safeName(n.name) + '.md'); }catch(e){}
+  }
+  current = [...notes.keys()].sort()[0];
+  renderList(); loadCurrent();
+}
+
+async function renameNote(newTitle){
+  newTitle = safeName(newTitle);
+  if(!current || newTitle === current) { titleEl.value = current || ''; return; }
+  if(notes.has(newTitle)){ notify('A note called “' + newTitle + '” already exists.'); titleEl.value = current; return; }
+  const old = current;
+  const n = notes.get(old);
+  notes.delete(old);
+  n.name = newTitle;
+  notes.set(newTitle, n);
+  // delete old file, write new
+  if(vault && n.handle){
+    try{ await vault.removeEntry(safeName(old) + '.md'); }catch(e){}
+    n.handle = null;
+    await writeNote(n);
+  }
+  // update wikilinks everywhere
+  const re = new RegExp('\\[\\[' + escapeRe(old) + '\\]\\]', 'g');
+  for(const other of notes.values()){
+    if(other === n) continue;
+    if(re.test(other.content)){
+      other.content = other.content.replace(re, '[[' + newTitle + ']]');
+      await writeNote(other);
+    }
+    re.lastIndex = 0;
+  }
+  current = newTitle;
+  renderList(); renderFooter();
+  if(currentMode() === 'live') renderLive(false);
+  setSaveState(vault ? 'saved' : 'demo');
+}
+
+function escapeRe(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+/* ---------------- links ---------------- */
+function linksOf(content){
+  const out = []; const seen = new Set();
+  const re = /\[\[([^\]\n]+)\]\]/g; let m;
+  while((m = re.exec(content))){ const t = m[1].trim(); if(t && !seen.has(t)){ seen.add(t); out.push(t); } }
+  return out;
+}
+function backlinksOf(name){
+  const out = [];
+  for(const n of notes.values()){
+    if(n.name !== name && linksOf(n.content).includes(name)) out.push(n.name);
+  }
+  return out;
+}
+
+/* ---------------- rendering ---------------- */
+marked.setOptions({ breaks:true, gfm:true });
+
+function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(s){ return escHtml(s).replace(/"/g,'&quot;'); }
+
+// transform text outside code fences / inline code
+function outsideCode(src, fn){
+  return src.split(/(```[\s\S]*?```|~~~[\s\S]*?~~~)/).map(seg=>{
+    if(/^(```|~~~)/.test(seg)) return seg;
+    return seg.split(/(`[^`\n]*`)/).map(p => p.startsWith('`') ? p : fn(p)).join('');
+  }).join('');
+}
+
+function renderMarkdown(src){
+  const stash = [];
+  const keep = s => { stash.push(s); return '⟦F' + (stash.length-1) + '⟧'; };
+
+  src = outsideCode(src, seg => {
+    // display math
+    seg = seg.replace(/\$\$[\s\S]+?\$\$/g, m => keep(escHtml(m)));
+    // inline math ($…$, no newlines, non-space adjacent, not $5 prices)
+    seg = seg.replace(/\$(?=\S)((?:\\.|[^$\n\\])+?)(?<=\S)\$/g, m => keep(escHtml(m)));
+    // wikilinks
+    seg = seg.replace(/\[\[([^\]\n]+)\]\]/g, (m, p) => {
+      const t = p.trim();
+      const cls = notes.has(t) ? 'wl' : 'wl new';
+      return keep('<a class="' + cls + '" data-page="' + escAttr(t) + '">' + escHtml(t) + '</a>');
+    });
+    return seg;
+  });
+
+  let html = marked.parse(src);
+  html = html.replace(/⟦F(\d+)⟧/g, (m, i) => stash[+i]);
+  return html;
+}
+
+const KATEX_OPTS = {
+  delimiters: [
+    {left:'$$', right:'$$', display:true},
+    {left:'$', right:'$', display:false},
+    {left:'\\(', right:'\\)', display:false},
+    {left:'\\[', right:'\\]', display:true}
+  ],
+  throwOnError:false
+};
+
+async function resolveImages(root){
+  const imgs = root.querySelectorAll('img');
+  for(const img of imgs){
+    const src = img.getAttribute('src') || '';
+    if(/^(https?:|data:|blob:)/.test(src)) continue;
+    const path = decodeURIComponent(src.replace(/^\.\//,''));
+    if(blobCache.has(path)){ img.src = blobCache.get(path); continue; }
+    try{
+      let blob = null;
+      if(vault){
+        const parts = path.split('/').filter(Boolean);
+        let dir = vault;
+        for(let i=0;i<parts.length-1;i++) dir = await dir.getDirectoryHandle(parts[i]);
+        const fh = await dir.getFileHandle(parts[parts.length-1]);
+        blob = await fh.getFile();
+      } else if(memAssets.has(path)){
+        blob = memAssets.get(path);
+      }
+      if(blob){
+        const url = URL.createObjectURL(blob);
+        blobCache.set(path, url);
+        img.src = url;
+      } else {
+        img.alt = (img.alt || 'image') + ' — not found: ' + path;
+      }
+    }catch(e){
+      img.alt = (img.alt || 'image') + ' — not found: ' + path;
+    }
+  }
+}
+
+function renderPreview(){
+  const n = notes.get(current);
+  preview.innerHTML = n ? renderMarkdown(n.content) : '';
+  if(window.renderMathInElement) renderMathInElement(preview, KATEX_OPTS);
+  resolveImages(preview);
+  renderFooter();
+}
+
+function renderFooter(){
+  const n = notes.get(current);
+  const mk = (name) => {
+    const a = document.createElement('a');
+    a.className = 'wl' + (notes.has(name) ? '' : ' new');
+    a.dataset.page = name; a.textContent = name;
+    return a;
+  };
+  const fl = $('#f-links'), fb = $('#f-back');
+  fl.innerHTML = ''; fb.innerHTML = '';
+  const outs = n ? linksOf(n.content) : [];
+  const ins = n ? backlinksOf(n.name) : [];
+  if(outs.length) outs.forEach(x => fl.appendChild(mk(x)));
+  else fl.innerHTML = '<span class="none">none yet</span>';
+  if(ins.length) ins.forEach(x => fb.appendChild(mk(x)));
+  else fb.innerHTML = '<span class="none">nothing links here</span>';
+}
+
+/* ---------------- list / search ---------------- */
+function renderList(){
+  const q = $('#search').value.trim().toLowerCase();
+  const list = $('#note-list');
+  list.innerHTML = '';
+  [...notes.values()]
+    .filter(n => !q || n.name.toLowerCase().includes(q) || n.content.toLowerCase().includes(q))
+    .sort((a,b) => a.name.localeCompare(b.name))
+    .forEach(n => {
+      const el = document.createElement('div');
+      el.className = 'note-item' + (n.name === current ? ' active' : '');
+      const deg = linksOf(n.content).length + backlinksOf(n.name).length;
+      el.innerHTML = '<span>' + escHtml(n.name) + '</span>' + (deg ? '<span class="n-links">' + deg + '⛓</span>' : '');
+      el.onclick = () => gotoNote(n.name);
+      list.appendChild(el);
+    });
+}
+
+function currentMode(){ return $('#workspace').className.replace('mode-',''); }
+
+function gotoNote(name){
+  commitActive();
+  current = name;
+  renderList(); loadCurrent();
+}
+
+function loadCurrent(){
+  const n = notes.get(current);
+  titleEl.value = n ? n.name : '';
+  editor.value = n ? n.content : '';
+  if(currentMode() === 'live'){ renderLive(); renderFooter(); }
+  else renderPreview();
+  if(graphOpen) drawGraph();
+}
+
+/* ---------------- editing / saving ---------------- */
+function setSaveState(s){
+  const el = $('#save-state');
+  el.classList.toggle('dirty', s === 'unsaved');
+  el.textContent = { saved:'saved ✓', saving:'saving…', unsaved:'unsaved', demo:'demo mode' }[s] || '—';
+}
+
+function scheduleSave(){
+  setSaveState(vault ? 'unsaved' : 'demo');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveNow, 700);
+}
+
+async function saveNow(){
+  const n = notes.get(current);
+  if(!n) return;
+  if(!vault){ setSaveState('demo'); return; }
+  setSaveState('saving');
+  try{ await writeNote(n); setSaveState('saved'); }
+  catch(e){ setSaveState('unsaved'); notify('Save failed: ' + e.message); }
+}
+
+editor.addEventListener('input', () => {
+  const n = notes.get(current); if(!n) return;
+  n.content = editor.value;
+  scheduleSave();
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(() => { renderPreview(); if(graphOpen) drawGraph(); }, 250);
+});
+
+titleEl.addEventListener('change', () => renameNote(titleEl.value));
+titleEl.addEventListener('keydown', e => {
+  if(e.key === 'Enter'){
+    e.preventDefault(); titleEl.blur();
+    if(currentMode() === 'live') activateBlock(liveBlocks.length, '');
+    else editor.focus();
+  }
+});
+
+$('#search').addEventListener('input', renderList);
+
+document.addEventListener('keydown', e => {
+  if((e.metaKey || e.ctrlKey) && e.key === 's'){ e.preventDefault(); commitActive(); saveNow(); }
+  if((e.metaKey || e.ctrlKey) && e.key === 'n' && e.shiftKey){ e.preventDefault(); newNote(); }
+});
+
+/* view modes */
+document.querySelectorAll('.seg button').forEach(b => {
+  b.onclick = () => {
+    commitActive();
+    document.querySelectorAll('.seg button').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    $('#workspace').className = 'mode-' + b.dataset.mode;
+    if(b.dataset.mode === 'live'){ renderLive(); renderFooter(); }
+    else renderPreview();
+  };
+});
+
+/* wikilink navigation (live, preview + footer) — mousedown so it fires
+   before any blur-triggered re-render replaces the anchor */
+document.addEventListener('mousedown', e => {
+  const a = e.target.closest('a.wl');
+  if(!a) return;
+  e.preventDefault();
+  const name = a.dataset.page;
+  if(!notes.has(name)){
+    notes.set(name, { name, content:'# ' + name + '\n\n', handle:null });
+    writeNote(notes.get(name));
+  }
+  gotoNote(name);
+});
+
+/* ---------------- images: paste & drop ---------------- */
+function extFor(type){
+  return ({'image/png':'png','image/jpeg':'jpg','image/gif':'gif','image/webp':'webp','image/svg+xml':'svg'})[type] || 'png';
+}
+
+async function insertImage(blob, ta){
+  const stamp = new Date().toISOString().replace(/[-:T]/g,'').slice(0,14);
+  const fname = 'img-' + stamp + '-' + Math.random().toString(36).slice(2,6) + '.' + extFor(blob.type);
+  const path = await writeAsset(fname, blob);
+  const md = '\n![image](' + path + ')\n';
+  const s = ta.selectionStart, epos = ta.selectionEnd;
+  ta.value = ta.value.slice(0, s) + md + ta.value.slice(epos);
+  ta.selectionStart = ta.selectionEnd = s + md.length;
+  if(ta === editor){
+    const n = notes.get(current);
+    n.content = editor.value;
+    scheduleSave(); renderPreview();
+  } else {
+    autogrow(ta);
+  }
+  notify(vault ? 'Image saved to assets/' + fname : 'Image held in memory — open a vault to keep it.');
+}
+
+function attachImageHandlers(ta){
+  ta.addEventListener('paste', async e => {
+    const items = [...(e.clipboardData?.items || [])].filter(i => i.type.startsWith('image/'));
+    if(!items.length) return;
+    e.preventDefault();
+    for(const it of items){ const f = it.getAsFile(); if(f) await insertImage(f, ta); }
+  });
+  ta.addEventListener('dragover', e => { e.preventDefault(); ta.classList.add('dragging'); });
+  ta.addEventListener('dragleave', () => ta.classList.remove('dragging'));
+  ta.addEventListener('drop', async e => {
+    e.preventDefault(); ta.classList.remove('dragging');
+    const files = [...(e.dataTransfer?.files || [])].filter(f => f.type.startsWith('image/'));
+    for(const f of files) await insertImage(f, ta);
+  });
+}
+attachImageHandlers(editor);
+
+/* drop images anywhere on the rendered live pane — inserted at the drop point */
+live.addEventListener('dragover', e => {
+  if([...(e.dataTransfer?.items || [])].some(i => i.type.startsWith('image/'))){
+    e.preventDefault(); live.classList.add('dropping');
+  }
+});
+live.addEventListener('dragleave', e => { if(e.target === live) live.classList.remove('dropping'); });
+live.addEventListener('drop', async e => {
+  live.classList.remove('dropping');
+  const files = [...(e.dataTransfer?.files || [])].filter(f => f.type.startsWith('image/'));
+  if(!files.length) return;
+  e.preventDefault();
+  // if a block is open for editing and the drop landed on its textarea,
+  // that textarea's own handler already took it
+  if(e.target.tagName === 'TEXTAREA') return;
+  commitActive();
+  // find which block the drop landed on (insert after it); default = end
+  let at = liveBlocks.length;
+  const els = [...live.querySelectorAll(':scope > .lblock')];
+  for(let i = 0; i < els.length; i++){
+    const r = els[i].getBoundingClientRect();
+    if(e.clientY < r.top + r.height / 2){ at = i; break; }      // above midline → before this block
+    if(e.clientY <= r.bottom){ at = i + 1; break; }             // below midline → after it
+  }
+  const newBlocks = [];
+  for(const f of files){
+    const stamp = new Date().toISOString().replace(/[-:T]/g,'').slice(0,14);
+    const fname = 'img-' + stamp + '-' + Math.random().toString(36).slice(2,6) + '.' + extFor(f.type);
+    const path = await writeAsset(fname, f);
+    newBlocks.push('![image](' + path + ')');
+  }
+  liveBlocks.splice(at, 0, ...newBlocks);
+  updateFromLive();
+  renderLive(false);
+  notify(vault ? 'Image' + (files.length>1?'s':'') + ' saved to assets/' : 'Image held in memory — open a vault to keep it.');
+});
+
+/* stop the browser navigating away when a file is dropped anywhere else */
+window.addEventListener('dragover', e => e.preventDefault());
+window.addEventListener('drop', e => e.preventDefault());
+
+/* ============================================================
+   LIVE MODE — Bear/Typora-style in-place rendering.
+   The note is split into blocks (paragraphs, headings, lists,
+   code fences, $$ math blocks). Everything is rendered; the
+   block you click turns back into raw markdown for editing and
+   re-renders the moment you leave it.
+   ============================================================ */
+let liveBlocks = [];   // array of raw markdown block strings
+let activeIdx = -1;    // which block is being edited (liveBlocks.length = new tail block)
+let committing = false;
+
+function parseBlocks(content){
+  const lines = (content || '').replace(/\r/g,'').split('\n');
+  const blocks = []; let i = 0;
+  while(i < lines.length){
+    if(lines[i].trim() === ''){ i++; continue; }
+    const start = i, first = lines[i].trim();
+    if(/^(```|~~~)/.test(first)){
+      const fence = first.slice(0,3); i++;
+      while(i < lines.length && !lines[i].trim().startsWith(fence)) i++;
+      if(i < lines.length) i++;
+    } else if(first.startsWith('$$') && (lines[i].match(/\$\$/g) || []).length === 1){
+      i++;
+      while(i < lines.length && !lines[i].includes('$$')) i++;
+      if(i < lines.length) i++;
+    } else {
+      while(i < lines.length && lines[i].trim() !== '' && !/^(```|~~~)/.test(lines[i].trim())) i++;
+    }
+    blocks.push(lines.slice(start, i).join('\n'));
+  }
+  return blocks;
+}
+
+function updateFromLive(){
+  const n = notes.get(current); if(!n) return;
+  n.content = liveBlocks.join('\n\n') + (liveBlocks.length ? '\n' : '');
+  editor.value = n.content;
+  scheduleSave();
+  renderFooter();
+  if(graphOpen) drawGraph();
+}
+
+function renderLive(autoActivate){
+  live.innerHTML = '';
+  const n = notes.get(current);
+  liveBlocks = n ? parseBlocks(n.content) : [];
+  liveBlocks.forEach((text, i) => live.appendChild(makeBlock(text, i)));
+  const tail = document.createElement('div');
+  tail.id = 'live-tail';
+  tail.innerHTML = '<div id="live-hint">click to write · blank line + ⏎ starts a new block · esc renders</div>';
+  tail.addEventListener('mousedown', e => {
+    e.preventDefault();
+    commitActive();
+    activateBlock(liveBlocks.length, '');
+  });
+  live.appendChild(tail);
+  if(liveBlocks.length === 0 && autoActivate !== false) activateBlock(0, '');
+}
+
+function makeBlock(text, i){
+  const el = document.createElement('div');
+  el.className = 'lblock';
+  el.innerHTML = renderMarkdown(text);
+  if(window.renderMathInElement) renderMathInElement(el, KATEX_OPTS);
+  resolveImages(el);
+  el.addEventListener('mousedown', e => {
+    if(e.target.closest('a.wl') || e.target.closest('a[href]')) return;
+    if(e.target.tagName === 'TEXTAREA') return;
+    e.preventDefault();
+    let idx = i;
+    const c = commitActive();
+    if(c.oldIdx > -1 && idx > c.oldIdx) idx += c.delta;
+    idx = Math.max(0, Math.min(idx, Math.max(liveBlocks.length - 1, 0)));
+    if(liveBlocks.length) activateBlock(idx, null);
+    else activateBlock(0, '');
+  });
+  return el;
+}
+
+function autogrow(ta){ ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; }
+function caretAtEnd(ta){ return ta.selectionStart === ta.value.length; }
+function caretOnFirstLine(ta){ return !ta.value.slice(0, ta.selectionStart).includes('\n'); }
+function caretOnLastLine(ta){ return !ta.value.slice(ta.selectionEnd).includes('\n'); }
+
+function activateBlock(i, preset, caretPos){
+  commitActive();
+  activeIdx = Math.min(i, liveBlocks.length);
+  const isNew = activeIdx >= liveBlocks.length;
+  const text = (preset !== null && preset !== undefined) ? preset : (isNew ? '' : liveBlocks[activeIdx]);
+  const wrap = document.createElement('div');
+  wrap.className = 'lblock editing';
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.spellcheck = false;
+  wrap.appendChild(ta);
+  const blockEls = live.querySelectorAll(':scope > .lblock');
+  if(isNew) live.insertBefore(wrap, $('#live-tail'));
+  else live.replaceChild(wrap, blockEls[activeIdx]);
+  autogrow(ta);
+  ta.focus();
+  const pos = (caretPos !== undefined) ? caretPos : ta.value.length;
+  ta.selectionStart = ta.selectionEnd = Math.min(pos, ta.value.length);
+  attachImageHandlers(ta);
+  ta.addEventListener('input', () => autogrow(ta));
+  ta.addEventListener('blur', () => commitActive());
+  ta.addEventListener('keydown', e => {
+    if(e.key === 'Escape'){
+      e.preventDefault(); commitActive();
+    }
+    else if(e.key === 'Enter' && !e.shiftKey && caretAtEnd(ta) && ta.value.endsWith('\n')){
+      e.preventDefault();
+      ta.value = ta.value.replace(/\n+$/,'');
+      const c = commitActive();
+      activateBlock(c.last + 1, '');
+    }
+    else if(e.key === 'Backspace' && ta.selectionStart === 0 && ta.selectionEnd === 0){
+      const eff = Math.min(activeIdx, liveBlocks.length);
+      if(ta.value === ''){
+        e.preventDefault();
+        const c = commitActive();  // empty commit removes the block
+        const target = Math.min(Math.max(c.at - 1, 0), liveBlocks.length - 1);
+        if(liveBlocks.length) activateBlock(target, null);
+      } else if(eff > 0){
+        e.preventDefault();
+        const val = ta.value;
+        const prevIdx = eff - 1;
+        const junction = liveBlocks[prevIdx].length;
+        liveBlocks[prevIdx] = liveBlocks[prevIdx] + '\n' + val;
+        if(eff < liveBlocks.length) liveBlocks.splice(eff, 1);
+        activeIdx = -1;
+        updateFromLive();
+        renderLive(false);
+        activateBlock(prevIdx, null, junction + 1);
+      }
+    }
+    else if(e.key === 'ArrowUp' && caretOnFirstLine(ta)){
+      const c0 = Math.min(activeIdx, liveBlocks.length);
+      if(c0 > 0){
+        e.preventDefault();
+        commitActive();
+        activateBlock(c0 - 1, null);
+      }
+    }
+    else if(e.key === 'ArrowDown' && caretOnLastLine(ta)){
+      e.preventDefault();
+      const r = commitActive();
+      const next = r.last + 1;
+      if(next < liveBlocks.length) activateBlock(next, null, 0);
+      else if(r.last >= 0) activateBlock(liveBlocks.length, '');
+    }
+  });
+}
+
+function commitActive(){
+  if(committing) return { oldIdx:-1, delta:0, at:liveBlocks.length, last:liveBlocks.length - 1 };
+  const wrap = live.querySelector('.lblock.editing');
+  if(!wrap || activeIdx < 0){
+    activeIdx = -1;
+    return { oldIdx:-1, delta:0, at:liveBlocks.length, last:liveBlocks.length - 1 };
+  }
+  committing = true;
+  const oldIdx = activeIdx;
+  const val = wrap.querySelector('textarea').value;
+  const parts = parseBlocks(val);
+  const wasNew = oldIdx >= liveBlocks.length;
+  const at = wasNew ? liveBlocks.length : oldIdx;
+  if(wasNew) liveBlocks.push(...parts);
+  else liveBlocks.splice(oldIdx, 1, ...parts);
+  const delta = parts.length - (wasNew ? 0 : 1);
+  const last = at + parts.length - 1;
+  activeIdx = -1;
+  updateFromLive();
+  renderLive(false);
+  committing = false;
+  return { oldIdx, delta, at, last };
+}
+
+/* ---------------- graph ---------------- */
+function toggleGraph(){
+  graphOpen = !graphOpen;
+  $('#graph-panel').classList.toggle('open', graphOpen);
+  if(graphOpen) setTimeout(drawGraph, 200);
+}
+
+let gnodes = [];
+function drawGraph(){
+  const canvas = $('#graph-canvas');
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const headH = $('#graph-head').offsetHeight;
+  canvas.width = rect.width * devicePixelRatio;
+  canvas.height = (rect.height - headH) * devicePixelRatio;
+  canvas.style.height = (rect.height - headH) + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  const W = rect.width, H = rect.height - headH;
+
+  const names = [...notes.keys()];
+  const idx = new Map(names.map((n,i) => [n,i]));
+  const edges = [];
+  names.forEach(n => linksOf(notes.get(n).content).forEach(t => {
+    if(idx.has(t)) edges.push([idx.get(n), idx.get(t)]);
+  }));
+
+  // init positions (keep previous where possible for stability)
+  const prev = new Map(gnodes.map(g => [g.name, g]));
+  gnodes = names.map((name, i) => {
+    const p = prev.get(name);
+    return p ? { ...p, name } : {
+      name,
+      x: W/2 + (Math.random()-0.5)*W*0.6,
+      y: H/2 + (Math.random()-0.5)*H*0.6,
+      vx:0, vy:0
+    };
+  });
+
+  // simple force layout
+  for(let it = 0; it < 120; it++){
+    for(let a = 0; a < gnodes.length; a++){
+      for(let b = a+1; b < gnodes.length; b++){
+        let dx = gnodes[b].x - gnodes[a].x, dy = gnodes[b].y - gnodes[a].y;
+        let d2 = dx*dx + dy*dy || 1;
+        const f = 2600 / d2;
+        const d = Math.sqrt(d2);
+        dx /= d; dy /= d;
+        gnodes[a].vx -= dx*f; gnodes[a].vy -= dy*f;
+        gnodes[b].vx += dx*f; gnodes[b].vy += dy*f;
+      }
+    }
+    edges.forEach(([a,b]) => {
+      let dx = gnodes[b].x - gnodes[a].x, dy = gnodes[b].y - gnodes[a].y;
+      const d = Math.sqrt(dx*dx + dy*dy) || 1;
+      const f = (d - 90) * 0.02;
+      dx /= d; dy /= d;
+      gnodes[a].vx += dx*f*d*0.02; gnodes[a].vy += dy*f*d*0.02;
+      gnodes[b].vx -= dx*f*d*0.02; gnodes[b].vy -= dy*f*d*0.02;
+    });
+    gnodes.forEach(g => {
+      g.vx += (W/2 - g.x)*0.004; g.vy += (H/2 - g.y)*0.004;
+      g.x += g.vx *= 0.82; g.y += g.vy *= 0.82;
+      g.x = Math.max(28, Math.min(W-28, g.x));
+      g.y = Math.max(20, Math.min(H-24, g.y));
+    });
+  }
+
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle = 'rgba(36,94,81,.22)'; ctx.lineWidth = 1.2;
+  edges.forEach(([a,b]) => {
+    ctx.beginPath();
+    ctx.moveTo(gnodes[a].x, gnodes[a].y);
+    ctx.lineTo(gnodes[b].x, gnodes[b].y);
+    ctx.stroke();
+  });
+  ctx.font = '10.5px "IBM Plex Mono", monospace';
+  ctx.textAlign = 'center';
+  gnodes.forEach(g => {
+    const active = g.name === current;
+    ctx.beginPath();
+    ctx.arc(g.x, g.y, active ? 7 : 5, 0, Math.PI*2);
+    ctx.fillStyle = active ? '#a4620f' : '#245e51';
+    ctx.fill();
+    ctx.fillStyle = '#5c6357';
+    const label = g.name.length > 16 ? g.name.slice(0,15) + '…' : g.name;
+    ctx.fillText(label, g.x, g.y + 17);
+  });
+
+  canvas.onclick = e => {
+    const r = canvas.getBoundingClientRect();
+    const mx = e.clientX - r.left, my = e.clientY - r.top;
+    for(const g of gnodes){
+      if(Math.hypot(mx - g.x, my - g.y) < 13){
+        gotoNote(g.name); break;
+      }
+    }
+  };
+}
+
+window.addEventListener('resize', () => { if(graphOpen) drawGraph(); });
+window.addEventListener('beforeunload', e => {
+  if($('#save-state').textContent.includes('unsaved')) { e.preventDefault(); e.returnValue = ''; }
+});
+
+/* ---------------- notices ---------------- */
+let noticeTimer = null;
+function notify(msg){
+  const el = $('#notice');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(noticeTimer);
+  noticeTimer = setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+/* ---------------- boot ---------------- */
+(function boot(){
+  for(const k of Object.keys(STARTERS)) notes.set(k, { name:k, content:STARTERS[k], handle:null });
+  current = 'Welcome';
+  renderList(); loadCurrent();
+  setSaveState('demo');
+  if(!FS_OK) notify('Heads-up: saving to disk needs Chrome or Edge. Demo mode only in this browser.');
+})();
+</script>
+</body>
+</html>
