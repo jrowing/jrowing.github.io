@@ -1,0 +1,20 @@
+<nav class="nav">
+  <a class="nav-brand" href="{{ '/' | relative_url }}">J. <em>Rowing</em></a>
+
+  <ul class="nav-links">
+    <li><a href="{{ '/resources.html' | relative_url }}"{% if page.url contains '/resources' %} aria-current="page"{% endif %}>Resources</a></li>
+    <li><a href="{{ '/writing.html' | relative_url }}"{% if page.url contains '/writing' %} aria-current="page"{% endif %}>Writing</a></li>
+    <li><a href="{{ '/resources/pearls.html' | relative_url }}"{% if page.url contains 'pearls' %} aria-current="page"{% endif %}>Pearls of wisdom</a></li>
+    <li><a href="{{ '/planner.html' | relative_url }}"{% if page.url contains 'planner' %} aria-current="page"{% endif %}>Planner</a></li>
+    <li><a href="{{ '/cv.html' | relative_url }}"{% if page.url contains '/cv' %} aria-current="page"{% endif %}>CV</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <span class="coord">4°37′S</span>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+      <span class="theme-icon theme-icon--light">&#9788;</span>
+      <span class="theme-icon theme-icon--dark">&#9790;</span>
+    </button>
+    <a class="nav-cta" href="https://buymeacoffee.com/jrowing">&#9749; Support</a>
+  </div>
+</nav>

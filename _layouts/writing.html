@@ -1,0 +1,56 @@
+---
+layout: default
+---
+
+<div class="inner-page">
+  <div class="page-header">
+    <a class="back-link" href="{{ '/' | relative_url }}">&larr; jrowing.com</a>
+    <h1 class="page-title">Writing</h1>
+    <p class="page-desc">Essays and explainers on physics, teaching, and the occasional deep dive.</p>
+  </div>
+
+  <div class="post-list">
+    {% for post in site.posts %}
+    <a class="post-item" href="{{ post.url | relative_url }}">
+      <span class="post-date">{{ post.date | date: "%b %Y" }}</span>
+      <span class="post-body">
+        <span class="post-title">{{ post.title }}</span>
+        {% if post.description %}
+          <span class="post-excerpt">{{ post.description }}</span>
+        {% elsif post.excerpt %}
+          <span class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 25 }}</span>
+        {% endif %}
+      </span>
+      <span class="post-arrow">&rarr;</span>
+    </a>
+    {% endfor %}
+
+    {% comment %} Fallback static entries if no posts exist {% endcomment %}
+    {% if site.posts.size == 0 %}
+    <a class="post-item" href="{{ '/writing/fiftyunis.html' | relative_url }}">
+      <span class="post-date">Jul 2026</span>
+      <span class="post-body">
+        <span class="post-title">What fifty universities told me about personal statements</span>
+        <span class="post-excerpt">A real answer to the question every student is asking, for Maths, Physics, and Computer Science.</span>
+      </span>
+      <span class="post-arrow">&rarr;</span>
+    </a>
+    <a class="post-item" href="{{ '/writing/The Cracked Mirrors of Genius Why We Need to Stop Worshiping Textbook Heroes.html' | relative_url }}">
+      <span class="post-date">Jul 2026</span>
+      <span class="post-body">
+        <span class="post-title">The cracked mirrors of genius</span>
+        <span class="post-excerpt">From Schrödinger's diaries to Newton's gallows — a look at the dark human realities behind history's greatest equations.</span>
+      </span>
+      <span class="post-arrow">&rarr;</span>
+    </a>
+    <a class="post-item" href="{{ '/writing/181771426.teaching-radioactivity-with-or-without.html' | relative_url }}">
+      <span class="post-date">Jan 2026</span>
+      <span class="post-body">
+        <span class="post-title">Teaching radioactivity (with or without the resources)</span>
+        <span class="post-excerpt">Episode 1: why radioactivity is magic.</span>
+      </span>
+      <span class="post-arrow">&rarr;</span>
+    </a>
+    {% endif %}
+  </div>
+</div>

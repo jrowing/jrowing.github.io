@@ -1,0 +1,20 @@
+---
+layout: default
+---
+
+<div class="inner-page inner-page--post">
+  <div class="page-header">
+    <a class="back-link" href="{{ '/writing.html' | relative_url }}">&larr; Writing</a>
+    {% if page.date %}
+      <p class="post-meta-date">{{ page.date | date: "%-d %B %Y" }}</p>
+    {% endif %}
+    <h1 class="post-heading">{{ page.title }}</h1>
+    {% if page.description %}
+      <p class="post-lede">{{ page.description }}</p>
+    {% endif %}
+  </div>
+
+  <div class="post-content">
+    {{ content }}
+  </div>
+</div>
