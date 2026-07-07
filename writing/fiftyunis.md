@@ -11,9 +11,6 @@ date: 2026-07-06
 is_writing: true
 
 ---
-
-# What Fifty Universities Told Me About Personal Statements
-
 ### A real answer to the question every student is asking, for Maths, Physics, and Computer Science
 
 This is the question I am asked more than any other between September and January: *what should I put in my personal statement?* It is asked by students, by parents, by colleagues teaching tutor groups for the first time, and by the students I taught two years ago who have just realised that their younger siblings are now in the same boat.
