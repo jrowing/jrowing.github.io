@@ -1,0 +1,29 @@
+---
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>{{ site.title | default: "Joe Rowing" }}</title>
+  <description>{{ site.description | default: "Teaching resources, writing, and projects from Joe Rowing." }}</description>
+  <link>{{ site.url | default: "https://www.jrowing.com" }}/</link>
+  <atom:link href="{{ site.url | default: "https://www.jrowing.com" }}/feed.xml" rel="self" type="application/rss+xml" />
+  <lastBuildDate>{{ site.time | date_to_rfc822 }}</lastBuildDate>
+  <language>en</language>
+
+  {% assign resource_dated = site.pages | where: "is_resource", true | where_exp: "item", "item.date" %}
+  {% assign writing_dated = site.pages | where: "is_writing", true | where_exp: "item", "item.date" %}
+  {% assign all_items = resource_dated | concat: writing_dated | sort: "date" | reverse %}
+
+  {% for item in all_items %}
+  <item>
+    <title>{{ item.title | xml_escape }}</title>
+    <description>{{ item.description | xml_escape }}</description>
+    <link>{{ item.url | absolute_url }}</link>
+    <guid isPermaLink="true">{{ item.url | absolute_url }}</guid>
+    <pubDate>{{ item.date | date_to_rfc822 }}</pubDate>
+  </item>
+  {% endfor %}
+
+</channel>
+</rss>
