@@ -1,66 +1,64 @@
 ---
 layout: default
-title: Writing
+title: Writing — Joe Rowing
+description: Essays and explainers on physics, teaching, and the occasional deep dive.
 ---
-<div class="resources-wrap">
-  <a href="/" class="back-link">← jrowing.com</a>
-  <hr class="page-divider">
 
-  <div class="resources-intro">
-    <div class="section-label">Longer-form writing</div>
-    <p class="resources-lede">Essays and explainers on physics, teaching, and the occasional deep dive.</p>
+<div class="inner-page">
+  <div class="page-header">
+    <a class="back-link" href="{{ '/' | relative_url }}">&larr; jrowing.com</a>
+    <h1 class="page-title">Writing</h1>
+    <p class="page-desc">Essays and explainers on physics, teaching, and the occasional deep dive.</p>
   </div>
 
-  <div class="resource-toolbar">
-    <div class="resource-search-wrap">
-      <svg class="resource-search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.4"/>
-        <path d="M11.5 11.5L14.5 14.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-      </svg>
-      <input type="text" class="resource-search" id="writingSearch" placeholder="Search writing…" aria-label="Search writing">
-    </div>
-  </div>
+  <div class="post-list">
 
-  {% assign posts = site.pages | where: "is_writing", true | sort: "date" | reverse %}
+    {% if site.posts.size > 0 %}
+      {% for post in site.posts %}
+      <a class="post-item" href="{{ post.url | relative_url }}">
+        <span class="post-date">{{ post.date | date: "%b %Y" }}</span>
+        <span class="post-body">
+          <span class="post-title">{{ post.title }}</span>
+          {% if post.description %}
+            <span class="post-excerpt">{{ post.description }}</span>
+          {% elsif post.excerpt %}
+            <span class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 25 }}</span>
+          {% endif %}
+        </span>
+        <span class="post-arrow">&rarr;</span>
+      </a>
+      {% endfor %}
 
-  <div id="writingGroup">
-    {% if posts.size > 0 %}
-      <div class="resource-grid">
-        {% for p in posts %}
-          <a href="{{ p.url }}" class="resource-card writing-card"
-             data-search="{{ p.title | downcase }} {{ p.description | downcase }}">
-            <div class="resource-card-top"></div>
-            <div class="resource-card-body">
-              {% if p.date %}<div class="resource-card-tags"><span class="tag">{{ p.date | date: "%b %Y" }}</span></div>{% endif %}
-              <div class="resource-card-title" style="margin-top:8px;">{{ p.title }}</div>
-              {% if p.description %}<div class="resource-card-desc">{{ p.description }}</div>{% endif %}
-            </div>
-          </a>
-        {% endfor %}
-      </div>
-      <p class="no-results" id="noResults" hidden>No posts match your search.</p>
     {% else %}
-      <p style="padding:20px 0;color:var(--ink-4);font-family:var(--sans);font-size:15px;">No posts yet.</p>
+
+      <a class="post-item" href="{{ '/writing/fiftyunis.html' | relative_url }}">
+        <span class="post-date">Jul 2026</span>
+        <span class="post-body">
+          <span class="post-title">What fifty universities told me about personal statements</span>
+          <span class="post-excerpt">A real answer to the question every student is asking, for Maths, Physics, and Computer Science.</span>
+        </span>
+        <span class="post-arrow">&rarr;</span>
+      </a>
+
+      <a class="post-item" href="{{ '/writing/The Cracked Mirrors of Genius Why We Need to Stop Worshiping Textbook Heroes.html' | relative_url }}">
+        <span class="post-date">Jul 2026</span>
+        <span class="post-body">
+          <span class="post-title">The cracked mirrors of genius</span>
+          <span class="post-excerpt">From Schr&ouml;dinger&rsquo;s diaries to Newton&rsquo;s gallows &mdash; the dark human realities behind history&rsquo;s greatest equations.</span>
+        </span>
+        <span class="post-arrow">&rarr;</span>
+      </a>
+
+      <a class="post-item" href="{{ '/writing/181771426.teaching-radioactivity-with-or-without.html' | relative_url }}">
+        <span class="post-date">Jan 2026</span>
+        <span class="post-body">
+          <span class="post-title">Teaching radioactivity (with or without the resources)</span>
+          <span class="post-excerpt">Episode 1: why radioactivity is magic.</span>
+        </span>
+        <span class="post-arrow">&rarr;</span>
+      </a>
+
     {% endif %}
+
   </div>
 </div>
-
-<script>
-(function () {
-  var search = document.getElementById('writingSearch');
-  var cards = Array.prototype.slice.call(document.querySelectorAll('.writing-card'));
-  var noResults = document.getElementById('noResults');
-  if (!search) return;
-
-  search.addEventListener('input', function () {
-    var q = search.value.trim().toLowerCase();
-    var anyVisible = false;
-    cards.forEach(function (card) {
-      var visible = !q || card.dataset.search.indexOf(q) !== -1;
-      card.hidden = !visible;
-      if (visible) anyVisible = true;
-    });
-    if (noResults) noResults.hidden = anyVisible;
-  });
-})();
-</script>

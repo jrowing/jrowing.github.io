@@ -1,166 +1,171 @@
 ---
 layout: default
-title: Resources
+title: Resources — Joe Rowing
+description: Teaching and learning materials for Cambridge International Physics and Sciences.
 ---
-<div class="resources-wrap">
-  <a href="/" class="back-link">← jrowing.com</a>
-  <hr class="page-divider">
 
-  <div class="resources-intro">
-    <div class="section-label">Teaching &amp; learning materials</div>
-    <p class="resources-lede">Interactive tools, revision aids, and reference material built for the classroom — searchable and filterable as the pile grows.</p>
+<div class="inner-page">
+  <div class="page-header">
+    <a class="back-link" href="{{ '/' | relative_url }}">&larr; jrowing.com</a>
+    <h1 class="page-title">Resources</h1>
+    <p class="page-desc">Teaching and learning materials for Cambridge International Physics and Sciences.</p>
   </div>
 
-  <div class="resource-toolbar">
-    <div class="resource-search-wrap">
-      <svg class="resource-search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.4"/>
-        <path d="M11.5 11.5L14.5 14.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-      </svg>
-      <input type="text" class="resource-search" id="resourceSearch" placeholder="Search resources…" aria-label="Search resources">
-    </div>
+  <div class="resource-body">
 
-    <div class="filter-row">
-      <span class="filter-row-label">Spec</span>
-      <button type="button" class="filter-tag" data-filter-group="spec" data-filter-value="0654">0654</button>
-      <button type="button" class="filter-tag" data-filter-group="spec" data-filter-value="9702">9702</button>
-      <button type="button" class="filter-tag" data-filter-group="spec" data-filter-value="general">General</button>
-    </div>
+    <section class="resource-category">
+      <p class="resource-cat-label">Revision tools</p>
+      <div class="resource-list">
 
-    <div class="filter-row">
-      <span class="filter-row-label">Type</span>
-      <button type="button" class="filter-tag" data-filter-group="type" data-filter-value="simulation">Simulations</button>
-      <button type="button" class="filter-tag" data-filter-group="type" data-filter-value="revision-tool">Revision Tools</button>
-      <button type="button" class="filter-tag" data-filter-group="type" data-filter-value="database">Databases</button>
-      <button type="button" class="filter-tag" data-filter-group="type" data-filter-value="problem-set">Problem Sets</button>
-      <button type="button" class="filter-tag" data-filter-group="type" data-filter-value="reference">Reference &amp; Tools</button>
-      <button type="button" class="filter-tag" data-filter-group="type" data-filter-value="diving">Scuba diving</button>
-    </div>
+        <a class="resource-item" href="{{ '/resources/9702_as_physics_spinner.html' | relative_url }}">
+          <span class="resource-num">i.</span>
+          <span class="resource-content">
+            <span class="resource-title">9702 Revision Spinner</span>
+            <span class="resource-desc">A-level physics &mdash; revision at random</span>
+          </span>
+          <span class="resource-tag">Interactive</span>
+        </a>
 
-    <button type="button" class="filter-clear" id="filterClear" hidden>Clear filters ✕</button>
-  </div>
+        <a class="resource-item" href="{{ '/resources/0654_coordinated_sciences_spinner.html' | relative_url }}">
+          <span class="resource-num">ii.</span>
+          <span class="resource-content">
+            <span class="resource-title">0654 Revision Spinner</span>
+            <span class="resource-desc">Coordinated sciences &mdash; revision at random</span>
+          </span>
+          <span class="resource-tag">Interactive</span>
+        </a>
 
-  {% assign resource_pages = site.pages | where: "is_resource", true | sort: "title" %}
-  {% assign type_order = "simulation,revision-tool,database,problem-set,reference" | split: "," %}
-  {% assign type_labels = "Simulations,Revision Tools,Databases,Problem Sets,Reference & Tools" | split: "," %}
-  {% assign uncategorized = resource_pages | where_exp: "item", "item.type == nil" %}
+        <a class="resource-item" href="{{ '/resources/gcse-problems.html' | relative_url }}">
+          <span class="resource-num">iii.</span>
+          <span class="resource-content">
+            <span class="resource-title">GCSE Science Challenge Problems</span>
+            <span class="resource-desc">52 weekly problems across Physics, Biology, and Chemistry</span>
+          </span>
+          <span class="resource-tag">Problems</span>
+        </a>
 
-  <div id="resourceGroups">
-    {% if resource_pages.size > 0 %}
-      {% for t in type_order %}
-        {% assign items = resource_pages | where: "type", t %}
-        {% if items.size > 0 %}
-          {% assign idx = forloop.index0 %}
-          <div class="resource-group" id="{{ t }}">
-            <div class="resource-group-heading">
-              <span class="resource-group-dot"></span>
-              {{ type_labels[idx] }}
-              <span class="resource-group-count">{{ items.size }}</span>
-            </div>
-            <div class="resource-grid">
-              {% for r in items %}
-                <a href="{{ r.url }}" class="resource-card resource-card--{{ t }}"
-                   data-type="{{ r.type }}"
-                   data-spec="{{ r.spec }}"
-                   data-search="{{ r.title | downcase }} {{ r.description | downcase }}">
-                  <div class="resource-card-top"></div>
-                  <div class="resource-card-body">
-                    <div class="resource-card-title">{{ r.title }}</div>
-                    {% if r.description %}<div class="resource-card-desc">{{ r.description }}</div>{% endif %}
-                    {% if r.spec %}
-                      <div class="resource-card-tags">
-                        <span class="tag">{{ r.spec }}</span>
-                      </div>
-                    {% endif %}
-                  </div>
-                </a>
-              {% endfor %}
-            </div>
-          </div>
-        {% endif %}
-      {% endfor %}
+      </div>
+    </section>
 
-      {% if uncategorized.size > 0 %}
-        <div class="resource-group" id="other">
-          <div class="resource-group-heading">
-            <span class="resource-group-dot"></span>
-            Other
-            <span class="resource-group-count">{{ uncategorized.size }}</span>
-          </div>
-          <div class="resource-grid">
-            {% for r in uncategorized %}
-              <a href="{{ r.url }}" class="resource-card" data-type="" data-spec="" data-search="{{ r.title | downcase }} {{ r.description | downcase }}">
-                <div class="resource-card-top"></div>
-                <div class="resource-card-body">
-                  <div class="resource-card-title">{{ r.title }}</div>
-                  {% if r.description %}<div class="resource-card-desc">{{ r.description }}</div>{% endif %}
-                </div>
-              </a>
-            {% endfor %}
-          </div>
-        </div>
-      {% endif %}
+    <section class="resource-category">
+      <p class="resource-cat-label">Simulations</p>
+      <div class="resource-list">
 
-      <p class="no-results" id="noResults" hidden>No resources match your filters.</p>
-    {% else %}
-      <p style="padding:20px 0;color:var(--ink-4);font-family:var(--sans);font-size:15px;">No resources yet.</p>
-    {% endif %}
+        <a class="resource-item" href="{{ '/resources/einstein.html' | relative_url }}">
+          <span class="resource-num">iv.</span>
+          <span class="resource-content">
+            <span class="resource-title">Einstein&rsquo;s Light Clock</span>
+            <span class="resource-desc">Invariant speed of light dilates moving time</span>
+          </span>
+          <span class="resource-tag">Sim</span>
+        </a>
+
+        <a class="resource-item" href="{{ '/resources/reference.html' | relative_url }}">
+          <span class="resource-num">v.</span>
+          <span class="resource-content">
+            <span class="resource-title">Inertial vs Non-Inertial Frames</span>
+            <span class="resource-desc">Rotating carousel and linear train perspectives</span>
+          </span>
+          <span class="resource-tag">Sim</span>
+        </a>
+
+        <a class="resource-item" href="{{ '/resources/deco-models.html' | relative_url }}">
+          <span class="resource-num">vi.</span>
+          <span class="resource-content">
+            <span class="resource-title">Deco Models Compared</span>
+            <span class="resource-desc">B&uuml;hlmann / RGBM / VPM-B / USN decompression models</span>
+          </span>
+          <span class="resource-tag">Sim</span>
+        </a>
+
+        <a class="resource-item" href="{{ '/resources/drake.html' | relative_url }}">
+          <span class="resource-num">vii.</span>
+          <span class="resource-content">
+            <span class="resource-title">Drake Equation Explorer</span>
+            <span class="resource-desc">Interactive parameter space for estimating N</span>
+          </span>
+          <span class="resource-tag">Sim</span>
+        </a>
+
+        <a class="resource-item" href="{{ '/resources/skydiverreferenceframes.html' | relative_url }}">
+          <span class="resource-num">viii.</span>
+          <span class="resource-content">
+            <span class="resource-title">Skydiving Frames of Reference</span>
+            <span class="resource-desc">They don&rsquo;t fall up&hellip;</span>
+          </span>
+          <span class="resource-tag">Sim</span>
+        </a>
+
+      </div>
+    </section>
+
+    <section class="resource-category">
+      <p class="resource-cat-label">Databases</p>
+      <div class="resource-list">
+
+        <a class="resource-item" href="{{ '/resources/physics-experiments-database.html' | relative_url }}">
+          <span class="resource-num">ix.</span>
+          <span class="resource-content">
+            <span class="resource-title">Physics Experiments Database</span>
+            <span class="resource-desc">124 practicals &mdash; aims, methods, errors, filter by topic or exam board</span>
+          </span>
+          <span class="resource-tag">Database</span>
+        </a>
+
+        <a class="resource-item" href="{{ '/resources/physics-experiments.html' | relative_url }}">
+          <span class="resource-num">x.</span>
+          <span class="resource-content">
+            <span class="resource-title">Physics Experiment Data</span>
+            <span class="resource-desc">Student data files across the A-level course</span>
+          </span>
+          <span class="resource-tag">Data</span>
+        </a>
+
+        <a class="resource-item" href="{{ '/resources/demonstrations.html' | relative_url }}">
+          <span class="resource-num">xi.</span>
+          <span class="resource-content">
+            <span class="resource-title">60+ Demonstrations</span>
+            <span class="resource-desc">Classroom demos for a busy teacher</span>
+          </span>
+          <span class="resource-tag">Database</span>
+        </a>
+
+      </div>
+    </section>
+
+    <section class="resource-category">
+      <p class="resource-cat-label">Tools</p>
+      <div class="resource-list">
+
+        <a class="resource-item" href="{{ '/resources/excel-sims.html' | relative_url }}">
+          <span class="resource-num">xii.</span>
+          <span class="resource-content">
+            <span class="resource-title">Excel Simulations</span>
+            <span class="resource-desc">Physics concepts in Excel &mdash; collected and home-made</span>
+          </span>
+          <span class="resource-tag">Download</span>
+        </a>
+
+        <a class="resource-item" href="{{ '/resources/oxbridge-interview.html' | relative_url }}">
+          <span class="resource-num">xiii.</span>
+          <span class="resource-content">
+            <span class="resource-title">Oxbridge Mock Interview Questions</span>
+            <span class="resource-desc">Random question picker across 19 disciplines</span>
+          </span>
+          <span class="resource-tag">Tool</span>
+        </a>
+
+        <a class="resource-item" href="{{ '/resources/pearls.html' | relative_url }}">
+          <span class="resource-num">xiv.</span>
+          <span class="resource-content">
+            <span class="resource-title">Pearls of Wisdom</span>
+            <span class="resource-desc">365 things to make you think</span>
+          </span>
+          <span class="resource-tag">Tool</span>
+        </a>
+
+      </div>
+    </section>
+
   </div>
 </div>
-
-<script>
-(function () {
-  var search = document.getElementById('resourceSearch');
-  var clearBtn = document.getElementById('filterClear');
-  var groups = Array.prototype.slice.call(document.querySelectorAll('.resource-group'));
-  var noResults = document.getElementById('noResults');
-  var active = { type: new Set(), spec: new Set() };
-
-  document.querySelectorAll('.filter-tag').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var group = btn.dataset.filterGroup;
-      var value = btn.dataset.filterValue;
-      if (active[group].has(value)) {
-        active[group].delete(value);
-        btn.classList.remove('active');
-      } else {
-        active[group].add(value);
-        btn.classList.add('active');
-      }
-      applyFilters();
-    });
-  });
-
-  search.addEventListener('input', applyFilters);
-
-  clearBtn.addEventListener('click', function () {
-    active.type.clear();
-    active.spec.clear();
-    document.querySelectorAll('.filter-tag').forEach(function (b) { b.classList.remove('active'); });
-    search.value = '';
-    applyFilters();
-  });
-
-  function applyFilters() {
-    var q = search.value.trim().toLowerCase();
-    var anyVisible = false;
-    var filtersActive = active.type.size || active.spec.size || q;
-    clearBtn.hidden = !filtersActive;
-
-    groups.forEach(function (group) {
-      var groupHasVisible = false;
-      group.querySelectorAll('.resource-card').forEach(function (card) {
-        var matchesType = active.type.size === 0 || active.type.has(card.dataset.type);
-        var matchesSpec = active.spec.size === 0 || active.spec.has(card.dataset.spec);
-        var matchesSearch = !q || card.dataset.search.indexOf(q) !== -1;
-        var visible = matchesType && matchesSpec && matchesSearch;
-        card.hidden = !visible;
-        if (visible) { groupHasVisible = true; anyVisible = true; }
-      });
-      group.hidden = !groupHasVisible;
-    });
-
-    noResults.hidden = anyVisible;
-  }
-})();
-</script>

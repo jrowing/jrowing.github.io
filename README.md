@@ -1,39 +1,90 @@
-# jrowing.com
+# jrowing.com — site redesign
 
-## Structure — everything is flat at the root
+A complete set of Jekyll layouts and shared CSS covering the whole site.
+
+## File structure
 
 ```
-_config.yml
-index.html          homepage
-resources.html      resources list
-planner.html        planner
-cv.html             CV
 _layouts/
-  default.html      nav + footer (used by all pages)
-  resource.html     individual resource pages
+  default.html     — base layout (nav + footer + theme toggle) used by all pages
+  home.html        — homepage with hero, latest card, projects grid
+  writing.html     — writing index (lists posts automatically, falls back to static)
+  cv.html          — curriculum vitae
+  post.html        — individual article / essay
+
+_includes/
+  nav.html         — sticky nav with dark mode toggle, active-link detection
+  footer.html      — find-me links + copyright
+  theme-script.html — tiny inline script that sets data-theme before first paint
+
 assets/css/
-  style.css
-resources/
-  physics-notes.html
-  diving.html
-  car_friction_wide.html
-  teacher-calendar.html
-  (etc — resource pages only, NO index.html here)
+  main.css         — single CSS file covering all page types
 ```
 
-No blog. No subfolders with their own index pages.
+## Integration
 
-## Adding a resource page
+1. Copy all folders into your Jekyll repo root.
+2. Update front matter on existing pages:
 
-Drop a file in `resources/` with this front matter:
-
-```
+```yaml
+# index.md / index.html
 ---
-layout: resource
-title: "Page Title"
-is_resource: true
-description: "One-line description (shown on resources list)"
+layout: home
+---
+
+# writing.html
+---
+layout: writing
+title: Writing — Joe Rowing
+---
+
+# cv.html
+---
+layout: cv
+title: CV — Joe Rowing
+---
+
+# _posts/*.md  (individual posts)
+---
+layout: post
+title: "Your post title"
+description: "One-sentence teaser shown on the writing index and in the latest card."
+date: 2026-07-06
 ---
 ```
 
-It will automatically appear in the nav dropdown and on the resources page.
+3. Remove any inline `<style>` blocks or per-page CSS links that conflict.
+4. In `_config.yml`, add:
+
+```yaml
+description: "Chartered Physicist, educator, and author. Teaching physics on Praslin, Seychelles."
+```
+
+## Dark mode
+
+- Stored in `localStorage` under the key `theme`.
+- On first visit, respects `prefers-color-scheme` (system setting).
+- The `theme-script.html` include runs inline in `<head>` before first paint — no flash of wrong theme.
+- The toggle button in the nav switches between modes; the `<script>` at the bottom of each layout wires up the click handler.
+- All colours are CSS custom properties in two blocks at the top of `main.css` — easy to adjust.
+
+## Accent colour
+
+In dark mode: `#c8a96e` (warm amber-gold).
+In light mode: falls back to `--text-muted` (neutral grey).
+Used on: italic brand name, section labels, project numbers, "Read →" link, latest-writing label, footer col labels, CV section labels, list dashes, active nav underline.
+
+To change the dark accent: edit `--accent` in the `[data-theme="dark"]` block in `main.css`.
+
+## Resource pages (interactive HTML tools)
+
+Individual resource pages (car friction sim, spinners, etc.) are standalone HTML files and don't use the Jekyll layout system. To give them the same nav/footer, either:
+
+a) Convert them to use `layout: default` and put their interactive content in `{{ content }}`
+b) Add a small `<link rel="stylesheet" href="/assets/css/main.css">` and copy in the nav/footer HTML manually
+
+Option (a) is cleaner long-term.
+
+## Nav active states
+
+The nav uses Jekyll's `page.url` to set `aria-current="page"` on the current link. This works automatically — no configuration needed.
