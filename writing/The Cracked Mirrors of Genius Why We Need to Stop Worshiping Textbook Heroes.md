@@ -12,8 +12,6 @@ is_writing: true
 
 ---
 
-# The Cracked Mirrors of Genius: Why We Need to Stop Worshiping Textbook Heroes
-
 ### From Schrödinger’s diaries to Newton’s gallows, a look at the deeply dark human realities behind history's greatest equations—and the rare few who chose a different path.
 
 If you open any high school physics textbook, you are greeted by a gallery of secular saints. They stare out from the pages in airbrushed portraits or smooth marble busts - stoic, solemn, and seemingly operating on a higher moral and intellectual plane than the rest of humanity. We teach ***their*** laws, ***their*** constants, and ***their*** equations as if they dropped directly from a heaven of pure logic. 
