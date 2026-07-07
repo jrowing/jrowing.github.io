@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joe Rowing</title>
+  <meta name="description" content="Chartered Physicist, educator, and author. Teaching physics on Praslin, Seychelles.">
+  <link rel="stylesheet" href="{{ '/assets/css/home.css' | relative_url }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="{{ '/' | relative_url }}">J. <em>Rowing</em></a>
+
+  <ul class="nav-links">
+    <li><a href="{{ '/resources.html' | relative_url }}">Resources</a></li>
+    <li><a href="{{ '/writing.html' | relative_url }}">Writing</a></li>
+    <li><a href="{{ '/resources/pearls.html' | relative_url }}">Pearls of wisdom</a></li>
+    <li><a href="{{ '/planner.html' | relative_url }}">Planner</a></li>
+    <li><a href="{{ '/cv.html' | relative_url }}">CV</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <span class="coord">4°37′S</span>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+      <span class="theme-icon theme-icon--light">&#9788;</span>
+      <span class="theme-icon theme-icon--dark">&#9790;</span>
+    </button>
+    <a class="nav-cta" href="https://buymeacoffee.com/jrowing">&#9749; Support</a>
+  </div>
+</nav>
+
+<main>
+  <div class="hero">
+    <div class="hero-text">
+      <p class="hero-sub">CPHYS &middot; MINSTP &middot; PRASLIN &middot; SEYCHELLES</p>
+      <h1 class="hero-name">Joe<br><em>Rowing</em></h1>
+      <p class="hero-bio">
+        Chartered Physicist, educator, and author. Founding member of <strong>Exeter Mathematics School</strong>. IoP Physics Coach. Textbook author for Pearson, OUP, and Hodder. Currently teaching physics, chemistry, and biology at Vijay International School on Praslin. Twenty years in classrooms from West Sussex to the Indian Ocean.
+      </p>
+      <div class="hero-ctas">
+        <a class="cta-primary" href="#projects">Projects</a>
+        <a class="cta-secondary" href="{{ '/resources.html' | relative_url }}">Resources</a>
+        <a class="cta-secondary" href="{{ '/cv.html' | relative_url }}">CV</a>
+      </div>
+    </div>
+
+    <div class="latest-card">
+      <p class="latest-label">Latest writing</p>
+      {% assign latest = site.posts.first %}
+      {% if latest %}
+        <a class="latest-title" href="{{ latest.url | relative_url }}">{{ latest.title }}</a>
+        <p class="latest-date">{{ latest.date | date: "%-d %B %Y" }}</p>
+        {% if latest.excerpt %}
+          <p class="latest-desc">{{ latest.excerpt | strip_html | truncatewords: 30 }}</p>
+        {% endif %}
+        <a class="latest-link" href="{{ latest.url | relative_url }}">Read &rarr;</a>
+      {% else %}
+        <a class="latest-title" href="{{ '/writing.html' | relative_url }}">Notes from the science lab</a>
+        <p class="latest-desc">Writing on physics education, field science, and life in the Indian Ocean.</p>
+        <a class="latest-link" href="{{ '/writing.html' | relative_url }}">All writing &rarr;</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <section class="section" id="projects">
+    <p class="section-label">Current work</p>
+    <div class="projects-grid">
+      <a class="project-item" href="{{ '/resources/physics-notes.html' | relative_url }}">
+        <p class="project-num">i.</p>
+        <p class="project-title">Cambridge International Physics Notes</p>
+        <p class="project-desc">179pp &middot; LaTeX / Tufte layout &middot; free download</p>
+        <div class="project-tags"><span class="tag">Physics</span><span class="tag">Open access</span></div>
+      </a>
+      <a class="project-item" href="https://mybinder.org/v2/gh/jrowing/Jupyter_lab_book/HEAD">
+        <p class="project-num">ii.</p>
+        <p class="project-title">Jupyter Physics Lab Books</p>
+        <p class="project-desc">Interactive practicals &middot; work in progress</p>
+        <div class="project-tags"><span class="tag">Jupyter</span><span class="tag">Interactive</span></div>
+      </a>
+      <a class="project-item" href="{{ '/planner.html' | relative_url }}">
+        <p class="project-num">iii.</p>
+        <p class="project-title">Markdown Teacher Planner</p>
+        <p class="project-desc">Open source &middot; Mac + browser &middot; plain markdown</p>
+        <div class="project-tags"><span class="tag">Tools</span><span class="tag">Open source</span></div>
+      </a>
+      <a class="project-item" href="{{ '/resources/bioacoustics.html' | relative_url }}">
+        <p class="project-num">iv.</p>
+        <p class="project-title">Bioacoustics</p>
+        <p class="project-desc">Bat detection &middot; automated bird-call logging &middot; Praslin field research</p>
+        <div class="project-tags"><span class="tag">Seychelles</span><span class="tag">Field research</span></div>
+      </a>
+      <a class="project-item" href="{{ '/resources/diving.html' | relative_url }}">
+        <p class="project-num">v.</p>
+        <p class="project-title">Diving</p>
+        <p class="project-desc">Ennerdale &middot; Booby Rock &middot; South Marianne</p>
+        <div class="project-tags"><span class="tag">Marine</span><span class="tag">Seychelles</span></div>
+      </a>
+      <a class="project-item" href="{{ '/resources/dartmoor-tors.html' | relative_url }}">
+        <p class="project-num">vi.</p>
+        <p class="project-title">Walking Dartmoor Tors</p>
+        <p class="project-desc">268 Tors in 12 months</p>
+        <div class="project-tags"><span class="tag">Walking</span><span class="tag">Adventures</span></div>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-strip">
+    <div>
+      <p class="footer-col-label">Find me</p>
+      <p class="footer-item"><a href="https://www.linkedin.com/in/jrowing/">LinkedIn &nearr;</a></p>
+      <p class="footer-item"><a href="https://github.com/jrowing">GitHub &nearr;</a></p>
+      <p class="footer-item"><a href="{{ '/writing.html' | relative_url }}">Writing &nearr;</a></p>
+    </div>
+  </div>
+  <p class="copyright">&copy; {{ 'now' | date: "%Y" }} Joe Rowing</p>
+</footer>
+
+<script>
+  (function() {
+    var html = document.documentElement;
+    var btn = document.getElementById('theme-toggle');
+    var stored = localStorage.getItem('theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var theme = stored || (prefersDark ? 'dark' : 'light');
+    html.setAttribute('data-theme', theme);
+
+    btn.addEventListener('click', function() {
+      var current = html.getAttribute('data-theme');
+      var next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  })();
+</script>
+
+</body>
+</html>
