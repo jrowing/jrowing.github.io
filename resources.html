@@ -1,125 +1,156 @@
 ---
 layout: default
 title: Resources — Joe Rowing
-description: Teaching and learning materials for Cambridge International Physics and Sciences.
 ---
 
-<div class="inner-page">
-  <div class="page-header">
-    <a class="back-link" href="{{ '/' | relative_url }}">&larr; jrowing.com</a>
-    <h1 class="page-title">Resources</h1>
-    <p class="page-desc">Teaching and learning materials for Cambridge International Physics and Sciences.</p>
+<style>
+.jr-page { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; font-family: -apple-system, 'Inter', sans-serif; }
+.jr-back { font-size: 12px; color: #9a9992; text-decoration: none; display: inline-block; margin-bottom: 1.5rem; font-family: monospace; }
+.jr-back:hover { color: #5c5c58; }
+.jr-h1 { font-family: 'Lora', Georgia, serif; font-size: clamp(28px,5vw,40px); font-weight: 400; line-height: 1.1; letter-spacing: -.02em; margin-bottom: .4rem; color: inherit; }
+.jr-desc { font-size: 15px; color: #5c5c58; line-height: 1.6; margin-bottom: 2rem; }
+.jr-search { width: 100%; font-size: 14px; padding: .6rem .9rem; border: 1px solid rgba(0,0,0,.12); border-radius: 8px; margin-bottom: 1.5rem; outline: none; background: #f7f6f3; color: inherit; font-family: inherit; box-sizing: border-box; -webkit-appearance: none; }
+.jr-search:focus { border-color: rgba(0,0,0,.25); }
+.jr-grid { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important; gap: 1px !important; border: 1px solid rgba(0,0,0,.09) !important; border-radius: 12px !important; overflow: hidden !important; }
+.jr-card { display: flex !important; flex-direction: column !important; gap: .35rem !important; padding: 1.25rem !important; background: #fff !important; text-decoration: none !important; border-right: 1px solid rgba(0,0,0,.08) !important; border-bottom: 1px solid rgba(0,0,0,.08) !important; min-height: 110px !important; transition: background .15s !important; box-sizing: border-box !important; }
+.jr-card:hover { background: #f7f6f3 !important; text-decoration: none !important; }
+.jr-tag { font-size: 10px !important; letter-spacing: .06em !important; padding: 2px 7px !important; border-radius: 4px !important; background: #f0efe9 !important; color: #9a9992 !important; border: 1px solid rgba(0,0,0,.08) !important; align-self: flex-start !important; font-family: monospace !important; display: inline-block !important; text-decoration: none !important; }
+.jr-title { font-size: 14px !important; font-weight: 500 !important; color: #1a1a18 !important; line-height: 1.35 !important; display: block !important; text-decoration: none !important; margin: 0 !important; }
+.jr-excerpt { font-size: 12px !important; color: #5c5c58 !important; line-height: 1.55 !important; margin-top: auto !important; padding-top: .3rem !important; display: block !important; text-decoration: none !important; }
+.jr-empty { font-size: 14px; color: #9a9992; padding: 1.5rem 0; font-family: monospace; }
+hr.jr-rule { border: none; border-top: 1px solid rgba(0,0,0,.09); margin: 0 0 2rem; }
+@media (max-width: 600px) { .jr-grid { grid-template-columns: 1fr !important; } }
+</style>
+
+<div class="jr-page">
+  <a class="jr-back" href="https://www.jrowing.com/">← jrowing.com</a>
+  <h1 class="jr-h1">Resources</h1>
+  <hr class="jr-rule">
+  <p class="jr-desc">Teaching and learning materials for Cambridge International Physics and Sciences.</p>
+
+  <input class="jr-search" id="jr-search" type="search" placeholder="Search resources…" autocomplete="off">
+
+  <div class="jr-grid" id="jr-grid">
+
+    <a class="jr-card" href="https://www.jrowing.com/resources/9702_as_physics_spinner.html"
+       data-tags="interactive revision alevel physics 9702">
+      <span class="jr-tag">Interactive</span>
+      <span class="jr-title">9702 Revision Spinner</span>
+      <span class="jr-excerpt">A-level physics — revision at random</span>
+    </a>
+
+    <a class="jr-card" href="https://www.jrowing.com/resources/0654_coordinated_sciences_spinner.html"
+       data-tags="interactive revision igcse sciences 0654 coordinated">
+      <span class="jr-tag">Interactive</span>
+      <span class="jr-title">0654 Revision Spinner</span>
+      <span class="jr-excerpt">Coordinated sciences — revision at random</span>
+    </a>
+
+    <a class="jr-card" href="https://www.jrowing.com/resources/gcse-problems.html"
+       data-tags="problems gcse physics biology chemistry weekly challenge">
+      <span class="jr-tag">Problems</span>
+      <span class="jr-title">GCSE Science Challenge Problems</span>
+      <span class="jr-excerpt">52 weekly problems across Physics, Biology, and Chemistry</span>
+    </a>
+
+    <a class="jr-card" href="https://www.jrowing.com/resources/einstein.html"
+       data-tags="sim simulation relativity light clock time dilation special">
+      <span class="jr-tag">Sim</span>
+      <span class="jr-title">Einstein's Light Clock</span>
+      <span class="jr-excerpt">Odometer proof demonstrating how the invariant speed of light dilates moving time</span>
+    </a>
+
+    <a class="jr-card" href="https://www.jrowing.com/resources/reference.html"
+       data-tags="sim simulation frames reference inertial carousel train non-inertial">
+      <span class="jr-tag">Sim</span>
+      <span class="jr-title">Inertial vs Non-Inertial Frames</span>
+      <span class="jr-excerpt">Simulating linear train translation and rotating carousel perspectives</span>
+    </a>
+
+    <a class="jr-card" href="https://www.jrowing.com/resources/deco-models.html"
+       data-tags="sim simulation diving decompression buhlmann rgbm vpm usn scuba">
+      <span class="jr-tag">Sim</span>
+      <span class="jr-title">Deco Models Compared</span>
+      <span class="jr-excerpt">Bühlmann / RGBM / VPM-B / USN decompression models side by side</span>
+    </a>
+
+    <a class="jr-card" href="https://www.jrowing.com/resources/drake.html"
+       data-tags="sim simulation drake equation astrophysics space alien fermi">
+      <span class="jr-tag">Sim</span>
+      <span class="jr-title">Drake Equation Explorer</span>
+      <span class="jr-excerpt">Interactive parameter space for estimating intelligent civilisations in the galaxy</span>
+    </a>
+
+    <a class="jr-card" href="https://www.jrowing.com/resources/skydiverreferenceframes.html"
+       data-tags="sim simulation skydiving freefall frames reference baumgardner">
+      <span class="jr-tag">Sim</span>
+      <span class="jr-title">Skydiving Frames of Reference</span>
+      <span class="jr-excerpt">They don't fall up…</span>
+    </a>
+
+    <a class="jr-card" href="https://www.jrowing.com/resources/physics-experiments-database.html"
+       data-tags="database practicals experiments alevel gcse aims methods errors required">
+      <span class="jr-tag">Database</span>
+      <span class="jr-title">Physics Experiments Database</span>
+      <span class="jr-excerpt">124 GCSE and A-level practicals — searchable by topic, exam board, and required-practical status</span>
+    </a>
+
+    <a class="jr-card" href="https://www.jrowing.com/resources/physics-experiments.html"
+       data-tags="data experiments alevel student files results">
+      <span class="jr-tag">Data</span>
+      <span class="jr-title">Physics Experiment Data</span>
+      <span class="jr-excerpt">Student data files across the A-level physics course</span>
+    </a>
+
+    <a class="jr-card" href="https://www.jrowing.com/resources/demonstrations.html"
+       data-tags="database demonstrations demos classroom teacher 60">
+      <span class="jr-tag">Database</span>
+      <span class="jr-title">60+ Demonstrations</span>
+      <span class="jr-excerpt">Classroom demos for a busy teacher</span>
+    </a>
+
+    <a class="jr-card" href="https://www.jrowing.com/resources/excel-sims.html"
+       data-tags="download excel simulations physics spreadsheet">
+      <span class="jr-tag">Download</span>
+      <span class="jr-title">Excel Simulations</span>
+      <span class="jr-excerpt">Physics concepts in Excel — collected and home-made</span>
+    </a>
+
+    <a class="jr-card" href="https://www.jrowing.com/resources/oxbridge-interview.html"
+       data-tags="tool oxbridge interview questions mock tutorial cambridge oxford">
+      <span class="jr-tag">Tool</span>
+      <span class="jr-title">Oxbridge Mock Interview Questions</span>
+      <span class="jr-excerpt">Random question picker across 19 disciplines</span>
+    </a>
+
+    <a class="jr-card" href="https://www.jrowing.com/resources/pearls.html"
+       data-tags="tool pearls wisdom teaching physics daily quote">
+      <span class="jr-tag">Tool</span>
+      <span class="jr-title">Pearls of Wisdom</span>
+      <span class="jr-excerpt">365 things to make you think</span>
+    </a>
+
   </div>
 
-  <div class="search-bar-wrap">
-    <input class="search-bar" id="resource-search" type="search" placeholder="Search resources…" autocomplete="off">
-  </div>
-
-  <div class="resource-grid" id="resource-grid">
-
-    <a class="rcard" href="{{ '/resources/9702_as_physics_spinner.html' | relative_url }}" data-tags="interactive revision alevel physics 9702">
-      <span class="rcard-tag">Interactive</span>
-      <p class="rcard-title">9702 Revision Spinner</p>
-      <p class="rcard-desc">A-level physics &mdash; revision at random</p>
-    </a>
-
-    <a class="rcard" href="{{ '/resources/0654_coordinated_sciences_spinner.html' | relative_url }}" data-tags="interactive revision igcse sciences 0654">
-      <span class="rcard-tag">Interactive</span>
-      <p class="rcard-title">0654 Revision Spinner</p>
-      <p class="rcard-desc">Coordinated sciences &mdash; revision at random</p>
-    </a>
-
-    <a class="rcard" href="{{ '/resources/gcse-problems.html' | relative_url }}" data-tags="problems gcse physics biology chemistry weekly">
-      <span class="rcard-tag">Problems</span>
-      <p class="rcard-title">GCSE Science Challenge Problems</p>
-      <p class="rcard-desc">52 weekly problems across Physics, Biology, and Chemistry</p>
-    </a>
-
-    <a class="rcard" href="{{ '/resources/einstein.html' | relative_url }}" data-tags="sim simulation relativity light clock time dilation">
-      <span class="rcard-tag">Sim</span>
-      <p class="rcard-title">Einstein&rsquo;s Light Clock</p>
-      <p class="rcard-desc">Odometer proof demonstrating how the invariant speed of light dilates moving time</p>
-    </a>
-
-    <a class="rcard" href="{{ '/resources/reference.html' | relative_url }}" data-tags="sim simulation frames reference inertial carousel train">
-      <span class="rcard-tag">Sim</span>
-      <p class="rcard-title">Inertial vs Non-Inertial Frames</p>
-      <p class="rcard-desc">Simulating linear train translation and rotating carousel perspectives</p>
-    </a>
-
-    <a class="rcard" href="{{ '/resources/deco-models.html' | relative_url }}" data-tags="sim simulation diving decompression buhlmann rgbm vpm usn">
-      <span class="rcard-tag">Sim</span>
-      <p class="rcard-title">Deco Models Compared</p>
-      <p class="rcard-desc">B&uuml;hlmann / RGBM / VPM-B / USN decompression models side by side</p>
-    </a>
-
-    <a class="rcard" href="{{ '/resources/drake.html' | relative_url }}" data-tags="sim simulation drake equation astrophysics space alien">
-      <span class="rcard-tag">Sim</span>
-      <p class="rcard-title">Drake Equation Explorer</p>
-      <p class="rcard-desc">Interactive parameter space for estimating intelligent civilisations in the galaxy</p>
-    </a>
-
-    <a class="rcard" href="{{ '/resources/skydiverreferenceframes.html' | relative_url }}" data-tags="sim simulation skydiving freefall frames reference">
-      <span class="rcard-tag">Sim</span>
-      <p class="rcard-title">Skydiving Frames of Reference</p>
-      <p class="rcard-desc">They don&rsquo;t fall up&hellip;</p>
-    </a>
-
-    <a class="rcard" href="{{ '/resources/physics-experiments-database.html' | relative_url }}" data-tags="database practicals experiments alevel gcse aims methods errors">
-      <span class="rcard-tag">Database</span>
-      <p class="rcard-title">Physics Experiments Database</p>
-      <p class="rcard-desc">124 GCSE and A-level practicals &mdash; searchable by topic, exam board, or required-practical status</p>
-    </a>
-
-    <a class="rcard" href="{{ '/resources/physics-experiments.html' | relative_url }}" data-tags="data experiments alevel student files">
-      <span class="rcard-tag">Data</span>
-      <p class="rcard-title">Physics Experiment Data</p>
-      <p class="rcard-desc">Student data files across the A-level physics course</p>
-    </a>
-
-    <a class="rcard" href="{{ '/resources/demonstrations.html' | relative_url }}" data-tags="database demonstrations demos classroom teacher">
-      <span class="rcard-tag">Database</span>
-      <p class="rcard-title">60+ Demonstrations</p>
-      <p class="rcard-desc">Classroom demos for a busy teacher</p>
-    </a>
-
-    <a class="rcard" href="{{ '/resources/excel-sims.html' | relative_url }}" data-tags="download excel simulations physics spreadsheet">
-      <span class="rcard-tag">Download</span>
-      <p class="rcard-title">Excel Simulations</p>
-      <p class="rcard-desc">Physics concepts in Excel &mdash; collected and home-made</p>
-    </a>
-
-    <a class="rcard" href="{{ '/resources/oxbridge-interview.html' | relative_url }}" data-tags="tool oxbridge interview questions mock tutorial">
-      <span class="rcard-tag">Tool</span>
-      <p class="rcard-title">Oxbridge Mock Interview Questions</p>
-      <p class="rcard-desc">Random question picker across 19 disciplines</p>
-    </a>
-
-    <a class="rcard" href="{{ '/resources/pearls.html' | relative_url }}" data-tags="tool pearls wisdom teaching physics daily">
-      <span class="rcard-tag">Tool</span>
-      <p class="rcard-title">Pearls of Wisdom</p>
-      <p class="rcard-desc">365 things to make you think</p>
-    </a>
-
-  </div>
-
-  <p class="search-empty" id="search-empty" style="display:none;">No resources match that search.</p>
+  <p class="jr-empty" id="jr-empty" style="display:none;">No resources match that search.</p>
 </div>
 
 <script>
-  var input = document.getElementById('resource-search');
-  var cards = document.querySelectorAll('.rcard');
-  var empty = document.getElementById('search-empty');
-
-  input.addEventListener('input', function() {
+(function(){
+  var inp = document.getElementById('jr-search');
+  var cards = document.querySelectorAll('#jr-grid .jr-card');
+  var empty = document.getElementById('jr-empty');
+  if (!inp) return;
+  inp.addEventListener('input', function(){
     var q = this.value.toLowerCase().trim();
-    var visible = 0;
-    cards.forEach(function(card) {
-      var text = (card.textContent + ' ' + (card.dataset.tags || '')).toLowerCase();
-      var show = !q || text.includes(q);
-      card.style.display = show ? '' : 'none';
-      if (show) visible++;
+    var vis = 0;
+    cards.forEach(function(c){
+      var hay = (c.textContent + ' ' + (c.dataset.tags||'')).toLowerCase();
+      var show = !q || hay.includes(q);
+      c.style.display = show ? '' : 'none';
+      if (show) vis++;
     });
-    empty.style.display = (q && visible === 0) ? 'block' : 'none';
+    empty.style.display = (q && vis === 0) ? 'block' : 'none';
   });
+})();
 </script>

@@ -1,76 +1,79 @@
 ---
 layout: default
 title: Writing — Joe Rowing
-description: Essays and explainers on physics, teaching, and the occasional deep dive.
 ---
 
-<div class="inner-page">
-  <div class="page-header">
-    <a class="back-link" href="{{ '/' | relative_url }}">&larr; jrowing.com</a>
-    <h1 class="page-title">Writing</h1>
-    <p class="page-desc">Essays and explainers on physics, teaching, and the occasional deep dive.</p>
+<style>
+.jr-page { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; font-family: -apple-system, 'Inter', sans-serif; }
+.jr-back { font-size: 12px; color: #9a9992; text-decoration: none; display: inline-block; margin-bottom: 1.5rem; font-family: monospace; }
+.jr-back:hover { color: #5c5c58; }
+.jr-h1 { font-family: 'Lora', Georgia, serif; font-size: clamp(28px,5vw,40px); font-weight: 400; line-height: 1.1; letter-spacing: -.02em; margin-bottom: .4rem; color: inherit; }
+.jr-desc { font-size: 15px; color: #5c5c58; line-height: 1.6; margin-bottom: 2rem; }
+.jr-search { width: 100%; font-size: 14px; padding: .6rem .9rem; border: 1px solid rgba(0,0,0,.12); border-radius: 8px; margin-bottom: 1.5rem; outline: none; background: #f7f6f3; color: inherit; font-family: inherit; box-sizing: border-box; -webkit-appearance: none; }
+.jr-search:focus { border-color: rgba(0,0,0,.25); }
+.jr-grid { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important; gap: 1px !important; border: 1px solid rgba(0,0,0,.09) !important; border-radius: 12px !important; overflow: hidden !important; }
+.jr-card { display: flex !important; flex-direction: column !important; gap: .35rem !important; padding: 1.25rem !important; background: #fff !important; text-decoration: none !important; border-right: 1px solid rgba(0,0,0,.08) !important; border-bottom: 1px solid rgba(0,0,0,.08) !important; min-height: 120px !important; transition: background .15s !important; box-sizing: border-box !important; }
+.jr-card:hover { background: #f7f6f3 !important; text-decoration: none !important; }
+.jr-tag { font-size: 10px !important; letter-spacing: .06em !important; padding: 2px 7px !important; border-radius: 4px !important; background: #f0efe9 !important; color: #9a9992 !important; border: 1px solid rgba(0,0,0,.08) !important; align-self: flex-start !important; font-family: monospace !important; display: inline-block !important; text-decoration: none !important; }
+.jr-title { font-family: 'Lora', Georgia, serif !important; font-size: 15px !important; font-weight: 400 !important; color: #1a1a18 !important; line-height: 1.35 !important; display: block !important; text-decoration: none !important; margin: 0 !important; }
+.jr-excerpt { font-size: 12px !important; color: #5c5c58 !important; line-height: 1.55 !important; margin-top: auto !important; padding-top: .3rem !important; display: block !important; text-decoration: none !important; }
+.jr-empty { font-size: 14px; color: #9a9992; padding: 1.5rem 0; font-family: monospace; }
+hr.jr-rule { border: none; border-top: 1px solid rgba(0,0,0,.09); margin: 0 0 2rem; }
+@media (max-width: 600px) { .jr-grid { grid-template-columns: 1fr !important; } }
+</style>
+
+<div class="jr-page">
+  <a class="jr-back" href="https://www.jrowing.com/">← jrowing.com</a>
+  <h1 class="jr-h1">Writing</h1>
+  <hr class="jr-rule">
+  <p class="jr-desc">Essays and explainers on physics, teaching, and the occasional deep dive.</p>
+
+  <input class="jr-search" id="jr-search" type="search" placeholder="Search writing…" autocomplete="off">
+
+  <div class="jr-grid" id="jr-grid">
+
+    <a class="jr-card" href="https://www.jrowing.com/writing/fiftyunis.html"
+       data-tags="university personal statement ucas maths physics computer science admissions">
+      <span class="jr-tag">Jul 2026</span>
+      <span class="jr-title">What Fifty Universities Told Me About Personal Statements</span>
+      <span class="jr-excerpt">A real answer to the question every student is asking, for Maths, Physics, and Computer Science.</span>
+    </a>
+
+    <a class="jr-card" href="https://www.jrowing.com/writing/The%20Cracked%20Mirrors%20of%20Genius%20Why%20We%20Need%20to%20Stop%20Worshiping%20Textbook%20Heroes.html"
+       data-tags="history scientists genius ethics schrodinger newton millikan eugenics">
+      <span class="jr-tag">Jul 2026</span>
+      <span class="jr-title">The Cracked Mirrors of Genius</span>
+      <span class="jr-excerpt">From Schrödinger's diaries to Newton's gallows — the dark human realities behind history's greatest equations.</span>
+    </a>
+
+    <a class="jr-card" href="https://www.jrowing.com/writing/181771426.teaching-radioactivity-with-or-without.html"
+       data-tags="radioactivity teaching physics nuclear gcse magic">
+      <span class="jr-tag">Jan 2026</span>
+      <span class="jr-title">Teaching Radioactivity (with or without the resources)</span>
+      <span class="jr-excerpt">Episode 1: why radioactivity is magic.</span>
+    </a>
+
   </div>
 
-  <div class="search-bar-wrap">
-    <input class="search-bar" id="writing-search" type="search" placeholder="Search writing…" autocomplete="off">
-  </div>
-
-  <div class="resource-grid" id="writing-grid">
-
-    {% if site.posts.size > 0 %}
-      {% for post in site.posts %}
-      <a class="rcard rcard--post" href="{{ post.url | relative_url }}" data-tags="{{ post.tags | join: ' ' }} {{ post.categories | join: ' ' }}">
-        <span class="rcard-tag rcard-date">{{ post.date | date: "%b %Y" }}</span>
-        <p class="rcard-title">{{ post.title }}</p>
-        {% if post.description %}
-          <p class="rcard-desc">{{ post.description }}</p>
-        {% elsif post.excerpt %}
-          <p class="rcard-desc">{{ post.excerpt | strip_html | truncatewords: 25 }}</p>
-        {% endif %}
-      </a>
-      {% endfor %}
-
-    {% else %}
-
-      <a class="rcard rcard--post" href="{{ '/writing/fiftyunis.html' | relative_url }}" data-tags="university personal statement maths physics computer science">
-        <span class="rcard-tag rcard-date">Jul 2026</span>
-        <p class="rcard-title">What Fifty Universities Told Me About Personal Statements</p>
-        <p class="rcard-desc">A real answer to the question every student is asking, for Maths, Physics, and Computer Science.</p>
-      </a>
-
-      <a class="rcard rcard--post" href="{{ '/writing/The Cracked Mirrors of Genius Why We Need to Stop Worshiping Textbook Heroes.html' | relative_url }}" data-tags="history scientists genius ethics schrodinger newton">
-        <span class="rcard-tag rcard-date">Jul 2026</span>
-        <p class="rcard-title">The Cracked Mirrors of Genius</p>
-        <p class="rcard-desc">From Schr&ouml;dinger&rsquo;s diaries to Newton&rsquo;s gallows &mdash; the dark human realities behind history&rsquo;s greatest equations.</p>
-      </a>
-
-      <a class="rcard rcard--post" href="{{ '/writing/181771426.teaching-radioactivity-with-or-without.html' | relative_url }}" data-tags="radioactivity teaching physics nuclear gcse">
-        <span class="rcard-tag rcard-date">Jan 2026</span>
-        <p class="rcard-title">Teaching Radioactivity (with or without the resources)</p>
-        <p class="rcard-desc">Episode 1: why radioactivity is magic.</p>
-      </a>
-
-    {% endif %}
-
-  </div>
-
-  <p class="search-empty" id="search-empty" style="display:none;">No posts match that search.</p>
+  <p class="jr-empty" id="jr-empty" style="display:none;">No posts match that search.</p>
 </div>
 
 <script>
-  var input = document.getElementById('writing-search');
-  var cards = document.querySelectorAll('#writing-grid .rcard');
-  var empty = document.getElementById('search-empty');
-
-  input.addEventListener('input', function() {
+(function(){
+  var inp = document.getElementById('jr-search');
+  var cards = document.querySelectorAll('#jr-grid .jr-card');
+  var empty = document.getElementById('jr-empty');
+  if (!inp) return;
+  inp.addEventListener('input', function(){
     var q = this.value.toLowerCase().trim();
-    var visible = 0;
-    cards.forEach(function(card) {
-      var text = (card.textContent + ' ' + (card.dataset.tags || '')).toLowerCase();
-      var show = !q || text.includes(q);
-      card.style.display = show ? '' : 'none';
-      if (show) visible++;
+    var vis = 0;
+    cards.forEach(function(c){
+      var hay = (c.textContent + ' ' + (c.dataset.tags||'')).toLowerCase();
+      var show = !q || hay.includes(q);
+      c.style.display = show ? '' : 'none';
+      if (show) vis++;
     });
-    empty.style.display = (q && visible === 0) ? 'block' : 'none';
+    empty.style.display = (q && vis === 0) ? 'block' : 'none';
   });
+})();
 </script>
