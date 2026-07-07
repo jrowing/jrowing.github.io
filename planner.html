@@ -1,61 +1,95 @@
 ---
 layout: default
-title: Markdown Teacher Planner
+title: Markdown Teacher Planner — Joe Rowing
+description: A distraction-free planning tool built for teachers.
 ---
-<div class="page-wrap">
-  <a href="/" class="back-link">← jrowing.com</a>
-  <hr class="page-divider">
-  <h1>Markdown <em>Teacher Planner</em></h1>
-  <div class="page-sub">Open source · For teachers</div>
 
-  <p>A distraction-free planning tool built for teachers. Write your lessons, mark your days, and keep notes in plain Markdown — no accounts, no cloud, no faff.</p>
-
-  <div style="display:flex;gap:10px;flex-wrap:wrap;margin:28px 0 48px;">
-    <a href="/resources/teacher-calendar.html" class="btn btn-dark">Try it in browser</a>
-    <a href="https://github.com/jrowing/markdown-calendar" class="btn btn-outline" target="_blank" rel="noopener">View on GitHub ↗</a>
+<div class="inner-page inner-page--planner">
+  <div class="page-header">
+    <a class="back-link" href="{{ '/' | relative_url }}">&larr; jrowing.com</a>
+    <h1 class="page-title">Markdown <em>Teacher Planner</em></h1>
+    <p class="page-desc">Open source &middot; For teachers</p>
   </div>
 
-  <div class="section-label">Features</div>
-  <ul class="project-list" style="margin-bottom:48px;">
-    <li class="project-item"><span class="project-num">—</span><div>
-      <span class="project-title" style="font-size:18px;">Markdown-first</span>
-      <div class="project-meta">Write lesson notes in plain Markdown. Headings, bold, lists, code blocks — the full format.</div>
-    </div></li>
-    <li class="project-item"><span class="project-num">—</span><div>
-      <span class="project-title" style="font-size:18px;">Calendar view</span>
-      <div class="project-meta">Monthly calendar with indicators for days that have entries. Navigate by month, jump to today.</div>
-    </div></li>
-    <li class="project-item"><span class="project-num">—</span><div>
-      <span class="project-title" style="font-size:18px;">Stays in your browser</span>
-      <div class="project-meta">All data saved locally — no account, no cloud, no tracking.</div>
-    </div></li>
-    <li class="project-item"><span class="project-num">—</span><div>
-      <span class="project-title" style="font-size:18px;">Dark mode</span>
-      <div class="project-meta">Follows your system preference automatically.</div>
-    </div></li>
-    <li class="project-item"><span class="project-num">—</span><div>
-      <span class="project-title" style="font-size:18px;">Export &amp; import</span>
-      <div class="project-meta">Export all your data as JSON for backup, or import onto a new device.</div>
-    </div></li>
-  </ul>
+  <p class="planner-lede">A distraction-free planning tool built for teachers. Write your lessons, mark your days, and keep notes in plain Markdown &mdash; no accounts, no cloud, no faff.</p>
 
-  <div class="section-label">Get it</div>
-  <ul class="project-list">
-    <li class="project-item"><span class="project-num">→</span><div>
-      <a href="/resources/teacher-calendar.html" class="project-title">Open in browser</a>
-      <div class="project-meta">No install needed — runs entirely in your browser.</div>
-    </div></li>
-    <li class="project-item"><span class="project-num">→</span><div>
-      <a href="https://github.com/jrowing/markdown-calendar/raw/main/MarkdownCalendar-1.0.0.dmg.zip" class="project-title" target="_blank" rel="noopener">Download for Mac</a>
-      <div class="project-meta">Native Mac app — free download.</div>
-    </div></li>
-    <li class="project-item"><span class="project-num">→</span><div>
-      <a href="/assets/teacher-calendar-standalone.html" class="project-title">Standalone HTML</a>
-      <div class="project-meta">Single file, works offline.</div>
-    </div></li>
-    <li class="project-item"><span class="project-num">→</span><div>
-      <a href="https://github.com/jrowing/markdown-calendar" class="project-title" target="_blank" rel="noopener">Source on GitHub ↗</a>
-      <div class="project-meta">Open source. PRs welcome.</div>
-    </div></li>
-  </ul>
+  <div class="planner-ctas">
+    <a class="cta-primary" href="{{ '/resources/teacher-calendar.html' | relative_url }}">Try it in browser</a>
+    <a class="cta-secondary" href="https://github.com/jrowing/markdown-calendar">View on GitHub &nearr;</a>
+  </div>
+
+  <div class="planner-sections">
+
+    <section class="planner-section">
+      <p class="planner-section-label">Features</p>
+      <div class="resource-grid resource-grid--features">
+
+        <div class="rcard rcard--feature">
+          <p class="rcard-title">Markdown-first</p>
+          <p class="rcard-desc">Write lesson notes in plain Markdown. Headings, bold, lists, code blocks &mdash; the full format.</p>
+        </div>
+
+        <div class="rcard rcard--feature">
+          <p class="rcard-title">Calendar view</p>
+          <p class="rcard-desc">Monthly calendar with indicators for days that have entries. Navigate by month, jump to today.</p>
+        </div>
+
+        <div class="rcard rcard--feature">
+          <p class="rcard-title">Stays in your browser</p>
+          <p class="rcard-desc">All data saved locally &mdash; no account, no cloud, no tracking.</p>
+        </div>
+
+        <div class="rcard rcard--feature">
+          <p class="rcard-title">Dark mode</p>
+          <p class="rcard-desc">Follows your system preference automatically.</p>
+        </div>
+
+        <div class="rcard rcard--feature">
+          <p class="rcard-title">Export &amp; import</p>
+          <p class="rcard-desc">Export all your data as JSON for backup, or import onto a new device.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="planner-section">
+      <p class="planner-section-label">Get it</p>
+      <div class="planner-get-list">
+
+        <a class="planner-get-item" href="{{ '/resources/teacher-calendar.html' | relative_url }}">
+          <span class="planner-get-arrow">&rarr;</span>
+          <span class="planner-get-body">
+            <span class="planner-get-title">Open in browser</span>
+            <span class="planner-get-desc">No install needed &mdash; runs entirely in your browser.</span>
+          </span>
+        </a>
+
+        <a class="planner-get-item" href="https://github.com/jrowing/markdown-calendar/raw/main/MarkdownCalendar-1.0.0.dmg.zip">
+          <span class="planner-get-arrow">&rarr;</span>
+          <span class="planner-get-body">
+            <span class="planner-get-title">Download for Mac</span>
+            <span class="planner-get-desc">Native Mac app &mdash; free download.</span>
+          </span>
+        </a>
+
+        <a class="planner-get-item" href="{{ '/assets/teacher-calendar-standalone.html' | relative_url }}">
+          <span class="planner-get-arrow">&rarr;</span>
+          <span class="planner-get-body">
+            <span class="planner-get-title">Standalone HTML</span>
+            <span class="planner-get-desc">Single file, works offline.</span>
+          </span>
+        </a>
+
+        <a class="planner-get-item" href="https://github.com/jrowing/markdown-calendar">
+          <span class="planner-get-arrow">&rarr;</span>
+          <span class="planner-get-body">
+            <span class="planner-get-title">Source on GitHub &nearr;</span>
+            <span class="planner-get-desc">Open source. PRs welcome.</span>
+          </span>
+        </a>
+
+      </div>
+    </section>
+
+  </div>
 </div>

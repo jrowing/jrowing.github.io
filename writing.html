@@ -11,54 +11,66 @@ description: Essays and explainers on physics, teaching, and the occasional deep
     <p class="page-desc">Essays and explainers on physics, teaching, and the occasional deep dive.</p>
   </div>
 
-  <div class="post-list">
+  <div class="search-bar-wrap">
+    <input class="search-bar" id="writing-search" type="search" placeholder="Search writing…" autocomplete="off">
+  </div>
+
+  <div class="resource-grid" id="writing-grid">
 
     {% if site.posts.size > 0 %}
       {% for post in site.posts %}
-      <a class="post-item" href="{{ post.url | relative_url }}">
-        <span class="post-date">{{ post.date | date: "%b %Y" }}</span>
-        <span class="post-body">
-          <span class="post-title">{{ post.title }}</span>
-          {% if post.description %}
-            <span class="post-excerpt">{{ post.description }}</span>
-          {% elsif post.excerpt %}
-            <span class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 25 }}</span>
-          {% endif %}
-        </span>
-        <span class="post-arrow">&rarr;</span>
+      <a class="rcard rcard--post" href="{{ post.url | relative_url }}" data-tags="{{ post.tags | join: ' ' }} {{ post.categories | join: ' ' }}">
+        <span class="rcard-tag rcard-date">{{ post.date | date: "%b %Y" }}</span>
+        <p class="rcard-title">{{ post.title }}</p>
+        {% if post.description %}
+          <p class="rcard-desc">{{ post.description }}</p>
+        {% elsif post.excerpt %}
+          <p class="rcard-desc">{{ post.excerpt | strip_html | truncatewords: 25 }}</p>
+        {% endif %}
       </a>
       {% endfor %}
 
     {% else %}
 
-      <a class="post-item" href="{{ '/writing/fiftyunis.html' | relative_url }}">
-        <span class="post-date">Jul 2026</span>
-        <span class="post-body">
-          <span class="post-title">What fifty universities told me about personal statements</span>
-          <span class="post-excerpt">A real answer to the question every student is asking, for Maths, Physics, and Computer Science.</span>
-        </span>
-        <span class="post-arrow">&rarr;</span>
+      <a class="rcard rcard--post" href="{{ '/writing/fiftyunis.html' | relative_url }}" data-tags="university personal statement maths physics computer science">
+        <span class="rcard-tag rcard-date">Jul 2026</span>
+        <p class="rcard-title">What Fifty Universities Told Me About Personal Statements</p>
+        <p class="rcard-desc">A real answer to the question every student is asking, for Maths, Physics, and Computer Science.</p>
       </a>
 
-      <a class="post-item" href="{{ '/writing/The Cracked Mirrors of Genius Why We Need to Stop Worshiping Textbook Heroes.html' | relative_url }}">
-        <span class="post-date">Jul 2026</span>
-        <span class="post-body">
-          <span class="post-title">The cracked mirrors of genius</span>
-          <span class="post-excerpt">From Schr&ouml;dinger&rsquo;s diaries to Newton&rsquo;s gallows &mdash; the dark human realities behind history&rsquo;s greatest equations.</span>
-        </span>
-        <span class="post-arrow">&rarr;</span>
+      <a class="rcard rcard--post" href="{{ '/writing/The Cracked Mirrors of Genius Why We Need to Stop Worshiping Textbook Heroes.html' | relative_url }}" data-tags="history scientists genius ethics schrodinger newton">
+        <span class="rcard-tag rcard-date">Jul 2026</span>
+        <p class="rcard-title">The Cracked Mirrors of Genius</p>
+        <p class="rcard-desc">From Schr&ouml;dinger&rsquo;s diaries to Newton&rsquo;s gallows &mdash; the dark human realities behind history&rsquo;s greatest equations.</p>
       </a>
 
-      <a class="post-item" href="{{ '/writing/181771426.teaching-radioactivity-with-or-without.html' | relative_url }}">
-        <span class="post-date">Jan 2026</span>
-        <span class="post-body">
-          <span class="post-title">Teaching radioactivity (with or without the resources)</span>
-          <span class="post-excerpt">Episode 1: why radioactivity is magic.</span>
-        </span>
-        <span class="post-arrow">&rarr;</span>
+      <a class="rcard rcard--post" href="{{ '/writing/181771426.teaching-radioactivity-with-or-without.html' | relative_url }}" data-tags="radioactivity teaching physics nuclear gcse">
+        <span class="rcard-tag rcard-date">Jan 2026</span>
+        <p class="rcard-title">Teaching Radioactivity (with or without the resources)</p>
+        <p class="rcard-desc">Episode 1: why radioactivity is magic.</p>
       </a>
 
     {% endif %}
 
   </div>
+
+  <p class="search-empty" id="search-empty" style="display:none;">No posts match that search.</p>
 </div>
+
+<script>
+  var input = document.getElementById('writing-search');
+  var cards = document.querySelectorAll('#writing-grid .rcard');
+  var empty = document.getElementById('search-empty');
+
+  input.addEventListener('input', function() {
+    var q = this.value.toLowerCase().trim();
+    var visible = 0;
+    cards.forEach(function(card) {
+      var text = (card.textContent + ' ' + (card.dataset.tags || '')).toLowerCase();
+      var show = !q || text.includes(q);
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    empty.style.display = (q && visible === 0) ? 'block' : 'none';
+  });
+</script>

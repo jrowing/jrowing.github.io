@@ -11,161 +11,115 @@ description: Teaching and learning materials for Cambridge International Physics
     <p class="page-desc">Teaching and learning materials for Cambridge International Physics and Sciences.</p>
   </div>
 
-  <div class="resource-body">
+  <div class="search-bar-wrap">
+    <input class="search-bar" id="resource-search" type="search" placeholder="Search resources…" autocomplete="off">
+  </div>
 
-    <section class="resource-category">
-      <p class="resource-cat-label">Revision tools</p>
-      <div class="resource-list">
+  <div class="resource-grid" id="resource-grid">
 
-        <a class="resource-item" href="{{ '/resources/9702_as_physics_spinner.html' | relative_url }}">
-          <span class="resource-num">i.</span>
-          <span class="resource-content">
-            <span class="resource-title">9702 Revision Spinner</span>
-            <span class="resource-desc">A-level physics &mdash; revision at random</span>
-          </span>
-          <span class="resource-tag">Interactive</span>
-        </a>
+    <a class="rcard" href="{{ '/resources/9702_as_physics_spinner.html' | relative_url }}" data-tags="interactive revision alevel physics 9702">
+      <span class="rcard-tag">Interactive</span>
+      <p class="rcard-title">9702 Revision Spinner</p>
+      <p class="rcard-desc">A-level physics &mdash; revision at random</p>
+    </a>
 
-        <a class="resource-item" href="{{ '/resources/0654_coordinated_sciences_spinner.html' | relative_url }}">
-          <span class="resource-num">ii.</span>
-          <span class="resource-content">
-            <span class="resource-title">0654 Revision Spinner</span>
-            <span class="resource-desc">Coordinated sciences &mdash; revision at random</span>
-          </span>
-          <span class="resource-tag">Interactive</span>
-        </a>
+    <a class="rcard" href="{{ '/resources/0654_coordinated_sciences_spinner.html' | relative_url }}" data-tags="interactive revision igcse sciences 0654">
+      <span class="rcard-tag">Interactive</span>
+      <p class="rcard-title">0654 Revision Spinner</p>
+      <p class="rcard-desc">Coordinated sciences &mdash; revision at random</p>
+    </a>
 
-        <a class="resource-item" href="{{ '/resources/gcse-problems.html' | relative_url }}">
-          <span class="resource-num">iii.</span>
-          <span class="resource-content">
-            <span class="resource-title">GCSE Science Challenge Problems</span>
-            <span class="resource-desc">52 weekly problems across Physics, Biology, and Chemistry</span>
-          </span>
-          <span class="resource-tag">Problems</span>
-        </a>
+    <a class="rcard" href="{{ '/resources/gcse-problems.html' | relative_url }}" data-tags="problems gcse physics biology chemistry weekly">
+      <span class="rcard-tag">Problems</span>
+      <p class="rcard-title">GCSE Science Challenge Problems</p>
+      <p class="rcard-desc">52 weekly problems across Physics, Biology, and Chemistry</p>
+    </a>
 
-      </div>
-    </section>
+    <a class="rcard" href="{{ '/resources/einstein.html' | relative_url }}" data-tags="sim simulation relativity light clock time dilation">
+      <span class="rcard-tag">Sim</span>
+      <p class="rcard-title">Einstein&rsquo;s Light Clock</p>
+      <p class="rcard-desc">Odometer proof demonstrating how the invariant speed of light dilates moving time</p>
+    </a>
 
-    <section class="resource-category">
-      <p class="resource-cat-label">Simulations</p>
-      <div class="resource-list">
+    <a class="rcard" href="{{ '/resources/reference.html' | relative_url }}" data-tags="sim simulation frames reference inertial carousel train">
+      <span class="rcard-tag">Sim</span>
+      <p class="rcard-title">Inertial vs Non-Inertial Frames</p>
+      <p class="rcard-desc">Simulating linear train translation and rotating carousel perspectives</p>
+    </a>
 
-        <a class="resource-item" href="{{ '/resources/einstein.html' | relative_url }}">
-          <span class="resource-num">iv.</span>
-          <span class="resource-content">
-            <span class="resource-title">Einstein&rsquo;s Light Clock</span>
-            <span class="resource-desc">Invariant speed of light dilates moving time</span>
-          </span>
-          <span class="resource-tag">Sim</span>
-        </a>
+    <a class="rcard" href="{{ '/resources/deco-models.html' | relative_url }}" data-tags="sim simulation diving decompression buhlmann rgbm vpm usn">
+      <span class="rcard-tag">Sim</span>
+      <p class="rcard-title">Deco Models Compared</p>
+      <p class="rcard-desc">B&uuml;hlmann / RGBM / VPM-B / USN decompression models side by side</p>
+    </a>
 
-        <a class="resource-item" href="{{ '/resources/reference.html' | relative_url }}">
-          <span class="resource-num">v.</span>
-          <span class="resource-content">
-            <span class="resource-title">Inertial vs Non-Inertial Frames</span>
-            <span class="resource-desc">Rotating carousel and linear train perspectives</span>
-          </span>
-          <span class="resource-tag">Sim</span>
-        </a>
+    <a class="rcard" href="{{ '/resources/drake.html' | relative_url }}" data-tags="sim simulation drake equation astrophysics space alien">
+      <span class="rcard-tag">Sim</span>
+      <p class="rcard-title">Drake Equation Explorer</p>
+      <p class="rcard-desc">Interactive parameter space for estimating intelligent civilisations in the galaxy</p>
+    </a>
 
-        <a class="resource-item" href="{{ '/resources/deco-models.html' | relative_url }}">
-          <span class="resource-num">vi.</span>
-          <span class="resource-content">
-            <span class="resource-title">Deco Models Compared</span>
-            <span class="resource-desc">B&uuml;hlmann / RGBM / VPM-B / USN decompression models</span>
-          </span>
-          <span class="resource-tag">Sim</span>
-        </a>
+    <a class="rcard" href="{{ '/resources/skydiverreferenceframes.html' | relative_url }}" data-tags="sim simulation skydiving freefall frames reference">
+      <span class="rcard-tag">Sim</span>
+      <p class="rcard-title">Skydiving Frames of Reference</p>
+      <p class="rcard-desc">They don&rsquo;t fall up&hellip;</p>
+    </a>
 
-        <a class="resource-item" href="{{ '/resources/drake.html' | relative_url }}">
-          <span class="resource-num">vii.</span>
-          <span class="resource-content">
-            <span class="resource-title">Drake Equation Explorer</span>
-            <span class="resource-desc">Interactive parameter space for estimating N</span>
-          </span>
-          <span class="resource-tag">Sim</span>
-        </a>
+    <a class="rcard" href="{{ '/resources/physics-experiments-database.html' | relative_url }}" data-tags="database practicals experiments alevel gcse aims methods errors">
+      <span class="rcard-tag">Database</span>
+      <p class="rcard-title">Physics Experiments Database</p>
+      <p class="rcard-desc">124 GCSE and A-level practicals &mdash; searchable by topic, exam board, or required-practical status</p>
+    </a>
 
-        <a class="resource-item" href="{{ '/resources/skydiverreferenceframes.html' | relative_url }}">
-          <span class="resource-num">viii.</span>
-          <span class="resource-content">
-            <span class="resource-title">Skydiving Frames of Reference</span>
-            <span class="resource-desc">They don&rsquo;t fall up&hellip;</span>
-          </span>
-          <span class="resource-tag">Sim</span>
-        </a>
+    <a class="rcard" href="{{ '/resources/physics-experiments.html' | relative_url }}" data-tags="data experiments alevel student files">
+      <span class="rcard-tag">Data</span>
+      <p class="rcard-title">Physics Experiment Data</p>
+      <p class="rcard-desc">Student data files across the A-level physics course</p>
+    </a>
 
-      </div>
-    </section>
+    <a class="rcard" href="{{ '/resources/demonstrations.html' | relative_url }}" data-tags="database demonstrations demos classroom teacher">
+      <span class="rcard-tag">Database</span>
+      <p class="rcard-title">60+ Demonstrations</p>
+      <p class="rcard-desc">Classroom demos for a busy teacher</p>
+    </a>
 
-    <section class="resource-category">
-      <p class="resource-cat-label">Databases</p>
-      <div class="resource-list">
+    <a class="rcard" href="{{ '/resources/excel-sims.html' | relative_url }}" data-tags="download excel simulations physics spreadsheet">
+      <span class="rcard-tag">Download</span>
+      <p class="rcard-title">Excel Simulations</p>
+      <p class="rcard-desc">Physics concepts in Excel &mdash; collected and home-made</p>
+    </a>
 
-        <a class="resource-item" href="{{ '/resources/physics-experiments-database.html' | relative_url }}">
-          <span class="resource-num">ix.</span>
-          <span class="resource-content">
-            <span class="resource-title">Physics Experiments Database</span>
-            <span class="resource-desc">124 practicals &mdash; aims, methods, errors, filter by topic or exam board</span>
-          </span>
-          <span class="resource-tag">Database</span>
-        </a>
+    <a class="rcard" href="{{ '/resources/oxbridge-interview.html' | relative_url }}" data-tags="tool oxbridge interview questions mock tutorial">
+      <span class="rcard-tag">Tool</span>
+      <p class="rcard-title">Oxbridge Mock Interview Questions</p>
+      <p class="rcard-desc">Random question picker across 19 disciplines</p>
+    </a>
 
-        <a class="resource-item" href="{{ '/resources/physics-experiments.html' | relative_url }}">
-          <span class="resource-num">x.</span>
-          <span class="resource-content">
-            <span class="resource-title">Physics Experiment Data</span>
-            <span class="resource-desc">Student data files across the A-level course</span>
-          </span>
-          <span class="resource-tag">Data</span>
-        </a>
-
-        <a class="resource-item" href="{{ '/resources/demonstrations.html' | relative_url }}">
-          <span class="resource-num">xi.</span>
-          <span class="resource-content">
-            <span class="resource-title">60+ Demonstrations</span>
-            <span class="resource-desc">Classroom demos for a busy teacher</span>
-          </span>
-          <span class="resource-tag">Database</span>
-        </a>
-
-      </div>
-    </section>
-
-    <section class="resource-category">
-      <p class="resource-cat-label">Tools</p>
-      <div class="resource-list">
-
-        <a class="resource-item" href="{{ '/resources/excel-sims.html' | relative_url }}">
-          <span class="resource-num">xii.</span>
-          <span class="resource-content">
-            <span class="resource-title">Excel Simulations</span>
-            <span class="resource-desc">Physics concepts in Excel &mdash; collected and home-made</span>
-          </span>
-          <span class="resource-tag">Download</span>
-        </a>
-
-        <a class="resource-item" href="{{ '/resources/oxbridge-interview.html' | relative_url }}">
-          <span class="resource-num">xiii.</span>
-          <span class="resource-content">
-            <span class="resource-title">Oxbridge Mock Interview Questions</span>
-            <span class="resource-desc">Random question picker across 19 disciplines</span>
-          </span>
-          <span class="resource-tag">Tool</span>
-        </a>
-
-        <a class="resource-item" href="{{ '/resources/pearls.html' | relative_url }}">
-          <span class="resource-num">xiv.</span>
-          <span class="resource-content">
-            <span class="resource-title">Pearls of Wisdom</span>
-            <span class="resource-desc">365 things to make you think</span>
-          </span>
-          <span class="resource-tag">Tool</span>
-        </a>
-
-      </div>
-    </section>
+    <a class="rcard" href="{{ '/resources/pearls.html' | relative_url }}" data-tags="tool pearls wisdom teaching physics daily">
+      <span class="rcard-tag">Tool</span>
+      <p class="rcard-title">Pearls of Wisdom</p>
+      <p class="rcard-desc">365 things to make you think</p>
+    </a>
 
   </div>
+
+  <p class="search-empty" id="search-empty" style="display:none;">No resources match that search.</p>
 </div>
+
+<script>
+  var input = document.getElementById('resource-search');
+  var cards = document.querySelectorAll('.rcard');
+  var empty = document.getElementById('search-empty');
+
+  input.addEventListener('input', function() {
+    var q = this.value.toLowerCase().trim();
+    var visible = 0;
+    cards.forEach(function(card) {
+      var text = (card.textContent + ' ' + (card.dataset.tags || '')).toLowerCase();
+      var show = !q || text.includes(q);
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    empty.style.display = (q && visible === 0) ? 'block' : 'none';
+  });
+</script>
