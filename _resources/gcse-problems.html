@@ -1,312 +1,160 @@
 ---
 layout: default
 title: GCSE Science Challenge Problems
-is_resource: true
-description: 52 weekly science problems across Physics, Biology, and Chemistry
-type: problem-set
+description: 52 weekly science problems across Physics, Biology, and Chemistry — designed to make you think, not just calculate.
+category: Problems
+tags: [gcse, physics, biology, chemistry, problems, weekly, challenge, estimation]
 ---
 
 <style>
-  .problems-intro {
-    background: var(--paper-2);
-    border: 1px solid var(--rule);
-    border-radius: 4px;
-    padding: 20px 24px;
-    margin-bottom: 2em;
-    font-size: 14px;
-    line-height: 1.7;
-    color: var(--ink-3);
-  }
-  .problems-intro p { margin-bottom: 0.6em; }
-  .problems-intro p:last-child { margin-bottom: 0; }
-
-  .download-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 2.4em;
-  }
-  @media (max-width: 560px) { .download-row { grid-template-columns: 1fr; } }
-
-  .download-card {
-    border: 1px solid var(--rule);
-    border-radius: 4px;
-    padding: 20px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .download-card h3 {
-    font-family: var(--tight);
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--ink);
-    margin: 0;
-    letter-spacing: -0.01em;
-  }
-  .download-card p {
-    font-size: 13px;
-    color: var(--ink-3);
-    line-height: 1.55;
-    margin: 0;
-    flex: 1;
-  }
-  .download-card .dl-meta {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--ink-4);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-
-  .problems-controls {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-  }
-  .problems-search {
-    flex: 1;
-    min-width: 180px;
-    font-family: var(--sans);
-    font-size: 14px;
-    padding: 7px 12px;
-    border: 1px solid var(--rule);
-    border-radius: 4px;
-    background: var(--paper);
-    color: var(--ink);
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .problems-search:focus { border-color: var(--accent); }
-
-  .filter-btns { display: flex; gap: 6px; flex-wrap: wrap; }
-  .filter-btn {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 5px 12px;
-    border: 1px solid var(--rule);
-    border-radius: 3px;
-    background: none;
-    color: var(--ink-4);
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .filter-btn:hover { border-color: var(--ink-3); color: var(--ink-2); }
-  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-
-  .problems-count {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--ink-4);
-    letter-spacing: 0.06em;
-    margin-bottom: 16px;
-  }
-
-  .problems-list { list-style: none; border-top: 1px solid var(--rule); }
-
-  .problem-item {
-    display: grid;
-    grid-template-columns: 40px 1fr auto;
-    gap: 0 16px;
-    align-items: start;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--rule);
-    transition: background 0.1s;
-  }
-  .problem-item.hidden { display: none; }
-
-  .problem-num {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--ink-4);
-    letter-spacing: 0.06em;
-    padding-top: 2px;
-  }
-
-  .problem-body { min-width: 0; }
-
-  .problem-title {
-    font-family: var(--tight);
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--ink);
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-    margin-bottom: 3px;
-  }
-  .problem-topic {
-    font-size: 13px;
-    color: var(--ink-4);
-  }
-
-  .subject-tag {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 2px 8px;
-    border-radius: 3px;
-    flex-shrink: 0;
-    align-self: flex-start;
-    margin-top: 2px;
-  }
-  .subject-tag.physics  { color: #3b7de8; background: #e8f0fd; }
-  .subject-tag.biology  { color: #1a6b3c; background: var(--accent-lt); }
-  .subject-tag.chemistry { color: #7c3d0f; background: #fdf0e8; }
-  .subject-tag.mixed    { color: #555; background: var(--paper-3); }
-
-  .no-results {
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--ink-4);
-    padding: 40px 0;
-    text-align: center;
-    letter-spacing: 0.06em;
-  }
+.gp-page { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+.gp-intro { font-size: 15px; color: var(--text-secondary, #5c5c58); line-height: 1.7; margin-bottom: 1.5rem; }
+.gp-downloads { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; border: 0.5px solid var(--border, rgba(0,0,0,.09)); border-radius: 12px; overflow: hidden; margin-bottom: 2rem; }
+.gp-dl-card { background: var(--bg, #fff); padding: 1.25rem; border-right: 0.5px solid var(--border, rgba(0,0,0,.08)); }
+.gp-dl-label { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent, #9a9992); font-family: var(--font-mono, monospace); margin-bottom: 0.5rem; }
+.gp-dl-title { font-size: 14px; font-weight: 500; color: var(--text-primary, #1a1a18); margin-bottom: 0.35rem; }
+.gp-dl-desc { font-size: 12px; color: var(--text-secondary, #5c5c58); line-height: 1.5; margin-bottom: 0.75rem; }
+.gp-dl-link { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 12px; color: var(--accent, #9a9992); text-decoration: none; font-family: var(--font-mono, monospace); transition: color 0.15s; }
+.gp-dl-link:hover { color: var(--text-primary, #1a1a18); }
+.gp-rule { border: none; border-top: 0.5px solid var(--border, rgba(0,0,0,.09)); margin: 0 0 1.5rem; }
+.gp-filter-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.gp-filter-btn { font-size: 12px; padding: 0.3rem 0.85rem; border: 0.5px solid var(--border, rgba(0,0,0,.15)); border-radius: 20px; background: none; cursor: pointer; color: var(--text-secondary, #5c5c58); font-family: inherit; transition: all 0.15s; }
+.gp-filter-btn:hover { border-color: var(--border-strong, rgba(0,0,0,.3)); color: var(--text-primary, #1a1a18); }
+.gp-filter-btn.active { background: var(--text-primary, #1a1a18); color: var(--bg, #fff); border-color: var(--text-primary, #1a1a18); }
+.gp-count { font-size: 12px; color: var(--text-muted, #9a9992); font-family: var(--font-mono, monospace); margin-bottom: 1.25rem; }
+.gp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1px; border: 0.5px solid var(--border, rgba(0,0,0,.09)); border-radius: 12px; overflow: hidden; }
+.gp-card { background: var(--bg, #fff); padding: 1.1rem 1.25rem; border-right: 0.5px solid var(--border, rgba(0,0,0,.08)); border-bottom: 0.5px solid var(--border, rgba(0,0,0,.08)); display: flex; flex-direction: column; gap: 0.3rem; transition: background 0.15s; }
+.gp-card:hover { background: var(--bg-subtle, #f7f6f3); }
+.gp-card-header { display: flex; align-items: baseline; gap: 0.5rem; }
+.gp-num { font-size: 10px; color: var(--accent, #9a9992); font-family: var(--font-mono, monospace); flex-shrink: 0; }
+.gp-subject { font-size: 10px; padding: 1px 6px; border-radius: 4px; background: var(--bg-subtle, #f7f6f3); color: var(--accent, #9a9992); border: 0.5px solid var(--border, rgba(0,0,0,.08)); font-family: var(--font-mono, monospace); margin-left: auto; flex-shrink: 0; }
+.gp-title { font-size: 14px; font-weight: 500; color: var(--text-primary, #1a1a18); line-height: 1.3; }
+.gp-topic { font-size: 11px; color: var(--text-secondary, #5c5c58); line-height: 1.4; }
+.gp-none { font-size: 14px; color: var(--text-muted, #9a9992); padding: 2rem 0; font-family: var(--font-mono, monospace); }
+.gp-footer { margin-top: 2rem; font-size: 12px; color: var(--text-muted, #9a9992); }
+@media (max-width: 600px) { .gp-downloads { grid-template-columns: 1fr; } .gp-grid { grid-template-columns: 1fr; } }
 </style>
 
-<div class="page-wrap">
-  <a class="back-link" href="/resources.html">← Resources</a>
-  <hr class="page-divider" />
+<div class="gp-page">
 
-  <p class="page-sub">GCSE Science · Physics · Biology · Chemistry</p>
-  <h1>52 Weekly Science Problems</h1>
-  <p style="font-size:17px; color:var(--ink-3); margin: 12px 0 28px; max-width: 560px; line-height:1.7;">
-    A year's worth of GCSE science challenge problems — one per week, spanning physics,
-    biology, and chemistry. Designed to make you think, not just calculate.
-  </p>
+  <p class="gp-intro">A year's worth of GCSE science challenge problems — one per week, spanning physics, biology, and chemistry. Designed to make you think, not just calculate. These sit above standard GCSE difficulty but below A-level — they reward careful reading, estimation, and logical argument as much as correct formula use.</p>
 
-  <div class="problems-intro">
-    <p>These problems sit above standard GCSE difficulty but below A-level — they reward careful reading, estimation, and logical argument as much as correct formula use. Each has three or four parts, and most have a <em>should you be worried?</em> or <em>what does this tell us?</em> flavour that rewards genuine engagement.</p>
-    <p>Download the problem sheet for students and the solutions separately. Full working is shown for every part.</p>
-  </div>
-
-  <div class="download-row">
-    <div class="download-card">
-      <p class="dl-meta">Student sheet · Word document</p>
-      <h3>52 Problems</h3>
-      <p>All 52 weekly problems with answer spaces. Suitable for printing or distributing digitally.</p>
-      <a class="btn btn-dark" href="/assets/problems/GCSE_Problems.docx" download style="margin-top:8px; display:inline-block; text-align:center;">Download Problems</a>
+  <div class="gp-downloads">
+    <div class="gp-dl-card">
+      <p class="gp-dl-label">Student sheet · Word document</p>
+      <p class="gp-dl-title">52 Problems</p>
+      <p class="gp-dl-desc">All 52 weekly problems with answer spaces. Suitable for printing or distributing digitally.</p>
+      <a class="gp-dl-link" href="/assets/problems/GCSE_Problems.docx">↓ Download problems</a>
     </div>
-    <div class="download-card">
-      <p class="dl-meta">Teacher sheet · Word document</p>
-      <h3>Full Solutions</h3>
-      <p>Worked solutions with full mark-scheme style answers for all 52 problems.</p>
-      <a class="btn btn-outline" href="/assets/problems/GCSE_Solutions.docx" download style="margin-top:8px; display:inline-block; text-align:center;">Download Solutions</a>
+    <div class="gp-dl-card">
+      <p class="gp-dl-label">Teacher sheet · Word document</p>
+      <p class="gp-dl-title">Full Solutions</p>
+      <p class="gp-dl-desc">Worked solutions with full mark-scheme style answers for all 52 problems.</p>
+      <a class="gp-dl-link" href="/assets/problems/GCSE_Solutions.docx">↓ Download solutions</a>
     </div>
   </div>
 
-  <div class="section-label">All problems</div>
+  <hr class="gp-rule">
 
-  <div class="problems-controls">
-    <input class="problems-search" type="search" id="prob-search" placeholder="Search problems…" aria-label="Search problems" />
-    <div class="filter-btns">
-      <button class="filter-btn active" data-subject="all">All</button>
-      <button class="filter-btn" data-subject="physics">Physics</button>
-      <button class="filter-btn" data-subject="biology">Biology</button>
-      <button class="filter-btn" data-subject="chemistry">Chemistry</button>
-      <button class="filter-btn" data-subject="mixed">Mixed</button>
-    </div>
+  <div class="gp-filter-bar" id="gp-filter-bar">
+    <button class="gp-filter-btn active" data-subject="All">All</button>
+    <button class="gp-filter-btn" data-subject="Physics">Physics</button>
+    <button class="gp-filter-btn" data-subject="Biology">Biology</button>
+    <button class="gp-filter-btn" data-subject="Chemistry">Chemistry</button>
+    <button class="gp-filter-btn" data-subject="Mixed">Mixed</button>
   </div>
+  <p class="gp-count" id="gp-count">52 problems</p>
 
-  <p class="problems-count" id="prob-count">52 problems</p>
+  <div class="gp-grid" id="gp-grid"></div>
+  <p class="gp-none" id="gp-none" style="display:none">No problems match.</p>
 
-  <ul class="problems-list" id="problems-list">
-    <li class="problem-item" data-subject="physics"><span class="problem-num">01</span><div class="problem-body"><div class="problem-title">The Falling Ruler</div><div class="problem-topic">Forces &amp; Motion · reaction time, kinematics, g</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="biology"><span class="problem-num">02</span><div class="problem-body"><div class="problem-title">How Many Breaths in a Lifetime?</div><div class="problem-topic">Estimation · respiration, moles, Fermi estimation</div></div><span class="subject-tag biology">Biology</span></li>
-    <li class="problem-item" data-subject="physics"><span class="problem-num">03</span><div class="problem-body"><div class="problem-title">Thunder and Lightning</div><div class="problem-topic">Waves · speed of sound, speed of light, distance</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="chemistry"><span class="problem-num">04</span><div class="problem-body"><div class="problem-title">The Disappearing Tablet</div><div class="problem-topic">Rates of Reaction · temperature, doubling rule</div></div><span class="subject-tag chemistry">Chemistry</span></li>
-    <li class="problem-item" data-subject="physics"><span class="problem-num">05</span><div class="problem-body"><div class="problem-title">The Bouncing Ball</div><div class="problem-topic">Energy · GPE, energy transfer, geometric series</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="biology"><span class="problem-num">06</span><div class="problem-body"><div class="problem-title">Genetics Problem</div><div class="problem-topic">Genetics · inheritance, probability, Punnett squares</div></div><span class="subject-tag biology">Biology</span></li>
-    <li class="problem-item" data-subject="physics"><span class="problem-num">07</span><div class="problem-body"><div class="problem-title">Electricity Problem</div><div class="problem-topic">Electricity · circuits, resistance, power</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="chemistry"><span class="problem-num">08</span><div class="problem-body"><div class="problem-title">Atomic Structure</div><div class="problem-topic">Atomic Structure · electrons, isotopes, nuclear notation</div></div><span class="subject-tag chemistry">Chemistry</span></li>
-    <li class="problem-item" data-subject="biology"><span class="problem-num">09</span><div class="problem-body"><div class="problem-title">Cells &amp; Diffusion</div><div class="problem-topic">Cells &amp; Diffusion · surface area to volume ratio, osmosis</div></div><span class="subject-tag biology">Biology</span></li>
-    <li class="problem-item" data-subject="physics"><span class="problem-num">10</span><div class="problem-body"><div class="problem-title">Pressure Problem</div><div class="problem-topic">Pressure · fluid pressure, Pascal's principle</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="chemistry"><span class="problem-num">11</span><div class="problem-body"><div class="problem-title">Bonding Problem</div><div class="problem-topic">Bonding · ionic, covalent, intermolecular forces</div></div><span class="subject-tag chemistry">Chemistry</span></li>
-    <li class="problem-item" data-subject="physics"><span class="problem-num">12</span><div class="problem-body"><div class="problem-title">Radioactivity Problem</div><div class="problem-topic">Radioactivity · half-life, decay, radiation types</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="biology"><span class="problem-num">13</span><div class="problem-body"><div class="problem-title">Enzymes Problem</div><div class="problem-topic">Enzymes · active site, temperature, pH, inhibition</div></div><span class="subject-tag biology">Biology</span></li>
-    <li class="problem-item" data-subject="physics"><span class="problem-num">14</span><div class="problem-body"><div class="problem-title">Moments Problem</div><div class="problem-topic">Moments · torque, equilibrium, levers</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="chemistry"><span class="problem-num">15</span><div class="problem-body"><div class="problem-title">Electrolysis Problem</div><div class="problem-topic">Electrolysis · ions, electrodes, half equations</div></div><span class="subject-tag chemistry">Chemistry</span></li>
-    <li class="problem-item" data-subject="biology"><span class="problem-num">16</span><div class="problem-body"><div class="problem-title">Transport Problem</div><div class="problem-topic">Transport · blood, xylem, phloem, heart</div></div><span class="subject-tag biology">Biology</span></li>
-    <li class="problem-item" data-subject="physics"><span class="problem-num">17</span><div class="problem-body"><div class="problem-title">Space Problem</div><div class="problem-topic">Space · orbits, gravity, light years, scale</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="chemistry"><span class="problem-num">18</span><div class="problem-body"><div class="problem-title">Moles Problem</div><div class="problem-topic">Moles · Avogadro, molar mass, stoichiometry</div></div><span class="subject-tag chemistry">Chemistry</span></li>
-    <li class="problem-item" data-subject="biology"><span class="problem-num">19</span><div class="problem-body"><div class="problem-title">Nervous System Problem</div><div class="problem-topic">Nervous System · neurones, synapses, reflex arcs</div></div><span class="subject-tag biology">Biology</span></li>
-    <li class="problem-item" data-subject="physics"><span class="problem-num">20</span><div class="problem-body"><div class="problem-title">Waves &amp; Sound Problem</div><div class="problem-topic">Waves &amp; Sound · frequency, wavelength, Doppler effect</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="chemistry"><span class="problem-num">21</span><div class="problem-body"><div class="problem-title">Earth Science Problem</div><div class="problem-topic">Earth Science · carbon cycle, rock cycle, climate</div></div><span class="subject-tag chemistry">Chemistry</span></li>
-    <li class="problem-item" data-subject="biology"><span class="problem-num">22</span><div class="problem-body"><div class="problem-title">Photosynthesis Problem</div><div class="problem-topic">Photosynthesis · light intensity, limiting factors, chlorophyll</div></div><span class="subject-tag biology">Biology</span></li>
-    <li class="problem-item" data-subject="physics"><span class="problem-num">23</span><div class="problem-body"><div class="problem-title">Magnets &amp; Motors Problem</div><div class="problem-topic">Magnets &amp; Motors · electromagnetic force, Fleming's rule</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="chemistry"><span class="problem-num">24</span><div class="problem-body"><div class="problem-title">Titration Problem</div><div class="problem-topic">Titration · neutralisation, concentration, volumes</div></div><span class="subject-tag chemistry">Chemistry</span></li>
-    <li class="problem-item" data-subject="biology"><span class="problem-num">25</span><div class="problem-body"><div class="problem-title">Ecosystems Problem</div><div class="problem-topic">Ecosystems · food webs, energy transfer, biomass</div></div><span class="subject-tag biology">Biology</span></li>
-    <li class="problem-item" data-subject="physics"><span class="problem-num">26</span><div class="problem-body"><div class="problem-title">Optics Problem</div><div class="problem-topic">Optics · refraction, lenses, ray diagrams</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="chemistry"><span class="problem-num">27</span><div class="problem-body"><div class="problem-title">Electrochemistry Problem</div><div class="problem-topic">Electrochemistry · redox, electrode potentials, cells</div></div><span class="subject-tag chemistry">Chemistry</span></li>
-    <li class="problem-item" data-subject="biology"><span class="problem-num">28</span><div class="problem-body"><div class="problem-title">Hormones Problem</div><div class="problem-topic">Hormones · endocrine system, feedback, insulin</div></div><span class="subject-tag biology">Biology</span></li>
-    <li class="problem-item" data-subject="physics"><span class="problem-num">29</span><div class="problem-body"><div class="problem-title">Nuclear Physics Problem</div><div class="problem-topic">Nuclear Physics · fission, fusion, binding energy</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="chemistry"><span class="problem-num">30</span><div class="problem-body"><div class="problem-title">Organic Chemistry Problem</div><div class="problem-topic">Organic Chemistry · hydrocarbons, functional groups, reactions</div></div><span class="subject-tag chemistry">Chemistry</span></li>
-    <li class="problem-item" data-subject="biology"><span class="problem-num">31</span><div class="problem-body"><div class="problem-title">Evolution Problem</div><div class="problem-topic">Evolution · natural selection, adaptation, speciation</div></div><span class="subject-tag biology">Biology</span></li>
-    <li class="problem-item" data-subject="physics"><span class="problem-num">32</span><div class="problem-body"><div class="problem-title">Heat Transfer Problem</div><div class="problem-topic">Heat Transfer · conduction, convection, radiation, U-values</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="chemistry"><span class="problem-num">33</span><div class="problem-body"><div class="problem-title">Polymers Problem</div><div class="problem-topic">Polymers · addition, condensation, properties</div></div><span class="subject-tag chemistry">Chemistry</span></li>
-    <li class="problem-item" data-subject="biology"><span class="problem-num">34</span><div class="problem-body"><div class="problem-title">Respiration Problem</div><div class="problem-topic">Respiration · aerobic, anaerobic, ATP, RQ</div></div><span class="subject-tag biology">Biology</span></li>
-    <li class="problem-item" data-subject="physics"><span class="problem-num">35</span><div class="problem-body"><div class="problem-title">Particle Physics Problem</div><div class="problem-topic">Particle Physics · quarks, leptons, Standard Model</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="chemistry"><span class="problem-num">36</span><div class="problem-body"><div class="problem-title">Acids &amp; Bases Problem</div><div class="problem-topic">Acids &amp; Bases · pH, neutralisation, buffer solutions</div></div><span class="subject-tag chemistry">Chemistry</span></li>
-    <li class="problem-item" data-subject="biology"><span class="problem-num">37</span><div class="problem-body"><div class="problem-title">Immunity Problem</div><div class="problem-topic">Immunity · antibodies, vaccination, herd immunity</div></div><span class="subject-tag biology">Biology</span></li>
-    <li class="problem-item" data-subject="physics"><span class="problem-num">38</span><div class="problem-body"><div class="problem-title">Electromagnetism Problem</div><div class="problem-topic">Electromagnetism · induction, transformers, Faraday's law</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="chemistry"><span class="problem-num">39</span><div class="problem-body"><div class="problem-title">Equilibrium Problem</div><div class="problem-topic">Equilibrium · Le Chatelier, Kc, dynamic equilibrium</div></div><span class="subject-tag chemistry">Chemistry</span></li>
-    <li class="problem-item" data-subject="biology"><span class="problem-num">40</span><div class="problem-body"><div class="problem-title">Homeostasis Problem</div><div class="problem-topic">Homeostasis · thermoregulation, osmoregulation, kidneys</div></div><span class="subject-tag biology">Biology</span></li>
-    <li class="problem-item" data-subject="physics"><span class="problem-num">41</span><div class="problem-body"><div class="problem-title">Momentum Problem</div><div class="problem-topic">Momentum · conservation, impulse, collisions</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="chemistry"><span class="problem-num">42</span><div class="problem-body"><div class="problem-title">Metals Problem</div><div class="problem-topic">Metals · reactivity series, extraction, corrosion</div></div><span class="subject-tag chemistry">Chemistry</span></li>
-    <li class="problem-item" data-subject="biology"><span class="problem-num">43</span><div class="problem-body"><div class="problem-title">Plant Biology Problem</div><div class="problem-topic">Plant Biology · tropisms, hormones, transpiration</div></div><span class="subject-tag biology">Biology</span></li>
-    <li class="problem-item" data-subject="physics"><span class="problem-num">44</span><div class="problem-body"><div class="problem-title">Astronomy Problem</div><div class="problem-topic">Astronomy · stellar evolution, redshift, Hubble's law</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="chemistry"><span class="problem-num">45</span><div class="problem-body"><div class="problem-title">Food &amp; Chromatography Problem</div><div class="problem-topic">Food &amp; Chromatography · Rf values, food testing, analysis</div></div><span class="subject-tag chemistry">Chemistry</span></li>
-    <li class="problem-item" data-subject="biology"><span class="problem-num">46</span><div class="problem-body"><div class="problem-title">DNA &amp; Protein Synthesis Problem</div><div class="problem-topic">DNA &amp; Protein Synthesis · transcription, translation, codons</div></div><span class="subject-tag biology">Biology</span></li>
-    <li class="problem-item" data-subject="physics"><span class="problem-num">47</span><div class="problem-body"><div class="problem-title">Circular Motion Problem</div><div class="problem-topic">Circular Motion · centripetal force, angular velocity, orbits</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="chemistry"><span class="problem-num">48</span><div class="problem-body"><div class="problem-title">Enthalpy Problem</div><div class="problem-topic">Enthalpy · Hess's law, bond energies, calorimetry</div></div><span class="subject-tag chemistry">Chemistry</span></li>
-    <li class="problem-item" data-subject="biology"><span class="problem-num">49</span><div class="problem-body"><div class="problem-title">Reproduction Problem</div><div class="problem-topic">Reproduction · meiosis, fertilisation, development</div></div><span class="subject-tag biology">Biology</span></li>
-    <li class="problem-item" data-subject="physics"><span class="problem-num">50</span><div class="problem-body"><div class="problem-title">Quantum &amp; Photoelectric Problem</div><div class="problem-topic">Quantum &amp; Photoelectric · photons, work function, wave-particle</div></div><span class="subject-tag physics">Physics</span></li>
-    <li class="problem-item" data-subject="chemistry"><span class="problem-num">51</span><div class="problem-body"><div class="problem-title">Spectroscopy Problem</div><div class="problem-topic">Spectroscopy · emission spectra, atomic energy levels, identification</div></div><span class="subject-tag chemistry">Chemistry</span></li>
-    <li class="problem-item" data-subject="mixed"><span class="problem-num">52</span><div class="problem-body"><div class="problem-title">The Big Challenge</div><div class="problem-topic">Biology + Physics + Chemistry · synoptic, cross-subject reasoning</div></div><span class="subject-tag mixed">Mixed</span></li>
-    <li class="no-results" id="no-results" style="display:none; padding:40px 0; text-align:center; font-family:var(--mono); font-size:13px; color:var(--ink-4); letter-spacing:0.06em;">No problems match.</li>
-  </ul>
+  <p class="gp-footer">52 problems · Physics, Biology, Chemistry · one per week · GCSE level and above.</p>
 
-  <p style="margin-top:3em; font-size:13px; color:var(--ink-4);">
-    52 problems · Physics, Biology, Chemistry · one per week · GCSE level and above.
-  </p>
 </div>
 
 <script>
-  const items    = Array.from(document.querySelectorAll('.problem-item'));
-  const search   = document.getElementById('prob-search');
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const countEl  = document.getElementById('prob-count');
-  const noRes    = document.getElementById('no-results');
-  let activeSubject = 'all';
+var problems = [
+  {n:"01",title:"The Falling Ruler",topic:"Forces & Motion · reaction time, kinematics, g",subject:"Physics"},
+  {n:"02",title:"How Many Breaths in a Lifetime?",topic:"Estimation · respiration, moles, Fermi estimation",subject:"Biology"},
+  {n:"03",title:"Thunder and Lightning",topic:"Waves · speed of sound, speed of light, distance",subject:"Physics"},
+  {n:"04",title:"The Disappearing Tablet",topic:"Rates of Reaction · temperature, doubling rule",subject:"Chemistry"},
+  {n:"05",title:"The Bouncing Ball",topic:"Energy · GPE, energy transfer, geometric series",subject:"Physics"},
+  {n:"06",title:"Genetics Problem",topic:"Genetics · inheritance, probability, Punnett squares",subject:"Biology"},
+  {n:"07",title:"Electricity Problem",topic:"Electricity · circuits, resistance, power",subject:"Physics"},
+  {n:"08",title:"Atomic Structure",topic:"Atomic Structure · electrons, isotopes, nuclear notation",subject:"Chemistry"},
+  {n:"09",title:"Cells & Diffusion",topic:"Cells & Diffusion · surface area to volume ratio, osmosis",subject:"Biology"},
+  {n:"10",title:"Pressure Problem",topic:"Pressure · fluid pressure, Pascal's principle",subject:"Physics"},
+  {n:"11",title:"Bonding Problem",topic:"Bonding · ionic, covalent, intermolecular forces",subject:"Chemistry"},
+  {n:"12",title:"Radioactivity Problem",topic:"Radioactivity · half-life, decay, radiation types",subject:"Physics"},
+  {n:"13",title:"Enzymes Problem",topic:"Enzymes · active site, temperature, pH, inhibition",subject:"Biology"},
+  {n:"14",title:"Moments Problem",topic:"Moments · torque, equilibrium, levers",subject:"Physics"},
+  {n:"15",title:"Electrolysis Problem",topic:"Electrolysis · ions, electrodes, half equations",subject:"Chemistry"},
+  {n:"16",title:"Transport Problem",topic:"Transport · blood, xylem, phloem, heart",subject:"Biology"},
+  {n:"17",title:"Space Problem",topic:"Space · orbits, gravity, light years, scale",subject:"Physics"},
+  {n:"18",title:"Moles Problem",topic:"Moles · Avogadro, molar mass, stoichiometry",subject:"Chemistry"},
+  {n:"19",title:"Nervous System Problem",topic:"Nervous System · neurones, synapses, reflex arcs",subject:"Biology"},
+  {n:"20",title:"Waves & Sound Problem",topic:"Waves & Sound · frequency, wavelength, Doppler effect",subject:"Physics"},
+  {n:"21",title:"Earth Science Problem",topic:"Earth Science · carbon cycle, rock cycle, climate",subject:"Chemistry"},
+  {n:"22",title:"Photosynthesis Problem",topic:"Photosynthesis · light intensity, limiting factors, chlorophyll",subject:"Biology"},
+  {n:"23",title:"Magnets & Motors Problem",topic:"Magnets & Motors · electromagnetic force, Fleming's rule",subject:"Physics"},
+  {n:"24",title:"Titration Problem",topic:"Titration · neutralisation, concentration, volumes",subject:"Chemistry"},
+  {n:"25",title:"Ecosystems Problem",topic:"Ecosystems · food webs, energy transfer, biomass",subject:"Biology"},
+  {n:"26",title:"Optics Problem",topic:"Optics · refraction, lenses, ray diagrams",subject:"Physics"},
+  {n:"27",title:"Electrochemistry Problem",topic:"Electrochemistry · redox, electrode potentials, cells",subject:"Chemistry"},
+  {n:"28",title:"Hormones Problem",topic:"Hormones · endocrine system, feedback, insulin",subject:"Biology"},
+  {n:"29",title:"Nuclear Physics Problem",topic:"Nuclear Physics · fission, fusion, binding energy",subject:"Physics"},
+  {n:"30",title:"Organic Chemistry Problem",topic:"Organic Chemistry · hydrocarbons, functional groups, reactions",subject:"Chemistry"},
+  {n:"31",title:"Evolution Problem",topic:"Evolution · natural selection, adaptation, speciation",subject:"Biology"},
+  {n:"32",title:"Heat Transfer Problem",topic:"Heat Transfer · conduction, convection, radiation, U-values",subject:"Physics"},
+  {n:"33",title:"Polymers Problem",topic:"Polymers · addition, condensation, properties",subject:"Chemistry"},
+  {n:"34",title:"Respiration Problem",topic:"Respiration · aerobic, anaerobic, ATP, RQ",subject:"Biology"},
+  {n:"35",title:"Particle Physics Problem",topic:"Particle Physics · quarks, leptons, Standard Model",subject:"Physics"},
+  {n:"36",title:"Acids & Bases Problem",topic:"Acids & Bases · pH, neutralisation, buffer solutions",subject:"Chemistry"},
+  {n:"37",title:"Immunity Problem",topic:"Immunity · antibodies, vaccination, herd immunity",subject:"Biology"},
+  {n:"38",title:"Electromagnetism Problem",topic:"Electromagnetism · induction, transformers, Faraday's law",subject:"Physics"},
+  {n:"39",title:"Equilibrium Problem",topic:"Equilibrium · Le Chatelier, Kc, dynamic equilibrium",subject:"Chemistry"},
+  {n:"40",title:"Homeostasis Problem",topic:"Homeostasis · thermoregulation, osmoregulation, kidneys",subject:"Biology"},
+  {n:"41",title:"Momentum Problem",topic:"Momentum · conservation, impulse, collisions",subject:"Physics"},
+  {n:"42",title:"Metals Problem",topic:"Metals · reactivity series, extraction, corrosion",subject:"Chemistry"},
+  {n:"43",title:"Plant Biology Problem",topic:"Plant Biology · tropisms, hormones, transpiration",subject:"Biology"},
+  {n:"44",title:"Astronomy Problem",topic:"Astronomy · stellar evolution, redshift, Hubble's law",subject:"Physics"},
+  {n:"45",title:"Food & Chromatography Problem",topic:"Food & Chromatography · Rf values, food testing, analysis",subject:"Chemistry"},
+  {n:"46",title:"DNA & Protein Synthesis Problem",topic:"DNA & Protein Synthesis · transcription, translation, codons",subject:"Biology"},
+  {n:"47",title:"Circular Motion Problem",topic:"Circular Motion · centripetal force, angular velocity, orbits",subject:"Physics"},
+  {n:"48",title:"Enthalpy Problem",topic:"Enthalpy · Hess's law, bond energies, calorimetry",subject:"Chemistry"},
+  {n:"49",title:"Reproduction Problem",topic:"Reproduction · meiosis, fertilisation, development",subject:"Biology"},
+  {n:"50",title:"Quantum & Photoelectric Problem",topic:"Quantum & Photoelectric · photons, work function, wave-particle",subject:"Physics"},
+  {n:"51",title:"Spectroscopy Problem",topic:"Spectroscopy · emission spectra, atomic energy levels, identification",subject:"Chemistry"},
+  {n:"52",title:"The Big Challenge",topic:"Biology + Physics + Chemistry · synoptic, cross-subject reasoning",subject:"Mixed"}
+];
 
-  function applyFilters() {
-    const q = search.value.toLowerCase().trim();
-    let visible = 0;
-    items.forEach(item => {
-      const subjectOk = activeSubject === 'all' || item.dataset.subject === activeSubject;
-      const searchOk  = !q || item.textContent.toLowerCase().includes(q);
-      const show = subjectOk && searchOk;
-      item.classList.toggle('hidden', !show);
-      if (show) visible++;
-    });
-    countEl.textContent = visible + ' problem' + (visible !== 1 ? 's' : '');
-    noRes.style.display = visible === 0 ? 'list-item' : 'none';
-  }
+var active = 'All';
 
-  search.addEventListener('input', applyFilters);
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      activeSubject = btn.dataset.subject;
-      applyFilters();
-    });
-  });
+function render() {
+  var filtered = active === 'All' ? problems : problems.filter(function(p){ return p.subject === active; });
+  var count = document.getElementById('gp-count');
+  var grid = document.getElementById('gp-grid');
+  var none = document.getElementById('gp-none');
+  count.textContent = filtered.length + ' problem' + (filtered.length !== 1 ? 's' : '');
+  if (!filtered.length) { grid.innerHTML = ''; none.style.display = 'block'; return; }
+  none.style.display = 'none';
+  grid.innerHTML = filtered.map(function(p) {
+    return '<div class="gp-card">' +
+      '<div class="gp-card-header"><span class="gp-num">' + p.n + '.</span><span class="gp-subject">' + p.subject + '</span></div>' +
+      '<p class="gp-title">' + p.title + '</p>' +
+      '<p class="gp-topic">' + p.topic + '</p>' +
+    '</div>';
+  }).join('');
+}
+
+document.getElementById('gp-filter-bar').addEventListener('click', function(e) {
+  var btn = e.target.closest('.gp-filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.gp-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  active = btn.dataset.subject;
+  render();
+});
+
+render();
 </script>

@@ -1,371 +1,210 @@
 ---
-layout: resource
-title: "Physics Experiment Data"
-is_resource: true
-description: "A collection of student experiment data files from across the A-level physics course."
-date: 2026-06-01
-type: database
+layout: default
+title: Physics Experiment Data
+description: Student experiment data files from across the A-level physics course — spreadsheets, write-ups, and reports ready to open in Excel or Google Sheets.
+category: Data
+tags: [data, experiments, alevel, physics, spreadsheet, mechanics, waves, electricity, thermal, nuclear, oscillations]
 ---
 
 <style>
-  .exp-intro {
-    font-size: 1.05em;
-    color: var(--ink-3);
-    max-width: 560px;
-    margin-bottom: 2.5rem;
-    line-height: 1.8;
-  }
-
-  .exp-section {
-    margin-bottom: 3rem;
-  }
-
-  .exp-section-title {
-    font-family: var(--sans);
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink-4);
-    border-bottom: 1px solid var(--rule);
-    padding-bottom: 0.4rem;
-    margin-bottom: 1.25rem;
-  }
-
-  .exp-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-  }
-
-  .exp-item {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: baseline;
-    gap: 1rem;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--paper-3);
-    transition: background 0.15s;
-  }
-
-  .exp-item:last-child {
-    border-bottom: none;
-  }
-
-  .exp-main {
-    min-width: 0;
-  }
-
-  .exp-name {
-    font-family: var(--serif);
-    font-size: 1em;
-    font-weight: 500;
-    color: var(--ink);
-    margin-bottom: 0.2rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-
-  .exp-tag {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    background: var(--paper-3);
-    color: var(--ink-3);
-    padding: 1px 6px;
-    border-radius: 3px;
-    font-weight: 400;
-  }
-
-  .exp-tag.xlsx { background: #e8f0e8; color: #3a5c3a; }
-  .exp-tag.xls  { background: #e8f0e8; color: #3a5c3a; }
-  .exp-tag.docx { background: #e8edf5; color: #2d4a6b; }
-  .exp-tag.pdf  { background: #fceee8; color: #7a3a1e; }
-
-  .exp-desc {
-    font-size: 0.88em;
-    color: var(--ink-3);
-    line-height: 1.55;
-  }
-
-  .exp-download {
-    font-family: var(--sans);
-    font-size: 0.75rem;
-    color: var(--green);
-    text-decoration: none;
-    white-space: nowrap;
-    border: 1px solid currentColor;
-    padding: 3px 10px;
-    border-radius: 3px;
-    transition: background 0.15s, color 0.15s;
-  }
-
-  .exp-download:hover {
-    background: var(--green);
-    color: white;
-  }
+.pe-page { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+.pe-intro { font-size: 15px; color: var(--text-secondary, #5c5c58); line-height: 1.7; margin-bottom: 2rem; }
+.pe-section { margin-bottom: 2.5rem; }
+.pe-section-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent, #9a9992); font-family: var(--font-mono, monospace); margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 0.5px solid var(--border, rgba(0,0,0,.09)); }
+.pe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1px; border: 0.5px solid var(--border, rgba(0,0,0,.09)); border-radius: 12px; overflow: hidden; }
+.pe-card { background: var(--bg, #fff); padding: 1.25rem; border-right: 0.5px solid var(--border, rgba(0,0,0,.08)); border-bottom: 0.5px solid var(--border, rgba(0,0,0,.08)); display: flex; flex-direction: column; gap: 0.4rem; transition: background 0.15s; }
+.pe-card:hover { background: var(--bg-subtle, #f7f6f3); }
+.pe-ext { font-size: 10px; font-family: var(--font-mono, monospace); color: var(--accent, #9a9992); background: var(--bg-subtle, #f7f6f3); border: 0.5px solid var(--border, rgba(0,0,0,.08)); padding: 1px 6px; border-radius: 4px; display: inline-block; align-self: flex-start; }
+.pe-title { font-size: 14px; font-weight: 500; color: var(--text-primary, #1a1a18); line-height: 1.3; }
+.pe-desc { font-size: 12px; color: var(--text-secondary, #5c5c58); line-height: 1.55; flex: 1; }
+.pe-link { display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.5rem; font-size: 12px; color: var(--accent, #9a9992); text-decoration: none; font-family: var(--font-mono, monospace); transition: color 0.15s; align-self: flex-start; }
+.pe-link:hover { color: var(--text-primary, #1a1a18); text-decoration: none; }
+@media (max-width: 600px) { .pe-grid { grid-template-columns: 1fr; } }
 </style>
 
-<p class="exp-intro">
-  Experiment data files from across the physics course — spreadsheets, write-ups, and reports ready to open in Excel or Google Sheets. Use them as templates, for analysis practice, or to check your own results against.
-</p>
+<div class="pe-page">
+  <p class="pe-intro">Experiment data files from across the A-level physics course — spreadsheets, write-ups, and reports ready to open in Excel or Google Sheets. Use them as templates, for analysis practice, or to check your own results against.</p>
 
-<div class="exp-section">
-  <div class="exp-section-title">Mechanics &amp; Motion</div>
-  <ul class="exp-list">
+  <div class="pe-section">
+    <p class="pe-section-label">Mechanics &amp; Motion</p>
+    <div class="pe-grid">
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Usain Bolt 100 m Sprint — World Record Analysis
-          <span class="exp-tag xlsx">xlsx</span>
-        </div>
-        <div class="exp-desc">Distance–time and velocity–time data for the 2009 Berlin world record. Good for exploring non-uniform acceleration, instantaneous vs average velocity, and graphical analysis of motion.</div>
+      <div class="pe-card">
+        <span class="pe-ext">xlsx</span>
+        <p class="pe-title">Usain Bolt 100 m Sprint — World Record Analysis</p>
+        <p class="pe-desc">Distance–time and velocity–time data for the 2009 Berlin world record. Good for non-uniform acceleration, instantaneous vs average velocity, and graphical analysis of motion.</p>
+        <a class="pe-link" href="/assets/experimentresults/Usain_Bolt_100m_sprint_world_record_analysis.xlsx">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/Usain_Bolt_100m_sprint_world_record_analysis.xlsx">↓ Download</a>
-    </li>
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Jumping Popper
-          <span class="exp-tag xlsx">xlsx</span>
-        </div>
-        <div class="exp-desc">Video analysis of a rubber popper toy — captures the launch phase at high frame rate. Useful for energy conservation, impulse, and projectile calculations.</div>
+      <div class="pe-card">
+        <span class="pe-ext">xlsx</span>
+        <p class="pe-title">Jumping Popper</p>
+        <p class="pe-desc">Video analysis of a rubber popper toy — captures the launch phase at high frame rate. Useful for energy conservation, impulse, and projectile calculations.</p>
+        <a class="pe-link" href="/assets/experimentresults/Jumping_Popper.xlsx">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/Jumping_Popper.xlsx">↓ Download</a>
-    </li>
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Popper on Smartphone — Acceleration
-          <span class="exp-tag xls">xls</span>
-        </div>
-        <div class="exp-desc">Accelerometer data from a phone placed under a jumping popper. Illustrates how consumer sensors can capture rapid acceleration events and links to Newton's second law.</div>
+      <div class="pe-card">
+        <span class="pe-ext">xls</span>
+        <p class="pe-title">Popper on Smartphone — Acceleration</p>
+        <p class="pe-desc">Accelerometer data from a phone placed under a jumping popper. Links consumer sensors to Newton's second law and illustrates how to capture rapid acceleration events.</p>
+        <a class="pe-link" href="/assets/experimentresults/Popper_on_smartphone_acceleration.xls">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/Popper_on_smartphone_acceleration.xls">↓ Download</a>
-    </li>
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Acceleration Without g
-          <span class="exp-tag xls">xls</span>
-        </div>
-        <div class="exp-desc">Datalogger results from an Atwood machine setup. Separates gravitational acceleration from measured cart acceleration to explore F = ma without needing to know g in advance.</div>
+      <div class="pe-card">
+        <span class="pe-ext">xls</span>
+        <p class="pe-title">Acceleration Without g</p>
+        <p class="pe-desc">Datalogger results from an Atwood machine. Separates gravitational from measured cart acceleration — explores F = ma without needing to know g in advance.</p>
+        <a class="pe-link" href="/assets/experimentresults/_Acceleration_without_g_2020-07-24_15-07-04.xls">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/_Acceleration_without_g_2020-07-24_15-07-04.xls">↓ Download</a>
-    </li>
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Load on a Plastic Wire — Extension Graph
-          <span class="exp-tag docx">docx</span>
-        </div>
-        <div class="exp-desc">Student write-up investigating how load affects extension in a plastic wire, including a graph showing the elastic and plastic regions. Covers Hooke's law, Young modulus, and the limit of proportionality.</div>
+      <div class="pe-card">
+        <span class="pe-ext">docx</span>
+        <p class="pe-title">Load on a Plastic Wire — Extension Graph</p>
+        <p class="pe-desc">Student write-up investigating how load affects extension in a plastic wire, including a graph showing the elastic and plastic regions. Covers Hooke's law and the limit of proportionality.</p>
+        <a class="pe-link" href="/assets/experimentresults/_This_is_a_graph_to_show_how_the_load_on_a_plastic_wire_affects_the_extension.docx">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/_This_is_a_graph_to_show_how_the_load_on_a_plastic_wire_affects_the_extension.docx">↓ Download</a>
-    </li>
 
-  </ul>
-</div>
+    </div>
+  </div>
 
-<div class="exp-section">
-  <div class="exp-section-title">Waves &amp; Optics</div>
-  <ul class="exp-list">
+  <div class="pe-section">
+    <p class="pe-section-label">Waves &amp; Optics</p>
+    <div class="pe-grid">
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Speed of Sound Using Standing Waves
-          <span class="exp-tag xlsx">xlsx</span>
-        </div>
-        <div class="exp-desc">Resonance tube data at multiple frequencies. Students determine the speed of sound from the relationship between tube length and wavelength at the fundamental and harmonic frequencies.</div>
+      <div class="pe-card">
+        <span class="pe-ext">xlsx</span>
+        <p class="pe-title">Speed of Sound Using Standing Waves</p>
+        <p class="pe-desc">Resonance tube data at multiple frequencies. Students determine the speed of sound from tube length and wavelength at the fundamental and harmonic frequencies.</p>
+        <a class="pe-link" href="/assets/experimentresults/Speed_of_sound_using_standing_waves.xlsx">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/Speed_of_sound_using_standing_waves.xlsx">↓ Download</a>
-    </li>
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Refraction Through a Glass Block
-          <span class="exp-tag xls">xls</span>
-        </div>
-        <div class="exp-desc">Angle of incidence and refraction measurements for a rectangular glass block. Includes a Snell's law analysis and calculation of the refractive index with uncertainty treatment.</div>
+      <div class="pe-card">
+        <span class="pe-ext">xls</span>
+        <p class="pe-title">Refraction Through a Glass Block</p>
+        <p class="pe-desc">Angle of incidence and refraction measurements for a rectangular glass block. Includes a Snell's law analysis and refractive index calculation with uncertainty treatment.</p>
+        <a class="pe-link" href="/assets/experimentresults/Refraction_through_a_glass_block.xls">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/Refraction_through_a_glass_block.xls">↓ Download</a>
-    </li>
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Inverse Square Law — Photocell (I vs d)
-          <span class="exp-tag xlsx">xlsx</span>
-        </div>
-        <div class="exp-desc">Light intensity measured with a photocell at increasing distances from a point source. Demonstrates the inverse square law and includes a log–log plot to confirm the relationship.</div>
+      <div class="pe-card">
+        <span class="pe-ext">xlsx</span>
+        <p class="pe-title">Inverse Square Law — Photocell (I vs d)</p>
+        <p class="pe-desc">Light intensity measured with a photocell at increasing distances from a point source. Demonstrates the inverse square law and includes a log–log plot to confirm the relationship.</p>
+        <a class="pe-link" href="/assets/experimentresults/Inverse_square_law_with_Photocell_I_vs_d.xlsx">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/Inverse_square_law_with_Photocell_I_vs_d.xlsx">↓ Download</a>
-    </li>
 
-  </ul>
-</div>
+    </div>
+  </div>
 
-<div class="exp-section">
-  <div class="exp-section-title">Electricity &amp; Quantum</div>
-  <ul class="exp-list">
+  <div class="pe-section">
+    <p class="pe-section-label">Electricity &amp; Quantum</p>
+    <div class="pe-grid">
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Internal Resistance of a 9 V Cell
-          <span class="exp-tag xlsx">xlsx</span>
-        </div>
-        <div class="exp-desc">Terminal voltage vs. current data for a carbon-zinc 9 V battery. The gradient of the V–I graph gives internal resistance; the y-intercept gives the EMF. A neat, clean dataset for circuit analysis.</div>
+      <div class="pe-card">
+        <span class="pe-ext">xlsx</span>
+        <p class="pe-title">Internal Resistance of a 9 V Cell</p>
+        <p class="pe-desc">Terminal voltage vs current data for a carbon-zinc 9 V battery. The gradient of the V–I graph gives internal resistance; the y-intercept gives the EMF.</p>
+        <a class="pe-link" href="/assets/experimentresults/Internal_resistance_of_a_9v_cell.xlsx">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/Internal_resistance_of_a_9v_cell.xlsx">↓ Download</a>
-    </li>
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Finding Planck's Constant from LEDs
-          <span class="exp-tag xlsx">xlsx</span>
-        </div>
-        <div class="exp-desc">Threshold voltage data for LEDs of known wavelength. Plotting eV against frequency gives a straight line whose gradient is h — a real determination of Planck's constant from simple bench equipment.</div>
+      <div class="pe-card">
+        <span class="pe-ext">xlsx</span>
+        <p class="pe-title">Finding Planck's Constant from LEDs</p>
+        <p class="pe-desc">Threshold voltage data for LEDs of known wavelength. Plotting eV against frequency gives a straight line whose gradient is h — a real bench determination of Planck's constant.</p>
+        <a class="pe-link" href="/assets/experimentresults/Find_Plank_constant_from_LED.xlsx">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/Find_Plank_constant_from_LED.xlsx">↓ Download</a>
-    </li>
 
-  </ul>
-</div>
+    </div>
+  </div>
 
-<div class="exp-section">
-  <div class="exp-section-title">Thermal Physics</div>
-  <ul class="exp-list">
+  <div class="pe-section">
+    <p class="pe-section-label">Thermal Physics</p>
+    <div class="pe-grid">
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Specific Heat Capacity — Experiment Report
-          <span class="exp-tag pdf">pdf</span>
-        </div>
-        <div class="exp-desc">Full lab report for a calorimetry experiment measuring the specific heat of water and lead. Includes method, error analysis, and a candid discussion of the large systematic errors encountered.</div>
+      <div class="pe-card">
+        <span class="pe-ext">pdf</span>
+        <p class="pe-title">Specific Heat Capacity — Experiment Report</p>
+        <p class="pe-desc">Full lab report for a calorimetry experiment measuring the specific heat of water and lead. Includes method, error analysis, and a candid discussion of systematic errors.</p>
+        <a class="pe-link" href="/assets/experimentresults/SHC_experiment.pdf">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/SHC_experiment.pdf">↓ Download</a>
-    </li>
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Boyle's Law
-          <span class="exp-tag xlsx">xlsx</span>
-        </div>
-        <div class="exp-desc">Pressure and volume data for a fixed mass of gas at constant temperature. A p vs 1/V plot confirms the linear relationship and allows students to extract a value for the constant k.</div>
+      <div class="pe-card">
+        <span class="pe-ext">xlsx</span>
+        <p class="pe-title">Boyle's Law</p>
+        <p class="pe-desc">Pressure and volume data for a fixed mass of gas at constant temperature. A p vs 1/V plot confirms the linear relationship and allows extraction of the constant k.</p>
+        <a class="pe-link" href="/assets/experimentresults/Boyles_law.xlsx">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/Boyles_law.xlsx">↓ Download</a>
-    </li>
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Radiation from Different Surfaces
-          <span class="exp-tag xlsx">xlsx</span>
-        </div>
-        <div class="exp-desc">Temperature-vs-time cooling curves for containers with matt black, shiny silver, and white surfaces. Good for comparing emissivity and discussing Stefan's law qualitatively.</div>
+      <div class="pe-card">
+        <span class="pe-ext">xlsx</span>
+        <p class="pe-title">Radiation from Different Surfaces</p>
+        <p class="pe-desc">Cooling curves for containers with matt black, shiny silver, and white surfaces. Good for comparing emissivity and discussing Stefan's law qualitatively.</p>
+        <a class="pe-link" href="/assets/experimentresults/Radiation_from_different_surfaces.xlsx">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/Radiation_from_different_surfaces.xlsx">↓ Download</a>
-    </li>
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Light Absorption as a Model for X-ray / Gamma Absorption
-          <span class="exp-tag xlsx">xlsx</span>
-        </div>
-        <div class="exp-desc">Intensity data for visible light passing through increasing thicknesses of absorbing material, used as an analogy for exponential attenuation in medical imaging and nuclear physics.</div>
+      <div class="pe-card">
+        <span class="pe-ext">xlsx</span>
+        <p class="pe-title">Light Absorption as a Model for X-ray / Gamma Absorption</p>
+        <p class="pe-desc">Intensity data for visible light through increasing thicknesses of absorbing material — an analogy for exponential attenuation in medical imaging and nuclear physics.</p>
+        <a class="pe-link" href="/assets/experimentresults/Use_Light_absorption_to_model_xray_or_gamma_absorbtion.xlsx">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/Use_Light_absorption_to_model_xray_or_gamma_absorbtion.xlsx">↓ Download</a>
-    </li>
 
-  </ul>
-</div>
+    </div>
+  </div>
 
-<div class="exp-section">
-  <div class="exp-section-title">Nuclear Physics &amp; Radioactivity</div>
-  <ul class="exp-list">
+  <div class="pe-section">
+    <p class="pe-section-label">Nuclear Physics &amp; Radioactivity</p>
+    <div class="pe-grid">
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Radioactive Decay of Protactinium — Results
-          <span class="exp-tag xlsx">xlsx</span>
-        </div>
-        <div class="exp-desc">Count-rate data from a protactinium generator over time. Students plot ln(count rate) vs time to find the decay constant and half-life of Pa-234.</div>
+      <div class="pe-card">
+        <span class="pe-ext">xlsx</span>
+        <p class="pe-title">Radioactive Decay of Protactinium</p>
+        <p class="pe-desc">Count-rate data from a protactinium generator over time. Students plot ln(count rate) vs time to find the decay constant and half-life of Pa-234.</p>
+        <a class="pe-link" href="/assets/experimentresults/Radioactive_decay_of_protactinium_results.xlsx">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/Radioactive_decay_of_protactinium_results.xlsx">↓ Download</a>
-    </li>
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Half-Life Dice Analogue
-          <span class="exp-tag xlsx">xlsx</span>
-        </div>
-        <div class="exp-desc">Simulated decay using dice — each roll removes a fraction of the "nuclei." The resulting data mirrors real exponential decay and gives students intuition for randomness, half-life, and the decay constant.</div>
+      <div class="pe-card">
+        <span class="pe-ext">xlsx</span>
+        <p class="pe-title">Half-Life Dice Analogue</p>
+        <p class="pe-desc">Simulated decay using dice — each roll removes a fraction of the "nuclei." Mirrors real exponential decay and gives intuition for randomness, half-life, and the decay constant.</p>
+        <a class="pe-link" href="/assets/experimentresults/Half-life_dice_analogue.xlsx">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/Half-life_dice_analogue.xlsx">↓ Download</a>
-    </li>
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Radioactive Nuclides — Binding Energy
-          <span class="exp-tag xlsx">xlsx</span>
-        </div>
-        <div class="exp-desc">Binding energy per nucleon data for a range of nuclides. Used to plot the classic binding energy curve, identify the most stable nuclides, and explain energy release in fission and fusion.</div>
+      <div class="pe-card">
+        <span class="pe-ext">xlsx</span>
+        <p class="pe-title">Radioactive Nuclides — Binding Energy</p>
+        <p class="pe-desc">Binding energy per nucleon data for a range of nuclides. Used to plot the binding energy curve, identify the most stable nuclides, and explain fission and fusion energy release.</p>
+        <a class="pe-link" href="/assets/experimentresults/Radioactive_nucleides_-_binding_energy_.xlsx">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/Radioactive_nucleides_-_binding_energy_.xlsx">↓ Download</a>
-    </li>
 
-  </ul>
-</div>
+    </div>
+  </div>
 
-<div class="exp-section">
-  <div class="exp-section-title">Oscillations</div>
-  <ul class="exp-list">
+  <div class="pe-section">
+    <p class="pe-section-label">Oscillations</p>
+    <div class="pe-grid">
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Mass on a Spring — Datalogger
-          <span class="exp-tag xlsx">xlsx</span>
-        </div>
-        <div class="exp-desc">Position vs time trace from a datalogger for a mass oscillating on a spring. Covers period, amplitude, SHM analysis, and energy exchange between kinetic and potential forms.</div>
+      <div class="pe-card">
+        <span class="pe-ext">xlsx</span>
+        <p class="pe-title">Mass on a Spring — Datalogger</p>
+        <p class="pe-desc">Position vs time trace from a datalogger for a mass oscillating on a spring. Covers period, amplitude, SHM analysis, and energy exchange between kinetic and potential forms.</p>
+        <a class="pe-link" href="/assets/experimentresults/Mass_on_spring_datalog.xlsx">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/Mass_on_spring_datalog.xlsx">↓ Download</a>
-    </li>
 
-  </ul>
-</div>
+    </div>
+  </div>
 
-<div class="exp-section">
-  <div class="exp-section-title">Student Write-ups</div>
-  <ul class="exp-list">
+  <div class="pe-section">
+    <p class="pe-section-label">Student Write-ups</p>
+    <div class="pe-grid">
 
-    <li class="exp-item">
-      <div class="exp-main">
-        <div class="exp-name">
-          Experiment Results (General)
-          <span class="exp-tag docx">docx</span>
-        </div>
-        <div class="exp-desc">A general student results write-up template with data tables, graph space, and an analysis section — useful as a starting point for any practical report.</div>
+      <div class="pe-card">
+        <span class="pe-ext">docx</span>
+        <p class="pe-title">Experiment Results Template</p>
+        <p class="pe-desc">A general student results write-up template with data tables, graph space, and an analysis section — a useful starting point for any practical report.</p>
+        <a class="pe-link" href="/assets/experimentresults/Experiment_Results.docx">↓ Download</a>
       </div>
-      <a class="exp-download" href="/assets/experimentresults/Experiment_Results.docx">↓ Download</a>
-    </li>
 
-  </ul>
+    </div>
+  </div>
+
 </div>
