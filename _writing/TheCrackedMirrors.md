@@ -1,6 +1,6 @@
 ---
 
-layout: writing-post
+layout: post
 
 title: "The Cracked Mirrors of Genius: Why We Need to Stop Worshiping Textbook Heroes"
 
@@ -45,7 +45,15 @@ Here are some unvarnished snapshots of the names in your textbook.
 
 ⠀Isaac Newton (1642–1727)
 * **The Textbook Legacy:** Calculus, the laws of motion, and universal gravitation.
-* **The Human Reality:** Newton was famously paranoid, spending decades trying to utterly destroy his rivals, Leibniz and Hooke, going so far as to allegedly burn Hooke’s only portrait when he took over the Royal Society (Westfall, 1980). But his darkest chapter came when he was appointed Warden of the Royal Mint. Newton turned into a ruthless, obsessive inquisitor (Levenson, 2010). He donned disguises, frequented the London underworld, and used psychological torture and bribery to hunt down counterfeiters. When he caught his primary target, a con-man named William Chaloner, Newton showed zero mercy, systematically ensuring Chaloner was sentenced to the gallows to be hanged, drawn, and quartered while ignoring his desperate letters begging for his life.  Whilst we’re here I can’t resist a Newton story:  In a 1676 letter to his rival Robert Hooke, Newton wrote the famous line: “If I have seen further, it is by standing on the shoulders of giants.” It is quoted endlessly as evidence of Newton’s gracious acknowledgement of those who came before him. It’s even on some of the UK’s currency: ![](The%20Cracked%20Mirrors%20of%20Genius%20Why%20We%20Need%20to%20Stop%20Worshiping%20Textbook%20Heroes/1eeb56aa-320b-4126-8e34-013ef84624bf_275x183.jpeg.webp)[The UK £2 coin](https://substackcdn.com/image/fetch/$s_!mm8K!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F1eeb56aa-320b-4126-8e34-013ef84624bf_275x183.jpeg)   The problem is that he wrote it *to Hooke* — a man who was notably short, and physically misshapen from scoliosis, and with whom Newton was engaged in a vicious priority dispute at the time. Many historians now read it not as a gesture of intellectual modesty, but as a carefully aimed insult: a reminder to Hooke that he was not, and never would be, one of the giants in question… 
+* **The Human Reality:** Newton was famously paranoid, spending decades trying to utterly destroy his rivals, Leibniz and Hooke, going so far as to allegedly burn Hooke’s only portrait when he took over the Royal Society (Westfall, 1980). But his darkest chapter came when he was appointed Warden of the Royal Mint. Newton turned into a ruthless, obsessive inquisitor (Levenson, 2010). He donned disguises, frequented the London underworld, and used psychological torture and bribery to hunt down counterfeiters. When he caught his primary target, a con-man named William Chaloner, Newton showed zero mercy, systematically ensuring Chaloner was sentenced to the gallows to be hanged, drawn, and quartered while ignoring his desperate letters begging for his life.
+
+Whilst we’re here I can’t resist a Newton story: 
+In a 1676 letter to his rival Robert Hooke, Newton wrote the famous line: “If I have seen further, it is by standing on the shoulders of giants.” It is quoted endlessly as evidence of Newton’s gracious acknowledgement of those who came before him. It’s even on some of the UK’s currency:
+![](The%20Cracked%20Mirrors%20of%20Genius%20Why%20We%20Need%20to%20Stop%20Worshiping%20Textbook%20Heroes/1eeb56aa-320b-4126-8e34-013ef84624bf_275x183.jpeg.webp)[The UK £2 coin](https://substackcdn.com/image/fetch/$s_!mm8K!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F1eeb56aa-320b-4126-8e34-013ef84624bf_275x183.jpeg)
+
+
+The problem is that he wrote it *to Hooke* — a man who was notably short, and physically misshapen from scoliosis, and with whom Newton was engaged in a vicious priority dispute at the time. Many historians now read it not as a gesture of intellectual modesty, but as a carefully aimed insult: a reminder to Hooke that he was not, and never would be, one of the giants in question…
+
 
 ⠀Albert Einstein (1879–1955)
 * **The Textbook Legacy:** Special and General Relativity, E=mc^2

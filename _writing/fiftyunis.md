@@ -1,6 +1,6 @@
 ---
 
-layout: writing-post
+layout: post
 
 title: "What Fifty Universities Told Me About Personal Statements"
 
