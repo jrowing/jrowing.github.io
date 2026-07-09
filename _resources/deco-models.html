@@ -1,21 +1,11 @@
 ---
 layout: default
-title: Deco Models Compared
-description: An interesting aside into Scuba deco models.
-is_resource: true
-type: diving
+title: Decompression Models Compared
+description: An interactive comparison of Bühlmann ZHL-16C, RGBM, VPM-B, and USN decompression models — with adjustable gradient factors and repetitive dive simulation.
+category: Sim
+tags: [diving, decompression, buhlmann, rgbm, vpm, usn, scuba, simulator, physics]
 ---
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Decompression Models Compared | jrowing.com</title>
-<meta name="description" content="An interactive comparison of Bühlmann ZHL-16C, RGBM, VPM-B, and USN decompression models — with adjustable gradient factors and repetitive dive simulation.">
 
-<!-- Google Fonts: Lora (body serif) + JetBrains Mono (code/data) + Inter (UI) -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 
 <style>
@@ -358,8 +348,14 @@ footer a:hover { text-decoration: underline; }
   .ctrl label { min-width: 140px; }
 }
 </style>
-</head>
-<body>
+
+<div class="inner-page">
+  <div class="page-header">
+    <a class="back-link" href="/resources.html">&larr; Resources</a>
+    <h1 class="post-heading">Decompression Models Compared</h1>
+    <p class="post-lede">B&uuml;hlmann ZHL-16C, RGBM, VPM-B, and the legacy USN tables &mdash; what the algorithms actually disagree about, and why it matters at depth.</p>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════
      HERO
@@ -866,5 +862,3 @@ function update(){
 document.querySelectorAll('input').forEach(e=>e.addEventListener('input',update));
 update();
 </script>
-</body>
-</html>
