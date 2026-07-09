@@ -2,8 +2,28 @@ title: Joe Rowing
 description: Educator, Physicist, Explorer
 baseurl: ""
 url: "https://jrowing.com"
+
+collections:
+  writing:
+    output: true
+    permalink: /writing/:name.html
+  resources:
+    output: true
+    permalink: /resources/:name.html
+
+defaults:
+  - scope:
+      path: ""
+      type: writing
+    values:
+      layout: post
+  - scope:
+      path: ""
+      type: resources
+    values:
+      layout: default
+
 exclude:
   - README.md
   - Gemfile
   - Gemfile.lock
-
