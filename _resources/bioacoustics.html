@@ -1,190 +1,61 @@
 ---
 layout: default
+title: Bioacoustics
+description: Automated acoustic monitoring — bat ultrasound detection on Praslin, the curious failure of BirdNET-Pi in the Seychelles, and what it produces when pointed at the Devon countryside.
+category: Field research
+tags: [bioacoustics, bats, birds, birdnet, seychelles, praslin, devon, acoustic monitoring, passive monitoring]
 ---
-<!DOCTYPE html>
-<html lang="en">
-<body>
 
-  <h1>Bioacoustics</h1>
-  <p style="font-size:17px; color:var(--ink-3); margin: 12px 0 40px; max-width: 560px; line-height:1.7;">
-    Automated acoustic monitoring — bat ultrasound detection on Praslin, the curious
-    failure of BirdNET-Pi in the Seychelles, and what it produces when pointed at the
-    Devon countryside.
-  </p>
+Automated acoustic monitoring — bat ultrasound detection on Praslin, the curious failure of BirdNET-Pi in the Seychelles, and what it produces when pointed at the Devon countryside.
 
-  <!-- Praslin bats -->
-  <div class="section-label">Bats on Praslin</div>
-  <div class="prose">
-    <p>
-      The Seychelles inner islands have a depauperate bat fauna. Of the species present,
-      only a small number echolocate in the ultrasonic range detectable by standard bat
-      detectors — the remainder are fruit bats that navigate visually and don't echolocate
-      at all. Running a heterodyne or full-spectrum detector on Praslin at dusk is a
-      sparse experience compared to a summer evening in the UK, but that sparseness is
-      itself ecologically interesting.
-    </p>
-    <p>
-      I've surveyed with a bat detector around the Vallée de Mai and along the forest
-      margins at Anse Lazio, trying to detect the few insectivorous species present. It's quiet work.
-      The sheer dominance of the Seychelles fruit bat — <em>Pteropus seychellensis</em>,
-      large enough to cast a proper shadow at dusk — makes the absence of ultrasonic
-      traffic all the more striking by contrast. I've also tried automated devices....
-    </p>
-  </div>
+## Bats on Praslin
 
-  <!-- Why BirdNET doesn't work -->
-  <div class="section-gap">
-    <div class="section-label">Why BirdNET-Pi doesn't work here</div>
-    <div class="prose">
-      <p>
-        BirdNET-Pi is an open-source system that runs the Cornell Lab of Ornithology's
-        BirdNET neural network on a Raspberry Pi with an attached microphone. It listens
-        continuously, analyses short windows of audio, and logs species detections with
-        timestamps and confidence scores. In temperate regions with well-documented avifaunas
-        it works remarkably well.
-      </p>
-      <p>
-        I tried running one on Praslin. The results were immediate and useless: the system
-        occasionally reported sparrows, robins, and blackbirds — birds that have never been
-        within several thousand kilometres of the Seychelles - but mostly reported nothing at all. The problem is a fundamental
-        one. BirdNET's training data is built overwhelmingly from recordings of European
-        and North American species. The Seychelles endemics — the Seychelles bulbul,
-        Seychelles sunbird, Seychelles blue pigeon, Seychelles warbler, and the black parrot that frequents the garden — are either absent
-        from the training corpus entirely or so underrepresented that the model pattern-matches
-        their calls to the nearest phonetically similar temperate species instead.
-      </p>
-      <div class="aside">
-        <p>
-          This isn't a criticism of BirdNET — it's an honest reflection of where the
-          world's acoustic biodiversity data comes from. Citizen science recording effort
-          is heavily concentrated in western Europe and North America. Islands like Praslin,
-          which hold some of the most evolutionarily distinct bird communities on Earth,
-          are acoustically undersampled in every major training dataset.
-        </p>
-        <p>
-          Building a model that works here would require a substantial corpus of verified
-          Seychelles recordings — a worthwhile project, and one that doesn't yet exist at
-          the scale needed.
-        </p>
-      </div>
-      <p>
-        So the BirdNET-Pi sits unused on Praslin. Instead, the data below comes from
-        running one properly — back in Devon, where it actually knows what it's listening to.
-      </p>
-    </div>
-  </div>
+The Seychelles inner islands have a depauperate bat fauna. Of the species present, only a small number echolocate in the ultrasonic range detectable by standard bat detectors — the remainder are fruit bats that navigate visually and don't echolocate at all. Running a heterodyne or full-spectrum detector on Praslin at dusk is a sparse experience compared to a summer evening in the UK, but that sparseness is itself ecologically interesting.
 
-  <!-- UK BirdNET -->
-  <div class="section-gap">
-    <div class="section-label">BirdNET-Pi — Devon, UK</div>
-    <div class="prose">
-      <p>
-        Pointed at a Devon garden and hedgerow, BirdNET-Pi accumulates thousands of
-        detections a week across the full calendar of British species — the dawn chorus
-        in spring, the thin autumn calls of redwings overhead at night, the year-round
-        background of robins and wrens. The data it produces is genuinely rich, and
-        rich data invites interesting ways of looking at it.
-      </p>
-      <p>
-       Once it's up and running, you get a lot of really useful data that you can use to analise the behaviours of birds in your local area, you can, of course do sillier things with it too...
-      </p>
-      <p>
-        Inspired by listening to Joy Division, I thought a ridgeline plot might be the
-        best way to show some of the time-of-day patterns. Here's when in the day each
-        species was detected, coloured by the average confidence of the identification.
-        Not so useful that one, but it makes it pretty.
-      </p>
-    </div>
+I've surveyed with a bat detector around the Vallée de Mai and along the forest margins at Anse Lazio, trying to detect the few insectivorous species present. It's quiet work. The sheer dominance of the Seychelles fruit bat — *Pteropus seychellensis*, large enough to cast a proper shadow at dusk — makes the absence of ultrasonic traffic all the more striking by contrast. I've also tried automated devices.
 
-    <div class="plot-block">
-      <img class="plot-img" src="/assets/img/birdnet-ridgeline.png"
-           alt="Ridgeline plot of bird detection patterns by time of day, coloured by average confidence score" />
-      <p class="plot-caption">Detection density by hour of day · coloured by mean confidence score · each ridge = one species · Devon, UK</p>
-    </div>
+## Why BirdNET-Pi doesn't work here
 
-   
+BirdNET-Pi is an open-source system that runs the Cornell Lab of Ornithology's BirdNET neural network on a Raspberry Pi with an attached microphone. It listens continuously, analyses short windows of audio, and logs species detections with timestamps and confidence scores. In temperate regions with well-documented avifaunas it works remarkably well.
 
-  <!-- Joy Division -->
-  <div class="section-gap">
-    <div class="section-label">Unknown Pleasures</div>
-    <div class="prose">
-      <p>
-        To those of us of a certain age or musical persuasion, there's more than a gentle
-        echo of the cover of Joy Division's <em>Unknown Pleasures</em> (1979) in that plot.
-        That image — one of the most iconic album artworks ever made — is starker, more
-        minimalist, and considerably more mysterious.
-      </p>
-      <p>
-        The cover is a plot of successive radio pulses from the first pulsar ever discovered,
-        CP 1919, superimposed vertically — taken from <em>Radio Observations of the Pulse
-        Profiles and Dispersion Measures of Twelve Pulsars</em> (Craft, 1970). I'm not
-        going to go into much more here, as
-        <a href="https://www.scientificamerican.com/blog/sa-visual/pop-culture-pulsar-origin-story-of-joy-division-s-unknown-pleasures-album-cover-video/"
-           target="_blank" rel="noopener">Scientific American has already done such a good job</a>.
-        The full dataset and its origin are explained there — and we can use it to recreate
-        the cover directly in R.
-      </p>
-    </div>
+I tried running one on Praslin. The results were immediate and useless: the system occasionally reported sparrows, robins, and blackbirds — birds that have never been within several thousand kilometres of the Seychelles — but mostly reported nothing at all. The problem is a fundamental one. BirdNET's training data is built overwhelmingly from recordings of European and North American species. The Seychelles endemics — the Seychelles bulbul, Seychelles sunbird, Seychelles blue pigeon, Seychelles warbler, and the black parrot that frequents the garden — are either absent from the training corpus entirely or so underrepresented that the model pattern-matches their calls to the nearest phonetically similar temperate species instead.
 
-    <div class="plot-block">
-      <img class="plot-img" src="/assets/img/cp1919-pulsar.png"
-           alt="Recreation of the Joy Division Unknown Pleasures album cover using CP 1919 pulsar data" />
-      <p class="plot-caption">CP 1919 pulsar · successive pulse profiles superimposed vertically · data: Craft (1970) · recreation of the <em>Unknown Pleasures</em> cover</p>
-    </div>
+This isn't a criticism of BirdNET — it's an honest reflection of where the world's acoustic biodiversity data comes from. Citizen science recording effort is heavily concentrated in western Europe and North America. Islands like Praslin, which hold some of the most evolutionarily distinct bird communities on Earth, are acoustically undersampled in every major training dataset.
 
-   
+Building a model that works here would require a substantial corpus of verified Seychelles recordings — a worthwhile project, and one that doesn't yet exist at the scale needed.
 
-    <div class="prose" style="margin-top: 1.8em;">
-      <p>
-        So having recreated that — let's see what the BirdNET data looks like rendered
-        in the same style. Strip out the axes, strip out the colour, render each species
-        as a density ridge on black.
-      </p>
-    </div>
+So the BirdNET-Pi sits unused on Praslin. Instead, the data below comes from running one properly — back in Devon, where it actually knows what it's listening to.
 
-    <div class="plot-block">
-      <img class="plot-img" src="/assets/img/birdnet-jd.png"
-           alt="BirdNET-Pi bird detection data rendered in the style of Joy Division's Unknown Pleasures" />
-      <p class="plot-caption">BirdNET-Pi detections by hour of day · Devon, UK · rendered in the style of <em>Unknown Pleasures</em></p>
-    </div>
+## BirdNET-Pi — Devon, UK
 
-   
+Pointed at a Devon garden and hedgerow, BirdNET-Pi accumulates thousands of detections a week across the full calendar of British species — the dawn chorus in spring, the thin autumn calls of redwings overhead at night, the year-round background of robins and wrens. The data it produces is genuinely rich, and rich data invites interesting ways of looking at it.
 
-    <div class="prose" style="margin-top: 1.6em;">
-      <p>
-        Not far off. The pulsar has sharper, more dramatic spikes — the physics of a
-        rotating neutron star producing tight, repeating pulses. The birds are smoother,
-        broader: the robin starts before dawn and tapers through the morning; the tawny
-        owl makes a narrow spike in the small hours; the wood pigeon is an unremarkable
-        broad hump around midday. Biological rhythms rather than astrophysical ones, but
-        the family resemblance is there.
-      </p>
-    </div>
-  </div>
+Once it's up and running, you get a lot of really useful data that you can use to analyse the behaviours of birds in your local area. You can, of course, do sillier things with it too.
 
-  <p style="margin-top: 3.5em; font-size: 13px; color: var(--ink-4);">
-    BirdNET-Pi data: Devon, UK · ongoing collection.
-    Bat survey: Praslin, Seychelles · Vallée de Mai and Anse Lazio forest margins.
-  </p>
-</div>
+Inspired by listening to Joy Division, I thought a ridgeline plot might be the best way to show some of the time-of-day patterns. Here's when in the day each species was detected, coloured by the average confidence of the identification.
 
-<footer class="site-footer">
-  <span class="footer-copy">© 2026 Joe Rowing</span>
-  <div class="footer-links">
-    <a href="https://www.linkedin.com/in/jrowing/" target="_blank" rel="noopener">LinkedIn</a>
-    <a href="https://jrowing.substack.com" target="_blank" rel="noopener">Substack</a>
-    <a href="https://github.com/jrowing" target="_blank" rel="noopener">GitHub</a>
-  </div>
-</footer>
+![Ridgeline plot of bird detection patterns by time of day, coloured by average confidence score](/assets/img/birdnet-ridgeline.png)
 
-<script>
-  function toggleCode(id) {
-    const block = document.getElementById(id);
-    const btn = block.previousElementSibling;
-    const isOpen = block.classList.toggle('open');
-    btn.textContent = isOpen ? 'Hide code' : 'Show code';
-  }
-</script>
+*Detection density by hour of day · coloured by mean confidence score · each ridge = one species · Devon, UK*
 
-</body>
-</html>
+## Unknown Pleasures
+
+To those of us of a certain age or musical persuasion, there's more than a gentle echo of the cover of Joy Division's *Unknown Pleasures* (1979) in that plot. That image — one of the most iconic album artworks ever made — is starker, more minimalist, and considerably more mysterious.
+
+The cover is a plot of successive radio pulses from the first pulsar ever discovered, CP 1919, superimposed vertically — taken from *Radio Observations of the Pulse Profiles and Dispersion Measures of Twelve Pulsars* (Craft, 1970). [Scientific American has already done such a good job](https://www.scientificamerican.com/blog/sa-visual/pop-culture-pulsar-origin-story-of-joy-division-s-unknown-pleasures-album-cover-video/) covering the origin of the image. The full dataset and its origin are explained there — and we can use it to recreate the cover directly in R.
+
+![Recreation of the Joy Division Unknown Pleasures album cover using CP 1919 pulsar data](/assets/img/cp1919-pulsar.png)
+
+*CP 1919 pulsar · successive pulse profiles superimposed vertically · data: Craft (1970) · recreation of the Unknown Pleasures cover*
+
+So having recreated that — let's see what the BirdNET data looks like rendered in the same style. Strip out the axes, strip out the colour, render each species as a density ridge on black.
+
+![BirdNET-Pi bird detection data rendered in the style of Joy Division's Unknown Pleasures](/assets/img/birdnet-jd.png)
+
+*BirdNET-Pi detections by hour of day · Devon, UK · rendered in the style of Unknown Pleasures*
+
+Not far off. The pulsar has sharper, more dramatic spikes — the physics of a rotating neutron star producing tight, repeating pulses. The birds are smoother, broader: the robin starts before dawn and tapers through the morning; the tawny owl makes a narrow spike in the small hours; the wood pigeon is an unremarkable broad hump around midday. Biological rhythms rather than astrophysical ones, but the family resemblance is there.
+
+---
+
+*BirdNET-Pi data: Devon, UK · ongoing collection. Bat survey: Praslin, Seychelles · Vallée de Mai and Anse Lazio forest margins.*
