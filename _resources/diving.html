@@ -1,220 +1,148 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Scuba diving — Seychelles. Dive sites, recommendations, and notes from the Indian Ocean." />
-  <title>Diving — Joe Rowing</title>
-  <link rel="stylesheet" href="/assets/css/style.css" />
-  <style>
-    .dive-section { margin-bottom: 2.4em; }
-    .dive-ops { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
-    .dive-op { border: 1px solid var(--rule); border-radius: 4px; padding: 20px 24px; }
-    .dive-op h3 { font-family: var(--tight); font-size: 16px; font-weight: 600; color: var(--ink); margin: 0 0 4px; }
-    .dive-op .op-meta { font-family: var(--mono); font-size: 11px; color: var(--ink-4); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
-    .dive-op p { font-size: 14px; color: var(--ink-3); line-height: 1.6; margin-bottom: 12px; }
-    .dive-op a { font-size: 13px; color: var(--accent); }
-    .cert-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
-    .cert { font-family: var(--mono); font-size: 11px; color: var(--ink-3); border: 1px solid var(--rule); padding: 3px 10px; border-radius: 3px; letter-spacing: 0.04em; }
-    @media (max-width: 560px) { .dive-ops { grid-template-columns: 1fr; } }
-  </style>
-</head>
-<body>
+---
+layout: default
+title: Diving
+description: Scuba diving in the Seychelles — wrecks, reef walls, and granite boulder gardens in the Indian Ocean. Notes on the best sites around Praslin and Mahé.
+category: Field research
+tags: [diving, scuba, seychelles, praslin, mahe, reef, wreck, ennerdale, booby rock]
+---
 
-<nav class="site-nav">
-  <a class="nav-logo" href="/">J. <span>Rowing</span></a>
-  <ul class="nav-links">
-    <li><a href="/#about">About</a></li>
-    <li class="nav-dropdown">
-      <a href="/resources.html">Resources</a>
-      <div class="dropdown-menu">
-        <a href="/resources/0654_coordinated_sciences_spinner.html">0654 Revision Spinner</a>
-        <a href="/resources/physics-notes.html">9702 Physics Notes</a>
-        <a href="/resources/9702_as_physics_spinner.html">9702 Revision Spinner</a>
-      </div>
-    </li>
-    <li><a href="/planner.html">Planner</a></li>
-    <li><a href="/cv.html">CV</a></li>
-    <li><a href="https://jrowing.substack.com">Substack ↗</a></li>
-  </ul>
-</nav>
+<style>
+.dive-page { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+.dive-lede { font-size: 15px; color: var(--text-secondary, #5c5c58); line-height: 1.7; margin-bottom: 1rem; }
+.dive-creds { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem; }
+.dive-cred { font-size: 11px; padding: 2px 8px; border-radius: 4px; background: var(--bg-subtle, #f7f6f3); color: var(--text-muted, #9a9992); border: 0.5px solid var(--border, rgba(0,0,0,.09)); font-family: var(--font-mono, monospace); }
+.dive-section-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent, #9a9992); font-family: var(--font-mono, monospace); margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 0.5px solid var(--border, rgba(0,0,0,.09)); }
+.dive-sites { display: flex; flex-direction: column; gap: 1px; border: 0.5px solid var(--border, rgba(0,0,0,.09)); border-radius: 12px; overflow: hidden; margin-bottom: 2.5rem; }
+.dive-site { background: var(--bg, #fff); padding: 1.25rem 1.5rem; border-bottom: 0.5px solid var(--border, rgba(0,0,0,.08)); }
+.dive-site:last-child { border-bottom: none; }
+.dive-site-header { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.5rem; }
+.dive-site-num { font-size: 11px; color: var(--accent, #9a9992); font-family: var(--font-mono, monospace); flex-shrink: 0; }
+.dive-site-name { font-size: 16px; font-weight: 500; color: var(--text-primary, #1a1a18); }
+.dive-site-coord { font-size: 11px; color: var(--text-muted, #9a9992); font-family: var(--font-mono, monospace); margin-left: auto; white-space: nowrap; }
+.dive-site-desc { font-size: 14px; color: var(--text-secondary, #5c5c58); line-height: 1.65; margin-bottom: 0.75rem; }
+.dive-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.dive-tag { font-size: 10px; padding: 2px 7px; border-radius: 4px; background: var(--bg-subtle, #f7f6f3); color: var(--text-muted, #9a9992); border: 0.5px solid var(--border, rgba(0,0,0,.08)); }
+.dive-operators { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; border: 0.5px solid var(--border, rgba(0,0,0,.09)); border-radius: 12px; overflow: hidden; margin-bottom: 2rem; }
+.dive-op { background: var(--bg, #fff); padding: 1.25rem; border-right: 0.5px solid var(--border, rgba(0,0,0,.08)); }
+.dive-op-name { font-size: 15px; font-weight: 500; color: var(--text-primary, #1a1a18); margin-bottom: 0.2rem; }
+.dive-op-loc { font-size: 11px; color: var(--accent, #9a9992); font-family: var(--font-mono, monospace); margin-bottom: 0.6rem; }
+.dive-op-desc { font-size: 13px; color: var(--text-secondary, #5c5c58); line-height: 1.6; margin-bottom: 0.75rem; }
+.dive-op-link { font-size: 12px; color: var(--text-secondary, #5c5c58); text-decoration: none; font-family: var(--font-mono, monospace); transition: color 0.15s; }
+.dive-op-link:hover { color: var(--text-primary, #1a1a18); }
+.dive-note { font-size: 12px; color: var(--text-muted, #9a9992); line-height: 1.6; margin-top: 1rem; }
+@media (max-width: 600px) { .dive-operators { grid-template-columns: 1fr; } .dive-site-coord { display: none; } }
+</style>
 
-<div class="page-wrap">
-  <a class="back-link" href="/#projects">← Projects</a>
-  <hr class="page-divider" />
+<div class="dive-page">
 
-  <p class="page-sub">Praslin · Seychelles · 4°37′S 55°27′E</p>
-  <h1>Diving</h1>
-  <p style="font-size:17px; color:var(--ink-3); margin: 12px 0 40px; max-width: 560px; line-height:1.7;">
-    Scuba diving in the Seychelles — wrecks, reef walls, and granite boulder gardens in the
-    Indian Ocean. Notes on the best sites around Praslin and Mahé, and operators worth diving with.
-  </p>
+  <p class="dive-lede">Living on Praslin puts me within twenty minutes of some of the most biodiverse reef systems in the western Indian Ocean. The granitic seabed here is unlike anywhere else &mdash; cathedral-scale boulders colonised by soft corals, patrolled by whitetip sharks and hawksbill turtles year-round. I dive recreational depths, mostly in the 12&ndash;30&thinsp;m range, with a preference for slow drift dives over reef walls and boulder gardens.</p>
 
-  <!-- About -->
-  <div class="section-label">About</div>
-  <div class="dive-section">
-    <p>
-      Living on Praslin puts me within twenty minutes of some of the most biodiverse reef systems
-      in the western Indian Ocean. The granitic seabed here is unlike anywhere else — cathedral-scale
-      boulders colonised by soft corals, patrolled by whitetip sharks and hawksbill turtles year-round.
-    </p>
-    <p>
-      I dive recreational depths, mostly in the 12–30 m range, with a preference for slow drift dives
-      over reef walls and boulder gardens. The Ennerdale wreck off Mahé is a particular favourite —
-      there's something about diving a ship that was deliberately blown apart that stays with you.
-    </p>
-    <div class="cert-row">
-      <span class="cert">PADI Open Water</span>
-      <span class="cert">PADI Advanced Open Water</span>
-      <span class="cert">Nitrox</span>
-    </div>
+  <div class="dive-creds">
+    <span class="dive-cred">PADI Open Water</span>
+    <span class="dive-cred">PADI Advanced Open Water</span>
+    <span class="dive-cred">Nitrox</span>
   </div>
 
-  <!-- Top 5 sites -->
-  <div class="section-label">Top five dive sites</div>
-  <ul class="project-list">
+  <p class="dive-section-label">Top five dive sites</p>
+  <div class="dive-sites">
 
-    <li class="project-item">
-      <span class="project-num">i.</span>
-      <div>
-        <span class="project-title">Ennerdale Wreck</span>
-        <p class="project-meta">off Mamelles Island · north-east Mahé · 4°33′S 55°28′E</p>
-        <p style="font-size:15px; color:var(--ink-3); line-height:1.65; margin-bottom:12px;">
-          A 270 m British Royal Fleet Auxiliary oil tanker that struck an unmarked pinnacle off
-          north-east Mahé in 1970. Unable to be saved, she was deliberately scuttled with explosives —
-          the charges blown with divers plucked from the water by speedboat at the last moment. Now the
-          largest wreck in the Seychelles, lying at 20–27 m and colonised by nurse sharks, giant groupers,
-          grey reef sharks, and dense schools of barracuda. The stern section, with propeller and
-          wheelhouse intact, is the highlight. An AOW dive; bottom time is short at depth.
-        </p>
-        <div class="project-tags">
-          <span class="tag">Wreck</span>
-          <span class="tag">20–27 m</span>
-          <span class="tag">Nurse sharks</span>
-          <span class="tag">Giant grouper</span>
-          <span class="tag">AOW</span>
-        </div>
+    <div class="dive-site">
+      <div class="dive-site-header">
+        <span class="dive-site-num">i.</span>
+        <span class="dive-site-name">Ennerdale Wreck</span>
+        <span class="dive-site-coord">4°33′S 55°28′E</span>
       </div>
-    </li>
-
-    <li class="project-item">
-      <span class="project-num">ii.</span>
-      <div>
-        <span class="project-title">Booby Rock</span>
-        <p class="project-meta">Seychelles · 4°18′S 55°44′E</p>
-        <p style="font-size:15px; color:var(--ink-3); line-height:1.65; margin-bottom:12px;">
-          A seamount rising from 40 m to within 8 m of the surface, roughly halfway between Mahé and
-          Praslin. Strong currents concentrate pelagics — eagle rays, whitetip and nurse sharks, and
-          occasional hammerheads. Best on a slack or gentle incoming tide.
-        </p>
-        <div class="project-tags">
-          <span class="tag">Pelagic</span>
-          <span class="tag">Current dive</span>
-          <span class="tag">Sharks</span>
-          <span class="tag">Eagle rays</span>
-        </div>
+      <p class="dive-site-desc">A 270&thinsp;m British Royal Fleet Auxiliary oil tanker that struck an unmarked pinnacle off north-east Mah&eacute; in 1970. Unable to be saved, she was deliberately scuttled with explosives &mdash; the charges blown with divers plucked from the water by speedboat at the last moment. Now the largest wreck in the Seychelles, lying at 20&ndash;27&thinsp;m and colonised by nurse sharks, giant groupers, grey reef sharks, and dense schools of barracuda. The stern section, with propeller and wheelhouse intact, is the highlight. An AOW dive; bottom time is short at depth.</p>
+      <div class="dive-tags">
+        <span class="dive-tag">Wreck</span>
+        <span class="dive-tag">20&ndash;27 m</span>
+        <span class="dive-tag">Nurse sharks</span>
+        <span class="dive-tag">Giant grouper</span>
+        <span class="dive-tag">AOW</span>
       </div>
-    </li>
-
-    <li class="project-item">
-      <span class="project-num">iii.</span>
-      <div>
-        <span class="project-title">Ave Maria</span>
-        <p class="project-meta">near Praslin · Seychelles · 4°22′S 55°42′E</p>
-        <p style="font-size:15px; color:var(--ink-3); line-height:1.65; margin-bottom:12px;">
-          A cluster of granite pinnacles covered in hard and soft corals, sitting in 18–28 m.
-          One of the most reliably productive sites near Praslin — Napoleon wrasse, moray eels,
-          lionfish, and resident hawksbill turtles on almost every dive. Sheltered enough to dive year-round.
-        </p>
-        <div class="project-tags">
-          <span class="tag">Granite pinnacles</span>
-          <span class="tag">Turtles</span>
-          <span class="tag">Year-round</span>
-          <span class="tag">18–28 m</span>
-        </div>
-      </div>
-    </li>
-
-    <li class="project-item">
-      <span class="project-num">iv.</span>
-      <div>
-        <span class="project-title">South Marianne</span>
-        <p class="project-meta">Île Marianne · Seychelles · 4°20′S 55°49′E</p>
-        <p style="font-size:15px; color:var(--ink-3); line-height:1.65; margin-bottom:12px;">
-          The southern wall of Île Marianne drops into deep blue water past boulder gardens encrusted
-          with sea fans. Remote and rarely dived — Marianne is uninhabited and requires a longer crossing
-          from Praslin, but rewards the effort with near-pristine corals and genuine solitude underwater.
-        </p>
-        <div class="project-tags">
-          <span class="tag">Wall dive</span>
-          <span class="tag">Sea fans</span>
-          <span class="tag">Remote</span>
-          <span class="tag">Pristine</span>
-        </div>
-      </div>
-    </li>
-
-    <li class="project-item">
-      <span class="project-num">v.</span>
-      <div>
-        <span class="project-title">Cousin Protected Reef</span>
-        <p class="project-meta">Cousin Island Special Reserve · Praslin · 4°20′S 55°40′E</p>
-        <p style="font-size:15px; color:var(--ink-3); line-height:1.65; margin-bottom:12px;">
-          The marine reserve surrounding Cousin Island supports one of the densest hawksbill turtle
-          populations in the Indian Ocean. Strict no-take enforcement since the 1970s means the reef
-          structure is in excellent condition — thick coral heads, abundant reef fish, and turtles
-          that have no fear of divers.
-        </p>
-        <div class="project-tags">
-          <span class="tag">Marine reserve</span>
-          <span class="tag">Hawksbill turtles</span>
-          <span class="tag">Reef</span>
-          <span class="tag">Cousin Island</span>
-        </div>
-      </div>
-    </li>
-
-  </ul>
-
-  <!-- Operators -->
-  <div class="section-label" style="margin-top:2.4em;">Recommended operators</div>
-  <div class="dive-ops">
-    <div class="dive-op">
-      <h3>Praslin Pro Divers</h3>
-      <p class="op-meta">Dive centre · Praslin</p>
-      <p>
-        Based at Anse Volbert, Praslin Pro Divers runs well-organised two-tank morning trips to the
-        best sites around Praslin and the outer islands. Knowledgeable guides, good equipment, and
-        sensible group sizes. The go-to choice for residents.
-      </p>
-      <a href="https://www.praslinprodivers.com" target="_blank" rel="noopener">praslinprodivers.com ↗</a>
     </div>
-    <div class="dive-op">
-      <h3>Whitetip Divers</h3>
-      <p class="op-meta">Dive centre · Praslin</p>
-      <p>
-        Smaller, more personal operation with excellent guides who know the granitic seabed
-        intimately. Particularly good for night dives and for reaching remoter sites like South
-        Marianne and Booby Rock on good weather days.
-      </p>
-      <a href="https://www.whitetipdivers.com" target="_blank" rel="noopener">whitetipdivers.com ↗</a>
+
+    <div class="dive-site">
+      <div class="dive-site-header">
+        <span class="dive-site-num">ii.</span>
+        <span class="dive-site-name">Booby Rock</span>
+        <span class="dive-site-coord">4°18′S 55°44′E</span>
+      </div>
+      <p class="dive-site-desc">A seamount rising from 40&thinsp;m to within 8&thinsp;m of the surface, roughly halfway between Mah&eacute; and Praslin. Strong currents concentrate pelagics &mdash; eagle rays, whitetip and nurse sharks, and occasional hammerheads. Best on a slack or gentle incoming tide.</p>
+      <div class="dive-tags">
+        <span class="dive-tag">Pelagic</span>
+        <span class="dive-tag">Current dive</span>
+        <span class="dive-tag">Sharks</span>
+        <span class="dive-tag">Eagle rays</span>
+      </div>
     </div>
+
+    <div class="dive-site">
+      <div class="dive-site-header">
+        <span class="dive-site-num">iii.</span>
+        <span class="dive-site-name">Ave Maria</span>
+        <span class="dive-site-coord">4°22′S 55°42′E</span>
+      </div>
+      <p class="dive-site-desc">A cluster of granite pinnacles covered in hard and soft corals, sitting in 18&ndash;28&thinsp;m. One of the most reliably productive sites near Praslin &mdash; Napoleon wrasse, moray eels, lionfish, and resident hawksbill turtles on almost every dive. Sheltered enough to dive year-round.</p>
+      <div class="dive-tags">
+        <span class="dive-tag">Granite pinnacles</span>
+        <span class="dive-tag">Turtles</span>
+        <span class="dive-tag">Year-round</span>
+        <span class="dive-tag">18&ndash;28 m</span>
+      </div>
+    </div>
+
+    <div class="dive-site">
+      <div class="dive-site-header">
+        <span class="dive-site-num">iv.</span>
+        <span class="dive-site-name">South Marianne</span>
+        <span class="dive-site-coord">4°20′S 55°49′E</span>
+      </div>
+      <p class="dive-site-desc">The southern wall of &Icirc;le Marianne drops into deep blue water past boulder gardens encrusted with sea fans. Remote and rarely dived &mdash; Marianne is uninhabited and requires a longer crossing from Praslin, but rewards the effort with near-pristine corals and genuine solitude underwater.</p>
+      <div class="dive-tags">
+        <span class="dive-tag">Wall dive</span>
+        <span class="dive-tag">Sea fans</span>
+        <span class="dive-tag">Remote</span>
+        <span class="dive-tag">Pristine</span>
+      </div>
+    </div>
+
+    <div class="dive-site">
+      <div class="dive-site-header">
+        <span class="dive-site-num">v.</span>
+        <span class="dive-site-name">Cousin Protected Reef</span>
+        <span class="dive-site-coord">4°20′S 55°40′E</span>
+      </div>
+      <p class="dive-site-desc">The marine reserve surrounding Cousin Island supports one of the densest hawksbill turtle populations in the Indian Ocean. Strict no-take enforcement since the 1970s means the reef structure is in excellent condition &mdash; thick coral heads, abundant reef fish, and turtles that have no fear of divers.</p>
+      <div class="dive-tags">
+        <span class="dive-tag">Marine reserve</span>
+        <span class="dive-tag">Hawksbill turtles</span>
+        <span class="dive-tag">Reef</span>
+        <span class="dive-tag">Cousin Island</span>
+      </div>
+    </div>
+
   </div>
 
-  <p style="margin-top:3em; font-size:13px; color:var(--ink-4);">
-    Site conditions, operators, and access change — always check current information before planning
-    a dive trip. Coordinates are approximate.
-  </p>
+  <p class="dive-section-label">Recommended operators</p>
+  <div class="dive-operators">
+
+    <div class="dive-op">
+      <p class="dive-op-name">Praslin Pro Divers</p>
+      <p class="dive-op-loc">Dive centre &middot; Praslin</p>
+      <p class="dive-op-desc">Based at Anse Volbert, Praslin Pro Divers runs well-organised two-tank morning trips to the best sites around Praslin and the outer islands. Knowledgeable guides, good equipment, and sensible group sizes.</p>
+      <a class="dive-op-link" href="https://www.praslinprodivers.com">praslinprodivers.com &nearr;</a>
+    </div>
+
+    <div class="dive-op">
+      <p class="dive-op-name">Whitetip Divers</p>
+      <p class="dive-op-loc">Dive centre &middot; Praslin</p>
+      <p class="dive-op-desc">Smaller, more personal operation with excellent guides who know the granitic seabed intimately. Particularly good for night dives and for reaching remoter sites like South Marianne and Booby Rock on good weather days.</p>
+      <a class="dive-op-link" href="https://www.whitetipdivers.com">whitetipdivers.com &nearr;</a>
+    </div>
+
+  </div>
+
+  <p class="dive-note">Site conditions, operators, and access change &mdash; always check current information before planning a dive trip. Coordinates are approximate.</p>
+
 </div>
-
-<footer class="site-footer">
-  <span class="footer-copy">© 2026 Joe Rowing</span>
-  <div class="footer-links">
-    <a href="https://www.linkedin.com/in/jrowing/" target="_blank" rel="noopener">LinkedIn</a>
-    <a href="https://jrowing.substack.com" target="_blank" rel="noopener">Substack</a>
-    <a href="https://github.com/jrowing" target="_blank" rel="noopener">GitHub</a>
-  </div>
-</footer>
-
-</body>
-</html>
