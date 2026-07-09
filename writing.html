@@ -5,55 +5,55 @@ description: Essays and explainers on physics, teaching, and the occasional deep
 ---
 
 <style>
-.jr-page { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-.jr-back { font-size: 12px; color: #9a9992; text-decoration: none; display: inline-block; margin-bottom: 1.5rem; font-family: monospace; }
-.jr-back:hover { color: #5c5c58; }
-.jr-h1 { font-family: 'Lora', Georgia, serif; font-size: clamp(28px,5vw,40px); font-weight: 400; line-height: 1.1; letter-spacing: -.02em; margin-bottom: .4rem; }
-.jr-rule { border: none; border-top: 1px solid rgba(0,0,0,.09); margin: 0 0 1.5rem; }
-.jr-desc { font-size: 15px; color: #5c5c58; line-height: 1.6; margin-bottom: 2rem; }
-.jr-search { width: 100%; font-size: 14px; padding: .6rem .9rem; border: 1px solid rgba(0,0,0,.12); border-radius: 8px; margin-bottom: 1.5rem; outline: none; background: #f7f6f3; color: inherit; font-family: inherit; box-sizing: border-box; -webkit-appearance: none; }
-.jr-search:focus { border-color: rgba(0,0,0,.25); }
-.jr-grid { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important; gap: 1px !important; border: 1px solid rgba(0,0,0,.09) !important; border-radius: 12px !important; overflow: hidden !important; }
-.jr-card { display: flex !important; flex-direction: column !important; gap: .35rem !important; padding: 1.25rem !important; background: #fff !important; text-decoration: none !important; border-right: 1px solid rgba(0,0,0,.08) !important; border-bottom: 1px solid rgba(0,0,0,.08) !important; min-height: 120px !important; transition: background .15s !important; box-sizing: border-box !important; }
-.jr-card:hover { background: #f7f6f3 !important; text-decoration: none !important; }
-.jr-tag { font-size: 10px !important; letter-spacing: .06em !important; padding: 2px 7px !important; border-radius: 4px !important; background: #f0efe9 !important; color: #9a9992 !important; border: 1px solid rgba(0,0,0,.08) !important; align-self: flex-start !important; font-family: monospace !important; display: inline-block !important; text-decoration: none !important; }
-.jr-title { font-family: 'Lora', Georgia, serif !important; font-size: 15px !important; font-weight: 400 !important; color: #1a1a18 !important; line-height: 1.35 !important; display: block !important; text-decoration: none !important; margin: 0 !important; }
-.jr-excerpt { font-size: 12px !important; color: #5c5c58 !important; line-height: 1.55 !important; margin-top: auto !important; padding-top: .3rem !important; display: block !important; text-decoration: none !important; }
-.jr-empty { font-size: 14px; color: #9a9992; padding: 1.5rem 0; font-family: monospace; }
-@media (max-width: 600px) { .jr-grid { grid-template-columns: 1fr !important; } }
+.search-bar-wrap { margin-bottom: 1.75rem; }
+.search-bar { width: 100%; font-family: var(--font-sans); font-size: 14px; color: var(--text-primary); background: var(--bg-card, var(--bg-subtle)); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 0.6rem 0.9rem; outline: none; transition: border-color 0.15s; -webkit-appearance: none; box-sizing: border-box; }
+.search-bar::placeholder { color: var(--text-muted); }
+.search-bar:focus { border-color: var(--border-strong); }
+.resource-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1px; border: 0.5px solid var(--border); border-radius: 12px; overflow: hidden; }
+.rcard { background: var(--bg); padding: 1.25rem; text-decoration: none; display: flex; flex-direction: column; gap: 0.4rem; border-right: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); transition: background 0.15s; min-height: 120px; }
+.rcard:hover { background: var(--bg-subtle); }
+.rcard-tag { font-size: 10px; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 4px; background: var(--bg-subtle); color: var(--accent); border: 0.5px solid var(--border); align-self: flex-start; font-family: var(--font-mono); }
+.rcard-title { font-family: var(--font-voice); font-size: 15px; font-weight: 400; color: var(--text-primary); line-height: 1.35; }
+.rcard-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.55; margin-top: auto; padding-top: 0.4rem; }
+.search-empty { font-size: 14px; color: var(--text-muted); padding: 1.5rem 0; font-family: var(--font-mono); }
+@media (max-width: 600px) { .resource-grid { grid-template-columns: 1fr; } }
 </style>
 
-<div class="jr-page">
-  <a class="jr-back" href="/">← jrowing.com</a>
-  <h1 class="jr-h1">Writing</h1>
-  <hr class="jr-rule">
-  <p class="jr-desc">Essays and explainers on physics, teaching, and the occasional deep dive.</p>
+<div class="inner-page">
+  <div class="page-header">
+    <a class="back-link" href="{{ '/' | relative_url }}">&larr; jrowing.com</a>
+    <h1 class="page-title">Writing</h1>
+    <p class="page-desc">Essays and explainers on physics, teaching, and the occasional deep dive.</p>
+  </div>
 
-  <input class="jr-search" id="jr-search" type="search" placeholder="Search writing…" autocomplete="off">
+  <div class="search-bar-wrap">
+    <input class="search-bar" id="wr-search" type="search" placeholder="Search writing…" autocomplete="off">
+  </div>
 
-  <div class="jr-grid" id="jr-grid">
-    {% assign pieces = site.writing | sort: 'date' | reverse %}
-    {% for piece in pieces %}
-    <a class="jr-card" href="{{ piece.url | relative_url }}" data-tags="{{ piece.tags | join: ' ' }}">
-      <span class="jr-tag">{{ piece.date | date: "%b %Y" }}</span>
-      <span class="jr-title">{{ piece.title }}</span>
+  <div class="resource-grid" id="wr-grid">
+    {% assign sorted_writing = site.writing | sort: 'date' | reverse %}
+    {% for piece in sorted_writing %}
+    <a class="rcard" href="{{ piece.url | relative_url }}"
+       data-tags="{{ piece.tags | join: ' ' }}">
+      <span class="rcard-tag">{{ piece.date | date: "%b %Y" }}</span>
+      <span class="rcard-title">{{ piece.title }}</span>
       {% if piece.description %}
-        <span class="jr-excerpt">{{ piece.description }}</span>
+        <span class="rcard-desc">{{ piece.description }}</span>
       {% elsif piece['meta-description'] %}
-        <span class="jr-excerpt">{{ piece['meta-description'] }}</span>
+        <span class="rcard-desc">{{ piece['meta-description'] }}</span>
       {% endif %}
     </a>
     {% endfor %}
   </div>
 
-  <p class="jr-empty" id="jr-empty" style="display:none;">No posts match that search.</p>
+  <p class="search-empty" id="wr-empty" style="display:none;">No posts match that search.</p>
 </div>
 
 <script>
 (function(){
-  var inp = document.getElementById('jr-search');
-  var cards = document.querySelectorAll('#jr-grid .jr-card');
-  var empty = document.getElementById('jr-empty');
+  var inp = document.getElementById('wr-search');
+  var cards = document.querySelectorAll('#wr-grid .rcard');
+  var empty = document.getElementById('wr-empty');
   if (!inp) return;
   inp.addEventListener('input', function(){
     var q = this.value.toLowerCase().trim();
