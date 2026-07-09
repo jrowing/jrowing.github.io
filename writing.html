@@ -1,13 +1,15 @@
 ---
 layout: default
 title: Writing — Joe Rowing
+description: Essays and explainers on physics, teaching, and the occasional deep dive.
 ---
 
 <style>
-.jr-page { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; font-family: -apple-system, 'Inter', sans-serif; }
+.jr-page { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
 .jr-back { font-size: 12px; color: #9a9992; text-decoration: none; display: inline-block; margin-bottom: 1.5rem; font-family: monospace; }
 .jr-back:hover { color: #5c5c58; }
-.jr-h1 { font-family: 'Lora', Georgia, serif; font-size: clamp(28px,5vw,40px); font-weight: 400; line-height: 1.1; letter-spacing: -.02em; margin-bottom: .4rem; color: inherit; }
+.jr-h1 { font-family: 'Lora', Georgia, serif; font-size: clamp(28px,5vw,40px); font-weight: 400; line-height: 1.1; letter-spacing: -.02em; margin-bottom: .4rem; }
+.jr-rule { border: none; border-top: 1px solid rgba(0,0,0,.09); margin: 0 0 1.5rem; }
 .jr-desc { font-size: 15px; color: #5c5c58; line-height: 1.6; margin-bottom: 2rem; }
 .jr-search { width: 100%; font-size: 14px; padding: .6rem .9rem; border: 1px solid rgba(0,0,0,.12); border-radius: 8px; margin-bottom: 1.5rem; outline: none; background: #f7f6f3; color: inherit; font-family: inherit; box-sizing: border-box; -webkit-appearance: none; }
 .jr-search:focus { border-color: rgba(0,0,0,.25); }
@@ -18,12 +20,11 @@ title: Writing — Joe Rowing
 .jr-title { font-family: 'Lora', Georgia, serif !important; font-size: 15px !important; font-weight: 400 !important; color: #1a1a18 !important; line-height: 1.35 !important; display: block !important; text-decoration: none !important; margin: 0 !important; }
 .jr-excerpt { font-size: 12px !important; color: #5c5c58 !important; line-height: 1.55 !important; margin-top: auto !important; padding-top: .3rem !important; display: block !important; text-decoration: none !important; }
 .jr-empty { font-size: 14px; color: #9a9992; padding: 1.5rem 0; font-family: monospace; }
-hr.jr-rule { border: none; border-top: 1px solid rgba(0,0,0,.09); margin: 0 0 2rem; }
 @media (max-width: 600px) { .jr-grid { grid-template-columns: 1fr !important; } }
 </style>
 
 <div class="jr-page">
-  <a class="jr-back" href="https://www.jrowing.com/">← jrowing.com</a>
+  <a class="jr-back" href="/">← jrowing.com</a>
   <h1 class="jr-h1">Writing</h1>
   <hr class="jr-rule">
   <p class="jr-desc">Essays and explainers on physics, teaching, and the occasional deep dive.</p>
@@ -31,28 +32,18 @@ hr.jr-rule { border: none; border-top: 1px solid rgba(0,0,0,.09); margin: 0 0 2r
   <input class="jr-search" id="jr-search" type="search" placeholder="Search writing…" autocomplete="off">
 
   <div class="jr-grid" id="jr-grid">
-
-    <a class="jr-card" href="https://www.jrowing.com/writing/fiftyunis.html"
-       data-tags="university personal statement ucas maths physics computer science admissions">
-      <span class="jr-tag">Jul 2026</span>
-      <span class="jr-title">What Fifty Universities Told Me About Personal Statements</span>
-      <span class="jr-excerpt">A real answer to the question every student is asking, for Maths, Physics, and Computer Science.</span>
+    {% assign pieces = site.writing | sort: 'date' | reverse %}
+    {% for piece in pieces %}
+    <a class="jr-card" href="{{ piece.url | relative_url }}" data-tags="{{ piece.tags | join: ' ' }}">
+      <span class="jr-tag">{{ piece.date | date: "%b %Y" }}</span>
+      <span class="jr-title">{{ piece.title }}</span>
+      {% if piece.description %}
+        <span class="jr-excerpt">{{ piece.description }}</span>
+      {% elsif piece['meta-description'] %}
+        <span class="jr-excerpt">{{ piece['meta-description'] }}</span>
+      {% endif %}
     </a>
-
-    <a class="jr-card" href="https://www.jrowing.com/writing/The%20Cracked%20Mirrors%20of%20Genius%20Why%20We%20Need%20to%20Stop%20Worshiping%20Textbook%20Heroes.html"
-       data-tags="history scientists genius ethics schrodinger newton millikan eugenics">
-      <span class="jr-tag">Jul 2026</span>
-      <span class="jr-title">The Cracked Mirrors of Genius</span>
-      <span class="jr-excerpt">From Schrödinger's diaries to Newton's gallows — the dark human realities behind history's greatest equations.</span>
-    </a>
-
-    <a class="jr-card" href="https://www.jrowing.com/writing/181771426.teaching-radioactivity-with-or-without.html"
-       data-tags="radioactivity teaching physics nuclear gcse magic">
-      <span class="jr-tag">Jan 2026</span>
-      <span class="jr-title">Teaching Radioactivity (with or without the resources)</span>
-      <span class="jr-excerpt">Episode 1: why radioactivity is magic.</span>
-    </a>
-
+    {% endfor %}
   </div>
 
   <p class="jr-empty" id="jr-empty" style="display:none;">No posts match that search.</p>
@@ -68,8 +59,7 @@ hr.jr-rule { border: none; border-top: 1px solid rgba(0,0,0,.09); margin: 0 0 2r
     var q = this.value.toLowerCase().trim();
     var vis = 0;
     cards.forEach(function(c){
-      var hay = (c.textContent + ' ' + (c.dataset.tags||'')).toLowerCase();
-      var show = !q || hay.includes(q);
+      var show = !q || (c.textContent + ' ' + (c.dataset.tags||'')).toLowerCase().includes(q);
       c.style.display = show ? '' : 'none';
       if (show) vis++;
     });
