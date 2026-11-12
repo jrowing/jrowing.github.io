@@ -1,16 +1,10 @@
 ---
 layout: default
-title: Fieldbook
-description: A distraction-free markdown notebook with wikilink support, force-directed graph view, and offline operation. Runs entirely in the browser.
+title: "Fieldbook"
+description: "A distraction-free markdown notebook with wikilink support, force-directed graph view, and offline operation. Runs entirely in the browser."
 category: Tool
 tags: [fieldbook, markdown, notebook, wikilinks, graph, offline, tool]
 ---
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fieldbook — non-linear markdown notebook</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
@@ -144,8 +138,6 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);font-size:
 ::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:5px}
 ::-webkit-scrollbar-track{background:transparent}
 </style>
-</head>
-<body>
 <div id="app">
   <aside id="sidebar">
     <div id="brand"><h1>field<span>book</span></h1></div>
@@ -1008,5 +1000,3 @@ function notify(msg){
   if(!FS_OK) notify('Heads-up: saving to disk needs Chrome or Edge. Demo mode only in this browser.');
 })();
 </script>
-</body>
-</html>

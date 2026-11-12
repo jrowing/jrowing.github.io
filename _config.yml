@@ -3,6 +3,9 @@ description: Educator, Physicist, Explorer
 baseurl: ""
 url: "https://jrowing.com"
 
+plugins:
+  - jekyll-redirect-from
+
 collections:
   writing:
     output: true
@@ -27,3 +30,6 @@ exclude:
   - README.md
   - Gemfile
   - Gemfile.lock
+  - .quarto
+  - .Rproj.user
+  - "*.Rproj"

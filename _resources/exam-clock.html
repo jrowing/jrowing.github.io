@@ -1,16 +1,12 @@
 ---
 layout: default
-title: Assessment Timer
-description: Assessment timer showing the current time, time remaining and automatic +25% extra time.
-permalink: /exam-clock/
-category: Toys
+title: "Assessment Timer"
+description: "Assessment timer showing the current time, time remaining and automatic +25% extra time."
+category: Tool
+tags: [exam, timer, clock, assessment, extra time]
+redirect_from:
+  - /exam-clock/
 ---
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Assessment timer</title>
 <style>
   :root {
     --bg: #fafaf8; --text: #14181c; --muted: #7a848e; --line: #e3e5e6;
@@ -84,8 +80,6 @@ category: Toys
   #hint { display: none; text-align: center; font-size: .7rem; color: var(--muted); opacity: .6; }
   body.hidden #hint { display: block; }
 </style>
-</head>
-<body>
   <header>
     <div id="title">Assessment timer</div>
     <div id="clockwrap">
@@ -347,5 +341,3 @@ category: Toys
   applyTheme(); render(); setInterval(render, 250);
 })();
 </script>
-</body>
-</html>

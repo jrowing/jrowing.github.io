@@ -1,14 +1,11 @@
 ---
 layout: post
-
 title: "Teaching Radioactivity (with or without the resources)"
-
 description: "Episode 1, why radioactivity is magic..."
-
+tags: [radioactivity, teaching, physics]
 date: 2026-01-06
-
-is_writing: true
-
+redirect_from:
+  - /writing/181771426.teaching-radioactivity-with-or-without.html
 ---
 
 *Episode 1, why radioactivity is magic...*
@@ -23,7 +20,7 @@ The origin of this post is almost lost in the mists of time. Years ago, I began 
 
 It's the kind of magic any self-respecting wizard-physicist would approve of: unpredictable at the micro level, but completely reliable when you scale up. You don't need Harry Potter or the Philosopher's Stone to find magic — it's all around you in physics.
 
-![](../images/e87337dc-d26e-4d9c-9446-cd43d48cbc1e_500x500.webp)
+![](/images/e87337dc-d26e-4d9c-9446-cd43d48cbc1e_500x500.webp)
 
 ## Magic at the Microscale
 
@@ -60,7 +57,7 @@ Radioactivity and the Philosopher's Stone share a curious similarity: mystery at
 
 Of course, the analogy has limits. Radioactivity is **empirically testable, quantitatively predictable, and universally consistent**. The Philosopher's Stone is **fictional and constrained by plot**.
 
-![](../images/2ba4e6fc-f5ad-47aa-a70c-58234fb50378_1530x600.webp)
+![](/images/2ba4e6fc-f5ad-47aa-a70c-58234fb50378_1530x600.webp)
 
 > In short: radioactivity isn't "magic we don't understand" — it's physics governed by probabilistic rules rather than mechanical ones.
 
@@ -74,7 +71,7 @@ Because radiation is invisible, it is often feared — and misunderstandings abo
 
 Here're a few key terms to get straight in your head before launching into teaching:
 
-![](../images/de29eeee-d7eb-47af-a061-7e7ec058948c_819x520.webp)
+![](/images/de29eeee-d7eb-47af-a061-7e7ec058948c_819x520.webp)
 
 ## Radioactivity All Around You
 
@@ -87,7 +84,7 @@ As I mention, you might be surprised how common it is:
 
 This is the background map of the uk due to radon gas:
 
-![](../images/e1c7d29a-f773-4317-ad03-5b39f88ce6d8_410x513.webp)
+![](/images/e1c7d29a-f773-4317-ad03-5b39f88ce6d8_410x513.webp)
 
 You can see that some areas are more active than others. Even the very active bits are nothing compared to the more radioactive places on Earth:
 
@@ -105,4 +102,4 @@ In short, **activity measures the source**, while **exposure measures what you a
 
 As always, there's a great XKCD that gives us context;
 
-![](../images/54b684a7-408e-4abe-9629-5ac365dc1e86_1134x1333.webp)
+![](/images/54b684a7-408e-4abe-9629-5ac365dc1e86_1134x1333.webp)

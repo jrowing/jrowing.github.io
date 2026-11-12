@@ -1,15 +1,11 @@
 ---
-
 layout: post
-
 title: "What Fifty Universities Told Me About Personal Statements"
-
 description: "A real answer to the question every student is asking, for Maths, Physics, and Computer Science."
-
+tags: [university admissions, personal statements, physics, maths, computer science]
 date: 2026-07-06
-
-is_writing: true
-
+redirect_from:
+  - /writing/fiftyunis.html
 ---
 ### A real answer to the question every student is asking, for Maths, Physics, and Computer Science
 

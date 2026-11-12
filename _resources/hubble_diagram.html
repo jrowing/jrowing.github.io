@@ -1,18 +1,11 @@
 ---
 layout: default
-title: Hubble Plot
-is_resource: true
-description: Hubble's data plotted, along with a slider to add in more modern data!.
-type: simulation
+title: "Hubble Plot"
+description: "Hubble's data plotted, along with a slider to add in more modern data."
+category: Sim
+tags: [astronomy, cosmology, hubble, expansion, simulation]
 date: 2026-07-09
-type: simulation
 ---
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Hubble Diagram</title>
 <style>
   :root {
     --ink: #1a1816;
@@ -168,9 +161,6 @@ type: simulation
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-</head>
-<body>
-
 <button class="mode-btn" id="btnTheme" onclick="toggleTheme()" style="position:fixed;top:1rem;right:1rem;z-index:100;">☀ Light</button>
 
 <div class="page-header">
@@ -607,5 +597,3 @@ revealExact = 0;
 updateHeader();
 draw();
 </script>
-</body>
-</html>
