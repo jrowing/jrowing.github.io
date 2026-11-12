@@ -276,7 +276,7 @@ footer { border-top: 0.5px solid var(--border); }
   padding: 4rem 2rem 3rem;
   border-bottom: 0.5px solid var(--border);
   display: grid;
-  grid-template-columns: 1fr 280px;
+  grid-template-columns: 1fr;
   gap: 3rem;
   align-items: start;
   max-width: var(--max-w);
@@ -350,58 +350,6 @@ footer { border-top: 0.5px solid var(--border); }
   border-color: var(--border-strong);
   color: var(--text-primary);
 }
-
-/* ─── Home: latest card ───────────────────────────────────────────────────── */
-
-.latest-card {
-  background: var(--bg-card);
-  border: 0.5px solid var(--border);
-  border-radius: 12px;
-  padding: 1.25rem;
-}
-
-.latest-label {
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 0.75rem;
-  font-family: var(--font-mono);
-}
-
-.latest-title {
-  font-family: var(--font-voice);
-  font-size: 15px;
-  line-height: 1.45;
-  color: var(--text-primary);
-  text-decoration: none;
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.latest-title:hover { text-decoration: underline; }
-
-.latest-date {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-bottom: 0.75rem;
-  font-family: var(--font-mono);
-}
-
-.latest-desc {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.6;
-  margin-bottom: 1rem;
-}
-
-.latest-link {
-  font-size: 12px;
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.latest-link:hover { color: var(--text-primary); }
 
 /* ─── Home: projects grid ─────────────────────────────────────────────────── */
 

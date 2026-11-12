@@ -26,24 +26,8 @@
       <a class="cta-primary" href="#projects">Projects</a>
       <a class="cta-secondary" href="{{ '/resources.html' | relative_url }}">Resources</a>
       <a class="cta-secondary" href="{{ '/cv.html' | relative_url }}">CV</a>
+      <a class="cta-secondary" id="random-link" href="{{ '/resources.html' | relative_url }}" title="Jump to a random resource or piece of writing">Random &#8599;</a>
     </div>
-  </div>
-
-  <div class="latest-card">
-    <p class="latest-label">Latest writing</p>
-    {% assign latest = site.posts.first %}
-    {% if latest %}
-      <a class="latest-title" href="{{ latest.url | relative_url }}">{{ latest.title }}</a>
-      <p class="latest-date">{{ latest.date | date: "%-d %B %Y" }}</p>
-      {% if latest.excerpt %}
-        <p class="latest-desc">{{ latest.excerpt | strip_html | truncatewords: 30 }}</p>
-      {% endif %}
-      <a class="latest-link" href="{{ latest.url | relative_url }}">Read &rarr;</a>
-    {% else %}
-      <a class="latest-title" href="{{ '/writing.html' | relative_url }}">Notes from the science lab</a>
-      <p class="latest-desc">Writing on physics education, field science, and life in the Indian Ocean.</p>
-      <a class="latest-link" href="{{ '/writing.html' | relative_url }}">All writing &rarr;</a>
-    {% endif %}
   </div>
 </div>
 
@@ -98,6 +82,21 @@
     html.setAttribute('data-theme', next);
     localStorage.setItem('theme', next);
   });
+</script>
+
+<script>
+  // "Random" button: jump to a random resource or article. Falls back to /resources.html without JS.
+  (function () {
+    var pages = [
+      {% assign all_pages = site.resources | concat: site.writing %}{% for p in all_pages %}{{ p.url | relative_url | jsonify }}{% unless forloop.last %},{% endunless %}{% endfor %}
+    ];
+    var link = document.getElementById('random-link');
+    if (!link || !pages.length) return;
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      window.location.href = pages[Math.floor(Math.random() * pages.length)];
+    });
+  })();
 </script>
 
 </body>
