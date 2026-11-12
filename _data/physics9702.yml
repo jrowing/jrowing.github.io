@@ -1,0 +1,47 @@
+# Topic list for /9702.html. To add a topic: copy its six files into assets/9702/ and add a line here.
+stats:
+  topics: 28
+  notes: 112
+  slides: 55
+
+groups:
+  - name: "Mechanics"
+    topics:
+      - { slug: physical-quantities, title: "Physical Quantities", pages: 7, pptx: true }
+      - { slug: kinematics, title: "Kinematics", pages: 15, pptx: true }
+      - { slug: newton-laws, title: "Force and Motion", pages: 13, pptx: true }
+      - { slug: momentum, title: "Momentum", pages: 7, pptx: true }
+      - { slug: work-energy, title: "Work and Energy", pages: 9, pptx: true }
+      - { slug: equilibrium, title: "Mechanical Equilibrium", pages: 8, pptx: true }
+      - { slug: circular-motion, title: "Circular Motion", pages: 8, pptx: true }
+      - { slug: gravitation, title: "Gravitational Fields", pages: 11, pptx: true }
+      - { slug: oscillation, title: "Oscillations", pages: 10, pptx: true }
+  - name: "Matter and thermal physics"
+    topics:
+      - { slug: solids, title: "Solids", pages: 9, pptx: true }
+      - { slug: fluids, title: "Fluids", pages: 5, pptx: true }
+      - { slug: thermal-physics, title: "Thermal Physics", pages: 10, pptx: true }
+      - { slug: ideal-gases, title: "Ideal Gases", pages: 13, pptx: true }
+  - name: "Waves"
+    topics:
+      - { slug: waves, title: "Waves", pages: 9, pptx: true }
+      - { slug: superposition, title: "Superposition", pages: 11, pptx: true }
+  - name: "Electricity and electronics"
+    topics:
+      - { slug: electrical-quantities, title: "Electrical Quantities", pages: 9, pptx: true }
+      - { slug: current, title: "Current Electricity", pages: 9, pptx: true }
+      - { slug: coulomb-law, title: "Electrostatics", pages: 13, pptx: true }
+      - { slug: electrostatics, title: "Electric Fields", pages: 5, pptx: false }
+      - { slug: capacitance, title: "Capacitors", pages: 9, pptx: true }
+      - { slug: electronics, title: "Electronics", pages: 4, pptx: true }
+  - name: "Magnetism and induction"
+    topics:
+      - { slug: magnetic-fields, title: "Magnetic Fields", pages: 15, pptx: true }
+      - { slug: electromagnetic-induction, title: "Electromagnetic Induction", pages: 7, pptx: true }
+      - { slug: alternating-currents, title: "Alternating Currents", pages: 9, pptx: true }
+  - name: "Modern and applied physics"
+    topics:
+      - { slug: quantum-physics, title: "Quantum Physics", pages: 16, pptx: true }
+      - { slug: nuclear-physics, title: "Nuclear Physics", pages: 12, pptx: true }
+      - { slug: medical-imaging, title: "Medical Imaging", pages: 13, pptx: true }
+      - { slug: telecommunication, title: "Telecommunication", pages: 13, pptx: true }

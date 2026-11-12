@@ -1,0 +1,144 @@
+---
+layout: default
+title: 9702 Physics — Guided Notes & Slides — Joe Rowing
+description: A complete set of guided notes, teacher keys and slides for Cambridge International AS & A Level Physics 9702 — 28 topics.
+---
+
+<style>
+.nine-lede { font-family: var(--font-voice); font-size: 17px; line-height: 1.7; color: var(--text-secondary); max-width: 44rem; margin: 0 0 1.75rem; }
+.nine-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1px; border: 0.5px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 2.5rem; background: var(--border); }
+.nine-stat { background: var(--bg); padding: 1rem 1.25rem; }
+.nine-stat-num { display: block; font-family: var(--font-voice); font-size: 26px; line-height: 1.1; color: var(--text-primary); }
+.nine-stat-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; color: var(--text-muted); }
+.nine-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin: 2.5rem 0 0.9rem; }
+.nine-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; border: 0.5px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--border); }
+.nine-card { background: var(--bg); padding: 1.15rem 1.25rem; }
+.nine-card h3 { font-size: 14px; font-weight: 500; color: var(--text-primary); margin: 0 0 0.4rem; }
+.nine-card p { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin: 0; }
+.nine-how { font-size: 14px; line-height: 1.7; color: var(--text-secondary); max-width: 44rem; }
+.nine-how p { margin: 0 0 0.9rem; }
+.nine-search { width: 100%; box-sizing: border-box; font-family: var(--font-sans); font-size: 14px; color: var(--text-primary); background: var(--bg-card, var(--bg-subtle)); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 0.6rem 0.9rem; outline: none; -webkit-appearance: none; margin-bottom: 1.5rem; }
+.nine-search:focus { border-color: var(--border-strong); }
+.nine-group { margin-bottom: 1.75rem; }
+.nine-group-name { font-family: var(--font-voice); font-size: 19px; font-weight: 400; color: var(--text-primary); margin: 0 0 0.6rem; }
+.nine-table { border: 0.5px solid var(--border); border-radius: 12px; overflow: hidden; }
+.nine-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 0.5rem 1rem; align-items: center; padding: 0.7rem 1.1rem; border-bottom: 0.5px solid var(--border); font-size: 13px; }
+.nine-row:last-child { border-bottom: none; }
+.nine-row--head { background: var(--bg-subtle); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+.nine-topic { color: var(--text-primary); font-size: 14px; }
+.nine-topic small { display: block; font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.nine-links { display: flex; gap: 6px; flex-wrap: wrap; }
+.nine-links a, .nine-links span { font-family: var(--font-mono); font-size: 11px; padding: 2px 8px; border-radius: 4px; border: 0.5px solid var(--border); text-decoration: none; }
+.nine-links a { background: var(--bg-subtle); color: var(--accent); }
+.nine-links a:hover { border-color: var(--border-strong); color: var(--text-primary); }
+.nine-links span { color: var(--text-muted); opacity: 0.6; }
+.nine-related { display: flex; flex-direction: column; gap: 1px; border: 0.5px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--border); }
+.nine-related a { background: var(--bg); padding: 0.9rem 1.25rem; text-decoration: none; display: flex; gap: 0.75rem; align-items: baseline; font-size: 14px; color: var(--text-primary); }
+.nine-related a:hover { background: var(--bg-subtle); }
+.nine-related small { color: var(--text-muted); font-size: 12px; }
+.nine-empty { font-family: var(--font-mono); font-size: 14px; color: var(--text-muted); padding: 1rem 0; }
+@media (max-width: 700px) {
+  .nine-row { grid-template-columns: 1fr; }
+  .nine-row--head { display: none; }
+  .nine-links::before { content: attr(data-label); width: 100%; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+}
+</style>
+
+{% assign base = '/assets/9702/' | relative_url %}
+
+<div class="inner-page">
+  <div class="page-header">
+    <h1 class="page-title">9702 <em>Physics</em></h1>
+    <p class="page-desc">Guided notes, teacher keys and slides &middot; Cambridge International AS &amp; A Level</p>
+  </div>
+
+  <p class="nine-lede">A complete set of teaching materials for Cambridge International AS &amp; A Level Physics (9702): the version I teach from at Vijay International School Praslin. Every topic comes as fill-in-the-gaps guided notes, a worked teacher key, and a slide deck to teach it with.</p>
+
+  <div class="nine-stats">
+    <div class="nine-stat"><span class="nine-stat-num">{{ site.data.physics9702.stats.topics }}</span><span class="nine-stat-label">topics</span></div>
+    <div class="nine-stat"><span class="nine-stat-num">{{ site.data.physics9702.stats.notes }}</span><span class="nine-stat-label">guided-notes PDFs</span></div>
+    <div class="nine-stat"><span class="nine-stat-num">{{ site.data.physics9702.stats.slides }}</span><span class="nine-stat-label">slide decks</span></div>
+    <div class="nine-stat"><span class="nine-stat-num">A4</span><span class="nine-stat-label">notes format</span></div>
+  </div>
+
+  <p class="nine-label">What's in each topic</p>
+  <div class="nine-cards">
+    <div class="nine-card">
+      <h3>Student guided notes</h3>
+      <p>Short, structured notes with the key terms, equations and diagram labels left blank. Students complete them during the lesson, alongside numbered worked examples and questions. Each topic opens with a &ldquo;By the end of this topic I can&hellip;&rdquo; checklist.</p>
+    </div>
+    <div class="nine-card">
+      <h3>Teacher key</h3>
+      <p>The same pages with every blank filled in and every example and question worked through, so you can mark, model answers, or check your own working.</p>
+    </div>
+    <div class="nine-card">
+      <h3>Print or tablet</h3>
+      <p>Each set of notes comes in two layouts. Use <strong>Print</strong> for paper copies, or <strong>Tablet</strong> for students who annotate on an iPad or similar. The content is the same.</p>
+    </div>
+    <div class="nine-card">
+      <h3>Slides</h3>
+      <p>A deck for each topic that follows the notes page by page. Download the PDF to present as it is, or the editable PowerPoint to adapt for your own class.</p>
+    </div>
+  </div>
+
+  <p class="nine-label">Suggested use</p>
+  <div class="nine-how">
+    <p>Teach from the slides while students fill in the student notes, so the lesson has a clear structure and nobody is copying from the board. The teacher key is there to check the blanks and work through the examples and questions.</p>
+  </div>
+
+  <p class="nine-label">All topics</p>
+  <input class="nine-search" id="nine-search" type="search" placeholder="Filter topics&hellip;" autocomplete="off">
+
+  <div id="nine-groups">
+  {% for group in site.data.physics9702.groups %}
+    <section class="nine-group">
+      <h2 class="nine-group-name">{{ group.name }}</h2>
+      <div class="nine-table">
+        <div class="nine-row nine-row--head"><span>Topic</span><span>Student notes</span><span>Teacher key</span><span>Slides</span></div>
+        {% for t in group.topics %}
+        <div class="nine-row" data-topic="{{ t.title | downcase }} {{ t.slug }}">
+          <span class="nine-topic">{{ t.title }}<small>{{ t.pages }} pages</small></span>
+          <span class="nine-links" data-label="Student notes">
+            <a href="{{ base }}{{ t.slug }}-notes-student-print.pdf" download>Print</a>
+            <a href="{{ base }}{{ t.slug }}-notes-student-tablet.pdf" download>Tablet</a>
+          </span>
+          <span class="nine-links" data-label="Teacher key">
+            <a href="{{ base }}{{ t.slug }}-notes-teacher-print.pdf" download>Print</a>
+            <a href="{{ base }}{{ t.slug }}-notes-teacher-tablet.pdf" download>Tablet</a>
+          </span>
+          <span class="nine-links" data-label="Slides">
+            <a href="{{ base }}{{ t.slug }}-slides.pdf" download>PDF</a>
+            {% if t.pptx %}<a href="{{ base }}{{ t.slug }}-slides.pptx" download>PPTX</a>{% else %}<span title="PowerPoint version not available for this topic">PPTX</span>{% endif %}
+          </span>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  {% endfor %}
+  </div>
+  <p class="nine-empty" id="nine-empty" style="display:none;">No topics match that search.</p>
+
+  <p class="nine-label">Related</p>
+  <div class="nine-related">
+    <a href="{{ '/resources/physics-notes.html' | relative_url }}">9702 Physics Notes <small>the notes as a single PDF</small></a>
+    <a href="{{ '/resources/9702_as_physics_spinner.html' | relative_url }}">9702 Revision Spinner <small>revision at random</small></a>
+    <a href="{{ '/resources/physics-experiments-database.html' | relative_url }}">Physics Experiments Database <small>124 GCSE and A-Level practicals</small></a>
+    <a href="{{ '/planner.html' | relative_url }}">Markdown Teacher Planner <small>plan lessons in plain Markdown</small></a>
+  </div>
+</div>
+
+<script>
+(function(){
+  var inp = document.getElementById('nine-search');
+  var rows = document.querySelectorAll('#nine-groups .nine-row[data-topic]');
+  var groups = document.querySelectorAll('#nine-groups .nine-group');
+  var empty = document.getElementById('nine-empty');
+  if (!inp) return;
+  inp.addEventListener('input', function(){
+    var q = this.value.toLowerCase().trim(), total = 0;
+    rows.forEach(function(r){ var s = !q || r.dataset.topic.indexOf(q) > -1; r.style.display = s ? '' : 'none'; if (s) total++; });
+    groups.forEach(function(g){ g.style.display = g.querySelector('.nine-row[data-topic]:not([style*="none"])') ? '' : 'none'; });
+    empty.style.display = (q && total === 0) ? 'block' : 'none';
+  });
+})();
+</script>
