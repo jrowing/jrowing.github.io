@@ -15,63 +15,68 @@
 
 {% include nav.html %}
 
-<div class="hero">
-  <div class="hero-text">
-    <p class="hero-sub">CPHYS &middot; MINSTP &middot; PRASLIN &middot; SEYCHELLES</p>
-    <h1 class="hero-name">Joe<br><em>Rowing</em></h1>
-    <p class="hero-bio">
+<main class="home">
+
+<header class="home-hero">
+  <canvas class="home-waves" id="home-waves" aria-hidden="true"></canvas>
+  <div class="home-hero-inner">
+    <p class="home-role">Physicist and teacher, Praslin, Seychelles</p>
+    <h1 class="home-name">Joe Rowing</h1>
+    <p class="home-bio">
       Chartered Physicist, educator, and author. Founding member of <strong>Exeter Mathematics School</strong>. IoP Physics Coach. Textbook author for Pearson, OUP, and Hodder. Currently teaching physics, chemistry, and biology at Vijay International School on Praslin. Twenty years in classrooms from West Sussex to the Indian Ocean.
     </p>
     <div class="hero-ctas">
       <a class="cta-primary" href="#projects">Projects</a>
       <a class="cta-secondary" href="{{ '/resources.html' | relative_url }}">Resources</a>
       <a class="cta-secondary" href="{{ '/cv.html' | relative_url }}">CV</a>
-      <a class="cta-secondary" id="random-link" href="{{ '/resources.html' | relative_url }}" title="Jump to a random resource or piece of writing">Random &#8599;</a>
+      <a class="cta-secondary" id="random-link" href="{{ '/resources.html' | relative_url }}" title="Jump to a random resource or piece of writing">Random</a>
     </div>
   </div>
-</div>
+  <p class="home-caption">Two-source interference, drawn live.</p>
+</header>
 
-<section class="section" id="projects">
-  <p class="section-label">Current work</p>
-  <div class="projects-grid">
-    <a class="project-item" href="{{ '/resources/physics-notes.html' | relative_url }}">
-      <p class="project-num">i.</p>
-      <p class="project-title">Cambridge International Physics Notes</p>
-      <p class="project-desc">179pp &middot; LaTeX / Tufte layout &middot; free download</p>
-      <div class="project-tags"><span class="tag">Physics</span><span class="tag">Open access</span></div>
-    </a>
-    <a class="project-item" href="https://mybinder.org/v2/gh/jrowing/Jupyter_lab_book/HEAD">
-      <p class="project-num">ii.</p>
-      <p class="project-title">Jupyter Physics Lab Books</p>
-      <p class="project-desc">Interactive practicals &middot; work in progress</p>
-      <div class="project-tags"><span class="tag">Jupyter</span><span class="tag">Interactive</span></div>
-    </a>
-    <a class="project-item" href="{{ '/planner.html' | relative_url }}">
-      <p class="project-num">iii.</p>
-      <p class="project-title">Markdown Teacher Planner</p>
-      <p class="project-desc">Open source &middot; Mac + browser &middot; plain markdown</p>
-      <div class="project-tags"><span class="tag">Tools</span><span class="tag">Open source</span></div>
-    </a>
-    <a class="project-item" href="{{ '/writing/bioacoustics.html' | relative_url }}">
-      <p class="project-num">iv.</p>
-      <p class="project-title">Bioacoustics</p>
-      <p class="project-desc">Bat detection &middot; automated bird-call logging &middot; Praslin field research</p>
-      <div class="project-tags"><span class="tag">Seychelles</span><span class="tag">Field research</span></div>
-    </a>
-    <a class="project-item" href="{{ '/writing/diving.html' | relative_url }}">
-      <p class="project-num">v.</p>
-      <p class="project-title">Diving</p>
-      <p class="project-desc">Ennerdale &middot; Booby Rock &middot; South Marianne</p>
-      <div class="project-tags"><span class="tag">Marine</span><span class="tag">Seychelles</span></div>
-    </a>
-    <a class="project-item" href="{{ '/writing/dartmoor-tors.html' | relative_url }}">
-      <p class="project-num">vi.</p>
-      <p class="project-title">Walking Dartmoor Tors</p>
-      <p class="project-desc">268 Tors in 12 months</p>
-      <div class="project-tags"><span class="tag">Walking</span><span class="tag">Adventures</span></div>
-    </a>
-  </div>
+<section class="home-work" id="projects" aria-labelledby="work-heading">
+  <h2 class="home-work-heading" id="work-heading">Current work</h2>
+  <ul class="home-work-list">
+    <li><a class="work-item" href="{{ '/9702.html' | relative_url }}">
+      <span class="work-title">9702 Physics: guided notes and slides</span>
+      <span class="work-desc">28 topics of student notes, teacher keys and slides for Cambridge AS &amp; A Level.</span>
+      <span class="work-tags">Physics, Teaching</span>
+    </a></li>
+    <li><a class="work-item" href="{{ '/resources/physics-notes.html' | relative_url }}">
+      <span class="work-title">Cambridge International Physics Notes</span>
+      <span class="work-desc">179 pages in a LaTeX / Tufte layout. Free download.</span>
+      <span class="work-tags">Physics, Open access</span>
+    </a></li>
+    <li><a class="work-item" href="https://mybinder.org/v2/gh/jrowing/Jupyter_lab_book/HEAD">
+      <span class="work-title">Jupyter Physics Lab Books</span>
+      <span class="work-desc">Interactive practicals. Work in progress.</span>
+      <span class="work-tags">Jupyter, Interactive</span>
+    </a></li>
+    <li><a class="work-item" href="{{ '/planner.html' | relative_url }}">
+      <span class="work-title">Markdown Teacher Planner</span>
+      <span class="work-desc">Open source, runs on Mac and in the browser, plain markdown.</span>
+      <span class="work-tags">Tools, Open source</span>
+    </a></li>
+    <li><a class="work-item" href="{{ '/writing/bioacoustics.html' | relative_url }}">
+      <span class="work-title">Bioacoustics</span>
+      <span class="work-desc">Bat detection and automated bird-call logging: field research on Praslin.</span>
+      <span class="work-tags">Seychelles, Field research</span>
+    </a></li>
+    <li><a class="work-item" href="{{ '/writing/diving.html' | relative_url }}">
+      <span class="work-title">Diving</span>
+      <span class="work-desc">Ennerdale, Booby Rock and South Marianne.</span>
+      <span class="work-tags">Marine, Seychelles</span>
+    </a></li>
+    <li><a class="work-item" href="{{ '/writing/dartmoor-tors.html' | relative_url }}">
+      <span class="work-title">Walking Dartmoor Tors</span>
+      <span class="work-desc">268 tors in 12 months.</span>
+      <span class="work-tags">Walking, Adventures</span>
+    </a></li>
+  </ul>
 </section>
+
+</main>
 
 {% include footer.html %}
 
@@ -82,6 +87,63 @@
     html.setAttribute('data-theme', next);
     localStorage.setItem('theme', next);
   });
+</script>
+
+<script>
+  // Hero: two point sources, interfering circular waves (a ripple tank). One frame if reduced motion is on.
+  (function () {
+    var cv = document.getElementById('home-waves');
+    if (!cv || !cv.getContext) return;
+    var ctx = cv.getContext('2d'), img, W, H, cssW, cssH, rgb = [23, 106, 115];
+    var SCALE = 2, WAVELENGTH = 30, SPEED = 24, SEP = 0.2; // css px, css px per s, source gap as fraction of height
+    var k = 2 * Math.PI / WAVELENGTH, w = k * SPEED;
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var running = false, t0 = performance.now(), last = 0, onScreen = true;
+
+    function readColour() {
+      var m = getComputedStyle(cv).color.match(/[\d.]+/g);
+      if (m && m.length >= 3) rgb = [+m[0], +m[1], +m[2]];
+    }
+    function size() {
+      cssW = cv.clientWidth; cssH = cv.clientHeight;
+      W = Math.max(1, Math.round(cssW / SCALE)); H = Math.max(1, Math.round(cssH / SCALE));
+      cv.width = W; cv.height = H; img = ctx.createImageData(W, H);
+    }
+    function draw(t) {
+      var d = img.data, sx = cssW * (cssW < 700 ? 0.82 : 0.8), gap = Math.min(cssH * SEP, 110) / 2,
+          y1 = cssH / 2 - gap, y2 = cssH / 2 + gap, i = 0, x, y, px, py, r1, r2, a1, a2, f, v;
+      for (y = 0; y < H; y++) {
+        py = y * SCALE;
+        for (x = 0; x < W; x++, i += 4) {
+          px = x * SCALE;
+          r1 = Math.sqrt((px - sx) * (px - sx) + (py - y1) * (py - y1));
+          r2 = Math.sqrt((px - sx) * (px - sx) + (py - y2) * (py - y2));
+          a1 = 1 / Math.sqrt(1 + r1 / 70); a2 = 1 / Math.sqrt(1 + r2 / 70);
+          f = (a1 * Math.cos(k * r1 - w * t) + a2 * Math.cos(k * r2 - w * t)) / (a1 + a2); // -1..1
+          v = (f - 0.2) / 0.8; v = v < 0 ? 0 : v * v * (3 - 2 * v);                     // crests only
+          d[i] = rgb[0]; d[i + 1] = rgb[1]; d[i + 2] = rgb[2]; d[i + 3] = v * 120;
+        }
+      }
+      ctx.putImageData(img, 0, 0);
+    }
+    function frame(now) {
+      if (!running) return;
+      if (now - last > 40) { last = now; draw((now - t0) / 1000); }
+      requestAnimationFrame(frame);
+    }
+    function start() { if (reduced || running || !onScreen || document.hidden) return; running = true; requestAnimationFrame(frame); }
+    function stop() { running = false; }
+
+    size(); readColour(); draw(0);
+    window.addEventListener('resize', function () { size(); draw((performance.now() - t0) / 1000); });
+    new MutationObserver(function () { readColour(); if (!running) draw((performance.now() - t0) / 1000); })
+      .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { onScreen = es[0].isIntersecting; onScreen ? start() : stop(); }).observe(cv);
+    }
+    start();
+  })();
 </script>
 
 <script>
