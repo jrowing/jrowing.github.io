@@ -1,0 +1,38 @@
+---
+title: "How to Write Mathematics"
+description: "A short guide for A-level Mathematics and Physics students on setting out written work so that a reader can follow it."
+tags: [a-level, maths, physics, writing, communication, exam-technique, pdf, latex]
+date: 2026-11-12
+---
+
+<style>
+.htwm-actions { display: flex; gap: 10px; flex-wrap: wrap; margin: 1.5rem 0 1.75rem; }
+.htwm-btn { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.02em; text-decoration: none; padding: 0.55rem 0.95rem; border-radius: var(--radius); border: 0.5px solid var(--border-strong); color: var(--text-primary); background: var(--bg-subtle); transition: background 0.15s, border-color 0.15s; }
+.htwm-btn:hover { background: var(--bg-card); border-color: var(--accent); }
+.htwm-btn--primary { background: var(--text-primary); color: var(--bg); border-color: var(--text-primary); }
+.htwm-btn--primary:hover { background: var(--text-secondary); border-color: var(--text-secondary); }
+.htwm-btn:focus-visible { outline: 2px solid var(--sea, var(--accent)); outline-offset: 2px; }
+.htwm-embed { width: 100%; height: 80vh; min-height: 600px; border: 0.5px solid var(--border); border-radius: var(--radius); display: block; background: var(--bg-subtle); }
+.htwm-note { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-top: 1.5rem; }
+.htwm-note a { color: var(--text-secondary); }
+</style>
+
+<p>Examiners can only mark what is on the page. This guide is for A-level Mathematics and Physics students, and it covers how to set out written work so that a reader can follow it without having to guess what you meant. It is eleven pages long, with a worked example and three student answers to rewrite: an arithmetic series proof, a projectile calculation and a quadratic inequality.</p>
+
+<ul>
+  <li>Sentences and punctuation, explaining your steps, and saying exactly what you mean.</li>
+  <li>Using &ldquo;=&rdquo; and &ldquo;&rArr;&rdquo; correctly, exact values versus approximations, and defining your symbols.</li>
+  <li>A section on style for written Physics: units, variables, equations in sentences, and uncertainty versus error.</li>
+</ul>
+
+<div class="htwm-actions">
+  <a class="htwm-btn htwm-btn--primary" href="{{ '/assets/pdf/how-to-write-mathematics.pdf' | relative_url }}" download>Download PDF</a>
+  <a class="htwm-btn" href="{{ '/assets/pdf/how-to-write-mathematics.pdf' | relative_url }}" target="_blank" rel="noopener">Open in new tab &nearr;</a>
+  <a class="htwm-btn" href="{{ '/assets/pdf/how-to-write-mathematics-source.zip' | relative_url }}" download>LaTeX source (.zip)</a>
+</div>
+
+<iframe class="htwm-embed" src="{{ '/assets/pdf/how-to-write-mathematics.pdf' | relative_url }}" title="How to Write Mathematics: a guide for A-level Mathematics and Physics students" loading="lazy"></iframe>
+
+<p class="htwm-note">
+  Adapted for A-level from <a href="http://www.kevinhouston.net/pdf/htwm.pdf" target="_blank" rel="noopener">How to Write Mathematics</a> by Kevin Houston, via Exeter Mathematics School. Typeset with the <code>tufte-handout</code> class, with the student answers redrawn in TikZ. The source zip contains both <code>.tex</code> files, which compile with <code>pdflatex</code>.
+</p>
