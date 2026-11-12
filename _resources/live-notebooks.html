@@ -1,0 +1,59 @@
+---
+layout: default
+title: "Live physics notebooks"
+description: "Five Python models you can run and edit in your browser: a skydive from space, the Magnus effect, rocket take-off, a satellite orbit and black-body curves."
+category: Sim
+tags: [python, jupyter, simulation, mechanics, astrophysics, computational-physics]
+date: 2026-11-12
+---
+
+<style>
+.lnb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1px; border: 0.5px solid var(--border); border-radius: 12px; overflow: hidden; margin: 1.5rem 0; }
+.lnb-card { background: var(--bg); padding: 1.25rem; text-decoration: none; display: flex; flex-direction: column; gap: 0.4rem; border-right: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); transition: background 0.15s; min-height: 130px; }
+.lnb-card:hover { background: var(--bg-subtle); }
+.lnb-tag { font-size: 10px; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 4px; background: var(--bg-subtle); color: var(--accent); border: 0.5px solid var(--border); align-self: flex-start; font-family: var(--font-mono); }
+.lnb-title { font-size: 14px; font-weight: 500; color: var(--text-primary); line-height: 1.35; }
+.lnb-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.55; margin-top: auto; padding-top: 0.4rem; }
+.lnb-note { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+.lnb-note small { color: var(--text-muted); }
+@media (max-width: 600px) { .lnb-grid { grid-template-columns: 1fr; } }
+</style>
+
+<div class="inner-page">
+  <div class="page-header">
+    <h1 class="page-title">Live <em>notebooks</em></h1>
+    <p class="page-desc">Python models that run in your browser. Change a number, press Run, and watch the graph respond.</p>
+  </div>
+
+  <p class="lnb-note">No install and no account. Python starts up in the page, so the first load takes 10&ndash;20 seconds; after that it is quick. Your edits stay in your own browser and are not saved to the site.</p>
+
+  <div class="lnb-grid">
+    <a class="lnb-card" href="{{ '/lite/notebooks/index.html?path=baumgartner-skydive.ipynb' | relative_url }}" target="_blank" rel="noopener">
+      <span class="lnb-tag">Mechanics</span>
+      <span class="lnb-title">Jumping from space</span>
+      <span class="lnb-desc">Model Felix Baumgartner's jump from the stratosphere: drag that changes with air density, terminal velocity, and the effect of uncertainty in his mass.</span>
+    </a>
+    <a class="lnb-card" href="{{ '/lite/notebooks/index.html?path=magnus-effect.ipynb' | relative_url }}" target="_blank" rel="noopener">
+      <span class="lnb-tag">Mechanics</span>
+      <span class="lnb-title">The Magnus effect</span>
+      <span class="lnb-desc">Why a spinning ball curves. Numerically solve the 3D flight of a ball with drag and spin, then change the spin axis.</span>
+    </a>
+    <a class="lnb-card" href="{{ '/lite/notebooks/index.html?path=rocket-takeoff.ipynb' | relative_url }}" target="_blank" rel="noopener">
+      <span class="lnb-tag">Mechanics</span>
+      <span class="lnb-title">Rocket take-off</span>
+      <span class="lnb-desc">From a full-size rocket through the atmosphere to a one-litre water rocket: thrust, changing mass, air density and drag.</span>
+    </a>
+    <a class="lnb-card" href="{{ '/lite/notebooks/index.html?path=satellite-orbit.ipynb' | relative_url }}" target="_blank" rel="noopener">
+      <span class="lnb-tag">Astrophysics</span>
+      <span class="lnb-title">A satellite round the Sun</span>
+      <span class="lnb-desc">Model a satellite's path under the combined gravity of the Sun, Earth and Moon.</span>
+    </a>
+    <a class="lnb-card" href="{{ '/lite/notebooks/index.html?path=black-body-radiation.ipynb' | relative_url }}" target="_blank" rel="noopener">
+      <span class="lnb-tag">Astrophysics</span>
+      <span class="lnb-title">Black-body curves</span>
+      <span class="lnb-desc">Planck's law, Wien's displacement law and the Stefan&ndash;Boltzmann law for stars of different temperatures.</span>
+    </a>
+  </div>
+
+  <p class="lnb-note"><small>Powered by <a href="https://jupyterlite.readthedocs.io">JupyterLite</a>.</small></p>
+</div>

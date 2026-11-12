@@ -33,3 +33,5 @@ exclude:
   - .quarto
   - .Rproj.user
   - "*.Rproj"
+  - lite-source
+  - build_lite.sh
