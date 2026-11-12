@@ -1,0 +1,160 @@
+---
+layout: default
+title: "Typesetting"
+description: "What typesetting is, why I use LaTeX for it, and three pieces I have set: a recipe book, a Shakespeare play, and a page with a drop cap and printer's ornaments."
+category: Craft
+tags: [typesetting, latex, typography, xelatex, microtype, books]
+date: 2026-11-12
+---
+
+<style>
+.ts-page { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+.ts-prose { font-family: var(--font-voice); font-size: 17px; line-height: 1.8; color: var(--text-secondary); max-width: 40rem; }
+.ts-prose p { margin: 0 0 1.1rem; }
+.ts-prose strong { color: var(--text-primary); font-weight: 500; }
+.ts-h2 { font-family: var(--font-voice); font-size: 26px; font-weight: 400; letter-spacing: -0.01em; color: var(--text-primary); margin: 3rem 0 1rem; }
+.ts-h3 { font-family: var(--font-voice); font-size: 21px; font-weight: 400; color: var(--text-primary); margin: 0 0 0.35rem; }
+.ts-meta { font-size: 13px; color: var(--text-muted); margin-bottom: 1rem; }
+.ts-terms { max-width: 40rem; margin: 1.5rem 0 0; border-top: 0.5px solid var(--border-strong); }
+.ts-terms div { display: grid; grid-template-columns: 9.5rem 1fr; gap: 1.25rem; padding: 0.8rem 0; border-bottom: 0.5px solid var(--border); }
+.ts-terms dt { font-family: var(--font-voice); font-size: 16px; color: var(--text-primary); }
+.ts-terms dd { font-size: 14px; line-height: 1.65; color: var(--text-secondary); }
+.ts-example { margin-top: 3.25rem; padding-top: 2rem; border-top: 0.5px solid var(--border-strong); }
+.ts-figs { display: grid; gap: 1rem; margin: 1.5rem 0 1.25rem; }
+.ts-figs--3 { grid-template-columns: repeat(3, 1fr); }
+.ts-figs--1 { grid-template-columns: minmax(0, 420px); }
+.ts-links { display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 0 0 1.25rem; }
+.ts-links a { font-size: 13px; color: var(--text-secondary); text-decoration: none; padding: 0.35rem 0.85rem; border: 0.5px solid var(--border-strong); border-radius: var(--radius); transition: background 0.15s, color 0.15s; }
+.ts-links a:hover { background: var(--bg-subtle); color: var(--text-primary); }
+.ts-links a:focus-visible { outline: 2px solid var(--sea, var(--accent)); outline-offset: 2px; }
+.ts-fig { margin: 0; }
+.ts-fig a { display: block; border: 0.5px solid var(--border-strong); border-radius: 4px; overflow: hidden; background: #fff; line-height: 0; }
+.ts-fig img { width: 100%; height: auto; display: block; }
+.ts-fig a:focus-visible { outline: 2px solid var(--sea, var(--accent)); outline-offset: 2px; }
+.ts-fig figcaption { font-size: 12px; line-height: 1.5; color: var(--text-muted); margin-top: 0.45rem; }
+.ts-notes { font-size: 14px; line-height: 1.7; color: var(--text-secondary); max-width: 40rem; }
+.ts-notes p { margin: 0 0 0.9rem; }
+.ts-notes ul { margin: 0 0 1rem 1.1rem; }
+.ts-notes li { margin-bottom: 0.35rem; }
+.ts-code { margin: 1.25rem 0 0; padding: 1rem 1.1rem; background: var(--bg-subtle); border: 0.5px solid var(--border); border-radius: var(--radius); overflow-x: auto; font-family: var(--font-mono); font-size: 12.5px; line-height: 1.65; color: var(--text-primary); max-width: 100%; }
+.ts-code-label { font-size: 12px; color: var(--text-muted); margin: 1.25rem 0 0.4rem; }
+@media (max-width: 700px) {
+  .ts-figs--3 { grid-template-columns: 1fr 1fr; }
+  .ts-terms div { grid-template-columns: 1fr; gap: 0.15rem; }
+}
+</style>
+
+<div class="inner-page">
+  <div class="page-header">
+    <a class="back-link" href="{{ '/writing.html' | relative_url }}">&larr; Writing</a>
+    <h1 class="page-title">Typesetting</h1>
+    <p class="page-desc">What it is, why I use LaTeX, and a few things I have set</p>
+  </div>
+
+  <div class="ts-prose">
+    <p><strong>Typesetting is the work of arranging text on a page</strong> so that it is comfortable to read and looks as though someone cared. It covers the obvious choices, such as the typeface, its size and the width of the margins, and a long tail of small ones: how far apart the lines sit, where a long word may break, how much space follows a full stop, and which letters need nudging closer together so a word doesn't look gappy.</p>
+    <p>When it is done well you don't notice it. When it is done badly you feel it as tiredness: lines that are too long to follow, rivers of white space running down a justified column, a heading that is stranded at the foot of a page.</p>
+    <p>The craft is centuries old. For most of that time it meant arranging pieces of metal type by hand. Today it means choosing settings and letting software do the arranging, and the quality of the software matters a great deal.</p>
+  </div>
+
+  <h2 class="ts-h2">Why LaTeX</h2>
+  <div class="ts-prose">
+    <p>Most people write in a word processor, where the page you see is the page you get. LaTeX works the other way round. You write plain text with a few markup commands, and it works out the page. TeX, the engine underneath, was written by Donald Knuth in the late 1970s because he was dissatisfied with how his own books were being printed. LaTeX, a layer of ready-made commands on top of it, was added by Leslie Lamport in the 1980s.</p>
+    <p>The part I care about most is how it breaks paragraphs into lines. A simple program fills each line in turn and moves on. TeX considers the whole paragraph at once, weighing the possible places to break against each other, which is why its spacing looks even and why it so rarely leaves one line looking stretched or cramped. Packages such as <em>microtype</em> go further, letting punctuation hang slightly into the margin and making tiny adjustments to letter widths.</p>
+    <p>Because the design lives in the code, it is also repeatable. Set up how a speaker's name, a stage direction or a recipe should look once, and every one on every page will match.</p>
+  </div>
+
+  <dl class="ts-terms">
+    <div><dt>Typeface</dt><dd>The design of the letters, such as Palatino or Public Sans. Choosing one is the biggest single decision in a document.</dd></div>
+    <div><dt>Measure</dt><dd>The length of a line of text. Around 60 to 75 characters is comfortable, and much wider than that and the eye loses its place on the way back.</dd></div>
+    <div><dt>Leading</dt><dd>The space between lines, named after the strips of lead once placed between rows of metal type.</dd></div>
+    <div><dt>Kerning and ligatures</dt><dd>Kerning adjusts the gap between particular pairs of letters. Ligatures join letters that would otherwise collide, such as <em>fi</em>.</dd></div>
+    <div><dt>Justification</dt><dd>Making both edges of a column straight by adjusting the spaces between words. Done carelessly it leaves uneven gaps, and hyphenation is what keeps them in check.</dd></div>
+  </dl>
+
+  <h2 class="ts-h2">Some examples</h2>
+  <div class="ts-prose"><p>Three pieces I have typeset, each solving a different problem. Click any page to see it full size.</p></div>
+
+  <section class="ts-example" id="cookbook">
+    <h3 class="ts-h3">The VISP Cookbook</h3>
+    <p class="ts-meta">35 pages &middot; A4 &middot; XeLaTeX &middot; The Seasons and Public Sans</p>
+    <div class="ts-figs ts-figs--3">
+      <figure class="ts-fig"><a href="{{ '/images/typesetting/cookbook-cover.jpg' | relative_url }}"><img src="{{ '/images/typesetting/cookbook-cover.jpg' | relative_url }}" alt="Cover of the VISP Cookbook: the title in blue lettering with a sketch of a palm-fringed island, a bowl of salad and a halved coconut" loading="lazy"></a><figcaption>The cover</figcaption></figure>
+      <figure class="ts-fig"><a href="{{ '/images/typesetting/cookbook-creole-fish.jpg' | relative_url }}"><img src="{{ '/images/typesetting/cookbook-creole-fish.jpg' | relative_url }}" alt="A recipe page for Creole grilled fish with a photo across the top, a strip of servings and times, and ingredients and instructions in two columns" loading="lazy"></a><figcaption>A recipe page</figcaption></figure>
+      <figure class="ts-fig"><a href="{{ '/images/typesetting/cookbook-shakshuka.jpg' | relative_url }}"><img src="{{ '/images/typesetting/cookbook-shakshuka.jpg' | relative_url }}" alt="A recipe page for shakshuka, with the same layout as the previous page" loading="lazy"></a><figcaption>The same layout, a different dish</figcaption></figure>
+    </div>
+    <div class="ts-notes">
+      <p>A collection of recipes, many credited to the people who shared them, set as one consistent book. Every recipe follows the same grid, so the ingredients and the method are in the same place on every page.</p>
+      <ul>
+        <li>A full-width photo opens each recipe, with the title and a strip of servings, prep time and cooking time beneath it.</li>
+        <li>Ingredients sit in a tinted sidebar on the left, with the numbered method in a wider column on the right, so the list can be scanned while cooking.</li>
+        <li>A light, high-contrast display face for headings, paired with a plain, sturdy sans for the working text.</li>
+        <li>Set with XeLaTeX, which can use the fonts installed on the computer directly.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="ts-example" id="shrew">
+    <h3 class="ts-h3">The Taming of the Shrew</h3>
+    <p class="ts-meta">84 pages &middot; A4 &middot; LaTeX &middot; Palatino with microtype</p>
+    <div class="ts-figs ts-figs--3">
+      <figure class="ts-fig"><a href="{{ '/images/typesetting/shrew-title.jpg' | relative_url }}"><img src="{{ '/images/typesetting/shrew-title.jpg' | relative_url }}" alt="Title page: The Taming of the Shrew in small capitals, with William Shakespeare below" loading="lazy"></a><figcaption>Title page</figcaption></figure>
+      <figure class="ts-fig"><a href="{{ '/images/typesetting/shrew-induction.jpg' | relative_url }}"><img src="{{ '/images/typesetting/shrew-induction.jpg' | relative_url }}" alt="The start of the Induction: a scene heading, then prose and verse speeches with speaker names in small capitals and stage directions in italics" loading="lazy"></a><figcaption>The Induction: prose, verse and stage directions</figcaption></figure>
+      <figure class="ts-fig"><a href="{{ '/images/typesetting/shrew-verse.jpg' | relative_url }}"><img src="{{ '/images/typesetting/shrew-verse.jpg' | relative_url }}" alt="A page of verse dialogue with a line number in the right margin every fifth line" loading="lazy"></a><figcaption>Verse, with line numbers every five lines</figcaption></figure>
+    </div>
+    <div class="ts-links">
+      <a href="{{ '/assets/typesetting/taming-of-the-shrew.pdf' | relative_url }}">Download the PDF (84 pages)</a>
+      <a href="{{ '/assets/typesetting/taming-of-the-shrew.tex' | relative_url }}">LaTeX source</a>
+    </div>
+    <div class="ts-notes">
+      <p>A play has several kinds of text, and a reader has to tell them apart at a glance. This edition, set from the public-domain text, gives each its own treatment, and the reader works out who is speaking and what is happening without thinking about it.</p>
+      <ul>
+        <li>Speaker names in small capitals, so they mark out the turn-taking without shouting.</li>
+        <li>Verse lines kept exactly as written, one per line. Prose speeches run on, with a hanging indent that keeps the speaker's name clear of the text.</li>
+        <li>Stage directions in italic and indented, so they read as separate from the speech.</li>
+        <li>Line numbers in the margin every five lines, which is what you need to refer to a passage in class.</li>
+        <li>A running head, a title page, a cast list, and a clean page for each act.</li>
+      </ul>
+    </div>
+    <p class="ts-code-label">The commands behind it. Each kind of text gets one command, defined once:</p>
+{% raw %}<pre class="ts-code"><code>\newcommand{\spk}[1]{\vspace{1mm}{\textbf{\scshape #1}}}   % speaker name, small caps
+
+\newenvironment{vs}                                        % a verse speech
+  {\par\addvspace{5pt}\begingroup\parindent=0pt\parskip=0pt\obeylines}
+  {\endgroup\par\addvspace{2pt}}
+
+\newcommand{\prose}[2]{\par\addvspace{5pt}%                % a prose speech
+  {\hangindent=1.4em\hangafter=1\noindent\spk{#1}\quad #2\par}\addvspace{2pt}}
+
+\modulolinenumbers[5]                                      % number every fifth line</code></pre>{% endraw %}
+  </section>
+
+  <section class="ts-example" id="ornaments">
+    <h3 class="ts-h3">Desiderata: a drop cap and ornaments</h3>
+    <p class="ts-meta">One page &middot; A4 &middot; LaTeX &middot; Computer Modern, with lettrine and adforn</p>
+    <div class="ts-figs ts-figs--1">
+      <figure class="ts-fig"><a href="{{ '/images/typesetting/desiderata.jpg' | relative_url }}"><img src="{{ '/images/typesetting/desiderata.jpg' | relative_url }}" alt="Max Ehrmann's Desiderata set as a single page: a three-line drop cap G, the first words in small capitals, small floral ornaments between the sentences, and a double rule above and below the text" loading="lazy"></a><figcaption>Max Ehrmann's <em>Desiderata</em> (1927), set as a single page</figcaption></figure>
+    </div>
+    <div class="ts-links">
+      <a href="{{ '/assets/typesetting/desiderata.pdf' | relative_url }}">Download the PDF</a>
+      <a href="{{ '/assets/typesetting/desiderata.tex' | relative_url }}">LaTeX source</a>
+    </div>
+    <div class="ts-notes">
+      <p>A single page for a short text, borrowing a few devices from old printing:</p>
+      <ul>
+        <li>A drop cap, a large initial sunk into the first three lines, to say where reading begins. The rest of the first line is in small capitals, which eases the step down from the big letter to the body text.</li>
+        <li>A small printer's ornament between sentences in place of a plain space, which turns a block of prose into a run of short pieces.</li>
+        <li>A thick rule over a thin one at the top and again at the bottom, framing the text like a plaque.</li>
+        <li>Margins that are deliberately uneven (wider on the left), and a small right-aligned credit line at the foot.</li>
+      </ul>
+    </div>
+    <p class="ts-code-label">The key lines. The ornament is a single command, and the rules are two <code>\rule</code> lines pulled together:</p>
+{% raw %}<pre class="ts-code"><code>\lettrine[lines=3,findent=5pt,nindent=-1pt]{G}{o placidly amid the noise and haste},
+and remember what peace there may be in silence. \adfast{10} As far as possible
+without surrender be on good terms with all persons. \adfast{10} ...
+
+\rule{13cm}{1pt}\par                  % thick rule
+\vspace{2pt}\vspace{-\baselineskip}
+\rule{13cm}{0.4pt}\par                % thin rule, tucked just beneath it</code></pre>{% endraw %}
+  </section>
+</div>
