@@ -1,0 +1,114 @@
+---
+layout: post
+title: "Binary Star Simulation"
+description: "This model visualizes the observed Doppler shift in frequency for two stars in a binary star system over time. The Doppler effect, caused by the relative motion of the…"
+tags: [cosmology, r-models, a-level]
+date: 2025-04-20
+math: true
+---
+
+{% raw %}
+<p>This model visualizes the observed Doppler shift in frequency for two stars in a binary star system over time. The Doppler effect, caused by the relative motion of the stars, shifts the frequency of their emitted radiation as observed from Earth. This plot demonstrates how the frequencies of the two stars (Star 1 and Star 2) vary over time, reflecting the periodic nature of their orbits.</p><p>In this plot:</p><p>The x-axis represents time in years. The y-axis represents the frequency shift (in THz) observed from Earth. Each line corresponds to one star, with Star 1 and Star 2 shown in different colors to differentiate their respective frequency shifts. By visualizing this data, we can analyze the periodicity and behavior of the Doppler shifts, which provides insight into the stars’ orbital dynamics and relative motion.</p><pre class="r"><code>library(ggplot2)
+library(plotly)
+
+# Constants
+G &lt;- 6.67430e-11  # Gravitational constant (m^3/kg/s^2)
+c &lt;- 3e8          # Speed of light (m/s)
+M_sun &lt;- 1.989e30 # Solar mass (kg)
+AU &lt;- 1.496e11    # Astronomical unit (m)
+year &lt;- 365 * 24 * 3600  # Seconds in a year
+
+# Binary system parameters
+M1 &lt;- 0.2 * M_sun
+M2 &lt;- M_sun
+a &lt;- 1 * AU
+i &lt;- 60  # degrees
+
+# Derived values
+a1 &lt;- a * M2 / (M1 + M2)
+a2 &lt;- a * M1 / (M1 + M2)
+P &lt;- 2 * pi * sqrt(a^3 / (G * (M1 + M2)))
+
+# Time and phase
+t &lt;- seq(0, P, length.out = 1000)
+theta &lt;- 2 * pi * t / P
+
+# Orbital positions
+x1 &lt;- a1 * cos(theta)
+y1 &lt;- a1 * sin(theta)
+x2 &lt;- -a2 * cos(theta)
+y2 &lt;- -a2 * sin(theta)
+
+# Line-of-sight velocities
+i_rad &lt;- i * pi / 180
+v1_los &lt;- (2 * pi * a1 / P) * sin(theta) * sin(i_rad)
+v2_los &lt;- -(2 * pi * a2 / P) * sin(theta) * sin(i_rad)
+
+# Doppler shift
+f_rest &lt;- 500e12  # Hz
+f1_obs &lt;- f_rest * (1 + v1_los / c)
+f2_obs &lt;- f_rest * (1 + v2_los / c)
+
+# Create dataframes for plotting
+df_orbit &lt;- data.frame(
+  x1 = x1 / AU, y1 = y1 / AU,
+  x2 = x2 / AU, y2 = y2 / AU
+)
+
+df_doppler &lt;- data.frame(
+  time_years = t / year,
+  f1_observed_THz = f1_obs / 1e12,
+  f2_observed_THz = f2_obs / 1e12
+)</code></pre><pre class="r"><code># Define colors
+colors &lt;- c(&quot;Star 1&quot; = &quot;blue&quot;, &quot;Star 2&quot; = &quot;red&quot;)
+
+# Extract first-row data for both stars
+first_points &lt;- data.frame(
+  x = c(df_orbit$x1[1], df_orbit$x2[1]),
+  y = c(df_orbit$y1[1], df_orbit$y2[1]),
+  star = c(&quot;Star 1&quot;, &quot;Star 2&quot;)
+)
+
+# Plot
+p1_plotly &lt;- plot_ly() %&gt;%
+  # Orbit paths
+  add_trace(data = df_orbit, x = ~x1, y = ~y1, type = &#39;scatter&#39;, mode = &#39;lines&#39;,
+            line = list(color = colors[&quot;Star 1&quot;]),
+            name = &quot;Star 1 (orbit)&quot;) %&gt;%
+  add_trace(data = df_orbit, x = ~x2, y = ~y2, type = &#39;scatter&#39;, mode = &#39;lines&#39;,
+            line = list(color = colors[&quot;Star 2&quot;]),
+            name = &quot;Star 2 (orbit)&quot;) %&gt;%
+  # Initial positions
+  add_trace(data = first_points, x = ~x, y = ~y, type = &#39;scatter&#39;, mode = &#39;markers&#39;,
+            
+            colors = colors,
+            marker = list(size = 8, symbol = &quot;circle&quot;),
+            name = &quot;Initial positions&quot;) %&gt;%
+  # Central point
+  add_trace(x = 0, y = 0, type = &#39;scatter&#39;, mode = &#39;markers&#39;,
+            marker = list(size = 6, color = &#39;black&#39;),
+            name = &quot;Centre&quot;) %&gt;%
+  layout(title = &quot;Binary Star System&quot;,
+         xaxis = list(title = &quot;x (AU)&quot;, scaleanchor = &quot;y&quot;),
+         yaxis = list(title = &quot;y (AU)&quot;),
+         showlegend = TRUE)
+
+
+# Plot 2: Doppler Shift
+p2_plotly &lt;- plot_ly(data = df_doppler) %&gt;%
+  add_trace(x = ~time_years, y = ~f1_observed_THz, type = &#39;scatter&#39;, mode = &#39;lines&#39;,
+            line = list(color = colors[&quot;Star 2&quot;]),
+            name = &quot;Star 2&quot;) %&gt;%
+  add_trace(x = ~time_years, y = ~f2_observed_THz, type = &#39;scatter&#39;, mode = &#39;lines&#39;,
+            line = list(color = colors[&quot;Star 1&quot;]),
+            name = &quot;Star 1&quot;) %&gt;%
+  layout(title = &quot;Doppler Shift Observed&quot;,
+         xaxis = list(title = &quot;Time (years)&quot;),
+         yaxis = list(title = &quot;Frequency (THz)&quot;),
+         legend = list(title = list(text = &quot;Star&quot;)))
+
+# To display the plots:
+p1_plotly
+p2_plotly</code></pre><figure><img src="/images/writing/binary-star-simulation/orbits.png" alt=""  loading="lazy" /><figcaption>Orbits of the two stars about the centre of mass</figcaption></figure><figure><img src="/images/writing/binary-star-simulation/doppler.png" alt=""  loading="lazy" /><figcaption>Observed Doppler-shifted frequency of each star over one orbit</figcaption></figure>
+
+{% endraw %}

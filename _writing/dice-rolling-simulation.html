@@ -1,0 +1,88 @@
+---
+layout: post
+title: "The Dice Rolling Simulation"
+description: "Each die in this experiment represents a radioactive nucleus. On every roll, each die has a 1 in 6 chance of decaying, mimicking radioactive decay."
+tags: [radioactivity, r-models, a-level]
+date: 2025-04-19
+math: true
+---
+
+{% raw %}
+<p>Each die in this experiment represents a radioactive nucleus. On every “roll” (i.e., time step), each die has a fixed probability <span class="math inline">\(p = \frac{1}{6}\)</span> of decaying (being removed). We begin with 80 dice.</p><p>This setup mimics <strong>radioactive decay</strong>, where: - The probability of a single atom decaying per unit time is constant. - The number of undecayed atoms decreases over time.</p><pre class="r"><code># Required libraries
+library(ggplot2)
+
+# Parameters
+P0 &lt;- 80
+n_rolls &lt;- 50
+p &lt;- 1 / 6
+
+# Simulation
+pop_avg &lt;- numeric(n_rolls + 1)
+set.seed(NULL)
+
+P &lt;- P0
+pop_avg[1] &lt;- P0
+k &lt;- 1
+while (k &lt;= n_rolls &amp;&amp; P &gt; 0) {
+  r &lt;- rbinom(1, P, p)
+  P &lt;- P - r
+  pop_avg[k + 1] &lt;- P
+  k &lt;- k + 1
+}
+
+# Truncate data when population hits zero
+final_index &lt;- which(pop_avg == 0)[1]
+if (is.na(final_index)) {
+  final_index &lt;- length(pop_avg)
+}
+pop_avg &lt;- pop_avg[1:final_index]
+time &lt;- 0:(length(pop_avg) - 1)
+
+# Exponential decay model
+lambda &lt;- -log(1 - p)
+exp_model &lt;- P0 * exp(-lambda * time)
+
+# Geometric approximation
+geometric_expansion &lt;- function(t, p, P0, n_terms = 15) {
+  sapply(t, function(tt) {
+    sum(sapply(0:(n_terms - 1), function(k) {
+      coef &lt;- (-1)^k * choose(tt, k)
+      coef * p^k
+    })) * P0
+  })
+}
+geom_approx &lt;- geometric_expansion(time, p, P0, n_terms = 15)
+
+# Half-life
+t_half &lt;- log(2) / lambda
+
+# Combine data
+df &lt;- data.frame(
+  Roll = time,
+  Experimental = pop_avg,
+  Exponential = exp_model,
+  Geometric = geom_approx
+)
+
+# Plot
+ggplot(df, aes(x = Roll)) +
+  geom_line(aes(y = Experimental, color = &quot;Experimental (Simulated)&quot;)) +
+  geom_line(aes(y = Exponential, color = &quot;Exponential Decay (Continuous)&quot;)) +
+  geom_line(aes(y = Geometric, color = &quot;Geometric Expansion (15 terms)&quot;), linetype = &quot;dashed&quot;) +
+  geom_vline(xintercept = t_half, linetype = &quot;dotted&quot;, color = &quot;purple&quot;, linewidth = 1) +
+  geom_hline(yintercept = P0 / 2, linetype = &quot;dotted&quot;, color = &quot;purple&quot;) +
+  annotate(&quot;text&quot;, x = t_half + 1, y = P0 / 2 + 3, label = &quot;Half-life&quot;, color = &quot;purple&quot;) +
+  labs(
+    title = &quot;Radioactive Decay with Half-life Marker&quot;,
+    x = &quot;Roll Number&quot;, y = &quot;Dice Remaining&quot;,
+    color = &quot;Legend&quot;
+  ) +
+  theme_minimal()</code></pre><figure><img src="/images/writing/dice-rolling-simulation/decay.png" alt=""  loading="lazy" /><figcaption>Simulated dice decay compared with exponential and geometric models</figcaption></figure><h3>What’s Plotted?</h3><p>The graph shows three curves:</p><h4>1. Experimental (Simulated) Line</h4><ul><li>This line shows the actual number of dice remaining after each roll in a single experiment.</li><li>It’s jagged because it’s <strong>random</strong>: on each roll, a different number of dice decay.</li></ul><h4>2. Exponential Decay Line (Continuous Model)</h4><ul><li>This is the smooth curve you’d get if decay happened continuously (instead of once per roll).</li><li>It’s based on the exponential decay formula:<br />
+<span class="math display">\[
+N(t) = N_0 e^{-\lambda t}, \quad \lambda = -\ln(1 - p)
+\]</span></li><li>This is often taught as the <strong>theoretical decay law</strong> in physics.</li></ul><blockquote><p>🔍 This curve smooths out randomness and assumes infinitesimally small time steps — great for math, but not realistic for real-world random events.</p></blockquote><h4>3. Geometric Expansion Line (Dashed)</h4><ul><li>This is a <strong>series approximation</strong> of the geometric decay:<br />
+<span class="math display">\[
+N(t) = N_0 (1 - p)^t
+\]</span></li><li>The series is built using the <strong>binomial expansion</strong> of <span class="math inline">\((1 - p)^t\)</span>, and you’ve included 15 terms for good accuracy even at early times.</li><li>This curve lies right on top of the exponential line for small <span class="math inline">\(t\)</span>, showing they’re nearly equivalent at first.</li></ul><h3>What the Graph Shows You</h3><ul><li><strong>Agreement at Early Times:</strong> All three lines start at the same place and follow a similar shape, showing how well the continuous exponential model approximates the actual discrete decay early on.</li><li><strong>Divergence Through Randomness:</strong> The experimental line starts to diverge due to the random nature of decay (especially in single trials).</li><li><strong>Geometric vs Exponential:</strong> The geometric expansion sits between the raw simulation and the smooth exponential, acting as a bridge between theory and simulation.</li></ul><h3>Physics Context</h3><p>This graph is a perfect classroom tool to: - Introduce <strong>exponential decay</strong> and how it’s derived. - Highlight the assumptions behind the exponential model (e.g., continuous time). - Show how <strong>probabilistic events lead to deterministic laws</strong> when averaged or modeled. - Provide a <strong>critical look at models</strong> — the “perfect curve” doesn’t represent any single real-world trial, but rather an average over many.</p>
+
+{% endraw %}
