@@ -1067,3 +1067,13 @@ footer { border-top: 0.5px solid var(--border); }
   .resource-grid { grid-template-columns: 1fr; }
   .cv-section { grid-template-columns: 1fr; gap: 0.5rem; }
 }
+
+/* Imported posts: video embeds, figures, footnotes, display maths */
+.post-content .embed-video{position:relative;aspect-ratio:16/9;margin:1.5rem 0}
+.post-content .embed-video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.post-content figure{margin:1.5rem 0}
+.post-content figure img{max-width:100%;height:auto;display:block}
+.post-content figcaption{font-size:.875rem;opacity:.75;margin-top:.4rem}
+.post-content .math-display{overflow-x:auto;margin:1rem 0}
+.post-content .footnote{font-size:.9rem;opacity:.85;margin-top:.5rem}
+.post-content .footnote p{display:inline}

@@ -35,3 +35,4 @@ exclude:
   - "*.Rproj"
   - lite-source
   - build_lite.sh
+  - scripts
