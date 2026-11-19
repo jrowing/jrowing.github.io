@@ -1,0 +1,57 @@
+---
+layout: post
+title: "What A-level Physics leaves out"
+description: "A-level Physics covers a lot of ground, but there are some important gaps. These are the topics I think should be in the course, and why each one matters."
+tags: [physics, a-level, curriculum, teaching]
+date: 2026-11-19
+math: true
+---
+
+{% raw %}
+<p>A-level Physics covers a lot of ground, but there are some important gaps. Below are the topics I think should be in the course, with a short note on why each one matters.</p>
+
+<h2>Computational modelling</h2>
+<p>We spend most of the A-level course in a "Perfect Physics World"&trade;: no air resistance, no friction, no inconvenient complexities. That is because nearly every problem is solved analytically. Write down an equation, rearrange it, substitute. Add air resistance to a falling object, or swing a pendulum through a large angle, and the algebra stops working.</p>
+<p>The way out is numerical. Split time into small steps \(\Delta t\) and update the state of the system at each step:</p>
+<p>\[ v_{n+1} = v_n + a_n\,\Delta t \qquad x_{n+1} = x_n + v_n\,\Delta t \]</p>
+<p>This is Euler's method, and a spreadsheet will do it. It also shows that exponential decay, capacitor discharge and simple harmonic motion are the same idea: the rate of change depends on the current value. At the moment students learn them as three separate sets of equations, which I think is a missed opportunity.</p>
+
+<h2>Entropy and the second law</h2>
+<p>The course covers the first law of thermodynamics and then stops. The first law tells you energy is conserved. It tells you nothing about which way a process will go.</p>
+<p>That is the job of the second law. Without it, students cannot explain why a heat engine can never be 100% efficient, why a heat pump delivers more heat than the electrical energy it uses, or why heat flows from hot to cold and never the other way.</p>
+<p>The statistical version is within reach of a sixth former. Count the number of ways \(W\) of sharing a few quanta of energy between a few oscillators, and define</p>
+<p>\[ S = k \ln W \]</p>
+<p>I personally think this is one of the most beautiful results in physics, and it is a shame most students never see it.</p>
+
+<h2>Earth's energy balance</h2>
+<p>The Stefan&ndash;Boltzmann law is already in the course, but only for stars. Apply it to the Earth instead. In equilibrium, the solar power absorbed equals the power radiated:</p>
+<p>\[ (1-\alpha)\,\frac{S}{4} = \sigma T^4 \]</p>
+<p>With \(S \approx 1361\ \mathrm{W\,m^{-2}}\) and an albedo \(\alpha \approx 0.3\), this gives \(T \approx 255\ \mathrm{K}\). The actual average surface temperature is about 288&nbsp;K. The 33&nbsp;K difference is the greenhouse effect.</p>
+<p>It takes one lesson, uses physics students already know, and answers a question they will hear about for the rest of their lives. Order-of-magnitude estimates of energy use and supply, in the style of David MacKay's <em>Sustainable Energy &ndash; Without the Hot Air</em>, fit naturally alongside it.</p>
+
+<h2>Rotational dynamics</h2>
+<p>Moments and circular motion are covered, but moment of inertia and angular momentum are not. Every linear quantity has a rotational partner:</p>
+<p>\[ \tau = I\alpha \qquad L = I\omega \qquad E_k = \tfrac{1}{2}I\omega^2 \]</p>
+<p>Students already know \(F = ma\), \(p = mv\) and \(E_k = \tfrac{1}{2}mv^2\), so this is cheap to teach. Without it they cannot explain a spinning skater, a gyroscope, a diver tucking into a somersault, or why a moving bicycle stays upright.</p>
+
+<h2>Special relativity</h2>
+<p>Students meet \(E = mc^2\) in nuclear physics, where it is used to convert mass defect into binding energy, with no idea where it comes from. Time dilation can be derived from a light clock using nothing more than Pythagoras:</p>
+<p>\[ \Delta t = \gamma\,\Delta t_0 \qquad \gamma = \frac{1}{\sqrt{1 - v^2/c^2}} \]</p>
+<p>It is one of the few topics that genuinely changes how students think about the world. At best it appears as an optional extra.</p>
+
+<h2>Fluid flow</h2>
+<p>Fluid statics is in: \(p = \rho g h\) and upthrust. Fluid flow is not. The continuity equation and Bernoulli's equation are just conservation of mass and conservation of energy applied to a moving fluid:</p>
+<p>\[ A_1 v_1 = A_2 v_2 \qquad p + \tfrac{1}{2}\rho v^2 + \rho g h = \text{constant} \]</p>
+<p>These explain lift, blood flow and water in pipes. Without them, students reach university still believing the "equal transit time" explanation of how a wing works, which is wrong.</p>
+
+<h2>Statistics</h2>
+<p>Uncertainty in the course is mostly a procedure: draw the best-fit line, draw the worst acceptable line, compare the gradients. It earns marks in the practical exam, but it is not how anyone actually analyses data.</p>
+<p>Standard deviation, what a least-squares fit is minimising, and how to tell whether two results agree within their uncertainties would be far more useful. Students will need these at university, whatever subject they go on to study.</p>
+
+<h2>Smaller gaps</h2>
+<ul>
+<li><strong>Band theory of solids.</strong> A simple band picture explains LEDs, solar cells, thermistors and LDRs. Without it they are black boxes.</li>
+<li><strong>Lenses and optical instruments.</strong> These disappear after GCSE, so telescopes turn up in astrophysics with no explanation of how they work.</li>
+<li><strong>Calculus.</strong> Kinematics, simple harmonic motion and radioactive decay are all calculus problems in disguise. Most physics students are taking A-level Mathematics anyway, and the physics course should use it.</li>
+</ul>
+{% endraw %}
