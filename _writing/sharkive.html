@@ -1,0 +1,80 @@
+---
+layout: default
+title: "The Sharkive"
+description: "A citizen-science record of the sharks landed and sold at markets and roadside stalls in Seychelles: why it exists, how it works, and where it could go next."
+category: Field research
+tags: [sharks, citizen science, conservation, seychelles, praslin, fish market, marine, sharkive]
+date: 2026-11-20
+---
+
+<div class="inner-page inner-page--post">
+  <div class="page-header">
+    <a class="back-link" href="/writing.html">&larr; Writing</a>
+    <h1 class="post-heading">The Sharkive</h1>
+    <p class="post-lede">A citizen-science record of the sharks landed and sold at markets and roadside stalls in Seychelles: why it exists, how it works, and where it could go next.</p>
+  </div>
+  <div class="post-content">
+
+<p><a href="/shark-id/"><strong>Open The Sharkive &rarr;</strong></a></p>
+
+<h2>What it is</h2>
+
+<p>The Sharkive is a phone web app for photographing dead sharks at fish markets and roadside stalls. Anyone can log one, with no account and no personal details. Every submission is checked by a reviewer, and confirmed records are published with the species, a date, time and location, and a downloadable data file.</p>
+
+<p>The aim is a long-term, consistent record that could one day show which species are being landed, how often threatened species turn up, where sharks are sold around the islands, and whether any of that is changing over seasons and years.</p>
+
+<h2>Why it matters</h2>
+
+<p>Sharks grow slowly, mature late and have few young, so populations that decline recover slowly. Many of the species in the western Indian Ocean are listed as threatened on the IUCN Red List.</p>
+
+<p>The sharks you see on a market table or at the side of the road mostly come from small-scale, artisanal fishing, and those catches are rarely recorded in any detail. Without that information it is hard to say which species are being caught, how big they are, or whether things are getting better or worse. A photograph taken by someone who happens to be passing is a small piece of evidence; thousands of them, collected the same way over years, start to become data.</p>
+
+<h2>How it works</h2>
+
+<ul>
+  <li><strong>Photograph the shark.</strong> Use the in-app camera or an original photo from the camera roll.</li>
+  <li><strong>When and where come from the photo, never from the user.</strong> Capture time comes from the shutter press or the photo&rsquo;s EXIF data, and location from GPS at the shutter or the EXIF GPS. Photos without a trustworthy capture time are refused, and once a record is saved its time and location can&rsquo;t be edited by anyone, reviewers included. Each record also stores where its time and location came from, so analysis can filter by data quality.</li>
+  <li><strong>A species suggestion, made on the phone.</strong> The photo is turned into an image fingerprint and compared with reviewer-confirmed photos. It is a matching tool, not generative AI, it works offline, and it improves with every confirmed record.</li>
+  <li><strong>Human review.</strong> Every record waits in a queue until a reviewer confirms the species or rejects it. Approved photos join the reference library.</li>
+  <li><strong>Open records.</strong> Confirmed records are published with species, family, IUCN status, time, place and a map, and can be exported as CSV.</li>
+</ul>
+
+<p>Under the hood it is a static site with a Supabase database. The code is open on GitHub.</p>
+
+<h2>About sharks, not people</h2>
+
+<p>The Sharkive records what is caught, not who caught or sold it. It doesn&rsquo;t collect the names of fishers or vendors, and it isn&rsquo;t an enforcement tool. Fishers and vendors know more about sharks than almost anyone, and a record like this only works with their goodwill. Contributors are asked to frame the shark rather than people, and to ask before photographing someone&rsquo;s stall or catch.</p>
+
+<h2>Where it is now</h2>
+
+<p>The app is live and taking records. It is run independently from Praslin, by me, in my spare time. I build and host it, and for now I am also the reviewer, confirming species and building up the reference library that the identifier learns from.</p>
+
+<p>That is fine for getting started, but it is also the project&rsquo;s main weakness. A dataset is only useful for conservation if it is collected consistently for a long time, and a long time is longer than one volunteer&rsquo;s attention span, posting or career.</p>
+
+<h2>A possible future</h2>
+
+<p>The app was the easy part. What The Sharkive really needs is people: contributors visiting markets on every island, reviewers with real shark-identification experience, relationships with fishers and vendors, and someone to turn the records into analysis and get it in front of researchers and the relevant authorities. Those are exactly the things a local wildlife or marine conservation organisation already has, and I don&rsquo;t.</p>
+
+<p>So I would like The Sharkive to end up working with, or belonging to, a Seychelles conservation organisation with more resources than a single teacher. I can see three ways that could go:</p>
+
+<ul>
+  <li><strong>Partnership.</strong> The organisation promotes the app, recruits contributors and provides reviewers; I keep building and maintaining it.</li>
+  <li><strong>Shared ownership.</strong> We run it together, with the organisation leading on the science and outreach and me on the technical side, and the data held jointly.</li>
+  <li><strong>Handover.</strong> The organisation takes the project over entirely, under its own name, and I help with the transition for as long as it&rsquo;s useful.</li>
+</ul>
+
+<p>A handover is practical by design. The app is a folder of static files that will run on any https host, the database schema is in the repository, and the records can be exported at any time. Moving it would mean transferring the database project and photo storage, pointing a new address at the app, and adding the organisation&rsquo;s staff as reviewers. Nothing about it depends on me personally.</p>
+
+<p>Whatever form it takes, there are a few things I would want to carry over with it:</p>
+
+<ul>
+  <li>The records stay openly published, so researchers and the public can use them.</li>
+  <li>It stays about sharks, not people: no names of fishers or vendors, and no use as an enforcement tool.</li>
+  <li>Contributors can keep logging without an account or handing over personal details.</li>
+  <li>The rule that time and location come from the photo, and can&rsquo;t be edited, stays in place. It is what makes the data trustworthy.</li>
+</ul>
+
+<p>If you are part of a Seychelles conservation group, research team or fisheries body and this sounds useful, I would be very glad to hear from you. In the meantime, if you live in or visit Seychelles and see a shark for sale, <a href="/shark-id/">please log it</a>.</p>
+
+  </div>
+</div>
