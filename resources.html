@@ -31,7 +31,7 @@ description: Teaching and learning materials for Cambridge International Physics
 
   <div class="resource-grid" id="res-grid">
     {% for resource in site.resources %}
-    <a class="rcard" href="{{ resource.url | relative_url }}"
+    <a class="rcard" href="{% if resource.external_url %}{{ resource.external_url | relative_url }}{% else %}{{ resource.url | relative_url }}{% endif %}"
        data-tags="{{ resource.tags | join: ' ' }} {{ resource.category }}">
       {% if resource.category %}
         <span class="rcard-tag">{{ resource.category }}</span>
