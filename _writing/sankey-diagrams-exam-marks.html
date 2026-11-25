@@ -1,0 +1,143 @@
+---
+layout: post
+title: "A use for Sankey Diagrams?"
+description: "Visualising how the marks on the 2023 A2 Component 2 physics paper split across topics and question styles with a Sankey diagram."
+tags: [interesting-graphs, a-level-physics]
+date: 2025-05-05
+---
+
+{% raw %}
+<p>A Sankey diagram is a type of flow chart used to visualize the distribution or movement of quantities through a system. Named after Captain Matthew Sankey, who first used it in 1898 to depict energy efficiency in steam engines, the diagram uses arrows or paths whose widths are proportional to the quantity they represent. This makes Sankey diagrams particularly effective for showing how resources, energy, information etc, are allocated across categories. They are especially useful for identifying dominant flows, bottlenecks, or imbalances within a process or dataset.</p>
+<p>It occurred to me that it might be an interesting way to display the breakdown of marks in an exam paper.</p>
+<p>This Sankey diagram provides a visual breakdown of how marks were distributed across the A2 Component 2 (2023) Physics paper. It begins with a single “Total Marks” block, which then splits into individual physics topics, such as Circular Motion, Electric Fields, and Nuclear Decay. Each topic node flows into different styles of questions—Calculation, Explanation or Graphing/Data—based on how the marks were awarded.</p>
+<p>The diagram makes it easy to see which topics carried the most weight (Electric Fields, Thermodynamics, Oscillations and Astrophysics share the highest total, 9 marks each) and which styles of questions were most common across the paper. Calculation dominates the assessment (obviously), with 48 of the 90 marks, while Explanation (27 marks) and Graphing/Data (15 marks) play smaller but still significant roles.</p>
+<details class="code-fold"><summary>Show the code</summary><pre class="r"><code># install.packages("networkD3") if needed
+library(networkD3)
+
+# Define nodes with Total Marks first
+nodes &lt;- data.frame(name = c(
+  &quot;Total Marks&quot;,
+  &quot;Circular Motion&quot;, &quot;Gravitational Fields&quot;, &quot;Electric Fields&quot;, &quot;Capacitance&quot;,
+  &quot;Magnetic Fields&quot;, &quot;Nuclear Decay&quot;, &quot;Nuclear Energy&quot;, &quot;Thermodynamics&quot;,
+  &quot;Oscillations&quot;, &quot;Astrophysics&quot;, &quot;Data Analysis&quot;,
+  &quot;Calculation&quot;, &quot;Explanation&quot;, &quot;Graphing/Data&quot;
+))
+
+# Define total marks per topic (names MUST match exactly with nodes$name)
+topic_totals &lt;- c(
+  8,  # Circular Motion
+  7,  # Gravitational Fields
+  9,  # Electric Fields
+  8,  # Capacitance
+  7,  # Magnetic Fields
+  8,  # Nuclear Decay
+  8,  # Nuclear Energy
+  9,  # Thermodynamics
+  9,  # Oscillations
+  9,  # Astrophysics
+  8   # Data Analysis
+)
+
+# Topics names must align with node indices 1–11
+topic_links &lt;- data.frame(
+  source = 0,
+  target = 1:11,
+  value = topic_totals
+)
+
+# Style links from topics (1–11) to styles (12–14)
+style_links &lt;- data.frame(
+  source = c(
+    1, 1,  # Circular Motion
+    2, 2,  # Gravitational Fields
+    3, 3,  # Electric Fields
+    4, 4,  # Capacitance
+    5, 5,  # Magnetic Fields
+    6, 6,  # Nuclear Decay
+    7, 7,  # Nuclear Energy
+    8, 8,  # Thermodynamics
+    9, 9,  # Oscillations
+    10,10, # Astrophysics
+    11,11  # Data Analysis
+  ),
+  target = c(
+    12, 13,
+    12, 13,
+    12, 14,
+    14, 13,
+    12, 13,
+    12, 13,
+    12, 13,
+    12, 13,
+    12, 13,
+    12, 13,
+    14, 13
+  ),
+  value = c(
+    6, 2,
+    5, 2,
+    5, 4,
+    5, 3,
+    5, 2,
+    4, 4,
+    6, 2,
+    5, 4,
+    7, 2,
+    5, 4,
+    6, 2
+  )
+)
+
+# Combine both sets of links
+links &lt;- rbind(topic_links, style_links)
+
+# Draw Sankey diagram
+sankeyNetwork(Links = links, Nodes = nodes, Source = &quot;source&quot;,
+              Target = &quot;target&quot;, Value = &quot;value&quot;, NodeID = &quot;name&quot;,
+              fontSize = 12, nodeWidth = 30,
+              sinksRight = FALSE)</code></pre></details>
+<div class="sankey-wrap"><div id="exam-sankey"></div></div>
+<style>
+.post-content .sankey-wrap{overflow-x:auto;margin:1.5rem 0}
+#exam-sankey,.exam-sankey{min-width:640px}
+#exam-sankey text,.exam-sankey text{font-size:12px;fill:var(--text-primary,#222)}
+#exam-sankey .link,.exam-sankey .link{fill:none;stroke:#888;stroke-opacity:.25}
+#exam-sankey .link:hover,.exam-sankey .link:hover{stroke-opacity:.5}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+<script>
+(function(){
+  function draw(el, names, links){
+    var W=Math.max(el.clientWidth,640), H=520;
+    var svg=d3.select(el).append("svg").attr("viewBox",[0,0,W,H]).attr("width","100%");
+    var sk=d3.sankey().nodeWidth(30).nodePadding(10).extent([[1,5],[W-1,H-5]]);
+    var g=sk({nodes:names.map(function(n){return {name:n};}),links:links.map(function(l){return Object.assign({},l);})});
+    var color=d3.scaleOrdinal(d3.schemeTableau10);
+    svg.append("g").selectAll("path").data(g.links).join("path").attr("class","link")
+      .attr("d",d3.sankeyLinkHorizontal()).attr("stroke-width",function(d){return Math.max(1,d.width);})
+      .append("title").text(function(d){return d.source.name+" \u2192 "+d.target.name+"\n"+d.value+" marks";});
+    var node=svg.append("g").selectAll("g").data(g.nodes).join("g");
+    node.append("rect").attr("x",function(d){return d.x0;}).attr("y",function(d){return d.y0;})
+      .attr("height",function(d){return d.y1-d.y0;}).attr("width",function(d){return d.x1-d.x0;})
+      .attr("fill",function(d){return color(d.name);}).attr("opacity",.9)
+      .append("title").text(function(d){return d.name+"\n"+d.value+" marks";});
+    node.append("text").attr("x",function(d){return d.x0<W/2?d.x1+6:d.x0-6;})
+      .attr("y",function(d){return (d.y1+d.y0)/2;}).attr("dy","0.35em")
+      .attr("text-anchor",function(d){return d.x0<W/2?"start":"end";}).text(function(d){return d.name;});
+  }
+  // Lets the "Run in browser" button redraw the diagram from whatever the R code produces.
+  window.webrRenderers=window.webrRenderers||{};
+  window.webrRenderers.sankey=function(el,data){ el.classList.add("exam-sankey"); draw(el,data.nodes,data.links); };
+
+  var names=["Total Marks","Circular Motion","Gravitational Fields","Electric Fields","Capacitance","Magnetic Fields","Nuclear Decay","Nuclear Energy","Thermodynamics","Oscillations","Astrophysics","Data Analysis","Calculation","Explanation","Graphing/Data"];
+  var totals=[8,7,9,8,7,8,8,9,9,9,8];
+  var links=totals.map(function(v,i){return {source:0,target:i+1,value:v};});
+  var src=[1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11];
+  var tgt=[12,13,12,13,12,14,14,13,12,13,12,13,12,13,12,13,12,13,12,13,14,13];
+  var val=[6,2,5,2,5,4,5,3,5,2,4,4,6,2,5,4,7,2,5,4,6,2];
+  src.forEach(function(s,i){links.push({source:s,target:tgt[i],value:val[i]});});
+  draw(document.getElementById("exam-sankey"),names,links);
+})();
+</script>
+{% endraw %}

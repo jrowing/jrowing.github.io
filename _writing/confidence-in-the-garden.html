@@ -1,0 +1,87 @@
+---
+layout: post
+title: "Confidence in the Garden: Understanding BirdNET-Pi Confidence Scores and Why They Matter"
+description: "What the confidence scores from a garden BirdNET-Pi actually mean, what a box plot of 25 species reveals, and how to use them to filter detections."
+tags: [wildlife, statistics, birdnet, bioacoustics, r]
+date: 2025-04-24
+---
+
+{% raw %}
+<p>One of the joys of setting up a BirdNET-Pi in the garden is that it turns your everyday green space into a hub of real-time bioacoustic science. Every chirp, tweet, and call becomes a data point. But when we look at the results—particularly those elusive confidence scores many of us wonder: <em>What exactly do these numbers mean?</em> And how much can we trust them?</p>
+<p>Let’s unpack what confidence scores are, how they’re used in BirdNET-Pi, and what insights we can pull from visualizing them, like in the box plot I generated from my garden’s data:</p>
+<figure><img src="/images/writing/confidence-in-the-garden/detection-confidence.png" alt="Box plot of BirdNET-Pi detection confidence scores for the 25 commonest species in the garden" loading="lazy" /><figcaption>Detection confidence for the 25 commonest species in the garden.</figcaption></figure>
+<h2 id="what-is-a-confidence-score">What is a Confidence Score?</h2>
+<p>In the world of machine learning and AI, a <strong>confidence score</strong> is a number (usually between 0 and 1) that tells us how certain the model is that it has made the right prediction. In the case of BirdNET-Pi, this means: How sure is the system that the bird call it detected belongs to a particular species?</p>
+<p>If the system hears a song and assigns a confidence score of <strong>0.94</strong> to a <strong>Great Tit</strong>, it’s very confident. If it gives only <strong>0.72</strong> for a <strong>Goldfinch</strong>, it’s not so sure.</p>
+<p>These scores are not random—they’re derived from deep learning models trained on thousands of real bird vocalizations. But even the best models have limits, especially in real-world environments full of overlapping calls, wind, rain, or traffic noise.</p>
+<p>Before we dig into the BirdNET data specifically, let’s briefly detour into statistics. A <strong>confidence interval</strong> is a range of values, derived from sample data, that likely contains the true value we care about.</p>
+<p>Say you’re measuring the average height of sparrows in your garden. You might find a mean of 16 cm, with a <strong>95% confidence interval</strong> of [15.7 cm, 16.3 cm]. That means you can be 95% sure the true average falls in that range. It’s a way of expressing <strong>uncertainty</strong>—and it’s a concept that’s related (though not identical) to BirdNET’s confidence scores.</p>
+<p>While BirdNET doesn’t give us formal “confidence intervals,” the distribution of scores across many detections acts like one. That’s where graphs like the one I generated become useful.</p>
+<h2 id="interpreting-the-graph-confidence-scores-across-25-bird-species">Interpreting the Graph: Confidence Scores Across 25 Bird Species</h2>
+<p>Recently, I collected data from my BirdNET-Pi setup in the garden and created a box plot showing detection confidence scores for the 25 bird species it picked up most commonly. Here’s what it revealed:</p>
+<ul>
+<li>Species like the Eurasian Jackdaw and White Wagtail consistently scored high, often above 0.9. The AI model is highly confident when it hears them.</li>
+<li>Others, like the Ring-necked Pheasant or Great Spotted Woodpecker, had wider spreads and lower medians—suggesting the model struggled more with these. There is some evidence that birds have local accents and I wonder if these are coming into play.</li>
+<li>Some species had lots of <strong>outliers</strong>, hinting at inconsistent recordings or background noise.</li>
+</ul>
+<p>This plot is powerful because it helps me do three things:</p>
+<ol type="1">
+<li><p>Evaluate model reliability: If a species constantly has low confidence scores, maybe I shouldn’t treat its detection as trustworthy without more evidence.</p></li>
+<li><p>Spot detection bias: Some birds might be misidentified due to overlapping frequencies with other species. A wide range of scores might indicate this.</p></li>
+<li><p>Tailor my alerts and filtering: I might only log or act on detections with a confidence &gt; 0.85 for certain species. Others, I might review manually.</p></li>
+</ol>
+<h2 id="why-this-matters-for-garden-birding">Why This Matters for Garden Birding</h2>
+<p>In short - it doesn’t - if all you want to do is have an idea of what’s around. If, on the other hand, you’re using BirdNET-Pi as part of your bird monitoring, conservation efforts, or just for fun, understanding confidence scores helps you interpret your data responsibly. You don’t want to celebrate the return of a rare warbler only to realize it was just a noisy House Sparrow with a weird echo!</p>
+<p>By looking at trends over time and visualizing confidence distributions, we start to go beyond passive detection and become more active, informed interpreters of the data. And the more we learn, the more meaningful our garden’s bird chorus becomes.</p>
+<h2 id="practical-tips-for-using-confidence-scores">Practical Tips for Using Confidence Scores</h2>
+<p>Here are a few ways to make the most of your confidence data:</p>
+<ul>
+<li><p>Set a filtering threshold: In BirdNET-Pi’s web interface or your CSV logs, you can filter to only include results with confidence above eg. 0.80 or 0.90.</p></li>
+<li><p>Visualize trends: Use tools like Excel, Python, or R to graph detection confidence over time or by species.</p></li>
+<li><p>Investigate edge cases: Low scores might point to interesting events—background noise, mimicry, or even unusual bird behavior.</p></li>
+<li><p>Compare seasons: Are confidence scores better in spring when birds sing more clearly? Or do leaves and wind affect fall detection?</p></li>
+</ul>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Threshold</th>
+<th>Interpretation</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>&gt; 0.90</td>
+<td>Very high confidence</td>
+<td>Pretty safe to assume correct ID — good for data logging, biodiversity reports.</td>
+</tr>
+<tr class="even">
+<td>0.80 – 0.90</td>
+<td>High confidence</td>
+<td>Likely correct, but worth a second look if species are similar-sounding.</td>
+</tr>
+<tr class="odd">
+<td>0.70 – 0.80</td>
+<td>Medium confidence</td>
+<td>Can include false positives — OK for casual monitoring but be cautious with rare species.</td>
+</tr>
+<tr class="even">
+<td>&lt; 0.70</td>
+<td>Low confidence</td>
+<td>Often unreliable — treat with skepticism unless you can verify it manually.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="final-thoughts">Final Thoughts</h2>
+<p>BirdNET-Pi brings a beautiful blend of AI and ecology right into our backyards. And while the tech behind it is complex, tools like confidence scores help demystify the magic. With a bit of data-savvy, we can turn raw detection logs into meaningful insights—and maybe even uncover some surprises along the way.</p>
+<p>Whether you’re a seasoned birder, a teacher running a school science project (ahem!), or just someone who loves the dawn chorus, take a closer look at your confidence data. You might find there’s more certainty (and more mystery) in the garden than you realized.</p>
+<hr />
+<h2 id="comments">Comments</h2>
+<p>Join the conversation <a href="https://bsky.app/profile/jrowing.com/post/3lnuiejxa2c2c">on Bluesky</a>.</p>
+
+{% endraw %}

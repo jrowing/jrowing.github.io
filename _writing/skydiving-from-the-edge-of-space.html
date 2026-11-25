@@ -1,0 +1,92 @@
+---
+layout: post
+title: "Skydiving from the edge of space"
+description: "Modelling Felix Baumgartner’s 39 km freefall in R, with gravity, drag and an exponentially thinning atmosphere."
+tags: [projectiles, r-models, a-level]
+date: 2025-04-19
+math: true
+---
+
+{% raw %}
+<h2 id="freefall-from-space">Freefall from space</h2>
+<p>In 2012, Felix Baumgartner jumped from the edge of space, plummeting from an altitude of nearly 39,000 meters. During his descent, he accelerated rapidly, eventually breaking the sound barrier before safely deploying his parachute.</p>
+<div class="embed-video"><iframe allow="fullscreen; picture-in-picture" allowfullscreen="" loading="lazy" src="https://www.youtube-nocookie.com/embed/E9oKEJ1pXPw?rel=0" title="Felix Baumgartner Red Bull Stratos jump"></iframe></div>
+<p>In this activity, you’ll use a computational model to simulate the physics of such a jump. By combining Newton’s laws of motion with the effects of air resistance and changing air density, you’ll explore how forces interact during freefall from high altitudes.</p>
+<p>You’ll investigate how the jumper’s velocity and acceleration change over time and identify the key point where drag balances gravity—known as terminal velocity. You’ll also reflect on the limitations of the model and how we can improve its accuracy.</p>
+<p>By the end, you’ll have a better understanding of the complex yet fascinating dynamics of extreme skydiving—and how physics helps us make sense of them.</p>
+<h2 id="modelling-the-jump">Modelling the jump:</h2>
+<p>The problem can be simply described in a free-body diagram:</p>
+<figure><img style="max-width:260px" src="/images/writing/skydiving-from-the-edge-of-space/free-body.png" alt="Free-body diagram: drag D acting upward, weight mg acting downward" loading="lazy" /></figure>
+<p>During his free-fall, he was subject to two main forces: gravity</p>
+<p><span class="math display">\[
+\mathbf{F_g} = mg;
+\]</span></p>
+<p>and atmospheric drag</p>
+<p><span class="math display">\[
+\mathbf{F_d} = -C \rho(h) A |\mathbf{v}|^2 \hat{v}
+\]</span></p>
+<p>Where the drag coefficient <span class="math inline">\(C \rho(h) A\)</span> is composed of a constant <span class="math inline">\(C\)</span> depending on the shape of the object, the air density <span class="math inline">\(\rho(h)\)</span> which depends on the height with respect to sea level, and the surface area perpendicular to the direction of motion <span class="math inline">\(A\)</span>.</p>
+<p>Assume that Baumgartner + equipment have a mass of 120kg, and that we are on Earth (so <span class="math inline">\(|\mathbf{g}| = 9.81 \text{ m/s}^2\)</span>).</p>
+<p>We can model the density of the atmosphere as a decaying exponential function:</p>
+<p><span class="math display">\[
+\rho(h) = \rho_0 e^{-h/H_n}
+\]</span></p>
+<p>where <span class="math inline">\(H_n = 10\,400\)</span> m and <span class="math inline">\(\rho_0 = 1.2\)</span> kg/m³.</p>
+<pre class="r"><code># Load libraries
+library(ggplot2)
+library(gridExtra)
+
+# Parameters
+mass &lt;- 120      # kg
+massuncert &lt;- 1  # kg
+g &lt;- 9.81        # m/s^2
+c_1 &lt;- 1.2       # Drag coefficient
+rho_0 &lt;- 1.2     # Fluid density at sea level
+h_n &lt;- 10400     # Scale height
+area &lt;- 1        # Cross-sectional area
+dt &lt;- 0.01       # Time step
+t &lt;- seq(0, 600, by = dt)
+
+# Initialize vectors
+x &lt;- numeric(length(t))
+v &lt;- numeric(length(t))
+a &lt;- numeric(length(t))
+rho &lt;- numeric(length(t))
+
+# Initial conditions
+x[1] &lt;- 39000
+v[1] &lt;- 0
+a[1] &lt;- -g
+
+# Time stepping loop
+for (i in 2:length(t)) {
+  rho[i] &lt;- rho_0 * exp(-x[i - 1] / h_n)
+  a[i] &lt;- -g + c_1 * rho[i] * area * (v[i - 1]^2) / mass
+  v[i] &lt;- v[i - 1] + a[i - 1] * dt
+  x[i] &lt;- x[i - 1] + v[i - 1] * dt
+}
+
+# Create data frame for plotting
+df &lt;- data.frame(time = t, altitude = x, velocity = v, acceleration = a)
+
+# Plot using ggplot2
+p1 &lt;- ggplot(df, aes(x = time, y = altitude)) +
+  geom_line() +
+  labs(y = &quot;Altitude (m)&quot;, x = NULL) +
+  theme_minimal()
+
+p2 &lt;- ggplot(df, aes(x = time, y = velocity)) +
+  geom_line() +
+  labs(y = &quot;Velocity (m/s)&quot;, x = NULL) +
+  theme_minimal()
+
+p3 &lt;- ggplot(df, aes(x = time, y = acceleration)) +
+  geom_line() +
+  labs(y = &quot;Acceleration (m/s^2)&quot;, x = &quot;Time (s)&quot;) +
+  theme_minimal()
+
+# Combine plots
+grid.arrange(p1, p2, p3, ncol = 1)</code></pre>
+<figure><img src="/images/writing/skydiving-from-the-edge-of-space/freefall.png" alt="Altitude, velocity and acceleration against time for the modelled jump" loading="lazy" /></figure>
+
+{% endraw %}

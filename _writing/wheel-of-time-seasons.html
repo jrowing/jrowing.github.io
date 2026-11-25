@@ -1,0 +1,148 @@
+---
+layout: post
+title: "The Wheel of Time and the Science of Everchanging Seasons"
+description: "Could any real orbit explain the unpredictable, world-wide seasons of The Wheel of Time? Five semi-scientific theories, with orbits plotted in R."
+tags: [cosmology, r-models, a-level, fantasy]
+date: 2025-04-23
+---
+
+{% raw %}
+<p><em>“The Wheel weaves as the Wheel wills.”</em> But could it also wobble?</p>
+<p>If you’ve read <em>The Wheel of Time</em> or watched the TV adaptation, you’ve probably noticed something peculiar: <strong>seasons don’t behave the way we’re used to on Earth</strong>. Winter drags on for far too long, or summer comes late. The entire world seems to be experiencing the <strong>same season</strong>, together — and the duration of each season seems random, almost like dice are being rolled by the Pattern itself.</p>
+<p>But what could explain this in astronomical terms?</p>
+<p>Let’s start with a quick Earth science refresher:</p>
+<h2 id="how-earth-gets-its-seasons">How Earth Gets Its Seasons</h2>
+<p>On Earth, seasons are caused by <strong>axial tilt</strong>. Our planet is tilted about 23.5° relative to its orbit around the Sun. As Earth moves around its (mostly circular) orbit: - One hemisphere leans <strong>toward</strong> the Sun (summer). - The other leans <strong>away</strong> (winter).</p>
+<p>Crucially: - <strong>Seasons are opposite in each hemisphere</strong>. - They’re regular, like clockwork, because Earth’s orbit is stable.</p>
+<p>But this regularity doesn’t apply in <em>The Wheel of Time</em> world.</p>
+<h2 id="the-world-of-the-wheel-unstable-seasons">The World of the Wheel: Unstable Seasons</h2>
+<p>In Randland (and across the known lands), <strong>everyone seems to experience the same season at the same time</strong>. When winter is long, it’s long <em>everywhere</em>. When summer comes late, crops fail across the entire continent.</p>
+<p>So… what kind of astronomical system could cause this?</p>
+<p>In short, probably none but I thought it might be fun <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> to explore a few semi-scientific theories — all inspired by real-world astrophysics but exaggerated to fit a fantasy setting. We’ll even visualize these in R (code below!) for the curious worldbuilders and science geeks.</p>
+<h2 id="fantasy-orbit-models-that-could-explain-wheel-of-time-style-seasons">Fantasy Orbit Models That Could Explain <em>Wheel of Time</em>-Style Seasons</h2>
+<h3 id="a-highly-eccentric-orbit-precessing-axis">1. <strong>A Highly Eccentric Orbit + Precessing Axis</strong></h3>
+<ul>
+<li>The planet’s orbit around its sun is a <strong>long ellipse</strong>, not a circle.</li>
+<li>Sometimes it’s much closer to the sun, sometimes far.</li>
+<li>The axis also <strong>precesses</strong> (wobbles), shifting the timing of the seasons.</li>
+</ul>
+<p>This could cause a planet-wide long winter if the coldest part of orbit coincides with a tilted-away axis.</p>
+<hr />
+<h3 id="chaotic-binary-star-system">2. <strong>Chaotic Binary Star System</strong></h3>
+<blockquote>
+<p><em>Aside:</em> This is my favourite one but it really wouldnt last very long before the planet crashed into one of the suns</p>
+</blockquote>
+<ul>
+<li>Imagine two suns pulling on the planet.</li>
+<li>The orbit gets subtly, unpredictably <strong>warped</strong> over time.</li>
+<li><strong>Distance to the primary sun changes</strong>, making summers hotter or colder.</li>
+</ul>
+<p>This <em>could</em> create <em>“The Long Heat”</em> or <em>“The Fading”</em> — seasons with no fixed schedule.</p>
+<h3 id="variable-axial-tilt">3. <strong>Variable Axial Tilt</strong></h3>
+<ul>
+<li>The planet’s tilt changes over decades due to interactions with a massive moon or nearby planets.</li>
+<li>When the tilt is strong: extreme seasons.</li>
+<li>When it’s mild: barely any seasons.</li>
+</ul>
+<p>If tilt gets stuck near zero, the planet could have <strong>long, uniform seasons</strong> that shift slowly over years.</p>
+<h3 id="passing-rogue-planet-or-dark-star">4. <strong>Passing Rogue Planet or Dark Star</strong></h3>
+<ul>
+<li>Every few centuries, a rogue planet or companion star swings by.</li>
+<li>It nudges the planet’s orbit just slightly — but the result is <strong>chaotic, long-term changes</strong> in season lengths.</li>
+</ul>
+<p>Perhaps <em>the Dark One’s prison</em> isn’t just metaphorical — maybe it’s an euphamism for a dark star that <em>actually</em> perturbs the planet’s orbit.</p>
+<h3 id="magical-cosmic-influence">5. <strong>Magical Cosmic Influence</strong></h3>
+<ul>
+<li>Let’s not rule out <em>magic</em> — but give it structure.</li>
+<li>Maybe there’s an invisible celestial body in higher dimensions that exerts a gravitational “pulse.”</li>
+<li>This pulse could rhythmically stretch or compress seasons… or tie them to the <strong>Turning of the Wheel</strong>.</li>
+</ul>
+<h2 id="visualizing-these-orbits-in-r">Visualizing These Orbits in R</h2>
+<p>If you’re a coder or science teacher, you might find it fun to explore these ideas yourself with the code below that lets you <strong>toggle different orbits</strong> and visualize how unstable systems might affect climate patterns. I’m still learning R myself and this was a great exercise.</p>
+<details class="code-fold"><summary>Show the code</summary><pre class="r"><code># Load libraries
+library(ggplot2)
+library(plotly)
+library(dplyr)
+
+# Orbit generator
+generate_orbit &lt;- function(a = 1, e = 0, theta_shift = 0, n = 360, label = &quot;Orbit&quot;) {
+  theta &lt;- seq(0, 2*pi, length.out = n)
+  r &lt;- (a * (1 - e^2)) / (1 + e * cos(theta - theta_shift))
+  data.frame(
+    x = r * cos(theta),
+    y = r * sin(theta),
+    orbit = label
+  )
+}
+
+# Create orbits
+orbit1 &lt;- generate_orbit(a = 1, e = 0, label = &quot;1. Regular Orbit&quot;)
+orbit2 &lt;- generate_orbit(a = 1, e = 0.6, theta_shift = pi/5, label = &quot;2. Eccentric + Precession&quot;)
+orbit3 &lt;- generate_orbit(a = 1, e = 0.4, theta_shift = pi/3, label = &quot;3. Binary Chaos&quot;)
+orbit3$x &lt;- orbit3$x + 0.2 * sin(5 * seq(0, 2*pi, length.out = 360))
+orbit4 &lt;- rbind(
+  generate_orbit(a = 1.05, e = 0.1, label = &quot;4. Tilt Wobble&quot;),
+  generate_orbit(a = 0.95, e = 0.1, label = &quot;4. Tilt Wobble&quot;)
+)
+orbit5 &lt;- generate_orbit(a = 1, e = 0.3, theta_shift = pi/6, label = &quot;5. Rogue Body&quot;)
+orbit5$x &lt;- orbit5$x + 0.2
+theta &lt;- seq(0, 4*pi, length.out = 360)
+r &lt;- 0.5 + 0.05 * theta
+orbit6 &lt;- data.frame(
+  x = r * cos(theta),
+  y = r * sin(theta),
+  orbit = &quot;6. Magic Orbit&quot;
+)
+
+# Combine all orbits
+all_orbits &lt;- bind_rows(orbit1, orbit2, orbit3, orbit4, orbit5, orbit6)
+
+# Central point (star)
+star &lt;- data.frame(x = 0, y = 0)
+
+# Plot with ggplot2
+p &lt;- ggplot(all_orbits, aes(x, y, color = orbit, group = orbit)) +
+  geom_path(size = 1) +
+  geom_point(data = star, aes(x, y), color = &quot;gold&quot;, size = 4, shape = 8, inherit.aes = FALSE) +
+  coord_equal() +
+  theme_minimal(base_size = 14) +
+  labs(title = &quot;Possible orbits for Wheel of time...&quot;,
+       x = &quot;X position (AU-ish)&quot;,
+       y = &quot;Y position (AU-ish)&quot;,
+       color = &quot;Orbit Type&quot;)
+
+# Convert to interactive plot
+ggplotly(p) %&gt;%
+  layout(legend = list(title = list(text = &quot;&lt;b&gt;Toggle Orbits&lt;/b&gt;&quot;)))</code></pre></details>
+<div id="wot-orbits" class="plotly-wrap"><figure><img src="/images/writing/wheel-of-time-seasons/orbits.png" alt="Six candidate orbits plotted around a central star" loading="lazy" /></figure></div>
+<p>You can see:</p>
+<ul>
+<li>Elliptical orbits</li>
+<li>Warped paths from binary stars</li>
+<li>Spiral-like “magical” tracks</li>
+<li>A central sun point anchoring everything</li>
+</ul>
+<h2 id="threads-in-the-pattern">Threads in the Pattern</h2>
+<p>Ultimately, <em>The Wheel of Time</em> isn’t science fiction — it’s myth woven with magic. But like all great fantasy worlds, it feels more real when it’s internally consistent.</p>
+<p>Thinking of the world as a planet locked in a <strong>chaotic celestial dance</strong>, where unpredictable seasons are just part of the weave, for me, makes it even richer.</p>
+<p>Because if the seasons themselves are unstable… maybe the Pattern really does have a will of its own…</p>
+<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>and I like to code/learn/frig about on the internet whilst watching trash<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</aside>
+<style>.post-content .plotly-wrap{margin:1.5rem 0;min-height:420px}</style>
+<script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<script>
+(function(){
+  if (!window.Plotly) return;
+  fetch("/images/writing/wheel-of-time-seasons/orbits.json").then(function(r){return r.json();}).then(function(fig){
+    fig.data.forEach(function(t){ t.hoverinfo = t.name ? "name+x+y" : "skip"; });
+    fig.layout.autosize = true; delete fig.layout.width; delete fig.layout.height;
+    var el = document.getElementById("wot-orbits"); el.innerHTML = "";
+    Plotly.newPlot(el, fig.data, fig.layout, {responsive:true, displaylogo:false});
+  }).catch(function(){});
+})();
+</script>
+{% endraw %}
