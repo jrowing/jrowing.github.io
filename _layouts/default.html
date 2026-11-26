@@ -17,6 +17,9 @@
 
 <main>
   {{ content }}
+  {% if page.layout == "default" %}{% if page.collection == "writing" or page.collection == "resources" %}{% unless page.comments == false %}
+  <div class="inner-page bsky-comments-wrap">{% include bluesky-comments.html %}</div>
+  {% endunless %}{% endif %}{% endif %}
 </main>
 
 {% include footer.html %}

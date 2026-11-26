@@ -1,9 +1,9 @@
 name: Share new posts on Bluesky
 
-# Runs when a push adds a new file to _writing/. Waits for the page to go live,
-# then posts it to Bluesky. The comments box on the article picks up the replies.
-# To share an older post by hand: Actions tab → this workflow → Run workflow,
-# and type the file name (e.g. vibrations-and-waves.html).
+# Runs when a push adds a new file to _writing/ or _resources/. Waits for the
+# page to go live, then posts it to Bluesky and records it in _data/bluesky.json.
+# To share something by hand: Actions tab → this workflow → Run workflow, and
+# type its path (e.g. _writing/vibrations-and-waves.html).
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -11,18 +11,18 @@ env:
 on:
   push:
     branches: [main]
-    paths: ['_writing/**']
+    paths: ['_writing/**', '_resources/**']
   workflow_dispatch:
     inputs:
       post:
-        description: 'File name in _writing/ to share (e.g. vibrations-and-waves.html)'
+        description: 'File to share, e.g. _writing/vibrations-and-waves.html'
         required: true
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: bluesky-share
+  group: bluesky
   cancel-in-progress: false
 
 jobs:
@@ -33,15 +33,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Work out which posts are new
+      - name: Work out which files are new
         id: posts
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "files=_writing/${{ github.event.inputs.post }}" >> "$GITHUB_OUTPUT"
+            f="${{ github.event.inputs.post }}"
+            case "$f" in _writing/*|_resources/*) ;; *) f="_writing/$f" ;; esac
+            echo "files=$f" >> "$GITHUB_OUTPUT"
           elif [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
             echo "files=" >> "$GITHUB_OUTPUT"
           else
-            files=$(git diff --name-only --diff-filter=A "${{ github.event.before }}" "${{ github.sha }}" -- '_writing/*.html' '_writing/*.md' | tr '\n' ' ')
+            files=$(git diff --name-only --diff-filter=A "${{ github.event.before }}" "${{ github.sha }}" -- '_writing/*' '_resources/*' | tr '\n' ' ')
             echo "files=$files" >> "$GITHUB_OUTPUT"
           fi
 
@@ -53,4 +55,14 @@ jobs:
           SITE_URL: https://www.jrowing.com
         run: |
           pip install --quiet pillow
-          python3 scripts/bluesky_share.py ${{ steps.posts.outputs.files }}
+          python3 scripts/bluesky_share.py share ${{ steps.posts.outputs.files }}
+
+      - name: Save record of what's been shared
+        if: steps.posts.outputs.files != ''
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add _data/bluesky.json 2>/dev/null || exit 0
+          git diff --staged --quiet && exit 0
+          git commit -m "Bluesky: record shared post"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done

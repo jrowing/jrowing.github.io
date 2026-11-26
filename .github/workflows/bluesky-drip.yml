@@ -1,0 +1,53 @@
+name: Drip old posts to Bluesky
+
+# Five chances a day (daytime UK/Seychelles). Each run usually does nothing;
+# now and then it shares one random article or resource that isn't on Bluesky
+# yet, never sooner than DRIP_MIN_DAYS after the last share. About two a week.
+# Run it by hand with "post now" ticked to share one immediately.
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  schedule:
+    - cron: '23 7,10,13,16,19 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Post one now (ignore the random chance and minimum gap)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bluesky
+  cancel-in-progress: false
+
+jobs:
+  drip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Maybe share one
+        env:
+          BLUESKY_HANDLE: jrowing.com
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+          SITE_URL: https://www.jrowing.com
+          DRIP_CHANCE: '0.12'
+          DRIP_MIN_DAYS: ${{ inputs.force && '0' || '2' }}
+          DRIP_FORCE: ${{ inputs.force && 'true' || 'false' }}
+        run: |
+          pip install --quiet pillow
+          python3 scripts/bluesky_share.py drip
+
+      - name: Save record of what's been shared
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add _data/bluesky.json 2>/dev/null || exit 0
+          git diff --staged --quiet && exit 0
+          git commit -m "Bluesky: record shared post"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done

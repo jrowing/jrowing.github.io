@@ -1,7 +1,8 @@
+{% assign bsky_rec = site.data.bluesky[page.url] %}
 <section class="bsky-comments" id="comments" hidden
   data-handle="{{ site.bluesky_handle | default: 'jrowing.com' }}"
   data-url="{{ page.url | absolute_url }}"
-  data-post="{{ page.bluesky }}">
+  data-post="{% if page.bluesky %}{{ page.bluesky }}{% elsif bsky_rec %}{{ bsky_rec.uri }}{% endif %}">
   <h2 class="bsky-comments__title">Comments</h2>
   <p class="bsky-comments__stats"></p>
   <p class="bsky-comments__intro">
