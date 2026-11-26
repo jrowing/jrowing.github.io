@@ -17,6 +17,10 @@ layout: default
   <div class="post-content">
     {{ content }}
   </div>
+
+  {% unless page.comments == false %}
+    {% include bluesky-comments.html %}
+  {% endunless %}
 </div>
 {% unless page.math == false %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">

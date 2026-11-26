@@ -1082,3 +1082,105 @@ footer { border-top: 0.5px solid var(--border); }
 .post-content .data-table caption{text-align:left;font-weight:600;padding-bottom:.4rem}
 .post-content .data-table th,.post-content .data-table td{padding:.25rem .8rem;border-bottom:1px solid rgba(128,128,128,.3);text-align:right}
 .post-content .data-table th{border-bottom-width:2px}
+
+/* ─── Bluesky comments ───────────────────────────────────────────────────── */
+
+.bsky-comments {
+  max-width: 680px;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 0.5px solid var(--border-strong);
+  color: var(--text-secondary);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.bsky-comments__title {
+  font-family: var(--font-voice);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem;
+}
+
+.bsky-comments__stats,
+.bsky-comments__intro {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0 0 0.25rem;
+}
+
+.bsky-comments__stats:empty { display: none; }
+
+.bsky-comments a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.bsky-comments a:hover { color: var(--text-primary); }
+
+.bsky-comments__reply { margin-left: 0.25rem; }
+
+.bsky-comments__list {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+}
+
+.bsky-comments__list .bsky-comments__list {
+  margin: 1rem 0 0;
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--border);
+}
+
+.bsky-c { margin: 0 0 1.5rem; }
+.bsky-c:last-child { margin-bottom: 0; }
+
+.bsky-c__head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  font-size: 14px;
+}
+
+.bsky-c__avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  object-fit: cover;
+  flex: none;
+}
+
+.bsky-comments a.bsky-c__name {
+  color: var(--text-primary);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.bsky-c__handle { color: var(--text-muted); }
+
+.bsky-comments a.bsky-c__time {
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: auto;
+}
+
+.bsky-c__body {
+  margin: 0.35rem 0 0.25rem 2rem;
+  overflow-wrap: anywhere;
+}
+
+.bsky-c__meta {
+  margin-left: 2rem;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.bsky-comments__empty {
+  color: var(--text-muted);
+  font-style: italic;
+}

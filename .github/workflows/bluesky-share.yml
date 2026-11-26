@@ -1,0 +1,56 @@
+name: Share new posts on Bluesky
+
+# Runs when a push adds a new file to _writing/. Waits for the page to go live,
+# then posts it to Bluesky. The comments box on the article picks up the replies.
+# To share an older post by hand: Actions tab → this workflow → Run workflow,
+# and type the file name (e.g. vibrations-and-waves.html).
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  push:
+    branches: [main]
+    paths: ['_writing/**']
+  workflow_dispatch:
+    inputs:
+      post:
+        description: 'File name in _writing/ to share (e.g. vibrations-and-waves.html)'
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bluesky-share
+  cancel-in-progress: false
+
+jobs:
+  share:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Work out which posts are new
+        id: posts
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "files=_writing/${{ github.event.inputs.post }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
+            echo "files=" >> "$GITHUB_OUTPUT"
+          else
+            files=$(git diff --name-only --diff-filter=A "${{ github.event.before }}" "${{ github.sha }}" -- '_writing/*.html' '_writing/*.md' | tr '\n' ' ')
+            echo "files=$files" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Post to Bluesky
+        if: steps.posts.outputs.files != ''
+        env:
+          BLUESKY_HANDLE: jrowing.com
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+          SITE_URL: https://www.jrowing.com
+        run: |
+          pip install --quiet pillow
+          python3 scripts/bluesky_share.py ${{ steps.posts.outputs.files }}

@@ -1,0 +1,141 @@
+<section class="bsky-comments" id="comments" hidden
+  data-handle="{{ site.bluesky_handle | default: 'jrowing.com' }}"
+  data-url="{{ page.url | absolute_url }}"
+  data-post="{{ page.bluesky }}">
+  <h2 class="bsky-comments__title">Comments</h2>
+  <p class="bsky-comments__stats"></p>
+  <p class="bsky-comments__intro">
+    Comments come from replies to this post on Bluesky.
+    <a class="bsky-comments__reply" href="#" target="_blank" rel="noopener">Reply on Bluesky</a>
+  </p>
+  <ol class="bsky-comments__list"></ol>
+</section>
+<script>
+(function () {
+  var box = document.getElementById('comments');
+  if (!box) return;
+  var API = 'https://public.api.bsky.app/xrpc/';
+  var handle = box.dataset.handle;
+
+  function get(method, params) {
+    return fetch(API + method + '?' + new URLSearchParams(params))
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+  }
+  function norm(u) {
+    try { var p = new URL(u); return p.host.replace(/^www\./, '') + p.pathname.replace(/\/$/, ''); }
+    catch (e) { return ''; }
+  }
+  function esc(s) {
+    return s.replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function webUrl(uri, h) {
+    var p = uri.split('/');
+    return 'https://bsky.app/profile/' + (h || p[2]) + '/post/' + p[p.length - 1];
+  }
+  function postLinks(post) {
+    var rec = post.record || {}, out = [];
+    var ext = rec.embed && (rec.embed.external || (rec.embed.media && rec.embed.media.external));
+    if (ext) out.push(ext.uri);
+    (rec.facets || []).forEach(function (f) {
+      (f.features || []).forEach(function (x) { if (x.uri) out.push(x.uri); });
+    });
+    return out;
+  }
+
+  // Find the Bluesky post for this page: front matter `bluesky:` wins,
+  // otherwise look through the author's recent posts for one linking here.
+  function findPost() {
+    var given = box.dataset.post;
+    if (given && given !== 'false') {
+      var m = given.match(/profile\/([^/]+)\/post\/([^/?#]+)/);
+      if (given.indexOf('at://') === 0) return Promise.resolve(given);
+      if (m) {
+        var actor = m[1], rkey = m[2];
+        var did = actor.indexOf('did:') === 0 ? Promise.resolve(actor)
+          : get('com.atproto.identity.resolveHandle', { handle: actor }).then(function (r) { return r.did; });
+        return did.then(function (d) { return 'at://' + d + '/app.bsky.feed.post/' + rkey; });
+      }
+    }
+    var target = norm(box.dataset.url);
+    function page(cursor, n) {
+      var q = { actor: handle, limit: 100, filter: 'posts_no_replies' };
+      if (cursor) q.cursor = cursor;
+      return get('app.bsky.feed.getAuthorFeed', q).then(function (feed) {
+        var hit = null;
+        (feed.feed || []).forEach(function (item) {
+          var p = item.post;
+          if (hit || item.reason || !p) return;
+          if (postLinks(p).some(function (u) { return norm(u) === target; })) hit = p.uri;
+        });
+        if (hit) return hit;
+        if (feed.cursor && n < 3) return page(feed.cursor, n + 1);
+        return null;
+      });
+    }
+    return page(null, 1);
+  }
+
+  function ago(iso) {
+    var s = (Date.now() - new Date(iso)) / 1000;
+    if (s < 3600) return Math.max(1, Math.round(s / 60)) + 'm';
+    if (s < 86400) return Math.round(s / 3600) + 'h';
+    if (s < 86400 * 30) return Math.round(s / 86400) + 'd';
+    return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+  function text(rec) {
+    var t = esc(rec.text || '');
+    return t.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener nofollow">$1</a>')
+            .replace(/\n/g, '<br>');
+  }
+  function render(node, depth) {
+    if (!node || !node.post || node.$type && node.$type.indexOf('threadViewPost') < 0) return '';
+    var p = node.post, a = p.author, url = webUrl(p.uri, a.handle);
+    var kids = (node.replies || []).slice().sort(function (x, y) {
+      return new Date(x.post && x.post.indexedAt) - new Date(y.post && y.post.indexedAt);
+    });
+    var html = '<li class="bsky-c">' +
+      '<div class="bsky-c__head">' +
+        (a.avatar ? '<img class="bsky-c__avatar" src="' + esc(a.avatar) + '" alt="" loading="lazy">' : '<span class="bsky-c__avatar"></span>') +
+        '<a class="bsky-c__name" href="https://bsky.app/profile/' + esc(a.handle) + '" target="_blank" rel="noopener">' +
+          esc(a.displayName || a.handle) + '</a>' +
+        '<span class="bsky-c__handle">@' + esc(a.handle) + '</span>' +
+        '<a class="bsky-c__time" href="' + url + '" target="_blank" rel="noopener">' + ago(p.indexedAt) + '</a>' +
+      '</div>' +
+      '<div class="bsky-c__body">' + text(p.record || {}) + '</div>' +
+      '<div class="bsky-c__meta">' +
+        (p.likeCount ? p.likeCount + (p.likeCount === 1 ? ' like' : ' likes') + ' · ' : '') +
+        '<a href="' + url + '" target="_blank" rel="noopener">Reply</a>' +
+      '</div>';
+    if (kids.length && depth < 6) {
+      html += '<ol class="bsky-comments__list">' + kids.map(function (k) { return render(k, depth + 1); }).join('') + '</ol>';
+    }
+    return html + '</li>';
+  }
+
+  findPost().then(function (uri) {
+    if (!uri) return;
+    return get('app.bsky.feed.getPostThread', { uri: uri, depth: 10, parentHeight: 0 }).then(function (r) {
+      var root = r.thread && r.thread.post;
+      if (!root) return;
+      var url = webUrl(root.uri, root.author.handle);
+      box.querySelector('.bsky-comments__reply').href = url;
+      var bits = [];
+      if (root.likeCount) bits.push(root.likeCount + (root.likeCount === 1 ? ' like' : ' likes'));
+      if (root.repostCount) bits.push(root.repostCount + (root.repostCount === 1 ? ' repost' : ' reposts'));
+      if (root.replyCount) bits.push(root.replyCount + (root.replyCount === 1 ? ' reply' : ' replies'));
+      box.querySelector('.bsky-comments__stats').innerHTML =
+        bits.length ? '<a href="' + url + '" target="_blank" rel="noopener">' + bits.join(' · ') + '</a>' : '';
+      var replies = (r.thread.replies || []).slice().sort(function (x, y) {
+        return new Date(x.post && x.post.indexedAt) - new Date(y.post && y.post.indexedAt);
+      });
+      var list = box.querySelector('.bsky-comments__list');
+      list.innerHTML = replies.length
+        ? replies.map(function (n) { return render(n, 1); }).join('')
+        : '<li class="bsky-comments__empty">No comments yet. Reply on Bluesky to start the discussion.</li>';
+      box.hidden = false;
+    });
+  }).catch(function () { /* Bluesky unreachable: leave the section hidden */ });
+})();
+</script>
