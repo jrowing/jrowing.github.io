@@ -84,7 +84,7 @@ As I mention, you might be surprised how common it is:
 
 This is the background map of the uk due to radon gas:
 
-![](/images/e1c7d29a-f773-4317-ad03-5b39f88ce6d8_410x513.webp)
+![Map of UK background radiation from radon gas](/images/e1c7d29a-f773-4317-ad03-5b39f88ce6d8_410x513.webp)
 
 You can see that some areas are more active than others. Even the very active bits are nothing compared to the more radioactive places on Earth:
 
@@ -102,4 +102,4 @@ In short, **activity measures the source**, while **exposure measures what you a
 
 As always, there's a great XKCD that gives us context;
 
-![](/images/54b684a7-408e-4abe-9629-5ac365dc1e86_1134x1333.webp)
+![XKCD comic putting radiation doses in context](/images/54b684a7-408e-4abe-9629-5ac365dc1e86_1134x1333.webp)

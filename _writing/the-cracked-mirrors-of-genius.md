@@ -45,11 +45,10 @@ Here are some unvarnished snapshots of the names in your textbook.
 
 Whilst we’re here I can’t resist a Newton story: 
 In a 1676 letter to his rival Robert Hooke, Newton wrote the famous line: “If I have seen further, it is by standing on the shoulders of giants.” It is quoted endlessly as evidence of Newton’s gracious acknowledgement of those who came before him. It’s even on some of the UK’s currency:
-![](/images/cracked-mirrors/1eeb56aa-320b-4126-8e34-013ef84624bf_275x183.jpeg.webp)[The UK £2 coin](https://substackcdn.com/image/fetch/$s_!mm8K!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F1eeb56aa-320b-4126-8e34-013ef84624bf_275x183.jpeg)
 
+<figure><img src="/images/cracked-mirrors/1eeb56aa-320b-4126-8e34-013ef84624bf_275x183.jpeg.webp" alt="A UK £2 coin" loading="lazy"><figcaption>The UK £2 coin</figcaption></figure>
 
 The problem is that he wrote it *to Hooke* — a man who was notably short, and physically misshapen from scoliosis, and with whom Newton was engaged in a vicious priority dispute at the time. Many historians now read it not as a gesture of intellectual modesty, but as a carefully aimed insult: a reminder to Hooke that he was not, and never would be, one of the giants in question…
-
 
 ⠀Albert Einstein (1879–1955)
 * **The Textbook Legacy:** Special and General Relativity, E=mc^2
@@ -61,13 +60,22 @@ The problem is that he wrote it *to Hooke* — a man who was notably short, and 
 **The Human Reality — and Why It’s Complicated:**
 In the first version of this post, I was planning to tell the tale of how one of the best experimentalists not only cheated, but also supported a horrific movement. Then it got more complex.
 As bit of a teaser to the article, I posted this to ~[Bluesky](https://bsky.app/profile/jrowing.com)~ (twitter, without Musk, in case you’re unfamiliar);
-![](/images/cracked-mirrors/e30cb518-78f7-4b35-9c86-14d7a6493548_1202x856.png.webp)[](https://substackcdn.com/image/fetch/$s_!MUZs!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fe30cb518-78f7-4b35-9c86-14d7a6493548_1202x856.png)In doing so I had a few good conversations, and a very important DM:
-![](/images/cracked-mirrors/0b1fba6e-84e7-4120-ac7f-a7608fee5473_978x322.png.webp)[](https://substackcdn.com/image/fetch/$s_!KzHD!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F0b1fba6e-84e7-4120-ac7f-a7608fee5473_978x322.png)In this a I discovered a paper I had entirely overlooked, and had to re-write the lot. More of that side in a sec -
+
+<figure><img src="/images/cracked-mirrors/e30cb518-78f7-4b35-9c86-14d7a6493548_1202x856.png.webp" alt="Screenshot of a Bluesky post teasing the article on Millikan" loading="lazy"></figure>
+
+In doing so I had a few good conversations, and a very important DM:
+
+<figure><img src="/images/cracked-mirrors/0b1fba6e-84e7-4120-ac7f-a7608fee5473_978x322.png.webp" alt="Screenshot of a direct message pointing to an overlooked paper" loading="lazy"></figure>
+
+In this a I discovered a paper I had entirely overlooked, and had to re-write the lot. More of that side in a sec -
 ### The Experiment and the fraudulent data:
 The experiment that won Millikan the Nobel Prize is a famous case study in scientific misconduct - in short:
 The experiment itself was elegantly simple: oil droplets were sprayed into a chamber and allowed to fall between two electrically charged plates, where they could be observed through a microscope. By ionising the air with X-rays, Millikan could cause individual droplets to pick up electrons and be pulled upward by the electric field. By carefully balancing gravity against the electric force, he could measure the charge on a single droplet — and he showed that this charge was always a whole-number multiple of one tiny, fixed value. 
 That fixed value was the charge of the electron itself, one of the fundamental constants of the universe, and pinning it down was a genuinely landmark achievement. The trouble is in how he got there and what happened after. If you plot the reported values of the electron’s charge over time after 1913, you find that each successive measurement comes out slightly higher than Millikan’s, and the next one higher still, creeping upward year by year until they finally converge on a number definitively above his original figure. 
-![](/images/cracked-mirrors/c60d9c0f-30cc-4620-bede-1d2af8770914_1600x989.png.webp)[](https://substackcdn.com/image/fetch/$s_!mTZj!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fc60d9c0f-30cc-4620-bede-1d2af8770914_1600x989.png)Richard Feynman used this pattern as a textbook example of confirmation bias in science: when subsequent experimenters got a number too far above Millikan’s, they assumed something must be wrong and kept looking; when they got a number close to his, they didn’t look so hard. The root cause was partly a straightforward error — he had used an incorrect value for the viscosity of air — but his laboratory notebooks reveal something more deliberate. Of 175 drops he measured, he used only 58 to calculate his final result, with annotations beside the discarded data reading “error high will not use” and “too high by 1.5%.” His published value was 1.592 × 10⁻¹⁹ C; the accepted value today is 1.602 × 10⁻¹⁹ C. He was close, and he was right that charge is quantised — but he got there by quietly discarding the data that told him he was slightly wrong, and a generation of physicists deferring to his authority then repeated that same bias back at him.
+
+<figure><img src="/images/cracked-mirrors/c60d9c0f-30cc-4620-bede-1d2af8770914_1600x989.png.webp" alt="Chart of measured values of the electron charge over time, following Millikan" loading="lazy"></figure>
+
+Richard Feynman used this pattern as a textbook example of confirmation bias in science: when subsequent experimenters got a number too far above Millikan’s, they assumed something must be wrong and kept looking; when they got a number close to his, they didn’t look so hard. The root cause was partly a straightforward error — he had used an incorrect value for the viscosity of air — but his laboratory notebooks reveal something more deliberate. Of 175 drops he measured, he used only 58 to calculate his final result, with annotations beside the discarded data reading “error high will not use” and “too high by 1.5%.” His published value was 1.592 × 10⁻¹⁹ C; the accepted value today is 1.602 × 10⁻¹⁹ C. He was close, and he was right that charge is quantised — but he got there by quietly discarding the data that told him he was slightly wrong, and a generation of physicists deferring to his authority then repeated that same bias back at him.
 ### Eugenics;
 Millikan was a trustee of the Human Betterment Foundation (HBF), a California organisation that advocated for compulsory sterilisation laws. The decision by Caltech and Pomona College to strip his name from buildings was made in direct response to his participation in the eugenics movement through this affiliation. That much is factual and uncontested. (~[Caltech Magazine](https://magazine.caltech.edu/post/eugenicists-names-removed)~)
 However Caltech’s own Committee on Naming and Recognition, in its detailed final report, acknowledged a significant caveat: Millikan did not lead the HBF, nor did he shape its policies. Rather, Millikan lent his prestige — and by extension Caltech’s — to the HBF when he joined its Board of Trustees, likely giving the organisation renewed legitimacy for its educational programme. He joined after a colleague’s death in 1937, late in the HBF’s existence, and the evidence suggests he treated the trusteeship as one of many civic affiliations rather than an ideological project. 
@@ -99,7 +107,6 @@ They were not gods. They were just humans—capable of looking at the stars, whi
 **What do you think? Can we truly separate the science from the scientist, or does knowing their history change how you look at the textbook? Let’s discuss in the comments.**
 *If you enjoyed this post, consider subscribing to the newsletter, sharing it with a friend, or leaving a comment below.*
 Notes from The Science lab is a reader-supported publication. To receive new posts and support my work, consider becoming a free or paid subscriber.
-
 
 # References
 * **Ball, P. (2014).** *Serving the Reich: The Struggle for the Soul of Physics under Hitler*. University of Chicago Press. 
