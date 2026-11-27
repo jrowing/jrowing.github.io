@@ -99,7 +99,7 @@
   (function () {
     var cv = document.getElementById('home-waves'), cap = document.getElementById('home-caption'), btn = document.getElementById('bg-new');
     if (!cv || !cv.getContext) return;
-    var ctx = cv.getContext('2d'), img, W, H, cssW, cssH, rgb = [23, 106, 115], gain = 0.8;
+    var ctx = cv.getContext('2d'), img, W, H, cssW, cssH, rgb = [23, 106, 115];
     var SCALE = 2;                       // css px per canvas px
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var running = false, t0 = performance.now(), last = 0, onScreen = true;
@@ -245,8 +245,6 @@
     function readColour() {
       var m = getComputedStyle(cv).color.match(/[\d.]+/g);
       if (m && m.length >= 3) rgb = [+m[0], +m[1], +m[2]];
-      // The pattern is teal on the page colour: lighter ink on dark pages glares, so use less of it there.
-      gain = document.documentElement.getAttribute('data-theme') === 'dark' ? 0.5 : 0.78;
     }
     function size() {
       cssW = cv.clientWidth; cssH = cv.clientHeight;
@@ -254,7 +252,7 @@
       cv.width = W; cv.height = H; img = ctx.createImageData(W, H);
     }
     function draw(t) {
-      var d = img.data, i = 0, x, y, py, v, al = cur.alpha * gain, sh = cur.shade;
+      var d = img.data, i = 0, x, y, py, v, al = cur.alpha, sh = cur.shade;
       for (y = 0; y < H; y++) {
         py = y * SCALE;
         for (x = 0; x < W; x++, i += 4) {
