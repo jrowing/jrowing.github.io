@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Praslin &amp; Curieuse currents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: a working tidal-stream atlas for divers and paddlers; plain, exact, honest about error.
+   IDEA: an Admiralty tidal-stream chart page that you can scrub through time.
+   PICTURE: the chart itself, full height, with flowing current tracers coloured by speed.
+   COLOUR and TYPE: chart buff land, chart-blue shallows, white deep water, deep reef-teal chrome, coral for strong flow. Barlow / Barlow Semi Condensed.
+   LAYOUT: chart left, readout panel right (stacks under 900px): time, conditions, point readout, day curves. */
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#0c1a20);--ink:light-dark(#10262e,#e4eef0);--mute:light-dark(#53666d,#9db1b7);
+--rule:light-dark(#d5e2e5,#24404a);--chrome:light-dark(#0b4a55,#0a3a43);--accent:#e4572e;--teal:light-dark(#0b6e79,#5ec6cf);
+--land:light-dark(#efdca6,#3a3a2a);--landedge:light-dark(#9a8550,#7c7a5a);--deep:light-dark(#fbfdfd,#0b1d26);--shallow:light-dark(#9fd0e3,#1d5a72);
+--panel:light-dark(#f4f8f8,#10242c)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Barlow,system-ui,sans-serif;overflow-x:clip}
+header{background:var(--chrome);color:#fff;padding:14px max(3vw,16px);display:flex;flex-wrap:wrap;gap:6px 24px;align-items:baseline}
+h1{font:700 clamp(24px,3vw,34px)/1.05 'Barlow Semi Condensed',sans-serif;margin:0;text-wrap:balance}
+header p{margin:0;color:#cfe6e9;font-size:15px}
+main{display:grid;grid-template-columns:minmax(0,1fr) 380px;min-height:calc(100vh - 64px)}
+.map{position:relative;min-height:560px;background:var(--deep);touch-action:none;overflow:hidden;cursor:crosshair}
+.map canvas{position:absolute;inset:0;width:100%;height:100%}
+.legend{position:absolute;left:12px;bottom:12px;background:color-mix(in srgb,var(--bg) 88%,transparent);border:1px solid var(--rule);border-radius:8px;padding:8px 10px;font-size:13px;pointer-events:none}
+.legend .bar{height:8px;width:180px;border-radius:4px;margin:4px 0;background:linear-gradient(90deg,#3d8fb0,#0b5d6b,#d99a1e,#e4572e,#9b1d20)}
+.legend .ticks{display:flex;justify-content:space-between;width:180px;color:var(--mute)}
+.zoom{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:6px}
+.zoom button{width:44px;height:44px;font-size:22px;padding:0}
+.loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--mute);font-size:17px}
+aside{background:var(--panel);border-left:1px solid var(--rule);padding:16px 18px 28px;display:flex;flex-direction:column;gap:18px}
+section h2{font:700 18px/1.2 'Barlow Semi Condensed',sans-serif;margin:0 0 8px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+label{font-size:14px;color:var(--mute);display:block;margin-bottom:3px}
+input,select,button{font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--rule);border-radius:8px;min-height:44px;padding:6px 10px}
+button{cursor:pointer;background:var(--bg)}button.primary{background:var(--teal);color:var(--bg);border-color:transparent;font-weight:600}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.seg{display:flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden}.seg button{border:0;border-radius:0;flex:1}.seg button[aria-pressed=true]{background:var(--teal);color:var(--bg);font-weight:600}
+input[type=range]{width:100%;padding:0;border:0;background:none}
+.big{font:700 clamp(34px,4vw,46px)/1 'Barlow Semi Condensed',sans-serif;white-space:nowrap}
+.readout{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:center}
+.arrow{width:64px;height:64px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:15px}.kv dt{color:var(--mute)}.kv dd{margin:0;text-align:right;white-space:nowrap}
+.fig{position:relative;height:150px}.fig>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.note{font-size:14px;color:var(--mute)}
+.pins{display:flex;flex-wrap:wrap;gap:6px}.pins button{min-height:36px;font-size:14px;padding:4px 10px}
+details{border-top:1px solid var(--rule);padding-top:10px}summary{cursor:pointer;font-weight:600;min-height:32px}
+.about{padding:clamp(24px,4vw,48px) max(5vw,16px);max-width:900px}
+.about h2{font:700 26px/1.1 'Barlow Semi Condensed',sans-serif;margin:0 0 10px}
+.about h3{font:700 19px/1.2 'Barlow Semi Condensed',sans-serif;margin:22px 0 6px}
+.about p,.about li{max-width:70ch}
+[hidden]{display:none!important}
+@media(max-width:900px){main{grid-template-columns:1fr}.map{min-height:62vh}aside{border-left:0;border-top:1px solid var(--rule)}}
+@media(prefers-reduced-motion:reduce){.motion-note{display:block}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Praslin &amp; Curieuse currents</h1>
+  <p id="headline">Loading the model…</p>
+</header>
+<main>
+  <div class="map" id="map" aria-label="Current chart. Click or tap to read the current at a point.">
+    <canvas id="base"></canvas><canvas id="trails"></canvas><canvas id="over"></canvas>
+    <div class="loading" id="loading">Loading model data…</div>
+    <div class="zoom"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zfit" aria-label="Reset view">⤢</button></div>
+    <div class="legend"><div>Current speed (knots)</div><div class="bar"></div><div class="ticks"><span>0</span><span>0.5</span><span>1</span><span>1.5+</span></div></div>
+  </div>
+  <aside>
+    <section>
+      <h2>Time (Seychelles, UTC+4)</h2>
+      <div class="row"><input type="datetime-local" id="when" step="600" style="flex:1"><button id="now">Now</button></div>
+      <input type="range" id="scrub" min="0" max="1439" step="10" aria-label="Time of day">
+      <div class="row"><button id="back">−1 h</button><button id="play" class="primary" style="flex:1">▶ Play day</button><button id="fwd">+1 h</button></div>
+    </section>
+    <section>
+      <h2>Conditions</h2>
+      <label>Layer</label>
+      <div class="seg" role="group" aria-label="Layer"><button id="lyrDive" aria-pressed="true">Diving: depth-averaged</button><button id="lyrSurf" aria-pressed="false">Surface: boat, kayak</button></div>
+      <div style="height:10px"></div>
+      <label for="windMode">Wind</label>
+      <select id="windMode" style="width:100%"><option value="season">Typical for the season</option><option value="custom">Enter forecast wind</option><option value="none">No wind (tide only)</option></select>
+      <div class="row" id="windCustom" style="margin-top:8px" hidden>
+        <div style="flex:1"><label for="wspd">Speed (knots)</label><input id="wspd" type="number" min="0" max="40" step="1" value="12" style="width:100%"></div>
+        <div style="flex:1"><label for="wdir">From</label><select id="wdir" style="width:100%"></select></div>
+      </div>
+      <p class="note" id="windNote"></p>
+    </section>
+    <section>
+      <h2 id="ptTitle">Tap the chart to read a point</h2>
+      <div class="readout"><svg class="arrow" id="ptArrow" viewBox="-32 -32 64 64" aria-hidden="true"></svg><div><div class="big" id="ptSpeed">–</div><div id="ptDir" class="note"></div></div></div>
+      <dl class="kv" id="ptKv"></dl>
+      <div class="fig" id="ptFig"><svg id="ptSvg"></svg></div>
+      <p class="note" id="ptSlack"></p>
+      <div class="row"><input id="pinName" placeholder="Name this spot" style="flex:1"><button id="pinAdd">Save pin</button></div>
+      <div class="pins" id="pins"></div>
+    </section>
+    <section>
+      <h2>Tide at Baie Ste Anne</h2>
+      <div class="fig" id="tideFig"><svg id="tideSvg"></svg></div>
+      <p class="note" id="tideNote"></p>
+    </section>
+  </aside>
+</main>
+<div class="about">
+  <h2>How this model works, and how far to trust it</h2>
+  <p><strong>It's a physics model that hasn't yet been checked against measured currents.</strong> The tides are calibrated to the Mahé tide gauge, but no current measurements around Praslin went into it. Use it for the pattern and timing of the flow, and treat the speeds as plausible to within about a factor of two. Never use it as the only basis for a safety decision.</p>
+  <h3>What's in it</h3>
+  <ul>
+    <li><strong>Tides.</strong> A 2D depth-averaged shallow-water model (nonlinear, quadratic bottom friction, Coriolis) covering the whole Seychelles Plateau at 1.85 km resolution. Its boundary tide is calibrated so the model reproduces the five main constituents at the Pointe La Rue gauge (UHSLC station 121, hourly data for 2022–24). A nested 150 m model around Praslin, Curieuse, La Digue, Aride and the Sisters is driven by the plateau model. Tidal currents from a 30-day run are harmonically analysed (M2, S2, N2, K1, O1, with K2, P1 and Q1 inferred), so they can be predicted for any date with nodal corrections. They're shown here at 300 m resolution.</li>
+    <li><strong>Wind-driven flow.</strong> The same two models are run to a steady state under a 7 m/s wind from each of 8 directions. Your wind is interpolated between those runs and scaled with speed. The "typical for the season" setting uses rough monsoon norms: NW winds about December–March, SE trades about May–October, lighter and variable in the changeovers. Put in a forecast wind (e.g. from Windy) for a better answer.</li>
+    <li><strong>Surface layer.</strong> For boats and kayaks it adds a wind drift of 2.5% of wind speed, downwind. Divers should use the depth-averaged layer.</li>
+  </ul>
+  <h3>Checks so far</h3>
+  <ul>
+    <li>The tide reproduces the Mahé gauge constituents. Predicted high and low waters at Baie Ste Anne for 27 Nov – 3 Dec 2026 agree with an independent published Praslin tide table to within about 2–15 minutes and 0.1 m.</li>
+    <li>Modelled tidal currents are weak: 0.1–0.3 kn over most of the area, peaking at about 0.5 kn at headlands and in the Praslin–La Digue and Félicité gaps. This matches mooring evidence that tides aren't the main driver of currents on the plateau. A steady 14 kn wind typically drives 0.15–0.35 kn, up to about 0.5 kn off headlands, so on most days <strong>wind matters as much as the tide or more</strong>.</li>
+  </ul>
+  <h3>What it can't capture</h3>
+  <ul>
+    <li><strong>Inertial and regional currents.</strong> Moorings on the Seychelles Plateau show that much of the real current variability is near-inertial oscillation (period about 6.6 days at this latitude, set off by wind changes) and slower regional flow. Neither can be predicted from tides and today's wind alone, so expect unexplained drift of 0.1–0.3 kn.</li>
+    <li><strong>Bathymetry.</strong> The depths are GEBCO 2026 (about 460 m resolution), which is poor here. It shows false shoals north of Praslin (floored at 12 m), and reef edges, channels and pinnacles are not resolved. Near-shore depths assume a fringing-reef slope. Flow squeezed between rocks and around headlands will be stronger than shown.</li>
+    <li><strong>Waves, swell-driven reef currents, rip currents and vertical shear</strong> aren't modelled.</li>
+  </ul>
+  <h3>How to make it better</h3>
+  <p>The biggest single gain would come from <strong>current observations</strong>: GPS tracks from drifting SMBs or drogued drifters, logged with the time and the wind. With those, the model's friction and wind response can be calibrated. The next biggest is better depths, from nautical chart soundings or local surveys. A high-resolution circulation model of the plateau also exists: UCLouvain's SLIM model, built with the Blue Economy Research Institute at UniSey.</p>
+  <p class="note">Sources: GEBCO Compilation Group (2026) GEBCO 2026 Grid; © OpenStreetMap contributors (coastline, ODbL); University of Hawaii Sea Level Center, station 121 Pointe La Rue. Model built November 2026.</p>
+</div>
+<script>
+{
+const $=id=>document.getElementById(id);
+const KN=1.943844, TZ=4;
+const COMPASS=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+const compass=d=>COMPASS[Math.round(((d%360)+360)%360/22.5)%16];
+let D=null, G=null, N=0, layers={}, U=null, V=null, tNow=Date.now(), surface=false, sel=null, playing=false;
+let view={s:1,ox:0,oy:0}, parts=[];
+// ---------- astronomy (Schureman approximations; validated vs. gauge fit to ~3 mm) ----------
+function vuf(tms){
+  const d=tms/86400000-10957.5, Tc=d/36525;
+  const s=218.3164+481267.8812*Tc, h=280.4661+36000.7698*Tc, p=83.3535+4069.0137*Tc, Nn=125.0445-1934.1363*Tc;
+  const T=15*((tms/3600000)%24+24)%360+180, n=Nn*Math.PI/180, c=Math.cos, si=Math.sin;
+  const fM2=1.0004-0.0373*c(n)+0.0002*c(2*n), uM2=-2.14*si(n);
+  const fK1=1.0060+0.1150*c(n)-0.0088*c(2*n)+0.0006*c(3*n), uK1=-8.86*si(n)+0.68*si(2*n)-0.07*si(3*n);
+  const fO1=1.0089+0.1871*c(n)-0.0147*c(2*n)+0.0014*c(3*n), uO1=10.80*si(n)-1.34*si(2*n)+0.19*si(3*n);
+  const fK2=1.0241+0.2863*c(n)+0.0083*c(2*n)-0.0015*c(3*n), uK2=-17.74*si(n)+0.68*si(2*n)-0.04*si(3*n);
+  const V={M2:2*T-2*s+2*h,S2:2*T,N2:2*T-3*s+2*h+p,K2:2*T+2*h,K1:T+h+90,O1:T-2*s+h-90,P1:T-h-90,Q1:T-3*s+h+p-90};
+  const F={M2:[fM2,uM2],S2:[1,0],N2:[fM2,uM2],K2:[fK2,uK2],K1:[fK1,uK1],O1:[fO1,uO1],P1:[1,0],Q1:[fO1,uO1]};
+  const out={}; for(const k in V) out[k]=[F[k][0],(V[k]+F[k][1])*Math.PI/180]; return out;
+}
+// ---------- data ----------
+const dec=b=>{const s=atob(b),a=new Int16Array(s.length/2);for(let i=0;i<a.length;i++){const lo=s.charCodeAt(2*i),hi=s.charCodeAt(2*i+1);a[i]=((hi<<8)|lo)<<16>>16}return a};
+function seasonWind(tms){ // rough monsoon climatology: [knots, from deg, label]
+  const m=new Date(tms+TZ*3600000).getUTCMonth();
+  return [[9,315,'NW monsoon'],[9,315,'NW monsoon'],[8,300,'NW monsoon, easing'],[5,270,'changeover, light and variable'],[11,135,'SE trades building'],[15,140,'SE trades'],[16,140,'SE trades'],[16,140,'SE trades'],[15,135,'SE trades'],[11,130,'SE trades easing'],[6,300,'changeover, light and variable'],[8,315,'NW monsoon']][m];
+}
+function windNow(){
+  const mode=$('windMode').value;
+  if(mode==='none') return [0,0,'none'];
+  if(mode==='custom') return [Math.max(0,+$('wspd').value||0),+$('wdir').value,'forecast'];
+  return seasonWind(tNow);
+}
+// ---------- field ----------
+function computeField(tms,out){
+  const a=vuf(tms), g=D.grid, n=g.nx*g.ny, w=windNow();
+  const terms=[];
+  for(const c of D.cons){const [f,th]=a[c];terms.push([layers.tide[c],f*Math.cos(th),f*Math.sin(th),1,0])}
+  for(const k in D.infer){const [base,r,dp]=D.infer[k];const [f,th]=a[k];const ph=dp*Math.PI/180;
+    // Z_k = Z_base * r * e^{i dp}; y = f*(Re Z cos th + Im Z sin th)
+    terms.push([layers.tide[base],f*r*Math.cos(th),f*r*Math.sin(th),Math.cos(ph),Math.sin(ph)]);}
+  const Wms=w[0]/KN, from=w[1]; let wi=null;
+  if(Wms>0){const x=((from%360)+360)%360/45, i0=Math.floor(x)%8, i1=(i0+1)%8, fr=x-Math.floor(x), sc=Wms/D.wind.W; wi=[i0,i1,(1-fr)*sc,fr*sc];}
+  const du=surface?-0.025*Wms*Math.sin(from*Math.PI/180):0, dv=surface?-0.025*Wms*Math.cos(from*Math.PI/180):0;
+  const [mu,mv]=layers.mean, S=1/D.scale;
+  for(let k=0;k<n;k++){
+    if(!layers.wet[k]){out.u[k]=0;out.v[k]=0;continue}
+    let u=mu[k], v=mv[k];
+    for(const [L,cc,ss,cr,sr] of terms){
+      const ur=L[0][k]*cr-L[1][k]*sr, ui=L[0][k]*sr+L[1][k]*cr, vr=L[2][k]*cr-L[3][k]*sr, vi=L[2][k]*sr+L[3][k]*cr;
+      u+=ur*cc+ui*ss; v+=vr*cc+vi*ss;
+    }
+    u*=S; v*=S;
+    if(wi){u+=(layers.wu[wi[0]][k]*wi[2]+layers.wu[wi[1]][k]*wi[3])*S; v+=(layers.wv[wi[0]][k]*wi[2]+layers.wv[wi[1]][k]*wi[3])*S;
+      if(surface){u+=du;v+=dv}}
+    out.u[k]=u; out.v[k]=v;
+  }
+  return w;
+}
+function sample(F,lon,lat){
+  const g=D.grid, x=(lon-g.lon0)/g.dlon, y=(lat-g.lat0)/g.dlat;
+  if(x<0||y<0||x>g.nx-1||y>g.ny-1) return null;
+  const i=Math.min(Math.floor(x),g.nx-2), j=Math.min(Math.floor(y),g.ny-2), fx=x-i, fy=y-j, k=j*g.nx+i;
+  const wts=[(1-fx)*(1-fy),fx*(1-fy),(1-fx)*fy,fx*fy], ks=[k,k+1,k+g.nx,k+g.nx+1];
+  let u=0,v=0,ws=0; for(let q=0;q<4;q++) if(layers.wet[ks[q]]){u+=F.u[ks[q]]*wts[q];v+=F.v[ks[q]]*wts[q];ws+=wts[q]}
+  if(ws<0.15) return null; return [u/ws,v/ws];
+}
+function pointSeries(lon,lat,t0,hours,stepMin){
+  const tmp={u:new Float32Array(N),v:new Float32Array(N)}, out=[];
+  for(let m=0;m<=hours*60;m+=stepMin){computeField(t0+m*60000,tmp);const s=sample(tmp,lon,lat);out.push([t0+m*60000,s])}
+  return out;
+}
+function tideAt(tms){const a=vuf(tms);let z=0;for(const k in D.ref.eta){const [H,g]=D.ref.eta[k];const [f,th]=a[k];z+=f*H*Math.cos(th-g*Math.PI/180)}return z}
+// ---------- view / drawing ----------
+const map=$('map'), cb=$('base'), ct=$('trails'), co=$('over');
+let W=0,H=0,dpr=1, depthImg=null, kx=1, b={};
+function proj(lon,lat){return [view.ox+(lon-b.l0)*kx*view.s, view.oy+(b.a1-lat)*view.s]}
+function unproj(x,y){return [b.l0+(x-view.ox)/(kx*view.s), b.a1-(y-view.oy)/view.s]}
+function fit(){const w=(b.l1-b.l0)*kx, h=b.a1-b.a0; view.s=Math.min(W/w,H/h)*0.98; view.ox=(W-w*view.s)/2; view.oy=(H-h*view.s)/2}
+function resize(){const r=map.getBoundingClientRect();dpr=window.devicePixelRatio||1;W=r.width;H=r.height;
+  for(const c of [cb,ct,co]){c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);c.getContext('2d').setTransform(dpr,0,0,dpr,0,0)}
+  if(D){if(!view.init){fit();view.init=1}drawBase()}}
+const probe=document.createElement('i');probe.style.display='none';document.body.append(probe);
+function css(v){probe.style.color=`var(${v})`;return getComputedStyle(probe).color}
+function makeDepthImg(){
+  const g=D.grid, c=document.createElement('canvas'); c.width=g.nx; c.height=g.ny; const x=c.getContext('2d',{willReadFrequently:true}), im=x.createImageData(g.nx,g.ny);
+  const tmp=document.createElement('canvas').getContext('2d',{willReadFrequently:true}); const col=s=>{tmp.fillStyle=s;tmp.fillRect(0,0,1,1);return tmp.getImageData(0,0,1,1).data};
+  const sh=col(css('--shallow')), dp=col(css('--deep'));
+  for(let j=0;j<g.ny;j++)for(let i=0;i<g.nx;i++){const k=j*g.nx+i, o=((g.ny-1-j)*g.nx+i)*4, d=layers.depth[k]/10, t=Math.min(1,Math.max(0,(d-3)/37))**0.7;
+    for(let q=0;q<3;q++) im.data[o+q]=sh[q]*(1-t)+dp[q]*t; im.data[o+3]=255}
+  x.putImageData(im,0,0); return c;
+}
+function drawBase(){
+  const x=cb.getContext('2d'); x.clearRect(0,0,W,H); x.fillStyle=css('--deep'); x.fillRect(0,0,W,H);
+  const g=D.grid,[px0,py0]=proj(g.lon0-g.dlon/2,g.lat0+(g.ny-0.5)*g.dlat),[px1,py1]=proj(g.lon0+(g.nx-0.5)*g.dlon,g.lat0-g.dlat/2);
+  x.imageSmoothingEnabled=true; x.drawImage(depthImg,px0,py0,px1-px0,py1-py0);
+  x.fillStyle=css('--land'); x.strokeStyle=css('--landedge'); x.lineWidth=0.8;
+  for(const p of D.land){x.beginPath();p.forEach(([lo,la],i)=>{const [a,c]=proj(lo,la);i?x.lineTo(a,c):x.moveTo(a,c)});x.closePath();x.fill();x.stroke()}
+  // island labels
+  x.fillStyle=css('--mute'); x.font='600 13px Barlow, sans-serif'; x.textAlign='center';
+  for(const [n,lo,la] of [['Praslin',55.725,-4.335],['Curieuse',55.728,-4.282],['La Digue',55.84,-4.358],['Aride',55.665,-4.205],['Félicité',55.865,-4.322],['Cousin',55.66,-4.322],['Cousine',55.648,-4.342],['The Sisters',55.862,-4.272],['Marianne',55.925,-4.325]]){
+    const [a,c]=proj(lo,la); if(a>0&&a<W&&c>0&&c<H) x.fillText(n,a,c);}
+  ct.getContext('2d').clearRect(0,0,W,H); drawOver();
+}
+const speedCol=s=>{const k=s*KN, st=[[0,[61,143,176]],[0.4,[11,93,107]],[0.8,[217,154,30]],[1.2,[228,87,46]],[1.6,[155,29,32]]];
+  for(let i=1;i<st.length;i++) if(k<=st[i][0]){const f=(k-st[i-1][0])/(st[i][0]-st[i-1][0]);return `rgb(${st[i-1][1].map((c,q)=>Math.round(c+(st[i][1][q]-c)*f)).join(',')})`}
+  return 'rgb(155,29,32)'};
+function spawn(p){const g=D.grid;for(let t=0;t<30;t++){const i=Math.floor(Math.random()*g.nx), j=Math.floor(Math.random()*g.ny);
+  if(layers.wet[j*g.nx+i]){p.lon=g.lon0+(i+Math.random()-0.5)*g.dlon;p.lat=g.lat0+(j+Math.random()-0.5)*g.dlat;p.age=Math.floor(Math.random()*80);return}}p.age=999}
+function animate(){
+  if(D && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+    const x=ct.getContext('2d'); x.globalCompositeOperation='destination-in'; x.fillStyle='rgba(0,0,0,0.92)'; x.fillRect(0,0,W,H); x.globalCompositeOperation='source-over';
+    const Tv=600000/view.s; x.lineWidth=1.6; // seconds of flow per frame, so 0.5 m/s ≈ 3 px/frame at any zoom
+    for(const p of parts){
+      if(p.age++>90){spawn(p);continue}
+      const s=sample(F,p.lon,p.lat); if(!s){spawn(p);continue}
+      const [a0,c0]=proj(p.lon,p.lat);
+      p.lon+=s[0]*Tv/(111320*kx); p.lat+=s[1]*Tv/111320;
+      const [a1,c1]=proj(p.lon,p.lat); x.strokeStyle=speedCol(Math.hypot(s[0],s[1])); x.beginPath(); x.moveTo(a0,c0); x.lineTo(a1,c1); x.stroke();
+    }
+  }
+  if(playing){tNow+=60000; const lt=localDay(tNow); if(tNow>=playEnd){playing=false;$('play').textContent='▶ Play day'} update(false)}
+  requestAnimationFrame(animate);
+}
+function drawOver(){
+  const x=co.getContext('2d'); x.clearRect(0,0,W,H);
+  for(const p of pins){const [a,c]=proj(p.lon,p.lat); x.fillStyle=css('--chrome'); x.beginPath(); x.arc(a,c,5,0,7); x.fill(); x.fillStyle=css('--ink'); x.font='600 13px Barlow,sans-serif'; x.textAlign='left'; x.fillText(p.name,a+8,c+4)}
+  if(sel){const [a,c]=proj(sel.lon,sel.lat); x.strokeStyle=css('--accent'); x.lineWidth=3; x.beginPath(); x.arc(a,c,9,0,7); x.stroke();}
+}
+// ---------- UI ----------
+const pad=n=>String(n).padStart(2,'0');
+const localParts=t=>{const d=new Date(t+TZ*3600000);return [d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate(),d.getUTCHours(),d.getUTCMinutes()]};
+const fmtTime=t=>{const p=localParts(t);return `${pad(p[3])}:${pad(p[4])}`};
+const localDay=t=>{const p=localParts(t);return Date.UTC(p[0],p[1],p[2])-TZ*3600000};
+let playEnd=0, F=null, lastDay=null;
+function update(full=true){
+  const w=computeField(tNow,F); const p=localParts(tNow);
+  $('when').value=`${p[0]}-${pad(p[1]+1)}-${pad(p[2])}T${pad(p[3])}:${pad(p[4])}`;
+  $('scrub').value=p[3]*60+p[4];
+  $('windNote').textContent=w[2]==='none'?'Tide only.':`${w[0].toFixed(0)} kn from ${compass(w[1])} (${w[2]}).`;
+  // headline: strongest current near Curieuse channel now
+  let mx=0;for(let k=0;k<N;k++){const s=Math.hypot(F.u[k],F.v[k]);if(s>mx)mx=s}
+  $('headline').textContent=`${new Date(tNow+TZ*3600000).toUTCString().slice(0,16)} ${fmtTime(tNow)} · strongest modelled flow ${(mx*KN).toFixed(1)} kn · ${surface?'surface':'depth-averaged'}`;
+  const day=localDay(tNow);
+  if(full||day!==lastDay){lastDay=day;drawTide(day);if(sel)readPoint(true)} else if(sel) readPoint(false);
+  else markTime();
+}
+function readPoint(full){
+  const s=sample(F,sel.lon,sel.lat);
+  $('ptTitle').textContent=sel.name||`${Math.abs(sel.lat).toFixed(4)}°S ${sel.lon.toFixed(4)}°E`;
+  if(!s){$('ptSpeed').textContent='Land';$('ptDir').textContent='';$('ptKv').innerHTML='';$('ptSvg').innerHTML='';$('ptSlack').textContent='';return}
+  const sp=Math.hypot(s[0],s[1]), dir=(Math.atan2(s[0],s[1])*180/Math.PI+360)%360;
+  $('ptSpeed').textContent=`${(sp*KN).toFixed(2)} kn`;
+  $('ptDir').textContent=`setting towards ${compass(dir)} (${dir.toFixed(0).padStart(3,'0')}°) · ${sp.toFixed(2)} m/s`;
+  $('ptArrow').innerHTML=`<circle r="30" fill="none" stroke="var(--rule)"/><g transform="rotate(${dir})"><path d="M0,24 L0,-18" stroke="${speedCol(sp)}" stroke-width="5" stroke-linecap="round"/><path d="M-9,-10 L0,-26 L9,-10Z" fill="${speedCol(sp)}"/></g><text y="-34" text-anchor="middle" font-size="9" fill="var(--mute)">N</text>`;
+  const g=D.grid, k=Math.round((sel.lat-g.lat0)/g.dlat)*g.nx+Math.round((sel.lon-g.lon0)/g.dlon);
+  // tidal-only component for comparison
+  const save=$('windMode').value, sv=surface; $('windMode').value='none'; surface=false;
+  const tmp={u:new Float32Array(N),v:new Float32Array(N)}; computeField(tNow,tmp); const st=sample(tmp,sel.lon,sel.lat); $('windMode').value=save; surface=sv;
+  $('ptKv').innerHTML=`<dt>Tidal part</dt><dd>${(Math.hypot(...st)*KN).toFixed(2)} kn → ${compass((Math.atan2(st[0],st[1])*180/Math.PI+360)%360)}</dd><dt>Wind${surface?' + surface drift':''} part</dt><dd>${(Math.hypot(s[0]-st[0],s[1]-st[1])*KN).toFixed(2)} kn → ${compass((Math.atan2(s[0]-st[0],s[1]-st[1])*180/Math.PI+360)%360)}</dd><dt>Model depth</dt><dd>${(layers.depth[k]/10||0).toFixed(0)} m (approx.)</dd>`;
+  if(full){sel.series=pointSeries(sel.lon,sel.lat,localDay(tNow),24,20);drawSeries()} else markTime();
+}
+function chartFrame(svg,t0){const W2=svg.clientWidth||320,H2=svg.clientHeight||150;return [W2,H2,t=>34+(t-t0)/86400000*(W2-42)]}
+function drawSeries(){
+  const svg=$('ptSvg'), ser=sel.series, t0=ser[0][0], [W2,H2,X]=chartFrame(svg,t0);
+  const sp=ser.map(([t,s])=>s?Math.hypot(...s)*KN:0), mx=Math.max(0.5,Math.ceil(Math.max(...sp)*4)/4), Y=v=>H2-22-(v/mx)*(H2-52);
+  let h=`<line x1="34" x2="${W2-8}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--rule)"/><text x="30" y="${Y(mx)+4}" text-anchor="end" font-size="12" fill="var(--mute)">${mx} kn</text><text x="30" y="${Y(0)+4}" text-anchor="end" font-size="12" fill="var(--mute)">0</text>`;
+  for(let hh=0;hh<=24;hh+=6) h+=`<text x="${X(t0+hh*3600000)}" y="${H2-4}" text-anchor="middle" font-size="12" fill="var(--mute)">${pad(hh%24)}:00</text>`;
+  h+=`<path d="${ser.map(([t],i)=>`${i?'L':'M'}${X(t).toFixed(1)},${Y(sp[i]).toFixed(1)}`).join('')}" fill="none" stroke="var(--teal)" stroke-width="2.2"/>`;
+  for(let i=0;i<ser.length;i+=6){const s=ser[i][1];if(!s)continue;const d=Math.atan2(s[0],s[1])*180/Math.PI;h+=`<g transform="translate(${X(ser[i][0])},14) rotate(${d})"><path d="M0,6 L0,-6 M-3.5,-2 L0,-6 L3.5,-2" stroke="var(--ink)" stroke-width="1.5" fill="none"/></g>`}
+  h+=`<line id="ptNow" y1="6" y2="${H2-18}" stroke="var(--accent)" stroke-width="2"/>`;
+  svg.innerHTML=h;
+  // slack / peak times: local minima & maxima of speed
+  const mins=[],maxs=[];for(let i=1;i<sp.length-1;i++){if(sp[i]<sp[i-1]&&sp[i]<=sp[i+1])mins.push(i);if(sp[i]>sp[i-1]&&sp[i]>=sp[i+1])maxs.push(i)}
+  $('ptSlack').textContent=(mins.length?`Weakest: ${mins.map(i=>`${fmtTime(ser[i][0])} (${sp[i].toFixed(1)} kn)`).join(', ')}. `:'')+(maxs.length?`Strongest: ${maxs.map(i=>`${fmtTime(ser[i][0])} (${sp[i].toFixed(1)} kn)`).join(', ')}.`:'')+' Times ±30 min.';
+  markTime();
+}
+function drawTide(day){
+  const svg=$('tideSvg'), [W2,H2,X]=chartFrame(svg,day), pts=[];
+  for(let m=0;m<=1440;m+=10) pts.push([day+m*60000,tideAt(day+m*60000)]);
+  const Y=z=>H2/2-14-z*(H2-40)/1.6;
+  let h=`<line x1="34" x2="${W2-8}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--rule)"/><text x="30" y="${Y(0.6)+4}" text-anchor="end" font-size="12" fill="var(--mute)">+0.6</text><text x="30" y="${Y(-0.6)+4}" text-anchor="end" font-size="12" fill="var(--mute)">−0.6</text>`;
+  for(let hh=0;hh<=24;hh+=6) h+=`<text x="${X(day+hh*3600000)}" y="${H2-4}" text-anchor="middle" font-size="12" fill="var(--mute)">${pad(hh%24)}:00</text>`;
+  h+=`<path d="${pts.map(([t,z],i)=>`${i?'L':'M'}${X(t).toFixed(1)},${Y(z).toFixed(1)}`).join('')}" fill="none" stroke="var(--chrome)" stroke-width="2.2"/>`;
+  const ev=[];for(let i=1;i<pts.length-1;i++){const [t,z]=pts[i];if(z>pts[i-1][1]&&z>=pts[i+1][1])ev.push(['HW',t,z]);if(z<pts[i-1][1]&&z<=pts[i+1][1])ev.push(['LW',t,z])}
+  for(const [k,t,z] of ev) h+=`<text x="${X(t)}" y="${Y(z)+(k==='HW'?-6:16)}" text-anchor="middle" font-size="12" fill="var(--ink)">${k} ${fmtTime(t)}</text>`;
+  h+=`<line id="tideNow" y1="6" y2="${H2-18}" stroke="var(--accent)" stroke-width="2"/>`;
+  svg.innerHTML=h; svg.dataset.day=day;
+  const rng=ev.length>1?Math.max(...ev.map(e=>e[2]))-Math.min(...ev.map(e=>e[2])):0;
+  $('tideNote').textContent=`Height above mean sea level (m), from the model calibrated to the Mahé gauge. Range today ≈ ${rng.toFixed(2)} m. Not for navigation.`;
+  markTime();
+}
+function markTime(){
+  for(const [id,svgId,t0] of [['ptNow','ptSvg',sel&&sel.series?sel.series[0][0]:null],['tideNow','tideSvg',+$('tideSvg').dataset.day]]){
+    const l=$(id); if(!l||t0==null) continue; const x=chartFrame($(svgId),t0)[2](tNow); l.setAttribute('x1',x); l.setAttribute('x2',x);}
+}
+let pins=[]; try{pins=JSON.parse(localStorage.getItem('praslinPins')||'[]')}catch(e){}
+function savePins(){try{localStorage.setItem('praslinPins',JSON.stringify(pins))}catch(e){} renderPins(); drawOver()}
+function renderPins(){$('pins').innerHTML='';pins.forEach((p,i)=>{const bt=document.createElement('button');bt.textContent=p.name;bt.onclick=()=>{sel={lon:p.lon,lat:p.lat,name:p.name};readPoint(true);drawOver()};
+  const x=document.createElement('button');x.textContent='×';x.setAttribute('aria-label','Remove '+p.name);x.onclick=()=>{pins.splice(i,1);savePins()};$('pins').append(bt,x)})}
+function bind(){
+  COMPASS.forEach((c,i)=>{const o=document.createElement('option');o.value=i*22.5;o.textContent=c;$('wdir').append(o)}); $('wdir').value=135;
+  $('windMode').onchange=()=>{$('windCustom').hidden=$('windMode').value!=='custom';update()};
+  $('wspd').oninput=$('wdir').onchange=()=>update();
+  $('now').onclick=()=>{tNow=Date.now();update()};
+  $('back').onclick=()=>{tNow-=3600000;update()}; $('fwd').onclick=()=>{tNow+=3600000;update()};
+  $('when').onchange=()=>{const v=$('when').value;if(!v)return;const [d,t]=v.split('T'),[y,mo,da]=d.split('-').map(Number),[hh,mm]=t.split(':').map(Number);tNow=Date.UTC(y,mo-1,da,hh,mm)-TZ*3600000;update()};
+  $('scrub').oninput=()=>{tNow=localDay(tNow)+(+$('scrub').value)*60000;update(false)};
+  $('play').onclick=()=>{playing=!playing;if(playing){if(tNow>=localDay(tNow)+86000000)tNow=localDay(tNow);playEnd=localDay(tNow)+86400000}$('play').textContent=playing?'❚❚ Pause':'▶ Play day'};
+  const setL=s=>{surface=s;$('lyrDive').setAttribute('aria-pressed',!s);$('lyrSurf').setAttribute('aria-pressed',s);update()};
+  $('lyrDive').onclick=()=>setL(false); $('lyrSurf').onclick=()=>setL(true);
+  $('pinAdd').onclick=()=>{if(!sel)return;const n=$('pinName').value.trim()||`Spot ${pins.length+1}`;pins.push({name:n.slice(0,40),lon:sel.lon,lat:sel.lat});sel.name=n;$('pinName').value='';savePins();readPoint(false)};
+  const zoomAt=(f,cx,cy)=>{view.ox=cx-(cx-view.ox)*f;view.oy=cy-(cy-view.oy)*f;view.s*=f;drawBase()};
+  $('zin').onclick=()=>zoomAt(1.5,W/2,H/2); $('zout').onclick=()=>zoomAt(1/1.5,W/2,H/2); $('zfit').onclick=()=>{fit();drawBase()};
+  map.addEventListener('wheel',e=>{e.preventDefault();const r=map.getBoundingClientRect();zoomAt(e.deltaY<0?1.2:1/1.2,e.clientX-r.left,e.clientY-r.top)},{passive:false});
+  let drag=null, ptrs=new Map();
+  map.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;map.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,[e.clientX,e.clientY]);drag={x:e.clientX,y:e.clientY,moved:0,d:null}});
+  map.addEventListener('pointermove',e=>{if(!drag||!ptrs.has(e.pointerId))return;const prev=ptrs.get(e.pointerId);ptrs.set(e.pointerId,[e.clientX,e.clientY]);
+    if(ptrs.size===2){const [a,c]=[...ptrs.values()];const d=Math.hypot(a[0]-c[0],a[1]-c[1]);if(drag.d){const r=map.getBoundingClientRect();zoomAt(d/drag.d,(a[0]+c[0])/2-r.left,(a[1]+c[1])/2-r.top)}drag.d=d;drag.moved=99;return}
+    const dx=e.clientX-prev[0],dy=e.clientY-prev[1];drag.moved+=Math.abs(dx)+Math.abs(dy);if(drag.moved>4){view.ox+=dx;view.oy+=dy;drawBase()}});
+  map.addEventListener('pointerup',e=>{ptrs.delete(e.pointerId);if(drag&&drag.moved<=4&&ptrs.size===0){const r=map.getBoundingClientRect();const [lo,la]=unproj(e.clientX-r.left,e.clientY-r.top);sel={lon:lo,lat:la};readPoint(true);drawOver()}if(ptrs.size===0)drag=null});
+  new ResizeObserver(()=>resize()).observe(map);
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{depthImg=makeDepthImg();drawBase()});
+  new MutationObserver(()=>{if(D){depthImg=makeDepthImg();drawBase()}}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+}
+fetch('data.json').then(r=>r.json()).then(d=>{
+  D=d; const g=D.grid; N=g.nx*g.ny;
+  layers.depth=dec(D.depth); const wf=dec(D.wetfrac); layers.wet=new Uint8Array(N); for(let k=0;k<N;k++) layers.wet[k]=wf[k]>=2?1:0;
+  layers.tide={}; for(const c of D.cons) layers.tide[c]=D.tide[c].map(dec);
+  layers.mean=D.mean.map(dec); layers.wu=D.wind.u.map(dec); layers.wv=D.wind.v.map(dec);
+  b={l0:g.lon0-g.dlon/2,l1:g.lon0+(g.nx-0.5)*g.dlon,a0:g.lat0-g.dlat/2,a1:g.lat0+(g.ny-0.5)*g.dlat}; kx=Math.cos((b.a0+b.a1)/2*Math.PI/180);
+  F={u:new Float32Array(N),v:new Float32Array(N)}; U=F.u; V=F.v;
+  depthImg=makeDepthImg(); parts=Array.from({length:2600},()=>{const p={};spawn(p);return p});
+  $('loading').remove(); bind(); resize(); renderPins(); update(); requestAnimationFrame(animate);
+}).catch(e=>{$('loading').textContent='Could not load the model data.';console.error(e)});
+}
+</script>
+</body>
+</html>
