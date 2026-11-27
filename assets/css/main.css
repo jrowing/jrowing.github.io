@@ -359,12 +359,34 @@ footer { border-top: 0.5px solid var(--border); }
 
 .cta-primary:hover { background: var(--bg-subtle); }
 
+/* <button> versions of the CTA links: switch off the browser's native button look (Safari paints a grey fill) */
 button.cta-primary,
 button.cta-secondary {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
   font-family: inherit;
+  font-size: 13px;
   line-height: inherit;
-  background: none;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
   cursor: pointer;
+}
+
+button.cta-secondary {
+  color: var(--text-secondary);
+  border: 0.5px solid var(--border);
+}
+
+button.cta-secondary:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+button.cta-secondary:focus-visible {
+  outline: 2px solid var(--sea);
+  outline-offset: 2px;
 }
 
 .cta-secondary {
