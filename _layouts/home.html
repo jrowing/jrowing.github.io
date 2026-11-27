@@ -239,6 +239,31 @@
             }
             return crest(Math.cos(M * phi), 0.8) * near;
           } };
+      },
+      function earthMoon() {
+        // Not to scale: the Moon's orbit is enlarged and sped up, but its speed stays below the Earth's, so its path round the Sun is a wavy line, not loops.
+        var cx = cssW * (cssW < 700 ? 0.7 : 0.74), cy = cssH / 2, R = Math.min(cssH * 0.4, cssW * 0.2), n = rint(6, 10), r = R * rnd(0.6, 0.9) / n,
+            PE = rnd(34, 46), dir = Math.random() < 0.5 ? 1 : -1, we = TAU / PE * dir, wm = we * n, ph0 = rnd(0, TAU), TR = 0.3 * PE, N = 150;
+        function pos(tt) { var a = ph0 + we * tt, ex = cx + R * Math.cos(a), ey = cy + R * Math.sin(a), b = wm * tt; return [ex, ey, ex + r * Math.cos(b), ey + r * Math.sin(b)]; }
+        function col(a) { return 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + a + ')'; }
+        return { caption: 'Earth and Moon orbiting the Sun (not to scale), drawn live.', vector: true,
+          render: function (c, t) {
+            var k, p0, p1, f, g;
+            c.lineCap = 'round';
+            c.strokeStyle = col(0.12); c.lineWidth = 1; c.beginPath(); c.arc(cx, cy, R, 0, TAU); c.stroke();
+            p0 = pos(t - TR);
+            for (k = 1; k <= N; k++) {
+              f = k / N; p1 = pos(t - TR * (1 - f));
+              c.strokeStyle = col(0.45 * f * f); c.lineWidth = 1.4; c.beginPath(); c.moveTo(p0[0], p0[1]); c.lineTo(p1[0], p1[1]); c.stroke();
+              c.strokeStyle = col(0.7 * f * f); c.lineWidth = 1.1; c.beginPath(); c.moveTo(p0[2], p0[3]); c.lineTo(p1[2], p1[3]); c.stroke();
+              p0 = p1;
+            }
+            g = c.createRadialGradient(cx, cy, 0, cx, cy, R * 0.28); g.addColorStop(0, 'rgba(245,179,1,0.5)'); g.addColorStop(1, 'rgba(245,179,1,0)');
+            c.fillStyle = g; c.beginPath(); c.arc(cx, cy, R * 0.28, 0, TAU); c.fill();
+            c.fillStyle = 'rgba(245,179,1,0.95)'; c.beginPath(); c.arc(cx, cy, 9, 0, TAU); c.fill();
+            c.fillStyle = col(0.95); c.beginPath(); c.arc(p1[0], p1[1], 5, 0, TAU); c.fill();
+            c.fillStyle = col(0.75); c.beginPath(); c.arc(p1[2], p1[3], 2.3, 0, TAU); c.fill();
+          } };
       }
     ];
 
@@ -252,6 +277,11 @@
       cv.width = W; cv.height = H; img = ctx.createImageData(W, H);
     }
     function draw(t) {
+      if (cur.render) {
+        ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H);
+        ctx.save(); ctx.scale(1 / SCALE, 1 / SCALE); cur.render(ctx, t); ctx.restore();
+        return;
+      }
       var d = img.data, i = 0, x, y, py, v, al = cur.alpha, sh = cur.shade;
       for (y = 0; y < H; y++) {
         py = y * SCALE;
@@ -262,9 +292,13 @@
       }
       ctx.putImageData(img, 0, 0);
     }
-    function pick(avoid) {
-      var i; do { i = Math.floor(Math.random() * PATTERNS.length); } while (i === avoid && PATTERNS.length > 1);
-      curIndex = i; cur = PATTERNS[i]();
+    function setRes(vector) {            // vector patterns draw at full device resolution, pixel patterns at half
+      var s = vector ? 1 / Math.min(window.devicePixelRatio || 1, 2) : 2;
+      if (s !== SCALE || !img) { SCALE = s; size(); }
+    }
+    function pick(avoid, force) {
+      var i; if (force !== undefined) i = force; else do { i = Math.floor(Math.random() * PATTERNS.length); } while (i === avoid && PATTERNS.length > 1);
+      curIndex = i; cur = PATTERNS[i](); setRes(!!cur.render);
       if (cap) cap.textContent = cur.caption;
       try { localStorage.setItem('hero-bg', String(i)); } catch (e) {}
       t0 = performance.now(); draw(0);
