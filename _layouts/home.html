@@ -100,7 +100,7 @@
     var cv = document.getElementById('home-waves'), cap = document.getElementById('home-caption'), btn = document.getElementById('bg-new');
     if (!cv || !cv.getContext) return;
     var ctx = cv.getContext('2d'), img, W, H, cssW, cssH, rgb = [23, 106, 115];
-    var SCALE = 2;                       // css px per canvas px
+    var SCALE = 2;                       // css px per canvas px (pixel patterns); vector patterns draw at full resolution
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var running = false, t0 = performance.now(), last = 0, onScreen = true;
     var TAU = 2 * Math.PI, cur = null, curIndex = -1;
