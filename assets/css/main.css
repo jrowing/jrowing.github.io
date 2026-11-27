@@ -359,6 +359,14 @@ footer { border-top: 0.5px solid var(--border); }
 
 .cta-primary:hover { background: var(--bg-subtle); }
 
+button.cta-primary,
+button.cta-secondary {
+  font-family: inherit;
+  line-height: inherit;
+  background: none;
+  cursor: pointer;
+}
+
 .cta-secondary {
   font-size: 13px;
   color: var(--text-secondary);
