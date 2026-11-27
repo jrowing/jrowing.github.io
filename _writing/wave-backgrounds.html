@@ -1,0 +1,140 @@
+---
+layout: post
+title: "The animated backgrounds on my front page"
+description: "Twelve small physics animations take turns as the background of my front page. Here they all are, each with a few lines on the physics behind it."
+tags: [physics, waves, code]
+date: 2026-11-27
+---
+
+{% raw %}
+<style>
+  .bgd-intro { margin-bottom: 2rem; }
+  .bgd { margin: 0 0 2.5rem; }
+  .bgd canvas { display: block; width: 100%; height: 250px; color: var(--sea); background: var(--bg-subtle); border: 0.5px solid var(--border); border-radius: var(--radius); }
+  .bgd h2 { margin: 1rem 0 0.35rem; }
+  .bgd p { margin: 0 0 0.75rem; }
+  .bgd-again { font: inherit; font-size: 13px; -webkit-appearance: none; appearance: none; background: transparent; color: var(--text-secondary); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 0.3rem 0.8rem; cursor: pointer; }
+  .bgd-again:hover { color: var(--text-primary); border-color: var(--border-strong); }
+  .bgd-again:focus-visible { outline: 2px solid var(--sea); outline-offset: 2px; }
+</style>
+
+<p class="bgd-intro">The background of the <a href="/">front page</a> is a different animation each time it loads. They are all drawn live in the browser, a pixel at a time, from a few lines of maths each. Here they all are. Press <em>Show another</em> to get a new version of one: the settings, such as the number of sources, the wavelength or the orbit, are chosen at random.</p>
+
+<section class="bgd">
+  <canvas data-i="0" aria-hidden="true"></canvas>
+  <div class="bgd-text">
+    <h2>Interference of point sources</h2>
+    <p>Two, three or four point sources send out circular waves. Where crest meets crest the waves add, and where crest meets trough they cancel, leaving a fixed pattern of bright and dark lines. It is the pattern you see in a ripple tank.</p>
+    <button type="button" class="bgd-again" data-i="0">Show another</button>
+  </div>
+</section>
+
+<section class="bgd">
+  <canvas data-i="1" aria-hidden="true"></canvas>
+  <div class="bgd-text">
+    <h2>A Chladni plate</h2>
+    <p>Sand on a vibrating plate collects along the lines that do not move. These lines are where two standing-wave modes cancel. The two modes slowly blend, so the lines drift.</p>
+    <button type="button" class="bgd-again" data-i="1">Show another</button>
+  </div>
+</section>
+
+<section class="bgd">
+  <canvas data-i="2" aria-hidden="true"></canvas>
+  <div class="bgd-text">
+    <h2>Moiré rings</h2>
+    <p>Two sets of concentric rings, one slowly drifting. Where the rings line up you get broad bright bands, and where they do not the bands fade. It is the same idea as beats, but in space instead of time.</p>
+    <button type="button" class="bgd-again" data-i="2">Show another</button>
+  </div>
+</section>
+
+<section class="bgd">
+  <canvas data-i="3" aria-hidden="true"></canvas>
+  <div class="bgd-text">
+    <h2>Crossing plane waves</h2>
+    <p>Three, five or seven plane waves cross at equal angles. Three make a hexagonal lattice, the idea behind the optical lattices that hold cold atoms. Five and seven make quasicrystal patterns that look regular but never exactly repeat.</p>
+    <button type="button" class="bgd-again" data-i="3">Show another</button>
+  </div>
+</section>
+
+<section class="bgd">
+  <canvas data-i="4" aria-hidden="true"></canvas>
+  <div class="bgd-text">
+    <h2>A Fresnel zone plate</h2>
+    <p>The rings get closer together towards the edge: their radii go as the square roots of whole numbers. A zone plate focuses light or X-rays by diffraction alone, with no lens or mirror.</p>
+    <button type="button" class="bgd-again" data-i="4">Show another</button>
+  </div>
+</section>
+
+<section class="bgd">
+  <canvas data-i="5" aria-hidden="true"></canvas>
+  <div class="bgd-text">
+    <h2>Doppler effect and shock waves</h2>
+    <p>A source moving through a medium bunches its waves up ahead of it and stretches them out behind. If it moves faster than the waves, they pile up into a cone: a sonic boom or a boat's bow wave.</p>
+    <button type="button" class="bgd-again" data-i="5">Show another</button>
+  </div>
+</section>
+
+<section class="bgd">
+  <canvas data-i="6" aria-hidden="true"></canvas>
+  <div class="bgd-text">
+    <h2>Beats</h2>
+    <p>Two waves of slightly different wavelength drift in and out of step, so the sum swells and fades in bands. A piano tuner listens for the same thing in time, as a slow throb between two almost-equal notes.</p>
+    <button type="button" class="bgd-again" data-i="6">Show another</button>
+  </div>
+</section>
+
+<section class="bgd">
+  <canvas data-i="7" aria-hidden="true"></canvas>
+  <div class="bgd-text">
+    <h2>Diffraction by slits</h2>
+    <p>Waves passing through a narrow gap spread out. Through two gaps, the spreading waves overlap and make fringes. Young used the same pattern with light to show that light is a wave.</p>
+    <button type="button" class="bgd-again" data-i="7">Show another</button>
+  </div>
+</section>
+
+<section class="bgd">
+  <canvas data-i="8" aria-hidden="true"></canvas>
+  <div class="bgd-text">
+    <h2>Spiral waves</h2>
+    <p>When the phase of a wave depends on angle as well as distance, the crests wind into spiral arms. Spiral waves turn up in chemical reactions, in heart muscle and in slime moulds.</p>
+    <button type="button" class="bgd-again" data-i="8">Show another</button>
+  </div>
+</section>
+
+<section class="bgd">
+  <canvas data-i="9" aria-hidden="true"></canvas>
+  <div class="bgd-text">
+    <h2>Hydrogen orbitals</h2>
+    <p>A slice through a hydrogen atom, showing where the electron is likely to be found. The shapes are the standing-wave solutions of the Schrödinger equation, and the dark lines are places the electron is never found. The picture rotates slowly, but the atom does not.</p>
+    <button type="button" class="bgd-again" data-i="9">Show another</button>
+  </div>
+</section>
+
+<section class="bgd">
+  <canvas data-i="10" aria-hidden="true"></canvas>
+  <div class="bgd-text">
+    <h2>Electric field lines</h2>
+    <p>Lines showing which way the electric force would push a positive test charge, drawn for two or three charges that drift slowly. Lines leave positive charges and end on negative ones, and they never cross. This is a flat, two-dimensional version, with the charges seen end-on as long lines.</p>
+    <button type="button" class="bgd-again" data-i="10">Show another</button>
+  </div>
+</section>
+
+<section class="bgd">
+  <canvas data-i="11" aria-hidden="true"></canvas>
+  <div class="bgd-text">
+    <h2>The Earth and Moon orbiting the Sun</h2>
+    <p>The Moon goes round the Earth while the Earth goes round the Sun, so the Moon's path round the Sun is the Earth's track with a wobble added. The real Moon is far too slow to loop. Here its orbit is exaggerated, but its speed is kept below the Earth's, so you see the same gentle wave.</p>
+    <button type="button" class="bgd-again" data-i="11">Show another</button>
+  </div>
+</section>
+
+<script src="/assets/js/wave-patterns.js"></script>
+<script>
+  (function () {
+    if (!window.WavePatterns) return;
+    var inst = {};
+    document.querySelectorAll('.bgd canvas').forEach(function (cv) { inst[cv.dataset.i] = WavePatterns.mount(cv, +cv.dataset.i); });
+    document.querySelectorAll('.bgd-again').forEach(function (b) { b.addEventListener('click', function () { inst[b.dataset.i].reroll(); }); });
+  })();
+</script>
+{% endraw %}
